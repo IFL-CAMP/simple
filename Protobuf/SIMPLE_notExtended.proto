@@ -1,0 +1,148 @@
+syntax = "proto2";
+
+package SIMPLE;
+
+
+message HEADER {
+
+	optional int32 VersionNumber =1;
+	optional string dataTypeName =2;
+	optional string deviceName =3;
+	optional int64 timeStamp =4;
+
+}
+
+
+message Pos {
+
+	optional float px =1;
+	optional float py =2;
+	optional float pz =3;
+	optional HEADER header =4;
+
+}
+
+message Orientation {
+
+	optional float r11 =1;
+	optional float r12 =2;
+	optional float r13 =3;
+	optional float r21 =4;
+	optional float r22 =5;
+	optional float r23 =6;
+	optional float r31 =7;
+	optional float r32 =8;
+	optional float r33 =9;
+	optional HEADER header =10;
+
+}
+
+message Quaternion {
+
+	optional float qi = 1;
+	optional float qj = 2;
+	optional float qk = 3;
+	optional float qr = 4;
+
+
+}
+
+message POSITION {
+
+	optional Pos position =1;
+	optional Quaternion orient =2;
+	optional HEADER header =3;
+
+}
+
+message TRANSFORM {
+
+	optional Pos position =1;
+	optional Orientation orient =2;
+	optional HEADER header =3;
+
+}
+
+message METRICS {
+
+	optional float voxelSize = 1;
+
+	enum COStype {
+		LPS =0;
+		RAS =1;
+	}
+
+	enum dataType {
+		RGB =0;
+		SCALAR =1;
+	}
+
+	optional COStype COS = 2;
+	optional Pos position = 3;
+	optional Orientation orient = 4;
+	optional int32 matrixSizeX = 5;
+	optional int32 matrixSizeY = 6;
+	optional int32 matrixSizeZ = 7;
+	optional dataType type =8;
+
+}
+
+message IMAGE {
+
+	message SUBVOLUME {
+
+		optional int32 cornerVoxelIdxX = 1;
+		optional int32 cornerVoxelIdxY = 2;
+		optional int32 cornerVoxelIdxZ = 3;
+		optional int32 numVoxelX = 4;
+		optional int32 numVoxelY = 5;
+		optional int32 numVoxelZ = 6;
+
+	}
+
+	message imageArray {
+
+		optional bytes dataRed = 1;
+		optional bytes dataGreen = 2;
+		optional bytes dataBlue = 3;
+		optional bytes data = 4;
+
+	}
+
+
+	optional METRICS metric= 1;
+	optional SUBVOLUME subvolume= 2;
+	optional bool existSUBVOLUME = 3;
+	optional imageArray imageData =4;
+	optional HEADER header =5;
+
+}
+
+message STATUS {
+
+	optional int32 statusCode =1;
+	optional int64 subcode =2;
+	optional string errorName =3;
+	optional string errorMsg =4;
+	optional HEADER header =5;
+
+}
+
+message CAPABILITY {
+
+	repeated string messageName =1;
+	optional HEADER header =2;
+
+}
+
+message BASIC {
+
+	optional bool basicBool = 1;
+	optional int32 basicInt = 2;
+	optional float basicFloat = 3;
+	optional double basicDouble = 4;
+	optional string basicString = 5;
+	optional HEADER header =6;
+
+}
+

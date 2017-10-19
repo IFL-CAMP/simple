@@ -1,0 +1,14 @@
+syntax = "proto2";
+
+package SIMPLE;
+
+message BASIC {
+
+	optional bool basicBool = 1;
+	optional int32 basicInt = 2;
+	optional float basicFloat = 3;
+	optional double basicDouble = 4;
+	optional string basicString = 5;
+
+}
+

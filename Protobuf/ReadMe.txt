@@ -1,0 +1,1 @@
+The protoc.exe compiler has to match the version of the protobuf libraries used (Release or Debug mode), built with the same version of compiler (ex. Visual Studio 12 2013 Win64)
