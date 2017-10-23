@@ -5,26 +5,39 @@
 // Publisher classes for all message types
 
 void Publisher::publish(const SIMPLE::BASEMSG& msg){
-	//opens a socket and sends the message by the open socket of the publisher
+	//sends the message by the open socket of the publisher
 	
-	zmq::context_t context(1);
-	zmq::socket_t socket(context, ZMQ_PUB);
-	socket.bind(port);
-
 	std::string strMSG;
 
 	msg.SerializeToString(&strMSG);//serialize the protobuf message into a string
 
 	zmq::message_t ZMQmsg(strMSG.size());
-	memcpy(ZMQmsg.data(), &strMSG, strMSG.size());
+	memcpy(ZMQmsg.data(), strMSG.c_str(), strMSG.size());
 
-	socket.send(ZMQmsg);
+	try{
+		socket->send(ZMQmsg);
+	}
+	catch (zmq::error_t& e){
+		std::cout << "Could not send message: " << e.what();
+	}
 	
 }
-Publisher::Publisher(std::string p):port(p){}
-Publisher::~Publisher(){
-	//close the socket
+Publisher::Publisher(std::string port){//open a socket and bind it to port
 
+	context = std::make_unique<zmq::context_t>(1);
+	socket = std::make_unique<zmq::socket_t>(*context, ZMQ_PUB);
+	try{
+		socket->bind(port);
+	}
+	catch (zmq::error_t& e){
+		std::cout << "could not bind to socket:" << e.what();
+	}
+	
+}
+Publisher::~Publisher(){
+	//close the socket and destroy the context
+	zmq_close(*socket);
+	zmq_ctx_destroy(*context);
 }
 std::unique_ptr<SIMPLE::BASEMSG> Publisher::createTRANSFORM(SIMPLE::HEADER& header, double px, double py, double pz, double r11, double r12, double r13, double r21, double r22, double r23, double r31, double r32, double r33){
 

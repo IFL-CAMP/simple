@@ -1,7 +1,5 @@
 #pragma once
 
-#include <iostream>
-#include <fstream>
 #include <string>
 #include "SIMPLE.pb.h"
 #include <zmq.hpp>
@@ -31,7 +29,8 @@ public:
 
 private:
 
-	std::string port;
+	std::unique_ptr<zmq::socket_t> socket;
+	std::unique_ptr<zmq::context_t> context;
 
 };
 
