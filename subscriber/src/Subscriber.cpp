@@ -35,6 +35,9 @@ Subscriber::Subscriber(std::string port){
 		std::cout << "could not bind to socket:" << e.what();
 	}
 
+	//subscribe to all messages
+	socket->setsockopt(ZMQ_SUBSCRIBE, "", 0);
+
 }
 Subscriber::~Subscriber(){
 	//close the socket and destroy the context
