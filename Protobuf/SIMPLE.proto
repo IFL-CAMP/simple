@@ -4,15 +4,15 @@ package SIMPLE;
 
 message BASEMSG {
 
-	required HEADER header =1;
 	oneof data {
-		STATUS status =2;
-		CAPABILITY capability = 3;
-		IMAGE image =4;
-		TRANSFORM transform= 5;
-		POSITION position =6;
-		GENERIC generic =7;
+		STATUS status =1;
+		CAPABILITY capability = 2;
+		IMAGE image =3;
+		TRANSFORM transform= 4;
+		POSITION position =5;
+		GENERIC gener =6;
 	}
+	required HEADER header =7;
 
 }
 
@@ -21,7 +21,7 @@ message HEADER {
 	optional int32 VersionNumber =1;
 	optional string dataTypeName =2;
 	optional string deviceName =3;
-	optional int64 timeStamp =4;
+	optional double timeStamp =4;
 
 }
 

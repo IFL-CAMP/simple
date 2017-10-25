@@ -25,7 +25,7 @@ class BASEMSGDefaultTypeInternal {
   const ::SIMPLE::IMAGE* image_;
   const ::SIMPLE::TRANSFORM* transform_;
   const ::SIMPLE::POSITION* position_;
-  const ::SIMPLE::GENERIC* generic_;
+  const ::SIMPLE::GENERIC* gener_;
 } _BASEMSG_default_instance_;
 class HEADERDefaultTypeInternal {
  public:
@@ -103,13 +103,13 @@ void InitDefaultsBASEMSGImpl() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::internal::InitProtobufDefaults();
-  protobuf_SIMPLE_2eproto::InitDefaultsHEADER();
   protobuf_SIMPLE_2eproto::InitDefaultsSTATUS();
   protobuf_SIMPLE_2eproto::InitDefaultsCAPABILITY();
   protobuf_SIMPLE_2eproto::InitDefaultsIMAGE();
   protobuf_SIMPLE_2eproto::InitDefaultsTRANSFORM();
   protobuf_SIMPLE_2eproto::InitDefaultsPOSITION();
   protobuf_SIMPLE_2eproto::InitDefaultsGENERIC();
+  protobuf_SIMPLE_2eproto::InitDefaultsHEADER();
   {
     void* ptr = &::SIMPLE::_BASEMSG_default_instance_;
     new (ptr) ::SIMPLE::BASEMSG();
@@ -362,21 +362,21 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   ~0u,  // no _extensions_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::BASEMSG, _oneof_case_[0]),
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::BASEMSG, header_),
   offsetof(::SIMPLE::BASEMSGDefaultTypeInternal, status_),
   offsetof(::SIMPLE::BASEMSGDefaultTypeInternal, capability_),
   offsetof(::SIMPLE::BASEMSGDefaultTypeInternal, image_),
   offsetof(::SIMPLE::BASEMSGDefaultTypeInternal, transform_),
   offsetof(::SIMPLE::BASEMSGDefaultTypeInternal, position_),
-  offsetof(::SIMPLE::BASEMSGDefaultTypeInternal, generic_),
+  offsetof(::SIMPLE::BASEMSGDefaultTypeInternal, gener_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::BASEMSG, header_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::BASEMSG, data_),
+  ~0u,
+  ~0u,
+  ~0u,
+  ~0u,
+  ~0u,
+  ~0u,
   0,
-  ~0u,
-  ~0u,
-  ~0u,
-  ~0u,
-  ~0u,
-  ~0u,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::HEADER, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::HEADER, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -612,53 +612,53 @@ void protobuf_RegisterTypes(const ::std::string&) {
 void AddDescriptorsImpl() {
   InitDefaults();
   static const char descriptor[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-      "\n\014SIMPLE.proto\022\006SIMPLE\"\217\002\n\007BASEMSG\022\036\n\006he"
-      "ader\030\001 \002(\0132\016.SIMPLE.HEADER\022 \n\006status\030\002 \001"
-      "(\0132\016.SIMPLE.STATUSH\000\022(\n\ncapability\030\003 \001(\013"
-      "2\022.SIMPLE.CAPABILITYH\000\022\036\n\005image\030\004 \001(\0132\r."
-      "SIMPLE.IMAGEH\000\022&\n\ttransform\030\005 \001(\0132\021.SIMP"
-      "LE.TRANSFORMH\000\022$\n\010position\030\006 \001(\0132\020.SIMPL"
-      "E.POSITIONH\000\022\"\n\007generic\030\007 \001(\0132\017.SIMPLE.G"
-      "ENERICH\000B\006\n\004data\"\\\n\006HEADER\022\025\n\rVersionNum"
-      "ber\030\001 \001(\005\022\024\n\014dataTypeName\030\002 \001(\t\022\022\n\ndevic"
-      "eName\030\003 \001(\t\022\021\n\ttimeStamp\030\004 \001(\003\"R\n\006STATUS"
-      "\022\022\n\nstatusCode\030\001 \001(\005\022\017\n\007subcode\030\002 \001(\003\022\021\n"
-      "\terrorName\030\003 \001(\t\022\020\n\010errorMsg\030\004 \001(\t\"!\n\nCA"
-      "PABILITY\022\023\n\013messageName\030\001 \003(\t\")\n\003Pos\022\n\n\002"
-      "px\030\001 \001(\001\022\n\n\002py\030\002 \001(\001\022\n\n\002pz\030\003 \001(\001\"\202\001\n\013Ori"
-      "entation\022\013\n\003r11\030\001 \001(\001\022\013\n\003r12\030\002 \001(\001\022\013\n\003r1"
-      "3\030\003 \001(\001\022\013\n\003r21\030\004 \001(\001\022\013\n\003r22\030\005 \001(\001\022\013\n\003r23"
-      "\030\006 \001(\001\022\013\n\003r31\030\007 \001(\001\022\013\n\003r32\030\010 \001(\001\022\013\n\003r33\030"
-      "\t \001(\001\"<\n\nQuaternion\022\n\n\002qi\030\001 \001(\001\022\n\n\002qj\030\002 "
-      "\001(\001\022\n\n\002qk\030\003 \001(\001\022\n\n\002qr\030\004 \001(\001\"M\n\010POSITION\022"
-      "\035\n\010position\030\001 \001(\0132\013.SIMPLE.Pos\022\"\n\006orient"
-      "\030\002 \001(\0132\022.SIMPLE.Quaternion\"O\n\tTRANSFORM\022"
-      "\035\n\010position\030\001 \001(\0132\013.SIMPLE.Pos\022#\n\006orient"
-      "\030\002 \001(\0132\023.SIMPLE.Orientation\"\275\005\n\005IMAGE\022%\n"
-      "\006metric\030\001 \001(\0132\025.SIMPLE.IMAGE.METRICS\022*\n\t"
-      "subvolume\030\002 \001(\0132\027.SIMPLE.IMAGE.SUBVOLUME"
-      "\022\026\n\016existSUBVOLUME\030\003 \001(\010\022+\n\timageData\030\004 "
-      "\001(\0132\030.SIMPLE.IMAGE.imageArray\032\267\002\n\007METRIC"
-      "S\022\021\n\tvoxelSize\030\001 \001(\001\022*\n\003COS\030\002 \001(\0162\035.SIMP"
-      "LE.IMAGE.METRICS.COStype\022\035\n\010position\030\003 \001"
-      "(\0132\013.SIMPLE.Pos\022#\n\006orient\030\004 \001(\0132\023.SIMPLE"
-      ".Orientation\022\023\n\013matrixSizeX\030\005 \001(\005\022\023\n\013mat"
-      "rixSizeY\030\006 \001(\005\022\023\n\013matrixSizeZ\030\007 \001(\005\022,\n\004t"
-      "ype\030\010 \001(\0162\036.SIMPLE.IMAGE.METRICS.dataTyp"
-      "e\"\033\n\007COStype\022\007\n\003LPS\020\000\022\007\n\003RAS\020\001\"\037\n\010dataTy"
-      "pe\022\007\n\003RGB\020\000\022\n\n\006SCALAR\020\001\032\217\001\n\tSUBVOLUME\022\027\n"
-      "\017cornerVoxelIdxX\030\001 \001(\005\022\027\n\017cornerVoxelIdx"
-      "Y\030\002 \001(\005\022\027\n\017cornerVoxelIdxZ\030\003 \001(\005\022\021\n\tnumV"
-      "oxelX\030\004 \001(\005\022\021\n\tnumVoxelY\030\005 \001(\005\022\021\n\tnumVox"
-      "elZ\030\006 \001(\005\032P\n\nimageArray\022\017\n\007dataRed\030\001 \001(\014"
-      "\022\021\n\tdataGreen\030\002 \001(\014\022\020\n\010dataBlue\030\003 \001(\014\022\014\n"
-      "\004data\030\004 \001(\014\"~\n\007GENERIC\022\023\n\tbasicBool\030\001 \001("
-      "\010H\000\022\022\n\010basicInt\030\002 \001(\005H\000\022\024\n\nbasicFloat\030\003 "
-      "\001(\002H\000\022\025\n\013basicDouble\030\004 \001(\001H\000\022\025\n\013basicStr"
-      "ing\030\005 \001(\tH\000B\006\n\004data"
+      "\n\014SIMPLE.proto\022\006SIMPLE\"\215\002\n\007BASEMSG\022 \n\006st"
+      "atus\030\001 \001(\0132\016.SIMPLE.STATUSH\000\022(\n\ncapabili"
+      "ty\030\002 \001(\0132\022.SIMPLE.CAPABILITYH\000\022\036\n\005image\030"
+      "\003 \001(\0132\r.SIMPLE.IMAGEH\000\022&\n\ttransform\030\004 \001("
+      "\0132\021.SIMPLE.TRANSFORMH\000\022$\n\010position\030\005 \001(\013"
+      "2\020.SIMPLE.POSITIONH\000\022 \n\005gener\030\006 \001(\0132\017.SI"
+      "MPLE.GENERICH\000\022\036\n\006header\030\007 \002(\0132\016.SIMPLE."
+      "HEADERB\006\n\004data\"\\\n\006HEADER\022\025\n\rVersionNumbe"
+      "r\030\001 \001(\005\022\024\n\014dataTypeName\030\002 \001(\t\022\022\n\ndeviceN"
+      "ame\030\003 \001(\t\022\021\n\ttimeStamp\030\004 \001(\001\"R\n\006STATUS\022\022"
+      "\n\nstatusCode\030\001 \001(\005\022\017\n\007subcode\030\002 \001(\003\022\021\n\te"
+      "rrorName\030\003 \001(\t\022\020\n\010errorMsg\030\004 \001(\t\"!\n\nCAPA"
+      "BILITY\022\023\n\013messageName\030\001 \003(\t\")\n\003Pos\022\n\n\002px"
+      "\030\001 \001(\001\022\n\n\002py\030\002 \001(\001\022\n\n\002pz\030\003 \001(\001\"\202\001\n\013Orien"
+      "tation\022\013\n\003r11\030\001 \001(\001\022\013\n\003r12\030\002 \001(\001\022\013\n\003r13\030"
+      "\003 \001(\001\022\013\n\003r21\030\004 \001(\001\022\013\n\003r22\030\005 \001(\001\022\013\n\003r23\030\006"
+      " \001(\001\022\013\n\003r31\030\007 \001(\001\022\013\n\003r32\030\010 \001(\001\022\013\n\003r33\030\t "
+      "\001(\001\"<\n\nQuaternion\022\n\n\002qi\030\001 \001(\001\022\n\n\002qj\030\002 \001("
+      "\001\022\n\n\002qk\030\003 \001(\001\022\n\n\002qr\030\004 \001(\001\"M\n\010POSITION\022\035\n"
+      "\010position\030\001 \001(\0132\013.SIMPLE.Pos\022\"\n\006orient\030\002"
+      " \001(\0132\022.SIMPLE.Quaternion\"O\n\tTRANSFORM\022\035\n"
+      "\010position\030\001 \001(\0132\013.SIMPLE.Pos\022#\n\006orient\030\002"
+      " \001(\0132\023.SIMPLE.Orientation\"\275\005\n\005IMAGE\022%\n\006m"
+      "etric\030\001 \001(\0132\025.SIMPLE.IMAGE.METRICS\022*\n\tsu"
+      "bvolume\030\002 \001(\0132\027.SIMPLE.IMAGE.SUBVOLUME\022\026"
+      "\n\016existSUBVOLUME\030\003 \001(\010\022+\n\timageData\030\004 \001("
+      "\0132\030.SIMPLE.IMAGE.imageArray\032\267\002\n\007METRICS\022"
+      "\021\n\tvoxelSize\030\001 \001(\001\022*\n\003COS\030\002 \001(\0162\035.SIMPLE"
+      ".IMAGE.METRICS.COStype\022\035\n\010position\030\003 \001(\013"
+      "2\013.SIMPLE.Pos\022#\n\006orient\030\004 \001(\0132\023.SIMPLE.O"
+      "rientation\022\023\n\013matrixSizeX\030\005 \001(\005\022\023\n\013matri"
+      "xSizeY\030\006 \001(\005\022\023\n\013matrixSizeZ\030\007 \001(\005\022,\n\004typ"
+      "e\030\010 \001(\0162\036.SIMPLE.IMAGE.METRICS.dataType\""
+      "\033\n\007COStype\022\007\n\003LPS\020\000\022\007\n\003RAS\020\001\"\037\n\010dataType"
+      "\022\007\n\003RGB\020\000\022\n\n\006SCALAR\020\001\032\217\001\n\tSUBVOLUME\022\027\n\017c"
+      "ornerVoxelIdxX\030\001 \001(\005\022\027\n\017cornerVoxelIdxY\030"
+      "\002 \001(\005\022\027\n\017cornerVoxelIdxZ\030\003 \001(\005\022\021\n\tnumVox"
+      "elX\030\004 \001(\005\022\021\n\tnumVoxelY\030\005 \001(\005\022\021\n\tnumVoxel"
+      "Z\030\006 \001(\005\032P\n\nimageArray\022\017\n\007dataRed\030\001 \001(\014\022\021"
+      "\n\tdataGreen\030\002 \001(\014\022\020\n\010dataBlue\030\003 \001(\014\022\014\n\004d"
+      "ata\030\004 \001(\014\"~\n\007GENERIC\022\023\n\tbasicBool\030\001 \001(\010H"
+      "\000\022\022\n\010basicInt\030\002 \001(\005H\000\022\024\n\nbasicFloat\030\003 \001("
+      "\002H\000\022\025\n\013basicDouble\030\004 \001(\001H\000\022\025\n\013basicStrin"
+      "g\030\005 \001(\tH\000B\006\n\004data"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 1739);
+      descriptor, 1737);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "SIMPLE.proto", &protobuf_RegisterTypes);
 }
@@ -721,8 +721,6 @@ const int IMAGE_METRICS::dataType_ARRAYSIZE;
 // ===================================================================
 
 void BASEMSG::InitAsDefaultInstance() {
-  ::SIMPLE::_BASEMSG_default_instance_._instance.get_mutable()->header_ = const_cast< ::SIMPLE::HEADER*>(
-      ::SIMPLE::HEADER::internal_default_instance());
   ::SIMPLE::_BASEMSG_default_instance_.status_ = const_cast< ::SIMPLE::STATUS*>(
       ::SIMPLE::STATUS::internal_default_instance());
   ::SIMPLE::_BASEMSG_default_instance_.capability_ = const_cast< ::SIMPLE::CAPABILITY*>(
@@ -733,17 +731,19 @@ void BASEMSG::InitAsDefaultInstance() {
       ::SIMPLE::TRANSFORM::internal_default_instance());
   ::SIMPLE::_BASEMSG_default_instance_.position_ = const_cast< ::SIMPLE::POSITION*>(
       ::SIMPLE::POSITION::internal_default_instance());
-  ::SIMPLE::_BASEMSG_default_instance_.generic_ = const_cast< ::SIMPLE::GENERIC*>(
+  ::SIMPLE::_BASEMSG_default_instance_.gener_ = const_cast< ::SIMPLE::GENERIC*>(
       ::SIMPLE::GENERIC::internal_default_instance());
+  ::SIMPLE::_BASEMSG_default_instance_._instance.get_mutable()->header_ = const_cast< ::SIMPLE::HEADER*>(
+      ::SIMPLE::HEADER::internal_default_instance());
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int BASEMSG::kHeaderFieldNumber;
 const int BASEMSG::kStatusFieldNumber;
 const int BASEMSG::kCapabilityFieldNumber;
 const int BASEMSG::kImageFieldNumber;
 const int BASEMSG::kTransformFieldNumber;
 const int BASEMSG::kPositionFieldNumber;
-const int BASEMSG::kGenericFieldNumber;
+const int BASEMSG::kGenerFieldNumber;
+const int BASEMSG::kHeaderFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 BASEMSG::BASEMSG()
@@ -787,8 +787,8 @@ BASEMSG::BASEMSG(const BASEMSG& from)
       mutable_position()->::SIMPLE::POSITION::MergeFrom(from.position());
       break;
     }
-    case kGeneric: {
-      mutable_generic()->::SIMPLE::GENERIC::MergeFrom(from.generic());
+    case kGener: {
+      mutable_gener()->::SIMPLE::GENERIC::MergeFrom(from.gener());
       break;
     }
     case DATA_NOT_SET: {
@@ -862,8 +862,8 @@ void BASEMSG::clear_data() {
       delete data_.position_;
       break;
     }
-    case kGeneric: {
-      delete data_.generic_;
+    case kGener: {
+      delete data_.gener_;
       break;
     }
     case DATA_NOT_SET: {
@@ -899,22 +899,10 @@ bool BASEMSG::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required .SIMPLE.HEADER header = 1;
+      // optional .SIMPLE.STATUS status = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_header()));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // optional .SIMPLE.STATUS status = 2;
-      case 2: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_status()));
         } else {
@@ -923,10 +911,10 @@ bool BASEMSG::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .SIMPLE.CAPABILITY capability = 3;
-      case 3: {
+      // optional .SIMPLE.CAPABILITY capability = 2;
+      case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_capability()));
         } else {
@@ -935,10 +923,10 @@ bool BASEMSG::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .SIMPLE.IMAGE image = 4;
-      case 4: {
+      // optional .SIMPLE.IMAGE image = 3;
+      case 3: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(34u /* 34 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_image()));
         } else {
@@ -947,10 +935,10 @@ bool BASEMSG::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .SIMPLE.TRANSFORM transform = 5;
-      case 5: {
+      // optional .SIMPLE.TRANSFORM transform = 4;
+      case 4: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(42u /* 42 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(34u /* 34 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_transform()));
         } else {
@@ -959,10 +947,10 @@ bool BASEMSG::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .SIMPLE.POSITION position = 6;
-      case 6: {
+      // optional .SIMPLE.POSITION position = 5;
+      case 5: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(50u /* 50 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(42u /* 42 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_position()));
         } else {
@@ -971,12 +959,24 @@ bool BASEMSG::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .SIMPLE.GENERIC generic = 7;
+      // optional .SIMPLE.GENERIC gener = 6;
+      case 6: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(50u /* 50 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_gener()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // required .SIMPLE.HEADER header = 7;
       case 7: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(58u /* 58 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_generic()));
+               input, mutable_header()));
         } else {
           goto handle_unusual;
         }
@@ -1009,40 +1009,40 @@ void BASEMSG::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  cached_has_bits = _has_bits_[0];
-  // required .SIMPLE.HEADER header = 1;
-  if (cached_has_bits & 0x00000001u) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, *this->header_, output);
-  }
-
   switch (data_case()) {
     case kStatus:
       ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-        2, *data_.status_, output);
+        1, *data_.status_, output);
       break;
     case kCapability:
       ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-        3, *data_.capability_, output);
+        2, *data_.capability_, output);
       break;
     case kImage:
       ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-        4, *data_.image_, output);
+        3, *data_.image_, output);
       break;
     case kTransform:
       ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-        5, *data_.transform_, output);
+        4, *data_.transform_, output);
       break;
     case kPosition:
       ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-        6, *data_.position_, output);
+        5, *data_.position_, output);
       break;
-    case kGeneric:
+    case kGener:
       ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-        7, *data_.generic_, output);
+        6, *data_.gener_, output);
       break;
     default: ;
   }
+  cached_has_bits = _has_bits_[0];
+  // required .SIMPLE.HEADER header = 7;
+  if (cached_has_bits & 0x00000001u) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      7, *this->header_, output);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
@@ -1057,47 +1057,47 @@ void BASEMSG::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  cached_has_bits = _has_bits_[0];
-  // required .SIMPLE.HEADER header = 1;
-  if (cached_has_bits & 0x00000001u) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      InternalWriteMessageNoVirtualToArray(
-        1, *this->header_, deterministic, target);
-  }
-
   switch (data_case()) {
     case kStatus:
       target = ::google::protobuf::internal::WireFormatLite::
         InternalWriteMessageNoVirtualToArray(
-          2, *data_.status_, deterministic, target);
+          1, *data_.status_, deterministic, target);
       break;
     case kCapability:
       target = ::google::protobuf::internal::WireFormatLite::
         InternalWriteMessageNoVirtualToArray(
-          3, *data_.capability_, deterministic, target);
+          2, *data_.capability_, deterministic, target);
       break;
     case kImage:
       target = ::google::protobuf::internal::WireFormatLite::
         InternalWriteMessageNoVirtualToArray(
-          4, *data_.image_, deterministic, target);
+          3, *data_.image_, deterministic, target);
       break;
     case kTransform:
       target = ::google::protobuf::internal::WireFormatLite::
         InternalWriteMessageNoVirtualToArray(
-          5, *data_.transform_, deterministic, target);
+          4, *data_.transform_, deterministic, target);
       break;
     case kPosition:
       target = ::google::protobuf::internal::WireFormatLite::
         InternalWriteMessageNoVirtualToArray(
-          6, *data_.position_, deterministic, target);
+          5, *data_.position_, deterministic, target);
       break;
-    case kGeneric:
+    case kGener:
       target = ::google::protobuf::internal::WireFormatLite::
         InternalWriteMessageNoVirtualToArray(
-          7, *data_.generic_, deterministic, target);
+          6, *data_.gener_, deterministic, target);
       break;
     default: ;
   }
+  cached_has_bits = _has_bits_[0];
+  // required .SIMPLE.HEADER header = 7;
+  if (cached_has_bits & 0x00000001u) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageNoVirtualToArray(
+        7, *this->header_, deterministic, target);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
@@ -1115,53 +1115,53 @@ size_t BASEMSG::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
-  // required .SIMPLE.HEADER header = 1;
+  // required .SIMPLE.HEADER header = 7;
   if (has_header()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
         *this->header_);
   }
   switch (data_case()) {
-    // optional .SIMPLE.STATUS status = 2;
+    // optional .SIMPLE.STATUS status = 1;
     case kStatus: {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           *data_.status_);
       break;
     }
-    // optional .SIMPLE.CAPABILITY capability = 3;
+    // optional .SIMPLE.CAPABILITY capability = 2;
     case kCapability: {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           *data_.capability_);
       break;
     }
-    // optional .SIMPLE.IMAGE image = 4;
+    // optional .SIMPLE.IMAGE image = 3;
     case kImage: {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           *data_.image_);
       break;
     }
-    // optional .SIMPLE.TRANSFORM transform = 5;
+    // optional .SIMPLE.TRANSFORM transform = 4;
     case kTransform: {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           *data_.transform_);
       break;
     }
-    // optional .SIMPLE.POSITION position = 6;
+    // optional .SIMPLE.POSITION position = 5;
     case kPosition: {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           *data_.position_);
       break;
     }
-    // optional .SIMPLE.GENERIC generic = 7;
-    case kGeneric: {
+    // optional .SIMPLE.GENERIC gener = 6;
+    case kGener: {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          *data_.generic_);
+          *data_.gener_);
       break;
     }
     case DATA_NOT_SET: {
@@ -1221,8 +1221,8 @@ void BASEMSG::MergeFrom(const BASEMSG& from) {
       mutable_position()->::SIMPLE::POSITION::MergeFrom(from.position());
       break;
     }
-    case kGeneric: {
-      mutable_generic()->::SIMPLE::GENERIC::MergeFrom(from.generic());
+    case kGener: {
+      mutable_gener()->::SIMPLE::GENERIC::MergeFrom(from.gener());
       break;
     }
     case DATA_NOT_SET: {
@@ -1433,13 +1433,13 @@ bool HEADER::MergePartialFromCodedStream(
         break;
       }
 
-      // optional int64 timeStamp = 4;
+      // optional double timeStamp = 4;
       case 4: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(32u /* 32 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(33u /* 33 & 0xFF */)) {
           set_has_timestamp();
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
                  input, &timestamp_)));
         } else {
           goto handle_unusual;
@@ -1499,9 +1499,9 @@ void HEADER::SerializeWithCachedSizes(
       3, this->devicename(), output);
   }
 
-  // optional int64 timeStamp = 4;
+  // optional double timeStamp = 4;
   if (cached_has_bits & 0x00000004u) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt64(4, this->timestamp(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(4, this->timestamp(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -1546,9 +1546,9 @@ void HEADER::SerializeWithCachedSizes(
         3, this->devicename(), target);
   }
 
-  // optional int64 timeStamp = 4;
+  // optional double timeStamp = 4;
   if (cached_has_bits & 0x00000004u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(4, this->timestamp(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(4, this->timestamp(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -1583,11 +1583,9 @@ size_t HEADER::ByteSizeLong() const {
           this->devicename());
     }
 
-    // optional int64 timeStamp = 4;
+    // optional double timeStamp = 4;
     if (has_timestamp()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int64Size(
-          this->timestamp());
+      total_size += 1 + 8;
     }
 
     // optional int32 VersionNumber = 1;

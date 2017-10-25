@@ -20,35 +20,39 @@ static void s_catch_signals(){
 	signal(SIGTERM, s_signal_handler);
 }
 
+
+
 int main(int argc, char* argv[]) {
 
 	GOOGLE_PROTOBUF_VERIFY_VERSION;
-	
-	Publisher pub("tcp://*:5556");
 
-	std::unique_ptr<SIMPLE::HEADER> header = pub.createHEADER(1, "GENERIC", "My PC", 0);
+	//start context
+	simple::myContext globalContext;
 
-	std::unique_ptr<SIMPLE::BASEMSG> baseMSG = pub.createGENERIC_BOOL(*header, true);
+	simple::Publisher pub("tcp://*:5556", globalContext.context);
+
+	SIMPLE::HEADER* header = pub.createHEADER(1, "GENERIC", "My PC", 0);
+
+	std::unique_ptr<SIMPLE::BASEMSG> baseMSG = pub.createGENERIC_INT(header, 5);
 
 	s_catch_signals();
-	while (true)
+	while (!s_interrupted)
 	{
 		try{
 			pub.publish(*baseMSG);
 			std::cout << "Message published" << "\n";
 		}
-		catch(zmq::error_t& e){
+		catch (zmq::error_t& e){
 			std::cout << "Interruption received" << "\n";
 		}
-		if (s_interrupted)
-		{
-			std::cout << "Interruption received, killing server" << "\n";
-			break;
-		}
-
 	}
-	
+
+	std::cout << "Interruption received, killing server" << "\n";
+
+	//delete all global objects allocated by libprotobuf
 	google::protobuf::ShutdownProtobufLibrary();
+
+	
 
 	return 0;
 }

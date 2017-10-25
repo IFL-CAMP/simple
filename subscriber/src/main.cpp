@@ -23,37 +23,42 @@ static void s_catch_signals(void)
 int main(int argc, char* argv[]) {
 
 	GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+	//create context
+	simple::myContext globalContext;
 	
-	Subscriber sub("tcp://localhost:5556");
+	simple::Subscriber<SIMPLE::GENERIC> sub("tcp://localhost:5556", globalContext.context);
 
 	s_catch_signals();
 	while (true)
 	{
 		try{
-
-			std::unique_ptr<SIMPLE::BASEMSG> msg = sub.subscribe();
+			
+			std::pair<std::unique_ptr<SIMPLE::GENERIC>,std::unique_ptr<SIMPLE::HEADER>> income = sub.subscribe();
 			//write the content of the message
 			std::string msgSTR;
-			google::protobuf::TextFormat::PrintToString(*msg, &msgSTR);
-			std::cout << msgSTR << "/n";
+			
+			google::protobuf::TextFormat::PrintToString(*income.first, &msgSTR);
+			std::cout << msgSTR << "\n";
 
 		}
 		
 		catch (zmq::error_t& e){
 
-			std::cout << "Interruption received" << "/n";
+			std::cout << "Interruption received" << "\n";
 
 		}
 
 		if (s_interrupted)
 		{
-			std::cout << "Interruption received" << "/n";
+			std::cout << "Interruption received" << "\n";
 			break;
 		}
 
 	}
 
 	google::protobuf::ShutdownProtobufLibrary();
+
 
 	return 0;
 }
