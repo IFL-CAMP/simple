@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
 	simple::myContext globalContext;
 	
 	simple::Subscriber<SIMPLE::GENERIC> sub("tcp://localhost:5556", globalContext.context);
-
+	
 	s_catch_signals();
 	while (true)
 	{

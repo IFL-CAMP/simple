@@ -146,37 +146,49 @@ std::pair<std::unique_ptr<SIMPLE::TRANSFORM>, std::unique_ptr<SIMPLE::HEADER>> s
 }
 void simple::Subscriber<SIMPLE::CAPABILITY>::filterSubscription(){
 	///Sets up a filter so the subscription only receives CAPABILITY messages
-	std::string filterStr = "capability";
 
+	//the message type consists of 2 letters: the last two on filter have to match the message type
+	std::string filterStr = "\n\x2CP";
+	
 	socket->setsockopt(ZMQ_SUBSCRIBE, filterStr.c_str(), filterStr.length());
 }
 void simple::Subscriber<SIMPLE::IMAGE>::filterSubscription(){
 	///Sets up a filter so the subscription only receives IMAGE messages
-	std::string filterStr = "image";
+
+	//the message type consists of 2 letters: the last two on filter have to match the message type
+	std::string filterStr = "\n\x2IM";
 
 	socket->setsockopt(ZMQ_SUBSCRIBE, filterStr.c_str(), filterStr.length());
 }
 void simple::Subscriber<SIMPLE::TRANSFORM>::filterSubscription(){
 	///Sets up a filter so the subscription only receives TRANSFORM messages
-	std::string filterStr = "transform";
+
+	//the message type consists of 2 letters: the last two on filter have to match the message type
+	std::string filterStr = "\n\x2TR";
 
 	socket->setsockopt(ZMQ_SUBSCRIBE, filterStr.c_str(), filterStr.length());
 }
 void simple::Subscriber<SIMPLE::GENERIC>::filterSubscription(){
 	///Sets up a filter so the subscription only receives GENERIC messages
-	std::string filterStr = "gener";
+
+	//the message type consists of 2 letters: the last two on filter have to match the message type
+	std::string filterStr = "\n\x2GN";
 
 	socket->setsockopt(ZMQ_SUBSCRIBE, filterStr.c_str(), filterStr.length());
 }
 void simple::Subscriber<SIMPLE::POSITION>::filterSubscription(){
 	///Sets up a filter so the subscription only receives POSITION messages
-	std::string filterStr = "position";
+
+	//the message type consists of 2 letters: the last two on filter have to match the message type
+	std::string filterStr = "\n\x2PO";
 
 	socket->setsockopt(ZMQ_SUBSCRIBE, filterStr.c_str(), filterStr.length());
 }
 void simple::Subscriber<SIMPLE::STATUS>::filterSubscription(){
 	///Sets up a filter so the subscription only receives STATUS messages
-	std::string filterStr = "status";
+
+	//the message type consists of 2 letters: the last two on filter have to match the message type
+	std::string filterStr = "\n\x2ST";
 
 	socket->setsockopt(ZMQ_SUBSCRIBE, filterStr.c_str(), filterStr.length());
 }

@@ -4,15 +4,17 @@ package SIMPLE;
 
 message BASEMSG {
 
+	required string flag = 1;
+
 	oneof data {
-		STATUS status =1;
-		CAPABILITY capability = 2;
-		IMAGE image =3;
-		TRANSFORM transform= 4;
-		POSITION position =5;
-		GENERIC gener =6;
+		STATUS status =2;
+		CAPABILITY capability = 3;
+		IMAGE image =4;
+		TRANSFORM transform= 5;
+		POSITION position =6;
+		GENERIC gener =7;
 	}
-	required HEADER header =7;
+	required HEADER header =8;
 
 }
 

@@ -211,12 +211,12 @@ class BASEMSG : public ::google::protobuf::Message /* @@protoc_insertion_point(c
   static const BASEMSG& default_instance();
 
   enum DataCase {
-    kStatus = 1,
-    kCapability = 2,
-    kImage = 3,
-    kTransform = 4,
-    kPosition = 5,
-    kGener = 6,
+    kStatus = 2,
+    kCapability = 3,
+    kImage = 4,
+    kTransform = 5,
+    kPosition = 6,
+    kGener = 7,
     DATA_NOT_SET = 0,
   };
 
@@ -273,64 +273,79 @@ class BASEMSG : public ::google::protobuf::Message /* @@protoc_insertion_point(c
 
   // accessors -------------------------------------------------------
 
-  // required .SIMPLE.HEADER header = 7;
+  // required string flag = 1;
+  bool has_flag() const;
+  void clear_flag();
+  static const int kFlagFieldNumber = 1;
+  const ::std::string& flag() const;
+  void set_flag(const ::std::string& value);
+  #if LANG_CXX11
+  void set_flag(::std::string&& value);
+  #endif
+  void set_flag(const char* value);
+  void set_flag(const char* value, size_t size);
+  ::std::string* mutable_flag();
+  ::std::string* release_flag();
+  void set_allocated_flag(::std::string* flag);
+
+  // required .SIMPLE.HEADER header = 8;
   bool has_header() const;
   void clear_header();
-  static const int kHeaderFieldNumber = 7;
+  static const int kHeaderFieldNumber = 8;
   const ::SIMPLE::HEADER& header() const;
   ::SIMPLE::HEADER* mutable_header();
   ::SIMPLE::HEADER* release_header();
   void set_allocated_header(::SIMPLE::HEADER* header);
 
-  // optional .SIMPLE.STATUS status = 1;
+  // optional .SIMPLE.STATUS status = 2;
   bool has_status() const;
   void clear_status();
-  static const int kStatusFieldNumber = 1;
+  static const int kStatusFieldNumber = 2;
   const ::SIMPLE::STATUS& status() const;
   ::SIMPLE::STATUS* mutable_status();
   ::SIMPLE::STATUS* release_status();
   void set_allocated_status(::SIMPLE::STATUS* status);
 
-  // optional .SIMPLE.CAPABILITY capability = 2;
+  // optional .SIMPLE.CAPABILITY capability = 3;
   bool has_capability() const;
   void clear_capability();
-  static const int kCapabilityFieldNumber = 2;
+  static const int kCapabilityFieldNumber = 3;
   const ::SIMPLE::CAPABILITY& capability() const;
   ::SIMPLE::CAPABILITY* mutable_capability();
   ::SIMPLE::CAPABILITY* release_capability();
   void set_allocated_capability(::SIMPLE::CAPABILITY* capability);
 
-  // optional .SIMPLE.IMAGE image = 3;
+  // optional .SIMPLE.IMAGE image = 4;
   bool has_image() const;
   void clear_image();
-  static const int kImageFieldNumber = 3;
+  static const int kImageFieldNumber = 4;
   const ::SIMPLE::IMAGE& image() const;
   ::SIMPLE::IMAGE* mutable_image();
   ::SIMPLE::IMAGE* release_image();
   void set_allocated_image(::SIMPLE::IMAGE* image);
 
-  // optional .SIMPLE.TRANSFORM transform = 4;
+  // optional .SIMPLE.TRANSFORM transform = 5;
   bool has_transform() const;
   void clear_transform();
-  static const int kTransformFieldNumber = 4;
+  static const int kTransformFieldNumber = 5;
   const ::SIMPLE::TRANSFORM& transform() const;
   ::SIMPLE::TRANSFORM* mutable_transform();
   ::SIMPLE::TRANSFORM* release_transform();
   void set_allocated_transform(::SIMPLE::TRANSFORM* transform);
 
-  // optional .SIMPLE.POSITION position = 5;
+  // optional .SIMPLE.POSITION position = 6;
   bool has_position() const;
   void clear_position();
-  static const int kPositionFieldNumber = 5;
+  static const int kPositionFieldNumber = 6;
   const ::SIMPLE::POSITION& position() const;
   ::SIMPLE::POSITION* mutable_position();
   ::SIMPLE::POSITION* release_position();
   void set_allocated_position(::SIMPLE::POSITION* position);
 
-  // optional .SIMPLE.GENERIC gener = 6;
+  // optional .SIMPLE.GENERIC gener = 7;
   bool has_gener() const;
   void clear_gener();
-  static const int kGenerFieldNumber = 6;
+  static const int kGenerFieldNumber = 7;
   const ::SIMPLE::GENERIC& gener() const;
   ::SIMPLE::GENERIC* mutable_gener();
   ::SIMPLE::GENERIC* release_gener();
@@ -339,6 +354,8 @@ class BASEMSG : public ::google::protobuf::Message /* @@protoc_insertion_point(c
   DataCase data_case() const;
   // @@protoc_insertion_point(class_scope:SIMPLE.BASEMSG)
  private:
+  void set_has_flag();
+  void clear_has_flag();
   void set_has_status();
   void set_has_capability();
   void set_has_image();
@@ -352,9 +369,13 @@ class BASEMSG : public ::google::protobuf::Message /* @@protoc_insertion_point(c
   void clear_data();
   inline void clear_has_data();
 
+  // helper for ByteSizeLong()
+  size_t RequiredFieldsByteSizeFallback() const;
+
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable int _cached_size_;
+  ::google::protobuf::internal::ArenaStringPtr flag_;
   ::SIMPLE::HEADER* header_;
   union DataUnion {
     DataUnion() {}
@@ -2414,7 +2435,70 @@ class GENERIC : public ::google::protobuf::Message /* @@protoc_insertion_point(c
 #endif  // __GNUC__
 // BASEMSG
 
-// optional .SIMPLE.STATUS status = 1;
+// required string flag = 1;
+inline bool BASEMSG::has_flag() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void BASEMSG::set_has_flag() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void BASEMSG::clear_has_flag() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void BASEMSG::clear_flag() {
+  flag_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_flag();
+}
+inline const ::std::string& BASEMSG::flag() const {
+  // @@protoc_insertion_point(field_get:SIMPLE.BASEMSG.flag)
+  return flag_.GetNoArena();
+}
+inline void BASEMSG::set_flag(const ::std::string& value) {
+  set_has_flag();
+  flag_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:SIMPLE.BASEMSG.flag)
+}
+#if LANG_CXX11
+inline void BASEMSG::set_flag(::std::string&& value) {
+  set_has_flag();
+  flag_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:SIMPLE.BASEMSG.flag)
+}
+#endif
+inline void BASEMSG::set_flag(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  set_has_flag();
+  flag_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:SIMPLE.BASEMSG.flag)
+}
+inline void BASEMSG::set_flag(const char* value, size_t size) {
+  set_has_flag();
+  flag_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:SIMPLE.BASEMSG.flag)
+}
+inline ::std::string* BASEMSG::mutable_flag() {
+  set_has_flag();
+  // @@protoc_insertion_point(field_mutable:SIMPLE.BASEMSG.flag)
+  return flag_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* BASEMSG::release_flag() {
+  // @@protoc_insertion_point(field_release:SIMPLE.BASEMSG.flag)
+  clear_has_flag();
+  return flag_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void BASEMSG::set_allocated_flag(::std::string* flag) {
+  if (flag != NULL) {
+    set_has_flag();
+  } else {
+    clear_has_flag();
+  }
+  flag_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), flag);
+  // @@protoc_insertion_point(field_set_allocated:SIMPLE.BASEMSG.flag)
+}
+
+// optional .SIMPLE.STATUS status = 2;
 inline bool BASEMSG::has_status() const {
   return data_case() == kStatus;
 }
@@ -2462,7 +2546,7 @@ inline void BASEMSG::set_allocated_status(::SIMPLE::STATUS* status) {
   // @@protoc_insertion_point(field_set_allocated:SIMPLE.BASEMSG.status)
 }
 
-// optional .SIMPLE.CAPABILITY capability = 2;
+// optional .SIMPLE.CAPABILITY capability = 3;
 inline bool BASEMSG::has_capability() const {
   return data_case() == kCapability;
 }
@@ -2510,7 +2594,7 @@ inline void BASEMSG::set_allocated_capability(::SIMPLE::CAPABILITY* capability) 
   // @@protoc_insertion_point(field_set_allocated:SIMPLE.BASEMSG.capability)
 }
 
-// optional .SIMPLE.IMAGE image = 3;
+// optional .SIMPLE.IMAGE image = 4;
 inline bool BASEMSG::has_image() const {
   return data_case() == kImage;
 }
@@ -2558,7 +2642,7 @@ inline void BASEMSG::set_allocated_image(::SIMPLE::IMAGE* image) {
   // @@protoc_insertion_point(field_set_allocated:SIMPLE.BASEMSG.image)
 }
 
-// optional .SIMPLE.TRANSFORM transform = 4;
+// optional .SIMPLE.TRANSFORM transform = 5;
 inline bool BASEMSG::has_transform() const {
   return data_case() == kTransform;
 }
@@ -2606,7 +2690,7 @@ inline void BASEMSG::set_allocated_transform(::SIMPLE::TRANSFORM* transform) {
   // @@protoc_insertion_point(field_set_allocated:SIMPLE.BASEMSG.transform)
 }
 
-// optional .SIMPLE.POSITION position = 5;
+// optional .SIMPLE.POSITION position = 6;
 inline bool BASEMSG::has_position() const {
   return data_case() == kPosition;
 }
@@ -2654,7 +2738,7 @@ inline void BASEMSG::set_allocated_position(::SIMPLE::POSITION* position) {
   // @@protoc_insertion_point(field_set_allocated:SIMPLE.BASEMSG.position)
 }
 
-// optional .SIMPLE.GENERIC gener = 6;
+// optional .SIMPLE.GENERIC gener = 7;
 inline bool BASEMSG::has_gener() const {
   return data_case() == kGener;
 }
@@ -2702,15 +2786,15 @@ inline void BASEMSG::set_allocated_gener(::SIMPLE::GENERIC* gener) {
   // @@protoc_insertion_point(field_set_allocated:SIMPLE.BASEMSG.gener)
 }
 
-// required .SIMPLE.HEADER header = 7;
+// required .SIMPLE.HEADER header = 8;
 inline bool BASEMSG::has_header() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
+  return (_has_bits_[0] & 0x00000002u) != 0;
 }
 inline void BASEMSG::set_has_header() {
-  _has_bits_[0] |= 0x00000001u;
+  _has_bits_[0] |= 0x00000002u;
 }
 inline void BASEMSG::clear_has_header() {
-  _has_bits_[0] &= ~0x00000001u;
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void BASEMSG::clear_header() {
   if (header_ != NULL) header_->::SIMPLE::HEADER::Clear();
