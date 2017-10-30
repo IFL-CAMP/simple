@@ -7,6 +7,7 @@
 #include "SIMPLE.pb.h"
 #include "Subscriber.h"
 #include <google/protobuf/text_format.h>
+#include "myContext.h"
 
 static int s_interrupted = 0;
 static void s_signal_handler(int signal_value)
@@ -27,14 +28,14 @@ int main(int argc, char* argv[]) {
 	//create context
 	simple::myContext globalContext;
 	
-	simple::Subscriber<SIMPLE::GENERIC> sub("tcp://localhost:5556", globalContext.context);
+	simple::Subscriber<SIMPLE::CAPABILITY> sub("tcp://localhost:5556", *globalContext.context);
 	
 	s_catch_signals();
 	while (true)
 	{
 		try{
 			
-			std::pair<std::unique_ptr<SIMPLE::GENERIC>,std::unique_ptr<SIMPLE::HEADER>> income = sub.subscribe();
+			std::pair<std::unique_ptr<SIMPLE::CAPABILITY>, std::unique_ptr<SIMPLE::HEADER>> income = sub.subscribe();
 			//write the content of the message
 			std::string msgSTR;
 			

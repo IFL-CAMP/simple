@@ -14,6 +14,7 @@ void simple::Publisher::publish(const SIMPLE::BASEMSG& msg){
 	memcpy(ZMQmsg.data(), strMSG.c_str(), strMSG.size());
 	
 	try{
+		
 		socket->send(ZMQmsg);
 	}
 	catch (zmq::error_t& e){
@@ -34,7 +35,7 @@ simple::Publisher::Publisher(std::string port, zmq::context_t& context){
 	
 }
 simple::Publisher::~Publisher(){
-	///Class destructor: Closes the socket and context
+	///Class destructor: Closes the socket
 	socket->close();
 }
 std::unique_ptr<SIMPLE::BASEMSG> simple::Publisher::createTRANSFORM(SIMPLE::HEADER* header, double px, double py, double pz, double r11, double r12, double r13, double r21, double r22, double r23, double r31, double r32, double r33){
@@ -64,7 +65,7 @@ std::unique_ptr<SIMPLE::BASEMSG> simple::Publisher::createTRANSFORM(SIMPLE::HEAD
 	transform->set_allocated_orient(orientation);
 	transform->set_allocated_position(pos);
 
-	std::string* flag = new std::string("TR");
+	std::string* flag = new std::string("TRF");
 
 	msg->set_allocated_flag(flag);
 	msg->set_allocated_header(header);
@@ -95,7 +96,7 @@ std::unique_ptr<SIMPLE::BASEMSG> simple::Publisher::createPOSITION(SIMPLE::HEADE
 	position->set_allocated_orient(quaternion);
 	position->set_allocated_position(pos);
 
-	std::string* flag = new std::string("PO");
+	std::string* flag = new std::string("POS");
 
 	msg->set_allocated_flag(flag);
 	msg->set_allocated_header(header);
@@ -116,7 +117,7 @@ std::unique_ptr<SIMPLE::BASEMSG> simple::Publisher::createSTATUS(SIMPLE::HEADER*
 	stat->set_errormsg(errorMsg);
 	stat->set_errorname(errorName);
 
-	std::string* flag = new std::string("ST");
+	std::string* flag = new std::string("STT");
 
 	msg->set_allocated_flag(flag);
 	msg->set_allocated_header(header);
@@ -136,7 +137,7 @@ std::unique_ptr<SIMPLE::BASEMSG> simple::Publisher::createCAPABILITY(SIMPLE::HEA
 		cap->add_messagename(msgNames.at(i));
 	}
 
-	std::string* flag = new std::string("CP");
+	std::string* flag = new std::string("TYP");
 
 	msg->set_allocated_flag(flag);
 	msg->set_allocated_header(header);
@@ -153,7 +154,7 @@ std::unique_ptr<SIMPLE::BASEMSG> simple::Publisher::createGENERIC_BOOL(SIMPLE::H
 	gen->set_basicbool(data);
 
 
-	std::string* flag = new std::string("GN");
+	std::string* flag = new std::string("GEN");
 
 	msg->set_allocated_flag(flag);
 	msg->set_allocated_header(header);
@@ -169,7 +170,7 @@ std::unique_ptr<SIMPLE::BASEMSG> simple::Publisher::createGENERIC_INT(SIMPLE::HE
 	
 	gen->set_basicint(data);
 
-	std::string* flag = new std::string("GN");
+	std::string* flag = new std::string("GEN");
 
 	msg->set_allocated_flag(flag);
 	msg->set_allocated_header(header);
@@ -185,7 +186,7 @@ std::unique_ptr<SIMPLE::BASEMSG> simple::Publisher::createGENERIC_FLOAT(SIMPLE::
 	SIMPLE::GENERIC* gen = new SIMPLE::GENERIC();
 	gen->set_basicfloat(data);
 
-	std::string* flag = new std::string("GN");
+	std::string* flag = new std::string("GEN");
 
 	msg->set_allocated_flag(flag);
 	msg->set_allocated_header(header);
@@ -201,7 +202,7 @@ std::unique_ptr<SIMPLE::BASEMSG> simple::Publisher::createGENERIC_DOUBLE(SIMPLE:
 	SIMPLE::GENERIC* gen = new SIMPLE::GENERIC();
 	gen->set_basicdouble(data);
 
-	std::string* flag = new std::string("GN");
+	std::string* flag = new std::string("GEN");
 
 	msg->set_allocated_flag(flag);
 	msg->set_allocated_header(header);
@@ -218,7 +219,7 @@ std::unique_ptr<SIMPLE::BASEMSG> simple::Publisher::createGENERIC_STR(SIMPLE::HE
 	gen->set_basicstring(data);
 	
 
-	std::string* flag = new std::string("GN");//always 2 letters
+	std::string* flag = new std::string("GEN");//always 3 letters
 
 	msg->set_allocated_flag(flag);
 	msg->set_allocated_header(header);

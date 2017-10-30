@@ -35,15 +35,6 @@ namespace simple{
 		std::unique_ptr<zmq::socket_t> socket;
 
 	};
-	class myContext{
-	public: 
-		zmq::context_t context;
-		myContext(){ 
-			context = zmq::context_t(1); 
-		};
-		~myContext(){
-			context.close();
-		};
-	};
+	
 
 }

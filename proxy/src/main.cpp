@@ -1,11 +1,9 @@
-#pragma once
-
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <signal.h>
 #include "SIMPLE.pb.h"
-#include "Publisher.h"
+#include "Proxy.h"
 #include "myContext.h"
 
 //handle interruptions
@@ -32,26 +30,7 @@ int main(int argc, char* argv[]) {
 	//start context
 	simple::myContext globalContext;
 
-	simple::Publisher pub("tcp://*:5556", *globalContext.context);
-
-	SIMPLE::HEADER* header = pub.createHEADER(1, "GENERIC", "My PC", 0);
-
-	std::vector<std::string> vec = { "POSITION", "STATUS", "TRANSFORM" };
-	std::unique_ptr<SIMPLE::BASEMSG> baseMSG = pub.createCAPABILITY(header, vec);
-
-	s_catch_signals();
-	while (!s_interrupted)
-	{
-		try{
-			pub.publish(*baseMSG);
-			std::cout << "Message published" << "\n";
-		}
-		catch (zmq::error_t& e){
-			std::cout << "Interruption received" << "\n";
-		}
-	}
-
-	std::cout << "Interruption received, killing server" << "\n";
+	
 
 	//delete all global objects allocated by libprotobuf
 	google::protobuf::ShutdownProtobufLibrary();

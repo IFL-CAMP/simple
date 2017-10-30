@@ -5,7 +5,7 @@
 #include <string>
 #include <signal.h>
 #include "SIMPLE.pb.h"
-#include "Publisher.h"
+#include "Server.h"
 #include "myContext.h"
 
 //handle interruptions
@@ -32,12 +32,10 @@ int main(int argc, char* argv[]) {
 	//start context
 	simple::myContext globalContext;
 
-	simple::Publisher pub("tcp://*:5556", *globalContext.context);
-
 	SIMPLE::HEADER* header = pub.createHEADER(1, "GENERIC", "My PC", 0);
 
 	std::vector<std::string> vec = { "POSITION", "STATUS", "TRANSFORM" };
-	std::unique_ptr<SIMPLE::BASEMSG> baseMSG = pub.createCAPABILITY(header, vec);
+	std::unique_ptr<SIMPLE::BASEMSG> baseMSG = pub.createSTATUS(header, 3,3,"hi","bye");
 
 	s_catch_signals();
 	while (!s_interrupted)
