@@ -9,7 +9,7 @@ include_directories(include include/Protobuf include/ZMQ)
 file(GLOB_RECURSE Headers "*.h" "*.hpp")
 
 
-set(LIB_SRCS src/Protobuf/SIMPLE.pb.cc src/Server.cpp src/Publisher.cpp src/Proxy.cpp src/Client.cpp)
+set(LIB_SRCS src/Protobuf/SIMPLE.pb.cc src/Server.cpp src/Publisher.cpp src/Proxy.cpp src/Client.cpp src/MSGcreator.cpp)
 
 add_library(SIMPLE_Lib STATIC ${LIB_SRCS})
 

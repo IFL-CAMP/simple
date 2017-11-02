@@ -11,24 +11,22 @@ namespace simple {
 	template <typename T>
 	class Subscriber{
 	public:
-
 		Subscriber(std::string port, zmq::context_t& context);
 		~Subscriber();
 		std::pair<std::unique_ptr<T>,std::unique_ptr<SIMPLE::HEADER>> subscribe();
-
-		//STATUS_Params getSTATUS(SIMPLE::BASEMSG& msg);
-		//POSITION_Params getPOSITION(SIMPLE::BASEMSG& msg);
-		//TRANSFORM_Params getTRANSFORM(SIMPLE::BASEMSG& msg);
-
 	private:
 		std::unique_ptr<SIMPLE::BASEMSG> retrieveBaseMsg();
 		void filterSubscription();
 		std::unique_ptr<zmq::socket_t> socket;
 
+		SIMPLE::TRANSFORM::GetTypeName();
 	};
-	
 }
 
+/*template <typename T>
+void simple::Subscriber<T>::filterSubscription() {
+	socker->setsockopt(ZMQ_SUBSCRIBE, T::GetTypeName().c_str(), T::GetTypeName().length());
+}*/
 template <typename T>
 std::unique_ptr<SIMPLE::BASEMSG> simple::Subscriber<T>::retrieveBaseMsg(){
 	///Subscription of ANY type of message. The subscription filter is already set on the instance socket
@@ -49,10 +47,7 @@ std::unique_ptr<SIMPLE::BASEMSG> simple::Subscriber<T>::retrieveBaseMsg(){
 	BASEmsg->ParseFromString(strMessage);//copy data from string to protobuf message
 
 	return BASEmsg;
-
 }
-
-
 
 void simple::Subscriber<SIMPLE::CAPABILITY>::filterSubscription(){
 	///Sets up a filter so the subscription only receives CAPABILITY messages
@@ -73,7 +68,6 @@ void simple::Subscriber<SIMPLE::IMAGE>::filterSubscription(){
 	socket->setsockopt(ZMQ_SUBSCRIBE, filterStr.c_str(), filterStr.length());
 
 }
-
 
 void simple::Subscriber<SIMPLE::TRANSFORM>::filterSubscription(){
 	///Sets up a filter so the subscription only receives TRANSFORM messages
@@ -127,13 +121,13 @@ simple::Subscriber<T>::Subscriber(std::string port, zmq::context_t& context){
 		socket->connect(port);
 	}
 	catch (zmq::error_t& e){
-		std::cout << "could not bind to socket:" << e.what();
+		std::cout << "could not connect to socket:" << e.what();
 	}
 
 	//filter the type of messages this subscriber will receive. Filter type depends on the templated instance
 	filterSubscription();
-
 }
+
 
 template <typename T>
 simple::Subscriber<T>::~Subscriber(){
@@ -141,8 +135,6 @@ simple::Subscriber<T>::~Subscriber(){
 	socket->close();
 
 }
-
-
 
 
 std::pair<std::unique_ptr<SIMPLE::POSITION>, std::unique_ptr<SIMPLE::HEADER>> simple::Subscriber<SIMPLE::POSITION>::subscribe(){
