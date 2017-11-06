@@ -16,17 +16,6 @@
 #include <google/protobuf/wire_format.h>
 // @@protoc_insertion_point(includes)
 namespace SIMPLE {
-class BASEMSGDefaultTypeInternal {
- public:
-  ::google::protobuf::internal::ExplicitlyConstructed<BASEMSG>
-      _instance;
-  const ::SIMPLE::STATUS* status_;
-  const ::SIMPLE::CAPABILITY* capability_;
-  const ::SIMPLE::IMAGE* image_;
-  const ::SIMPLE::TRANSFORM* transform_;
-  const ::SIMPLE::POSITION* position_;
-  const ::SIMPLE::GENERIC* gener_;
-} _BASEMSG_default_instance_;
 class HEADERDefaultTypeInternal {
  public:
   ::google::protobuf::internal::ExplicitlyConstructed<HEADER>
@@ -99,30 +88,6 @@ class GENERICDefaultTypeInternal {
 } _GENERIC_default_instance_;
 }  // namespace SIMPLE
 namespace protobuf_SIMPLE_2eproto {
-void InitDefaultsBASEMSGImpl() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-  ::google::protobuf::internal::InitProtobufDefaults();
-  protobuf_SIMPLE_2eproto::InitDefaultsSTATUS();
-  protobuf_SIMPLE_2eproto::InitDefaultsCAPABILITY();
-  protobuf_SIMPLE_2eproto::InitDefaultsIMAGE();
-  protobuf_SIMPLE_2eproto::InitDefaultsTRANSFORM();
-  protobuf_SIMPLE_2eproto::InitDefaultsPOSITION();
-  protobuf_SIMPLE_2eproto::InitDefaultsGENERIC();
-  protobuf_SIMPLE_2eproto::InitDefaultsHEADER();
-  {
-    void* ptr = &::SIMPLE::_BASEMSG_default_instance_;
-    new (ptr) ::SIMPLE::BASEMSG();
-    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
-  }
-  ::SIMPLE::BASEMSG::InitAsDefaultInstance();
-}
-
-void InitDefaultsBASEMSG() {
-  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
-  ::google::protobuf::GoogleOnceInit(&once, &InitDefaultsBASEMSGImpl);
-}
-
 void InitDefaultsHEADERImpl() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
@@ -144,6 +109,7 @@ void InitDefaultsSTATUSImpl() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::internal::InitProtobufDefaults();
+  protobuf_SIMPLE_2eproto::InitDefaultsHEADER();
   {
     void* ptr = &::SIMPLE::_STATUS_default_instance_;
     new (ptr) ::SIMPLE::STATUS();
@@ -161,6 +127,7 @@ void InitDefaultsCAPABILITYImpl() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::internal::InitProtobufDefaults();
+  protobuf_SIMPLE_2eproto::InitDefaultsHEADER();
   {
     void* ptr = &::SIMPLE::_CAPABILITY_default_instance_;
     new (ptr) ::SIMPLE::CAPABILITY();
@@ -231,6 +198,7 @@ void InitDefaultsPOSITIONImpl() {
   ::google::protobuf::internal::InitProtobufDefaults();
   protobuf_SIMPLE_2eproto::InitDefaultsPos();
   protobuf_SIMPLE_2eproto::InitDefaultsQuaternion();
+  protobuf_SIMPLE_2eproto::InitDefaultsHEADER();
   {
     void* ptr = &::SIMPLE::_POSITION_default_instance_;
     new (ptr) ::SIMPLE::POSITION();
@@ -250,6 +218,7 @@ void InitDefaultsTRANSFORMImpl() {
   ::google::protobuf::internal::InitProtobufDefaults();
   protobuf_SIMPLE_2eproto::InitDefaultsPos();
   protobuf_SIMPLE_2eproto::InitDefaultsOrientation();
+  protobuf_SIMPLE_2eproto::InitDefaultsHEADER();
   {
     void* ptr = &::SIMPLE::_TRANSFORM_default_instance_;
     new (ptr) ::SIMPLE::TRANSFORM();
@@ -323,6 +292,7 @@ void InitDefaultsIMAGEImpl() {
   protobuf_SIMPLE_2eproto::InitDefaultsIMAGE_METRICS();
   protobuf_SIMPLE_2eproto::InitDefaultsIMAGE_SUBVOLUME();
   protobuf_SIMPLE_2eproto::InitDefaultsIMAGE_imageArray();
+  protobuf_SIMPLE_2eproto::InitDefaultsHEADER();
   {
     void* ptr = &::SIMPLE::_IMAGE_default_instance_;
     new (ptr) ::SIMPLE::IMAGE();
@@ -340,6 +310,7 @@ void InitDefaultsGENERICImpl() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::internal::InitProtobufDefaults();
+  protobuf_SIMPLE_2eproto::InitDefaultsHEADER();
   {
     void* ptr = &::SIMPLE::_GENERIC_default_instance_;
     new (ptr) ::SIMPLE::GENERIC();
@@ -353,32 +324,10 @@ void InitDefaultsGENERIC() {
   ::google::protobuf::GoogleOnceInit(&once, &InitDefaultsGENERICImpl);
 }
 
-::google::protobuf::Metadata file_level_metadata[14];
+::google::protobuf::Metadata file_level_metadata[13];
 const ::google::protobuf::EnumDescriptor* file_level_enum_descriptors[2];
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::BASEMSG, _has_bits_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::BASEMSG, _internal_metadata_),
-  ~0u,  // no _extensions_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::BASEMSG, _oneof_case_[0]),
-  ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::BASEMSG, flag_),
-  offsetof(::SIMPLE::BASEMSGDefaultTypeInternal, status_),
-  offsetof(::SIMPLE::BASEMSGDefaultTypeInternal, capability_),
-  offsetof(::SIMPLE::BASEMSGDefaultTypeInternal, image_),
-  offsetof(::SIMPLE::BASEMSGDefaultTypeInternal, transform_),
-  offsetof(::SIMPLE::BASEMSGDefaultTypeInternal, position_),
-  offsetof(::SIMPLE::BASEMSGDefaultTypeInternal, gener_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::BASEMSG, header_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::BASEMSG, data_),
-  0,
-  ~0u,
-  ~0u,
-  ~0u,
-  ~0u,
-  ~0u,
-  ~0u,
-  1,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::HEADER, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::HEADER, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -401,17 +350,21 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::STATUS, subcode_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::STATUS, errorname_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::STATUS, errormsg_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::STATUS, header_),
+  4,
   3,
-  2,
   0,
   1,
+  2,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::CAPABILITY, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::CAPABILITY, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::CAPABILITY, messagename_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::CAPABILITY, header_),
   ~0u,
+  0,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::Pos, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::Pos, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -466,8 +419,10 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   ~0u,  // no _weak_field_map_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::POSITION, position_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::POSITION, orient_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::POSITION, header_),
   0,
   1,
+  2,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::TRANSFORM, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::TRANSFORM, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -475,8 +430,10 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   ~0u,  // no _weak_field_map_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::TRANSFORM, position_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::TRANSFORM, orient_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::TRANSFORM, header_),
   0,
   1,
+  2,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::IMAGE_METRICS, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::IMAGE_METRICS, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -537,10 +494,12 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::IMAGE, subvolume_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::IMAGE, existsubvolume_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::IMAGE, imagedata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::IMAGE, header_),
   0,
   1,
-  3,
+  4,
   2,
+  3,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::GENERIC, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::GENERIC, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -551,32 +510,32 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   offsetof(::SIMPLE::GENERICDefaultTypeInternal, basicfloat_),
   offsetof(::SIMPLE::GENERICDefaultTypeInternal, basicdouble_),
   offsetof(::SIMPLE::GENERICDefaultTypeInternal, basicstring_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::GENERIC, header_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::GENERIC, data_),
   ~0u,
   ~0u,
   ~0u,
   ~0u,
   ~0u,
+  0,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, 14, sizeof(::SIMPLE::BASEMSG)},
-  { 22, 31, sizeof(::SIMPLE::HEADER)},
-  { 35, 44, sizeof(::SIMPLE::STATUS)},
-  { 48, 54, sizeof(::SIMPLE::CAPABILITY)},
-  { 55, 63, sizeof(::SIMPLE::Pos)},
-  { 66, 80, sizeof(::SIMPLE::Orientation)},
-  { 89, 98, sizeof(::SIMPLE::Quaternion)},
-  { 102, 109, sizeof(::SIMPLE::POSITION)},
-  { 111, 118, sizeof(::SIMPLE::TRANSFORM)},
-  { 120, 133, sizeof(::SIMPLE::IMAGE_METRICS)},
-  { 141, 152, sizeof(::SIMPLE::IMAGE_SUBVOLUME)},
-  { 158, 167, sizeof(::SIMPLE::IMAGE_imageArray)},
-  { 171, 180, sizeof(::SIMPLE::IMAGE)},
-  { 184, 195, sizeof(::SIMPLE::GENERIC)},
+  { 0, 9, sizeof(::SIMPLE::HEADER)},
+  { 13, 23, sizeof(::SIMPLE::STATUS)},
+  { 28, 35, sizeof(::SIMPLE::CAPABILITY)},
+  { 37, 45, sizeof(::SIMPLE::Pos)},
+  { 48, 62, sizeof(::SIMPLE::Orientation)},
+  { 71, 80, sizeof(::SIMPLE::Quaternion)},
+  { 84, 92, sizeof(::SIMPLE::POSITION)},
+  { 95, 103, sizeof(::SIMPLE::TRANSFORM)},
+  { 106, 119, sizeof(::SIMPLE::IMAGE_METRICS)},
+  { 127, 138, sizeof(::SIMPLE::IMAGE_SUBVOLUME)},
+  { 144, 153, sizeof(::SIMPLE::IMAGE_imageArray)},
+  { 157, 167, sizeof(::SIMPLE::IMAGE)},
+  { 172, 184, sizeof(::SIMPLE::GENERIC)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
-  reinterpret_cast<const ::google::protobuf::Message*>(&::SIMPLE::_BASEMSG_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::SIMPLE::_HEADER_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::SIMPLE::_STATUS_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::SIMPLE::_CAPABILITY_default_instance_),
@@ -608,59 +567,57 @@ void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) GOOGLE_PROTOBUF_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 14);
+  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 13);
 }
 
 void AddDescriptorsImpl() {
   InitDefaults();
   static const char descriptor[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-      "\n\014SIMPLE.proto\022\006SIMPLE\"\233\002\n\007BASEMSG\022\014\n\004fl"
-      "ag\030\001 \002(\t\022 \n\006status\030\002 \001(\0132\016.SIMPLE.STATUS"
-      "H\000\022(\n\ncapability\030\003 \001(\0132\022.SIMPLE.CAPABILI"
-      "TYH\000\022\036\n\005image\030\004 \001(\0132\r.SIMPLE.IMAGEH\000\022&\n\t"
-      "transform\030\005 \001(\0132\021.SIMPLE.TRANSFORMH\000\022$\n\010"
-      "position\030\006 \001(\0132\020.SIMPLE.POSITIONH\000\022 \n\005ge"
-      "ner\030\007 \001(\0132\017.SIMPLE.GENERICH\000\022\036\n\006header\030\010"
-      " \002(\0132\016.SIMPLE.HEADERB\006\n\004data\"\\\n\006HEADER\022\025"
-      "\n\rVersionNumber\030\001 \001(\005\022\024\n\014dataTypeName\030\002 "
-      "\001(\t\022\022\n\ndeviceName\030\003 \001(\t\022\021\n\ttimeStamp\030\004 \001"
-      "(\001\"R\n\006STATUS\022\022\n\nstatusCode\030\001 \001(\005\022\017\n\007subc"
-      "ode\030\002 \001(\003\022\021\n\terrorName\030\003 \001(\t\022\020\n\010errorMsg"
-      "\030\004 \001(\t\"!\n\nCAPABILITY\022\023\n\013messageName\030\001 \003("
-      "\t\")\n\003Pos\022\n\n\002px\030\001 \001(\001\022\n\n\002py\030\002 \001(\001\022\n\n\002pz\030\003"
-      " \001(\001\"\202\001\n\013Orientation\022\013\n\003r11\030\001 \001(\001\022\013\n\003r12"
-      "\030\002 \001(\001\022\013\n\003r13\030\003 \001(\001\022\013\n\003r21\030\004 \001(\001\022\013\n\003r22\030"
-      "\005 \001(\001\022\013\n\003r23\030\006 \001(\001\022\013\n\003r31\030\007 \001(\001\022\013\n\003r32\030\010"
-      " \001(\001\022\013\n\003r33\030\t \001(\001\"<\n\nQuaternion\022\n\n\002qi\030\001 "
-      "\001(\001\022\n\n\002qj\030\002 \001(\001\022\n\n\002qk\030\003 \001(\001\022\n\n\002qr\030\004 \001(\001\""
-      "M\n\010POSITION\022\035\n\010position\030\001 \001(\0132\013.SIMPLE.P"
-      "os\022\"\n\006orient\030\002 \001(\0132\022.SIMPLE.Quaternion\"O"
-      "\n\tTRANSFORM\022\035\n\010position\030\001 \001(\0132\013.SIMPLE.P"
-      "os\022#\n\006orient\030\002 \001(\0132\023.SIMPLE.Orientation\""
-      "\275\005\n\005IMAGE\022%\n\006metric\030\001 \001(\0132\025.SIMPLE.IMAGE"
-      ".METRICS\022*\n\tsubvolume\030\002 \001(\0132\027.SIMPLE.IMA"
-      "GE.SUBVOLUME\022\026\n\016existSUBVOLUME\030\003 \001(\010\022+\n\t"
-      "imageData\030\004 \001(\0132\030.SIMPLE.IMAGE.imageArra"
-      "y\032\267\002\n\007METRICS\022\021\n\tvoxelSize\030\001 \001(\001\022*\n\003COS\030"
-      "\002 \001(\0162\035.SIMPLE.IMAGE.METRICS.COStype\022\035\n\010"
-      "position\030\003 \001(\0132\013.SIMPLE.Pos\022#\n\006orient\030\004 "
-      "\001(\0132\023.SIMPLE.Orientation\022\023\n\013matrixSizeX\030"
-      "\005 \001(\005\022\023\n\013matrixSizeY\030\006 \001(\005\022\023\n\013matrixSize"
-      "Z\030\007 \001(\005\022,\n\004type\030\010 \001(\0162\036.SIMPLE.IMAGE.MET"
-      "RICS.dataType\"\033\n\007COStype\022\007\n\003LPS\020\000\022\007\n\003RAS"
-      "\020\001\"\037\n\010dataType\022\007\n\003RGB\020\000\022\n\n\006SCALAR\020\001\032\217\001\n\t"
-      "SUBVOLUME\022\027\n\017cornerVoxelIdxX\030\001 \001(\005\022\027\n\017co"
-      "rnerVoxelIdxY\030\002 \001(\005\022\027\n\017cornerVoxelIdxZ\030\003"
-      " \001(\005\022\021\n\tnumVoxelX\030\004 \001(\005\022\021\n\tnumVoxelY\030\005 \001"
-      "(\005\022\021\n\tnumVoxelZ\030\006 \001(\005\032P\n\nimageArray\022\017\n\007d"
-      "ataRed\030\001 \001(\014\022\021\n\tdataGreen\030\002 \001(\014\022\020\n\010dataB"
-      "lue\030\003 \001(\014\022\014\n\004data\030\004 \001(\014\"~\n\007GENERIC\022\023\n\tba"
-      "sicBool\030\001 \001(\010H\000\022\022\n\010basicInt\030\002 \001(\005H\000\022\024\n\nb"
-      "asicFloat\030\003 \001(\002H\000\022\025\n\013basicDouble\030\004 \001(\001H\000"
-      "\022\025\n\013basicString\030\005 \001(\tH\000B\006\n\004data"
+      "\n\014SIMPLE.proto\022\006SIMPLE\"\\\n\006HEADER\022\025\n\rVers"
+      "ionNumber\030\001 \001(\005\022\024\n\014dataTypeName\030\002 \001(\t\022\022\n"
+      "\ndeviceName\030\003 \001(\t\022\021\n\ttimeStamp\030\004 \001(\001\"r\n\006"
+      "STATUS\022\022\n\nstatusCode\030\001 \001(\005\022\017\n\007subcode\030\002 "
+      "\001(\003\022\021\n\terrorName\030\003 \001(\t\022\020\n\010errorMsg\030\004 \001(\t"
+      "\022\036\n\006header\030\005 \002(\0132\016.SIMPLE.HEADER\"A\n\nCAPA"
+      "BILITY\022\023\n\013messageName\030\001 \003(\t\022\036\n\006header\030\002 "
+      "\002(\0132\016.SIMPLE.HEADER\")\n\003Pos\022\n\n\002px\030\001 \001(\001\022\n"
+      "\n\002py\030\002 \001(\001\022\n\n\002pz\030\003 \001(\001\"\202\001\n\013Orientation\022\013"
+      "\n\003r11\030\001 \001(\001\022\013\n\003r12\030\002 \001(\001\022\013\n\003r13\030\003 \001(\001\022\013\n"
+      "\003r21\030\004 \001(\001\022\013\n\003r22\030\005 \001(\001\022\013\n\003r23\030\006 \001(\001\022\013\n\003"
+      "r31\030\007 \001(\001\022\013\n\003r32\030\010 \001(\001\022\013\n\003r33\030\t \001(\001\"<\n\nQ"
+      "uaternion\022\n\n\002qi\030\001 \001(\001\022\n\n\002qj\030\002 \001(\001\022\n\n\002qk\030"
+      "\003 \001(\001\022\n\n\002qr\030\004 \001(\001\"m\n\010POSITION\022\035\n\010positio"
+      "n\030\001 \001(\0132\013.SIMPLE.Pos\022\"\n\006orient\030\002 \001(\0132\022.S"
+      "IMPLE.Quaternion\022\036\n\006header\030\003 \002(\0132\016.SIMPL"
+      "E.HEADER\"o\n\tTRANSFORM\022\035\n\010position\030\001 \001(\0132"
+      "\013.SIMPLE.Pos\022#\n\006orient\030\002 \001(\0132\023.SIMPLE.Or"
+      "ientation\022\036\n\006header\030\003 \002(\0132\016.SIMPLE.HEADE"
+      "R\"\335\005\n\005IMAGE\022%\n\006metric\030\001 \001(\0132\025.SIMPLE.IMA"
+      "GE.METRICS\022*\n\tsubvolume\030\002 \001(\0132\027.SIMPLE.I"
+      "MAGE.SUBVOLUME\022\026\n\016existSUBVOLUME\030\003 \001(\010\022+"
+      "\n\timageData\030\004 \001(\0132\030.SIMPLE.IMAGE.imageAr"
+      "ray\022\036\n\006header\030\005 \002(\0132\016.SIMPLE.HEADER\032\267\002\n\007"
+      "METRICS\022\021\n\tvoxelSize\030\001 \001(\001\022*\n\003COS\030\002 \001(\0162"
+      "\035.SIMPLE.IMAGE.METRICS.COStype\022\035\n\010positi"
+      "on\030\003 \001(\0132\013.SIMPLE.Pos\022#\n\006orient\030\004 \001(\0132\023."
+      "SIMPLE.Orientation\022\023\n\013matrixSizeX\030\005 \001(\005\022"
+      "\023\n\013matrixSizeY\030\006 \001(\005\022\023\n\013matrixSizeZ\030\007 \001("
+      "\005\022,\n\004type\030\010 \001(\0162\036.SIMPLE.IMAGE.METRICS.d"
+      "ataType\"\033\n\007COStype\022\007\n\003LPS\020\000\022\007\n\003RAS\020\001\"\037\n\010"
+      "dataType\022\007\n\003RGB\020\000\022\n\n\006SCALAR\020\001\032\217\001\n\tSUBVOL"
+      "UME\022\027\n\017cornerVoxelIdxX\030\001 \001(\005\022\027\n\017cornerVo"
+      "xelIdxY\030\002 \001(\005\022\027\n\017cornerVoxelIdxZ\030\003 \001(\005\022\021"
+      "\n\tnumVoxelX\030\004 \001(\005\022\021\n\tnumVoxelY\030\005 \001(\005\022\021\n\t"
+      "numVoxelZ\030\006 \001(\005\032P\n\nimageArray\022\017\n\007dataRed"
+      "\030\001 \001(\014\022\021\n\tdataGreen\030\002 \001(\014\022\020\n\010dataBlue\030\003 "
+      "\001(\014\022\014\n\004data\030\004 \001(\014\"\236\001\n\007GENERIC\022\023\n\tbasicBo"
+      "ol\030\001 \001(\010H\000\022\022\n\010basicInt\030\002 \001(\005H\000\022\024\n\nbasicF"
+      "loat\030\003 \001(\002H\000\022\025\n\013basicDouble\030\004 \001(\001H\000\022\025\n\013b"
+      "asicString\030\005 \001(\tH\000\022\036\n\006header\030\006 \002(\0132\016.SIM"
+      "PLE.HEADERB\006\n\004data"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 1751);
+      descriptor, 1658);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "SIMPLE.proto", &protobuf_RegisterTypes);
 }
@@ -719,645 +676,6 @@ const IMAGE_METRICS_dataType IMAGE_METRICS::dataType_MIN;
 const IMAGE_METRICS_dataType IMAGE_METRICS::dataType_MAX;
 const int IMAGE_METRICS::dataType_ARRAYSIZE;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
-
-// ===================================================================
-
-void BASEMSG::InitAsDefaultInstance() {
-  ::SIMPLE::_BASEMSG_default_instance_.status_ = const_cast< ::SIMPLE::STATUS*>(
-      ::SIMPLE::STATUS::internal_default_instance());
-  ::SIMPLE::_BASEMSG_default_instance_.capability_ = const_cast< ::SIMPLE::CAPABILITY*>(
-      ::SIMPLE::CAPABILITY::internal_default_instance());
-  ::SIMPLE::_BASEMSG_default_instance_.image_ = const_cast< ::SIMPLE::IMAGE*>(
-      ::SIMPLE::IMAGE::internal_default_instance());
-  ::SIMPLE::_BASEMSG_default_instance_.transform_ = const_cast< ::SIMPLE::TRANSFORM*>(
-      ::SIMPLE::TRANSFORM::internal_default_instance());
-  ::SIMPLE::_BASEMSG_default_instance_.position_ = const_cast< ::SIMPLE::POSITION*>(
-      ::SIMPLE::POSITION::internal_default_instance());
-  ::SIMPLE::_BASEMSG_default_instance_.gener_ = const_cast< ::SIMPLE::GENERIC*>(
-      ::SIMPLE::GENERIC::internal_default_instance());
-  ::SIMPLE::_BASEMSG_default_instance_._instance.get_mutable()->header_ = const_cast< ::SIMPLE::HEADER*>(
-      ::SIMPLE::HEADER::internal_default_instance());
-}
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int BASEMSG::kFlagFieldNumber;
-const int BASEMSG::kStatusFieldNumber;
-const int BASEMSG::kCapabilityFieldNumber;
-const int BASEMSG::kImageFieldNumber;
-const int BASEMSG::kTransformFieldNumber;
-const int BASEMSG::kPositionFieldNumber;
-const int BASEMSG::kGenerFieldNumber;
-const int BASEMSG::kHeaderFieldNumber;
-#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
-
-BASEMSG::BASEMSG()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    ::protobuf_SIMPLE_2eproto::InitDefaultsBASEMSG();
-  }
-  SharedCtor();
-  // @@protoc_insertion_point(constructor:SIMPLE.BASEMSG)
-}
-BASEMSG::BASEMSG(const BASEMSG& from)
-  : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _has_bits_(from._has_bits_),
-      _cached_size_(0) {
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  flag_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (from.has_flag()) {
-    flag_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.flag_);
-  }
-  if (from.has_header()) {
-    header_ = new ::SIMPLE::HEADER(*from.header_);
-  } else {
-    header_ = NULL;
-  }
-  clear_has_data();
-  switch (from.data_case()) {
-    case kStatus: {
-      mutable_status()->::SIMPLE::STATUS::MergeFrom(from.status());
-      break;
-    }
-    case kCapability: {
-      mutable_capability()->::SIMPLE::CAPABILITY::MergeFrom(from.capability());
-      break;
-    }
-    case kImage: {
-      mutable_image()->::SIMPLE::IMAGE::MergeFrom(from.image());
-      break;
-    }
-    case kTransform: {
-      mutable_transform()->::SIMPLE::TRANSFORM::MergeFrom(from.transform());
-      break;
-    }
-    case kPosition: {
-      mutable_position()->::SIMPLE::POSITION::MergeFrom(from.position());
-      break;
-    }
-    case kGener: {
-      mutable_gener()->::SIMPLE::GENERIC::MergeFrom(from.gener());
-      break;
-    }
-    case DATA_NOT_SET: {
-      break;
-    }
-  }
-  // @@protoc_insertion_point(copy_constructor:SIMPLE.BASEMSG)
-}
-
-void BASEMSG::SharedCtor() {
-  _cached_size_ = 0;
-  flag_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  header_ = NULL;
-  clear_has_data();
-}
-
-BASEMSG::~BASEMSG() {
-  // @@protoc_insertion_point(destructor:SIMPLE.BASEMSG)
-  SharedDtor();
-}
-
-void BASEMSG::SharedDtor() {
-  flag_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (this != internal_default_instance()) delete header_;
-  if (has_data()) {
-    clear_data();
-  }
-}
-
-void BASEMSG::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-}
-const ::google::protobuf::Descriptor* BASEMSG::descriptor() {
-  ::protobuf_SIMPLE_2eproto::protobuf_AssignDescriptorsOnce();
-  return ::protobuf_SIMPLE_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
-}
-
-const BASEMSG& BASEMSG::default_instance() {
-  ::protobuf_SIMPLE_2eproto::InitDefaultsBASEMSG();
-  return *internal_default_instance();
-}
-
-BASEMSG* BASEMSG::New(::google::protobuf::Arena* arena) const {
-  BASEMSG* n = new BASEMSG;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
-
-void BASEMSG::clear_data() {
-// @@protoc_insertion_point(one_of_clear_start:SIMPLE.BASEMSG)
-  switch (data_case()) {
-    case kStatus: {
-      delete data_.status_;
-      break;
-    }
-    case kCapability: {
-      delete data_.capability_;
-      break;
-    }
-    case kImage: {
-      delete data_.image_;
-      break;
-    }
-    case kTransform: {
-      delete data_.transform_;
-      break;
-    }
-    case kPosition: {
-      delete data_.position_;
-      break;
-    }
-    case kGener: {
-      delete data_.gener_;
-      break;
-    }
-    case DATA_NOT_SET: {
-      break;
-    }
-  }
-  _oneof_case_[0] = DATA_NOT_SET;
-}
-
-
-void BASEMSG::Clear() {
-// @@protoc_insertion_point(message_clear_start:SIMPLE.BASEMSG)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 3u) {
-    if (cached_has_bits & 0x00000001u) {
-      GOOGLE_DCHECK(!flag_.IsDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited()));
-      (*flag_.UnsafeRawStringPointer())->clear();
-    }
-    if (cached_has_bits & 0x00000002u) {
-      GOOGLE_DCHECK(header_ != NULL);
-      header_->::SIMPLE::HEADER::Clear();
-    }
-  }
-  clear_data();
-  _has_bits_.Clear();
-  _internal_metadata_.Clear();
-}
-
-bool BASEMSG::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:SIMPLE.BASEMSG)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required string flag = 1;
-      case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_flag()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-            this->flag().data(), static_cast<int>(this->flag().length()),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "SIMPLE.BASEMSG.flag");
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // optional .SIMPLE.STATUS status = 2;
-      case 2: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_status()));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // optional .SIMPLE.CAPABILITY capability = 3;
-      case 3: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_capability()));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // optional .SIMPLE.IMAGE image = 4;
-      case 4: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(34u /* 34 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_image()));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // optional .SIMPLE.TRANSFORM transform = 5;
-      case 5: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(42u /* 42 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_transform()));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // optional .SIMPLE.POSITION position = 6;
-      case 6: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(50u /* 50 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_position()));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // optional .SIMPLE.GENERIC gener = 7;
-      case 7: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(58u /* 58 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_gener()));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // required .SIMPLE.HEADER header = 8;
-      case 8: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(66u /* 66 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_header()));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, _internal_metadata_.mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:SIMPLE.BASEMSG)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:SIMPLE.BASEMSG)
-  return false;
-#undef DO_
-}
-
-void BASEMSG::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:SIMPLE.BASEMSG)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  cached_has_bits = _has_bits_[0];
-  // required string flag = 1;
-  if (cached_has_bits & 0x00000001u) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->flag().data(), static_cast<int>(this->flag().length()),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "SIMPLE.BASEMSG.flag");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      1, this->flag(), output);
-  }
-
-  switch (data_case()) {
-    case kStatus:
-      ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-        2, *data_.status_, output);
-      break;
-    case kCapability:
-      ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-        3, *data_.capability_, output);
-      break;
-    case kImage:
-      ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-        4, *data_.image_, output);
-      break;
-    case kTransform:
-      ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-        5, *data_.transform_, output);
-      break;
-    case kPosition:
-      ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-        6, *data_.position_, output);
-      break;
-    case kGener:
-      ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-        7, *data_.gener_, output);
-      break;
-    default: ;
-  }
-  // required .SIMPLE.HEADER header = 8;
-  if (cached_has_bits & 0x00000002u) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      8, *this->header_, output);
-  }
-
-  if (_internal_metadata_.have_unknown_fields()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        _internal_metadata_.unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:SIMPLE.BASEMSG)
-}
-
-::google::protobuf::uint8* BASEMSG::InternalSerializeWithCachedSizesToArray(
-    bool deterministic, ::google::protobuf::uint8* target) const {
-  (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:SIMPLE.BASEMSG)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  cached_has_bits = _has_bits_[0];
-  // required string flag = 1;
-  if (cached_has_bits & 0x00000001u) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->flag().data(), static_cast<int>(this->flag().length()),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "SIMPLE.BASEMSG.flag");
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        1, this->flag(), target);
-  }
-
-  switch (data_case()) {
-    case kStatus:
-      target = ::google::protobuf::internal::WireFormatLite::
-        InternalWriteMessageNoVirtualToArray(
-          2, *data_.status_, deterministic, target);
-      break;
-    case kCapability:
-      target = ::google::protobuf::internal::WireFormatLite::
-        InternalWriteMessageNoVirtualToArray(
-          3, *data_.capability_, deterministic, target);
-      break;
-    case kImage:
-      target = ::google::protobuf::internal::WireFormatLite::
-        InternalWriteMessageNoVirtualToArray(
-          4, *data_.image_, deterministic, target);
-      break;
-    case kTransform:
-      target = ::google::protobuf::internal::WireFormatLite::
-        InternalWriteMessageNoVirtualToArray(
-          5, *data_.transform_, deterministic, target);
-      break;
-    case kPosition:
-      target = ::google::protobuf::internal::WireFormatLite::
-        InternalWriteMessageNoVirtualToArray(
-          6, *data_.position_, deterministic, target);
-      break;
-    case kGener:
-      target = ::google::protobuf::internal::WireFormatLite::
-        InternalWriteMessageNoVirtualToArray(
-          7, *data_.gener_, deterministic, target);
-      break;
-    default: ;
-  }
-  // required .SIMPLE.HEADER header = 8;
-  if (cached_has_bits & 0x00000002u) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      InternalWriteMessageNoVirtualToArray(
-        8, *this->header_, deterministic, target);
-  }
-
-  if (_internal_metadata_.have_unknown_fields()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:SIMPLE.BASEMSG)
-  return target;
-}
-
-size_t BASEMSG::RequiredFieldsByteSizeFallback() const {
-// @@protoc_insertion_point(required_fields_byte_size_fallback_start:SIMPLE.BASEMSG)
-  size_t total_size = 0;
-
-  if (has_flag()) {
-    // required string flag = 1;
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::StringSize(
-        this->flag());
-  }
-
-  if (has_header()) {
-    // required .SIMPLE.HEADER header = 8;
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        *this->header_);
-  }
-
-  return total_size;
-}
-size_t BASEMSG::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:SIMPLE.BASEMSG)
-  size_t total_size = 0;
-
-  if (_internal_metadata_.have_unknown_fields()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        _internal_metadata_.unknown_fields());
-  }
-  if (((_has_bits_[0] & 0x00000003) ^ 0x00000003) == 0) {  // All required fields are present.
-    // required string flag = 1;
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::StringSize(
-        this->flag());
-
-    // required .SIMPLE.HEADER header = 8;
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        *this->header_);
-
-  } else {
-    total_size += RequiredFieldsByteSizeFallback();
-  }
-  switch (data_case()) {
-    // optional .SIMPLE.STATUS status = 2;
-    case kStatus: {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          *data_.status_);
-      break;
-    }
-    // optional .SIMPLE.CAPABILITY capability = 3;
-    case kCapability: {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          *data_.capability_);
-      break;
-    }
-    // optional .SIMPLE.IMAGE image = 4;
-    case kImage: {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          *data_.image_);
-      break;
-    }
-    // optional .SIMPLE.TRANSFORM transform = 5;
-    case kTransform: {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          *data_.transform_);
-      break;
-    }
-    // optional .SIMPLE.POSITION position = 6;
-    case kPosition: {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          *data_.position_);
-      break;
-    }
-    // optional .SIMPLE.GENERIC gener = 7;
-    case kGener: {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          *data_.gener_);
-      break;
-    }
-    case DATA_NOT_SET: {
-      break;
-    }
-  }
-  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void BASEMSG::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:SIMPLE.BASEMSG)
-  GOOGLE_DCHECK_NE(&from, this);
-  const BASEMSG* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const BASEMSG>(
-          &from);
-  if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:SIMPLE.BASEMSG)
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:SIMPLE.BASEMSG)
-    MergeFrom(*source);
-  }
-}
-
-void BASEMSG::MergeFrom(const BASEMSG& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:SIMPLE.BASEMSG)
-  GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 3u) {
-    if (cached_has_bits & 0x00000001u) {
-      set_has_flag();
-      flag_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.flag_);
-    }
-    if (cached_has_bits & 0x00000002u) {
-      mutable_header()->::SIMPLE::HEADER::MergeFrom(from.header());
-    }
-  }
-  switch (from.data_case()) {
-    case kStatus: {
-      mutable_status()->::SIMPLE::STATUS::MergeFrom(from.status());
-      break;
-    }
-    case kCapability: {
-      mutable_capability()->::SIMPLE::CAPABILITY::MergeFrom(from.capability());
-      break;
-    }
-    case kImage: {
-      mutable_image()->::SIMPLE::IMAGE::MergeFrom(from.image());
-      break;
-    }
-    case kTransform: {
-      mutable_transform()->::SIMPLE::TRANSFORM::MergeFrom(from.transform());
-      break;
-    }
-    case kPosition: {
-      mutable_position()->::SIMPLE::POSITION::MergeFrom(from.position());
-      break;
-    }
-    case kGener: {
-      mutable_gener()->::SIMPLE::GENERIC::MergeFrom(from.gener());
-      break;
-    }
-    case DATA_NOT_SET: {
-      break;
-    }
-  }
-}
-
-void BASEMSG::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:SIMPLE.BASEMSG)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void BASEMSG::CopyFrom(const BASEMSG& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:SIMPLE.BASEMSG)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool BASEMSG::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
-  return true;
-}
-
-void BASEMSG::Swap(BASEMSG* other) {
-  if (other == this) return;
-  InternalSwap(other);
-}
-void BASEMSG::InternalSwap(BASEMSG* other) {
-  using std::swap;
-  flag_.Swap(&other->flag_);
-  swap(header_, other->header_);
-  swap(data_, other->data_);
-  swap(_oneof_case_[0], other->_oneof_case_[0]);
-  swap(_has_bits_[0], other->_has_bits_[0]);
-  _internal_metadata_.Swap(&other->_internal_metadata_);
-  swap(_cached_size_, other->_cached_size_);
-}
-
-::google::protobuf::Metadata BASEMSG::GetMetadata() const {
-  protobuf_SIMPLE_2eproto::protobuf_AssignDescriptorsOnce();
-  return ::protobuf_SIMPLE_2eproto::file_level_metadata[kIndexInFileMessages];
-}
-
 
 // ===================================================================
 
@@ -1776,12 +1094,15 @@ void HEADER::InternalSwap(HEADER* other) {
 // ===================================================================
 
 void STATUS::InitAsDefaultInstance() {
+  ::SIMPLE::_STATUS_default_instance_._instance.get_mutable()->header_ = const_cast< ::SIMPLE::HEADER*>(
+      ::SIMPLE::HEADER::internal_default_instance());
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int STATUS::kStatusCodeFieldNumber;
 const int STATUS::kSubcodeFieldNumber;
 const int STATUS::kErrorNameFieldNumber;
 const int STATUS::kErrorMsgFieldNumber;
+const int STATUS::kHeaderFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 STATUS::STATUS()
@@ -1806,6 +1127,11 @@ STATUS::STATUS(const STATUS& from)
   if (from.has_errormsg()) {
     errormsg_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.errormsg_);
   }
+  if (from.has_header()) {
+    header_ = new ::SIMPLE::HEADER(*from.header_);
+  } else {
+    header_ = NULL;
+  }
   ::memcpy(&subcode_, &from.subcode_,
     static_cast<size_t>(reinterpret_cast<char*>(&statuscode_) -
     reinterpret_cast<char*>(&subcode_)) + sizeof(statuscode_));
@@ -1816,9 +1142,9 @@ void STATUS::SharedCtor() {
   _cached_size_ = 0;
   errorname_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   errormsg_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  ::memset(&subcode_, 0, static_cast<size_t>(
+  ::memset(&header_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&statuscode_) -
-      reinterpret_cast<char*>(&subcode_)) + sizeof(statuscode_));
+      reinterpret_cast<char*>(&header_)) + sizeof(statuscode_));
 }
 
 STATUS::~STATUS() {
@@ -1829,6 +1155,7 @@ STATUS::~STATUS() {
 void STATUS::SharedDtor() {
   errorname_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   errormsg_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (this != internal_default_instance()) delete header_;
 }
 
 void STATUS::SetCachedSize(int size) const {
@@ -1861,7 +1188,7 @@ void STATUS::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 3u) {
+  if (cached_has_bits & 7u) {
     if (cached_has_bits & 0x00000001u) {
       GOOGLE_DCHECK(!errorname_.IsDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited()));
       (*errorname_.UnsafeRawStringPointer())->clear();
@@ -1870,8 +1197,12 @@ void STATUS::Clear() {
       GOOGLE_DCHECK(!errormsg_.IsDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited()));
       (*errormsg_.UnsafeRawStringPointer())->clear();
     }
+    if (cached_has_bits & 0x00000004u) {
+      GOOGLE_DCHECK(header_ != NULL);
+      header_->::SIMPLE::HEADER::Clear();
+    }
   }
-  if (cached_has_bits & 12u) {
+  if (cached_has_bits & 24u) {
     ::memset(&subcode_, 0, static_cast<size_t>(
         reinterpret_cast<char*>(&statuscode_) -
         reinterpret_cast<char*>(&subcode_)) + sizeof(statuscode_));
@@ -1950,6 +1281,18 @@ bool STATUS::MergePartialFromCodedStream(
         break;
       }
 
+      // required .SIMPLE.HEADER header = 5;
+      case 5: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(42u /* 42 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_header()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -1978,12 +1321,12 @@ void STATUS::SerializeWithCachedSizes(
 
   cached_has_bits = _has_bits_[0];
   // optional int32 statusCode = 1;
-  if (cached_has_bits & 0x00000008u) {
+  if (cached_has_bits & 0x00000010u) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->statuscode(), output);
   }
 
   // optional int64 subcode = 2;
-  if (cached_has_bits & 0x00000004u) {
+  if (cached_has_bits & 0x00000008u) {
     ::google::protobuf::internal::WireFormatLite::WriteInt64(2, this->subcode(), output);
   }
 
@@ -2007,6 +1350,12 @@ void STATUS::SerializeWithCachedSizes(
       4, this->errormsg(), output);
   }
 
+  // required .SIMPLE.HEADER header = 5;
+  if (cached_has_bits & 0x00000004u) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      5, *this->header_, output);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
@@ -2023,12 +1372,12 @@ void STATUS::SerializeWithCachedSizes(
 
   cached_has_bits = _has_bits_[0];
   // optional int32 statusCode = 1;
-  if (cached_has_bits & 0x00000008u) {
+  if (cached_has_bits & 0x00000010u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->statuscode(), target);
   }
 
   // optional int64 subcode = 2;
-  if (cached_has_bits & 0x00000004u) {
+  if (cached_has_bits & 0x00000008u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(2, this->subcode(), target);
   }
 
@@ -2054,6 +1403,13 @@ void STATUS::SerializeWithCachedSizes(
         4, this->errormsg(), target);
   }
 
+  // required .SIMPLE.HEADER header = 5;
+  if (cached_has_bits & 0x00000004u) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageNoVirtualToArray(
+        5, *this->header_, deterministic, target);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
@@ -2071,7 +1427,13 @@ size_t STATUS::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
-  if (_has_bits_[0 / 32] & 15u) {
+  // required .SIMPLE.HEADER header = 5;
+  if (has_header()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        *this->header_);
+  }
+  if (_has_bits_[0 / 32] & 3u) {
     // optional string errorName = 3;
     if (has_errorname()) {
       total_size += 1 +
@@ -2086,6 +1448,8 @@ size_t STATUS::ByteSizeLong() const {
           this->errormsg());
     }
 
+  }
+  if (_has_bits_[0 / 32] & 24u) {
     // optional int64 subcode = 2;
     if (has_subcode()) {
       total_size += 1 +
@@ -2131,7 +1495,7 @@ void STATUS::MergeFrom(const STATUS& from) {
   (void) cached_has_bits;
 
   cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 15u) {
+  if (cached_has_bits & 31u) {
     if (cached_has_bits & 0x00000001u) {
       set_has_errorname();
       errorname_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.errorname_);
@@ -2141,9 +1505,12 @@ void STATUS::MergeFrom(const STATUS& from) {
       errormsg_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.errormsg_);
     }
     if (cached_has_bits & 0x00000004u) {
-      subcode_ = from.subcode_;
+      mutable_header()->::SIMPLE::HEADER::MergeFrom(from.header());
     }
     if (cached_has_bits & 0x00000008u) {
+      subcode_ = from.subcode_;
+    }
+    if (cached_has_bits & 0x00000010u) {
       statuscode_ = from.statuscode_;
     }
     _has_bits_[0] |= cached_has_bits;
@@ -2165,6 +1532,7 @@ void STATUS::CopyFrom(const STATUS& from) {
 }
 
 bool STATUS::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000004) != 0x00000004) return false;
   return true;
 }
 
@@ -2176,6 +1544,7 @@ void STATUS::InternalSwap(STATUS* other) {
   using std::swap;
   errorname_.Swap(&other->errorname_);
   errormsg_.Swap(&other->errormsg_);
+  swap(header_, other->header_);
   swap(subcode_, other->subcode_);
   swap(statuscode_, other->statuscode_);
   swap(_has_bits_[0], other->_has_bits_[0]);
@@ -2192,9 +1561,12 @@ void STATUS::InternalSwap(STATUS* other) {
 // ===================================================================
 
 void CAPABILITY::InitAsDefaultInstance() {
+  ::SIMPLE::_CAPABILITY_default_instance_._instance.get_mutable()->header_ = const_cast< ::SIMPLE::HEADER*>(
+      ::SIMPLE::HEADER::internal_default_instance());
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int CAPABILITY::kMessageNameFieldNumber;
+const int CAPABILITY::kHeaderFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 CAPABILITY::CAPABILITY()
@@ -2212,11 +1584,17 @@ CAPABILITY::CAPABILITY(const CAPABILITY& from)
       _cached_size_(0),
       messagename_(from.messagename_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
+  if (from.has_header()) {
+    header_ = new ::SIMPLE::HEADER(*from.header_);
+  } else {
+    header_ = NULL;
+  }
   // @@protoc_insertion_point(copy_constructor:SIMPLE.CAPABILITY)
 }
 
 void CAPABILITY::SharedCtor() {
   _cached_size_ = 0;
+  header_ = NULL;
 }
 
 CAPABILITY::~CAPABILITY() {
@@ -2225,6 +1603,7 @@ CAPABILITY::~CAPABILITY() {
 }
 
 void CAPABILITY::SharedDtor() {
+  if (this != internal_default_instance()) delete header_;
 }
 
 void CAPABILITY::SetCachedSize(int size) const {
@@ -2257,6 +1636,10 @@ void CAPABILITY::Clear() {
   (void) cached_has_bits;
 
   messagename_.Clear();
+  if (has_header()) {
+    GOOGLE_DCHECK(header_ != NULL);
+    header_->::SIMPLE::HEADER::Clear();
+  }
   _has_bits_.Clear();
   _internal_metadata_.Clear();
 }
@@ -2282,6 +1665,18 @@ bool CAPABILITY::MergePartialFromCodedStream(
             static_cast<int>(this->messagename(this->messagename_size() - 1).length()),
             ::google::protobuf::internal::WireFormat::PARSE,
             "SIMPLE.CAPABILITY.messageName");
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // required .SIMPLE.HEADER header = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_header()));
         } else {
           goto handle_unusual;
         }
@@ -2324,6 +1719,13 @@ void CAPABILITY::SerializeWithCachedSizes(
       1, this->messagename(i), output);
   }
 
+  cached_has_bits = _has_bits_[0];
+  // required .SIMPLE.HEADER header = 2;
+  if (cached_has_bits & 0x00000001u) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      2, *this->header_, output);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
@@ -2348,6 +1750,14 @@ void CAPABILITY::SerializeWithCachedSizes(
       WriteStringToArray(1, this->messagename(i), target);
   }
 
+  cached_has_bits = _has_bits_[0];
+  // required .SIMPLE.HEADER header = 2;
+  if (cached_has_bits & 0x00000001u) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageNoVirtualToArray(
+        2, *this->header_, deterministic, target);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
@@ -2364,6 +1774,12 @@ size_t CAPABILITY::ByteSizeLong() const {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
+  }
+  // required .SIMPLE.HEADER header = 2;
+  if (has_header()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        *this->header_);
   }
   // repeated string messageName = 1;
   total_size += 1 *
@@ -2403,6 +1819,9 @@ void CAPABILITY::MergeFrom(const CAPABILITY& from) {
   (void) cached_has_bits;
 
   messagename_.MergeFrom(from.messagename_);
+  if (from.has_header()) {
+    mutable_header()->::SIMPLE::HEADER::MergeFrom(from.header());
+  }
 }
 
 void CAPABILITY::CopyFrom(const ::google::protobuf::Message& from) {
@@ -2420,6 +1839,7 @@ void CAPABILITY::CopyFrom(const CAPABILITY& from) {
 }
 
 bool CAPABILITY::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
   return true;
 }
 
@@ -2430,6 +1850,7 @@ void CAPABILITY::Swap(CAPABILITY* other) {
 void CAPABILITY::InternalSwap(CAPABILITY* other) {
   using std::swap;
   messagename_.InternalSwap(&other->messagename_);
+  swap(header_, other->header_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   swap(_cached_size_, other->_cached_size_);
@@ -3659,10 +3080,13 @@ void POSITION::InitAsDefaultInstance() {
       ::SIMPLE::Pos::internal_default_instance());
   ::SIMPLE::_POSITION_default_instance_._instance.get_mutable()->orient_ = const_cast< ::SIMPLE::Quaternion*>(
       ::SIMPLE::Quaternion::internal_default_instance());
+  ::SIMPLE::_POSITION_default_instance_._instance.get_mutable()->header_ = const_cast< ::SIMPLE::HEADER*>(
+      ::SIMPLE::HEADER::internal_default_instance());
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int POSITION::kPositionFieldNumber;
 const int POSITION::kOrientFieldNumber;
+const int POSITION::kHeaderFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 POSITION::POSITION()
@@ -3689,14 +3113,19 @@ POSITION::POSITION(const POSITION& from)
   } else {
     orient_ = NULL;
   }
+  if (from.has_header()) {
+    header_ = new ::SIMPLE::HEADER(*from.header_);
+  } else {
+    header_ = NULL;
+  }
   // @@protoc_insertion_point(copy_constructor:SIMPLE.POSITION)
 }
 
 void POSITION::SharedCtor() {
   _cached_size_ = 0;
   ::memset(&position_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&orient_) -
-      reinterpret_cast<char*>(&position_)) + sizeof(orient_));
+      reinterpret_cast<char*>(&header_) -
+      reinterpret_cast<char*>(&position_)) + sizeof(header_));
 }
 
 POSITION::~POSITION() {
@@ -3707,6 +3136,7 @@ POSITION::~POSITION() {
 void POSITION::SharedDtor() {
   if (this != internal_default_instance()) delete position_;
   if (this != internal_default_instance()) delete orient_;
+  if (this != internal_default_instance()) delete header_;
 }
 
 void POSITION::SetCachedSize(int size) const {
@@ -3739,7 +3169,7 @@ void POSITION::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 3u) {
+  if (cached_has_bits & 7u) {
     if (cached_has_bits & 0x00000001u) {
       GOOGLE_DCHECK(position_ != NULL);
       position_->::SIMPLE::Pos::Clear();
@@ -3747,6 +3177,10 @@ void POSITION::Clear() {
     if (cached_has_bits & 0x00000002u) {
       GOOGLE_DCHECK(orient_ != NULL);
       orient_->::SIMPLE::Quaternion::Clear();
+    }
+    if (cached_has_bits & 0x00000004u) {
+      GOOGLE_DCHECK(header_ != NULL);
+      header_->::SIMPLE::HEADER::Clear();
     }
   }
   _has_bits_.Clear();
@@ -3781,6 +3215,18 @@ bool POSITION::MergePartialFromCodedStream(
             static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_orient()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // required .SIMPLE.HEADER header = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_header()));
         } else {
           goto handle_unusual;
         }
@@ -3826,6 +3272,12 @@ void POSITION::SerializeWithCachedSizes(
       2, *this->orient_, output);
   }
 
+  // required .SIMPLE.HEADER header = 3;
+  if (cached_has_bits & 0x00000004u) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      3, *this->header_, output);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
@@ -3855,6 +3307,13 @@ void POSITION::SerializeWithCachedSizes(
         2, *this->orient_, deterministic, target);
   }
 
+  // required .SIMPLE.HEADER header = 3;
+  if (cached_has_bits & 0x00000004u) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageNoVirtualToArray(
+        3, *this->header_, deterministic, target);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
@@ -3871,6 +3330,12 @@ size_t POSITION::ByteSizeLong() const {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
+  }
+  // required .SIMPLE.HEADER header = 3;
+  if (has_header()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        *this->header_);
   }
   if (_has_bits_[0 / 32] & 3u) {
     // optional .SIMPLE.Pos position = 1;
@@ -3918,12 +3383,15 @@ void POSITION::MergeFrom(const POSITION& from) {
   (void) cached_has_bits;
 
   cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 3u) {
+  if (cached_has_bits & 7u) {
     if (cached_has_bits & 0x00000001u) {
       mutable_position()->::SIMPLE::Pos::MergeFrom(from.position());
     }
     if (cached_has_bits & 0x00000002u) {
       mutable_orient()->::SIMPLE::Quaternion::MergeFrom(from.orient());
+    }
+    if (cached_has_bits & 0x00000004u) {
+      mutable_header()->::SIMPLE::HEADER::MergeFrom(from.header());
     }
   }
 }
@@ -3943,6 +3411,7 @@ void POSITION::CopyFrom(const POSITION& from) {
 }
 
 bool POSITION::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000004) != 0x00000004) return false;
   return true;
 }
 
@@ -3954,6 +3423,7 @@ void POSITION::InternalSwap(POSITION* other) {
   using std::swap;
   swap(position_, other->position_);
   swap(orient_, other->orient_);
+  swap(header_, other->header_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   swap(_cached_size_, other->_cached_size_);
@@ -3972,10 +3442,13 @@ void TRANSFORM::InitAsDefaultInstance() {
       ::SIMPLE::Pos::internal_default_instance());
   ::SIMPLE::_TRANSFORM_default_instance_._instance.get_mutable()->orient_ = const_cast< ::SIMPLE::Orientation*>(
       ::SIMPLE::Orientation::internal_default_instance());
+  ::SIMPLE::_TRANSFORM_default_instance_._instance.get_mutable()->header_ = const_cast< ::SIMPLE::HEADER*>(
+      ::SIMPLE::HEADER::internal_default_instance());
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int TRANSFORM::kPositionFieldNumber;
 const int TRANSFORM::kOrientFieldNumber;
+const int TRANSFORM::kHeaderFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 TRANSFORM::TRANSFORM()
@@ -4002,14 +3475,19 @@ TRANSFORM::TRANSFORM(const TRANSFORM& from)
   } else {
     orient_ = NULL;
   }
+  if (from.has_header()) {
+    header_ = new ::SIMPLE::HEADER(*from.header_);
+  } else {
+    header_ = NULL;
+  }
   // @@protoc_insertion_point(copy_constructor:SIMPLE.TRANSFORM)
 }
 
 void TRANSFORM::SharedCtor() {
   _cached_size_ = 0;
   ::memset(&position_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&orient_) -
-      reinterpret_cast<char*>(&position_)) + sizeof(orient_));
+      reinterpret_cast<char*>(&header_) -
+      reinterpret_cast<char*>(&position_)) + sizeof(header_));
 }
 
 TRANSFORM::~TRANSFORM() {
@@ -4020,6 +3498,7 @@ TRANSFORM::~TRANSFORM() {
 void TRANSFORM::SharedDtor() {
   if (this != internal_default_instance()) delete position_;
   if (this != internal_default_instance()) delete orient_;
+  if (this != internal_default_instance()) delete header_;
 }
 
 void TRANSFORM::SetCachedSize(int size) const {
@@ -4052,7 +3531,7 @@ void TRANSFORM::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 3u) {
+  if (cached_has_bits & 7u) {
     if (cached_has_bits & 0x00000001u) {
       GOOGLE_DCHECK(position_ != NULL);
       position_->::SIMPLE::Pos::Clear();
@@ -4060,6 +3539,10 @@ void TRANSFORM::Clear() {
     if (cached_has_bits & 0x00000002u) {
       GOOGLE_DCHECK(orient_ != NULL);
       orient_->::SIMPLE::Orientation::Clear();
+    }
+    if (cached_has_bits & 0x00000004u) {
+      GOOGLE_DCHECK(header_ != NULL);
+      header_->::SIMPLE::HEADER::Clear();
     }
   }
   _has_bits_.Clear();
@@ -4094,6 +3577,18 @@ bool TRANSFORM::MergePartialFromCodedStream(
             static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_orient()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // required .SIMPLE.HEADER header = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_header()));
         } else {
           goto handle_unusual;
         }
@@ -4139,6 +3634,12 @@ void TRANSFORM::SerializeWithCachedSizes(
       2, *this->orient_, output);
   }
 
+  // required .SIMPLE.HEADER header = 3;
+  if (cached_has_bits & 0x00000004u) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      3, *this->header_, output);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
@@ -4168,6 +3669,13 @@ void TRANSFORM::SerializeWithCachedSizes(
         2, *this->orient_, deterministic, target);
   }
 
+  // required .SIMPLE.HEADER header = 3;
+  if (cached_has_bits & 0x00000004u) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageNoVirtualToArray(
+        3, *this->header_, deterministic, target);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
@@ -4184,6 +3692,12 @@ size_t TRANSFORM::ByteSizeLong() const {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
+  }
+  // required .SIMPLE.HEADER header = 3;
+  if (has_header()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        *this->header_);
   }
   if (_has_bits_[0 / 32] & 3u) {
     // optional .SIMPLE.Pos position = 1;
@@ -4231,12 +3745,15 @@ void TRANSFORM::MergeFrom(const TRANSFORM& from) {
   (void) cached_has_bits;
 
   cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 3u) {
+  if (cached_has_bits & 7u) {
     if (cached_has_bits & 0x00000001u) {
       mutable_position()->::SIMPLE::Pos::MergeFrom(from.position());
     }
     if (cached_has_bits & 0x00000002u) {
       mutable_orient()->::SIMPLE::Orientation::MergeFrom(from.orient());
+    }
+    if (cached_has_bits & 0x00000004u) {
+      mutable_header()->::SIMPLE::HEADER::MergeFrom(from.header());
     }
   }
 }
@@ -4256,6 +3773,7 @@ void TRANSFORM::CopyFrom(const TRANSFORM& from) {
 }
 
 bool TRANSFORM::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000004) != 0x00000004) return false;
   return true;
 }
 
@@ -4267,6 +3785,7 @@ void TRANSFORM::InternalSwap(TRANSFORM* other) {
   using std::swap;
   swap(position_, other->position_);
   swap(orient_, other->orient_);
+  swap(header_, other->header_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   swap(_cached_size_, other->_cached_size_);
@@ -5679,12 +5198,15 @@ void IMAGE::InitAsDefaultInstance() {
       ::SIMPLE::IMAGE_SUBVOLUME::internal_default_instance());
   ::SIMPLE::_IMAGE_default_instance_._instance.get_mutable()->imagedata_ = const_cast< ::SIMPLE::IMAGE_imageArray*>(
       ::SIMPLE::IMAGE_imageArray::internal_default_instance());
+  ::SIMPLE::_IMAGE_default_instance_._instance.get_mutable()->header_ = const_cast< ::SIMPLE::HEADER*>(
+      ::SIMPLE::HEADER::internal_default_instance());
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int IMAGE::kMetricFieldNumber;
 const int IMAGE::kSubvolumeFieldNumber;
 const int IMAGE::kExistSUBVOLUMEFieldNumber;
 const int IMAGE::kImageDataFieldNumber;
+const int IMAGE::kHeaderFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 IMAGE::IMAGE()
@@ -5716,6 +5238,11 @@ IMAGE::IMAGE(const IMAGE& from)
   } else {
     imagedata_ = NULL;
   }
+  if (from.has_header()) {
+    header_ = new ::SIMPLE::HEADER(*from.header_);
+  } else {
+    header_ = NULL;
+  }
   existsubvolume_ = from.existsubvolume_;
   // @@protoc_insertion_point(copy_constructor:SIMPLE.IMAGE)
 }
@@ -5736,6 +5263,7 @@ void IMAGE::SharedDtor() {
   if (this != internal_default_instance()) delete metric_;
   if (this != internal_default_instance()) delete subvolume_;
   if (this != internal_default_instance()) delete imagedata_;
+  if (this != internal_default_instance()) delete header_;
 }
 
 void IMAGE::SetCachedSize(int size) const {
@@ -5768,7 +5296,7 @@ void IMAGE::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 7u) {
+  if (cached_has_bits & 15u) {
     if (cached_has_bits & 0x00000001u) {
       GOOGLE_DCHECK(metric_ != NULL);
       metric_->::SIMPLE::IMAGE_METRICS::Clear();
@@ -5780,6 +5308,10 @@ void IMAGE::Clear() {
     if (cached_has_bits & 0x00000004u) {
       GOOGLE_DCHECK(imagedata_ != NULL);
       imagedata_->::SIMPLE::IMAGE_imageArray::Clear();
+    }
+    if (cached_has_bits & 0x00000008u) {
+      GOOGLE_DCHECK(header_ != NULL);
+      header_->::SIMPLE::HEADER::Clear();
     }
   }
   existsubvolume_ = false;
@@ -5847,6 +5379,18 @@ bool IMAGE::MergePartialFromCodedStream(
         break;
       }
 
+      // required .SIMPLE.HEADER header = 5;
+      case 5: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(42u /* 42 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_header()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -5887,7 +5431,7 @@ void IMAGE::SerializeWithCachedSizes(
   }
 
   // optional bool existSUBVOLUME = 3;
-  if (cached_has_bits & 0x00000008u) {
+  if (cached_has_bits & 0x00000010u) {
     ::google::protobuf::internal::WireFormatLite::WriteBool(3, this->existsubvolume(), output);
   }
 
@@ -5895,6 +5439,12 @@ void IMAGE::SerializeWithCachedSizes(
   if (cached_has_bits & 0x00000004u) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       4, *this->imagedata_, output);
+  }
+
+  // required .SIMPLE.HEADER header = 5;
+  if (cached_has_bits & 0x00000008u) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      5, *this->header_, output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -5927,7 +5477,7 @@ void IMAGE::SerializeWithCachedSizes(
   }
 
   // optional bool existSUBVOLUME = 3;
-  if (cached_has_bits & 0x00000008u) {
+  if (cached_has_bits & 0x00000010u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(3, this->existsubvolume(), target);
   }
 
@@ -5936,6 +5486,13 @@ void IMAGE::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageNoVirtualToArray(
         4, *this->imagedata_, deterministic, target);
+  }
+
+  // required .SIMPLE.HEADER header = 5;
+  if (cached_has_bits & 0x00000008u) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageNoVirtualToArray(
+        5, *this->header_, deterministic, target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -5955,7 +5512,13 @@ size_t IMAGE::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
   }
-  if (_has_bits_[0 / 32] & 15u) {
+  // required .SIMPLE.HEADER header = 5;
+  if (has_header()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        *this->header_);
+  }
+  if (_has_bits_[0 / 32] & 7u) {
     // optional .SIMPLE.IMAGE.METRICS metric = 1;
     if (has_metric()) {
       total_size += 1 +
@@ -5977,12 +5540,12 @@ size_t IMAGE::ByteSizeLong() const {
           *this->imagedata_);
     }
 
-    // optional bool existSUBVOLUME = 3;
-    if (has_existsubvolume()) {
-      total_size += 1 + 1;
-    }
-
   }
+  // optional bool existSUBVOLUME = 3;
+  if (has_existsubvolume()) {
+    total_size += 1 + 1;
+  }
+
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = cached_size;
@@ -6013,7 +5576,7 @@ void IMAGE::MergeFrom(const IMAGE& from) {
   (void) cached_has_bits;
 
   cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 15u) {
+  if (cached_has_bits & 31u) {
     if (cached_has_bits & 0x00000001u) {
       mutable_metric()->::SIMPLE::IMAGE_METRICS::MergeFrom(from.metric());
     }
@@ -6024,6 +5587,9 @@ void IMAGE::MergeFrom(const IMAGE& from) {
       mutable_imagedata()->::SIMPLE::IMAGE_imageArray::MergeFrom(from.imagedata());
     }
     if (cached_has_bits & 0x00000008u) {
+      mutable_header()->::SIMPLE::HEADER::MergeFrom(from.header());
+    }
+    if (cached_has_bits & 0x00000010u) {
       existsubvolume_ = from.existsubvolume_;
     }
     _has_bits_[0] |= cached_has_bits;
@@ -6045,6 +5611,7 @@ void IMAGE::CopyFrom(const IMAGE& from) {
 }
 
 bool IMAGE::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000008) != 0x00000008) return false;
   return true;
 }
 
@@ -6057,6 +5624,7 @@ void IMAGE::InternalSwap(IMAGE* other) {
   swap(metric_, other->metric_);
   swap(subvolume_, other->subvolume_);
   swap(imagedata_, other->imagedata_);
+  swap(header_, other->header_);
   swap(existsubvolume_, other->existsubvolume_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
@@ -6078,6 +5646,8 @@ void GENERIC::InitAsDefaultInstance() {
   ::SIMPLE::_GENERIC_default_instance_.basicdouble_ = 0;
   ::SIMPLE::_GENERIC_default_instance_.basicstring_.UnsafeSetDefault(
       &::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  ::SIMPLE::_GENERIC_default_instance_._instance.get_mutable()->header_ = const_cast< ::SIMPLE::HEADER*>(
+      ::SIMPLE::HEADER::internal_default_instance());
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int GENERIC::kBasicBoolFieldNumber;
@@ -6085,6 +5655,7 @@ const int GENERIC::kBasicIntFieldNumber;
 const int GENERIC::kBasicFloatFieldNumber;
 const int GENERIC::kBasicDoubleFieldNumber;
 const int GENERIC::kBasicStringFieldNumber;
+const int GENERIC::kHeaderFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 GENERIC::GENERIC()
@@ -6101,6 +5672,11 @@ GENERIC::GENERIC(const GENERIC& from)
       _has_bits_(from._has_bits_),
       _cached_size_(0) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
+  if (from.has_header()) {
+    header_ = new ::SIMPLE::HEADER(*from.header_);
+  } else {
+    header_ = NULL;
+  }
   clear_has_data();
   switch (from.data_case()) {
     case kBasicBool: {
@@ -6132,6 +5708,7 @@ GENERIC::GENERIC(const GENERIC& from)
 
 void GENERIC::SharedCtor() {
   _cached_size_ = 0;
+  header_ = NULL;
   clear_has_data();
 }
 
@@ -6141,6 +5718,7 @@ GENERIC::~GENERIC() {
 }
 
 void GENERIC::SharedDtor() {
+  if (this != internal_default_instance()) delete header_;
   if (has_data()) {
     clear_data();
   }
@@ -6206,6 +5784,10 @@ void GENERIC::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  if (has_header()) {
+    GOOGLE_DCHECK(header_ != NULL);
+    header_->::SIMPLE::HEADER::Clear();
+  }
   clear_data();
   _has_bits_.Clear();
   _internal_metadata_.Clear();
@@ -6297,6 +5879,18 @@ bool GENERIC::MergePartialFromCodedStream(
         break;
       }
 
+      // required .SIMPLE.HEADER header = 6;
+      case 6: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(50u /* 50 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_header()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -6346,6 +5940,13 @@ void GENERIC::SerializeWithCachedSizes(
       break;
     default: ;
   }
+  cached_has_bits = _has_bits_[0];
+  // required .SIMPLE.HEADER header = 6;
+  if (cached_has_bits & 0x00000001u) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      6, *this->header_, output);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
@@ -6384,6 +5985,14 @@ void GENERIC::SerializeWithCachedSizes(
       break;
     default: ;
   }
+  cached_has_bits = _has_bits_[0];
+  // required .SIMPLE.HEADER header = 6;
+  if (cached_has_bits & 0x00000001u) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageNoVirtualToArray(
+        6, *this->header_, deterministic, target);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target);
@@ -6400,6 +6009,12 @@ size_t GENERIC::ByteSizeLong() const {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         _internal_metadata_.unknown_fields());
+  }
+  // required .SIMPLE.HEADER header = 6;
+  if (has_header()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        *this->header_);
   }
   switch (data_case()) {
     // optional bool basicBool = 1;
@@ -6464,6 +6079,9 @@ void GENERIC::MergeFrom(const GENERIC& from) {
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
+  if (from.has_header()) {
+    mutable_header()->::SIMPLE::HEADER::MergeFrom(from.header());
+  }
   switch (from.data_case()) {
     case kBasicBool: {
       set_basicbool(from.basicbool());
@@ -6506,6 +6124,7 @@ void GENERIC::CopyFrom(const GENERIC& from) {
 }
 
 bool GENERIC::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
   return true;
 }
 
@@ -6515,6 +6134,7 @@ void GENERIC::Swap(GENERIC* other) {
 }
 void GENERIC::InternalSwap(GENERIC* other) {
   using std::swap;
+  swap(header_, other->header_);
   swap(data_, other->data_);
   swap(_oneof_case_[0], other->_oneof_case_[0]);
   swap(_has_bits_[0], other->_has_bits_[0]);

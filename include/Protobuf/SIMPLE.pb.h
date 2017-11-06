@@ -37,14 +37,12 @@ namespace protobuf_SIMPLE_2eproto {
 struct TableStruct {
   static const ::google::protobuf::internal::ParseTableField entries[];
   static const ::google::protobuf::internal::AuxillaryParseTableField aux[];
-  static const ::google::protobuf::internal::ParseTable schema[14];
+  static const ::google::protobuf::internal::ParseTable schema[13];
   static const ::google::protobuf::internal::FieldMetadata field_metadata[];
   static const ::google::protobuf::internal::SerializationTable serialization_table[];
   static const ::google::protobuf::uint32 offsets[];
 };
 void AddDescriptors();
-void InitDefaultsBASEMSGImpl();
-void InitDefaultsBASEMSG();
 void InitDefaultsHEADERImpl();
 void InitDefaultsHEADER();
 void InitDefaultsSTATUSImpl();
@@ -72,7 +70,6 @@ void InitDefaultsIMAGE();
 void InitDefaultsGENERICImpl();
 void InitDefaultsGENERIC();
 inline void InitDefaults() {
-  InitDefaultsBASEMSG();
   InitDefaultsHEADER();
   InitDefaultsSTATUS();
   InitDefaultsCAPABILITY();
@@ -89,9 +86,6 @@ inline void InitDefaults() {
 }
 }  // namespace protobuf_SIMPLE_2eproto
 namespace SIMPLE {
-class BASEMSG;
-class BASEMSGDefaultTypeInternal;
-extern BASEMSGDefaultTypeInternal _BASEMSG_default_instance_;
 class CAPABILITY;
 class CAPABILITYDefaultTypeInternal;
 extern CAPABILITYDefaultTypeInternal _CAPABILITY_default_instance_;
@@ -174,225 +168,6 @@ inline bool IMAGE_METRICS_dataType_Parse(
 }
 // ===================================================================
 
-class BASEMSG : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:SIMPLE.BASEMSG) */ {
- public:
-  BASEMSG();
-  virtual ~BASEMSG();
-
-  BASEMSG(const BASEMSG& from);
-
-  inline BASEMSG& operator=(const BASEMSG& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  #if LANG_CXX11
-  BASEMSG(BASEMSG&& from) noexcept
-    : BASEMSG() {
-    *this = ::std::move(from);
-  }
-
-  inline BASEMSG& operator=(BASEMSG&& from) noexcept {
-    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
-      if (this != &from) InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-  #endif
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _internal_metadata_.unknown_fields();
-  }
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return _internal_metadata_.mutable_unknown_fields();
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const BASEMSG& default_instance();
-
-  enum DataCase {
-    kStatus = 2,
-    kCapability = 3,
-    kImage = 4,
-    kTransform = 5,
-    kPosition = 6,
-    kGener = 7,
-    DATA_NOT_SET = 0,
-  };
-
-  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const BASEMSG* internal_default_instance() {
-    return reinterpret_cast<const BASEMSG*>(
-               &_BASEMSG_default_instance_);
-  }
-  static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    0;
-
-  void Swap(BASEMSG* other);
-  friend void swap(BASEMSG& a, BASEMSG& b) {
-    a.Swap(&b);
-  }
-
-  // implements Message ----------------------------------------------
-
-  inline BASEMSG* New() const PROTOBUF_FINAL { return New(NULL); }
-
-  BASEMSG* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
-  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
-  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
-  void CopyFrom(const BASEMSG& from);
-  void MergeFrom(const BASEMSG& from);
-  void Clear() PROTOBUF_FINAL;
-  bool IsInitialized() const PROTOBUF_FINAL;
-
-  size_t ByteSizeLong() const PROTOBUF_FINAL;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
-  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
-      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
-  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const PROTOBUF_FINAL;
-  void InternalSwap(BASEMSG* other);
-  private:
-  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
-    return NULL;
-  }
-  inline void* MaybeArenaPtr() const {
-    return NULL;
-  }
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // required string flag = 1;
-  bool has_flag() const;
-  void clear_flag();
-  static const int kFlagFieldNumber = 1;
-  const ::std::string& flag() const;
-  void set_flag(const ::std::string& value);
-  #if LANG_CXX11
-  void set_flag(::std::string&& value);
-  #endif
-  void set_flag(const char* value);
-  void set_flag(const char* value, size_t size);
-  ::std::string* mutable_flag();
-  ::std::string* release_flag();
-  void set_allocated_flag(::std::string* flag);
-
-  // required .SIMPLE.HEADER header = 8;
-  bool has_header() const;
-  void clear_header();
-  static const int kHeaderFieldNumber = 8;
-  const ::SIMPLE::HEADER& header() const;
-  ::SIMPLE::HEADER* mutable_header();
-  ::SIMPLE::HEADER* release_header();
-  void set_allocated_header(::SIMPLE::HEADER* header);
-
-  // optional .SIMPLE.STATUS status = 2;
-  bool has_status() const;
-  void clear_status();
-  static const int kStatusFieldNumber = 2;
-  const ::SIMPLE::STATUS& status() const;
-  ::SIMPLE::STATUS* mutable_status();
-  ::SIMPLE::STATUS* release_status();
-  void set_allocated_status(::SIMPLE::STATUS* status);
-
-  // optional .SIMPLE.CAPABILITY capability = 3;
-  bool has_capability() const;
-  void clear_capability();
-  static const int kCapabilityFieldNumber = 3;
-  const ::SIMPLE::CAPABILITY& capability() const;
-  ::SIMPLE::CAPABILITY* mutable_capability();
-  ::SIMPLE::CAPABILITY* release_capability();
-  void set_allocated_capability(::SIMPLE::CAPABILITY* capability);
-
-  // optional .SIMPLE.IMAGE image = 4;
-  bool has_image() const;
-  void clear_image();
-  static const int kImageFieldNumber = 4;
-  const ::SIMPLE::IMAGE& image() const;
-  ::SIMPLE::IMAGE* mutable_image();
-  ::SIMPLE::IMAGE* release_image();
-  void set_allocated_image(::SIMPLE::IMAGE* image);
-
-  // optional .SIMPLE.TRANSFORM transform = 5;
-  bool has_transform() const;
-  void clear_transform();
-  static const int kTransformFieldNumber = 5;
-  const ::SIMPLE::TRANSFORM& transform() const;
-  ::SIMPLE::TRANSFORM* mutable_transform();
-  ::SIMPLE::TRANSFORM* release_transform();
-  void set_allocated_transform(::SIMPLE::TRANSFORM* transform);
-
-  // optional .SIMPLE.POSITION position = 6;
-  bool has_position() const;
-  void clear_position();
-  static const int kPositionFieldNumber = 6;
-  const ::SIMPLE::POSITION& position() const;
-  ::SIMPLE::POSITION* mutable_position();
-  ::SIMPLE::POSITION* release_position();
-  void set_allocated_position(::SIMPLE::POSITION* position);
-
-  // optional .SIMPLE.GENERIC gener = 7;
-  bool has_gener() const;
-  void clear_gener();
-  static const int kGenerFieldNumber = 7;
-  const ::SIMPLE::GENERIC& gener() const;
-  ::SIMPLE::GENERIC* mutable_gener();
-  ::SIMPLE::GENERIC* release_gener();
-  void set_allocated_gener(::SIMPLE::GENERIC* gener);
-
-  DataCase data_case() const;
-  // @@protoc_insertion_point(class_scope:SIMPLE.BASEMSG)
- private:
-  void set_has_flag();
-  void clear_has_flag();
-  void set_has_status();
-  void set_has_capability();
-  void set_has_image();
-  void set_has_transform();
-  void set_has_position();
-  void set_has_gener();
-  void set_has_header();
-  void clear_has_header();
-
-  inline bool has_data() const;
-  void clear_data();
-  inline void clear_has_data();
-
-  // helper for ByteSizeLong()
-  size_t RequiredFieldsByteSizeFallback() const;
-
-  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::google::protobuf::internal::HasBits<1> _has_bits_;
-  mutable int _cached_size_;
-  ::google::protobuf::internal::ArenaStringPtr flag_;
-  ::SIMPLE::HEADER* header_;
-  union DataUnion {
-    DataUnion() {}
-    ::SIMPLE::STATUS* status_;
-    ::SIMPLE::CAPABILITY* capability_;
-    ::SIMPLE::IMAGE* image_;
-    ::SIMPLE::TRANSFORM* transform_;
-    ::SIMPLE::POSITION* position_;
-    ::SIMPLE::GENERIC* gener_;
-  } data_;
-  ::google::protobuf::uint32 _oneof_case_[1];
-
-  friend struct ::protobuf_SIMPLE_2eproto::TableStruct;
-  friend void ::protobuf_SIMPLE_2eproto::InitDefaultsBASEMSGImpl();
-};
-// -------------------------------------------------------------------
-
 class HEADER : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:SIMPLE.HEADER) */ {
  public:
   HEADER();
@@ -435,7 +210,7 @@ class HEADER : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
                &_HEADER_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    1;
+    0;
 
   void Swap(HEADER* other);
   friend void swap(HEADER& a, HEADER& b) {
@@ -591,7 +366,7 @@ class STATUS : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
                &_STATUS_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    2;
+    1;
 
   void Swap(STATUS* other);
   friend void swap(STATUS& a, STATUS& b) {
@@ -668,6 +443,15 @@ class STATUS : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::std::string* release_errormsg();
   void set_allocated_errormsg(::std::string* errormsg);
 
+  // required .SIMPLE.HEADER header = 5;
+  bool has_header() const;
+  void clear_header();
+  static const int kHeaderFieldNumber = 5;
+  const ::SIMPLE::HEADER& header() const;
+  ::SIMPLE::HEADER* mutable_header();
+  ::SIMPLE::HEADER* release_header();
+  void set_allocated_header(::SIMPLE::HEADER* header);
+
   // optional int64 subcode = 2;
   bool has_subcode() const;
   void clear_subcode();
@@ -692,12 +476,15 @@ class STATUS : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   void clear_has_errorname();
   void set_has_errormsg();
   void clear_has_errormsg();
+  void set_has_header();
+  void clear_has_header();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable int _cached_size_;
   ::google::protobuf::internal::ArenaStringPtr errorname_;
   ::google::protobuf::internal::ArenaStringPtr errormsg_;
+  ::SIMPLE::HEADER* header_;
   ::google::protobuf::int64 subcode_;
   ::google::protobuf::int32 statuscode_;
   friend struct ::protobuf_SIMPLE_2eproto::TableStruct;
@@ -747,7 +534,7 @@ class CAPABILITY : public ::google::protobuf::Message /* @@protoc_insertion_poin
                &_CAPABILITY_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    3;
+    2;
 
   void Swap(CAPABILITY* other);
   friend void swap(CAPABILITY& a, CAPABILITY& b) {
@@ -816,13 +603,25 @@ class CAPABILITY : public ::google::protobuf::Message /* @@protoc_insertion_poin
   const ::google::protobuf::RepeatedPtrField< ::std::string>& messagename() const;
   ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_messagename();
 
+  // required .SIMPLE.HEADER header = 2;
+  bool has_header() const;
+  void clear_header();
+  static const int kHeaderFieldNumber = 2;
+  const ::SIMPLE::HEADER& header() const;
+  ::SIMPLE::HEADER* mutable_header();
+  ::SIMPLE::HEADER* release_header();
+  void set_allocated_header(::SIMPLE::HEADER* header);
+
   // @@protoc_insertion_point(class_scope:SIMPLE.CAPABILITY)
  private:
+  void set_has_header();
+  void clear_has_header();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable int _cached_size_;
   ::google::protobuf::RepeatedPtrField< ::std::string> messagename_;
+  ::SIMPLE::HEADER* header_;
   friend struct ::protobuf_SIMPLE_2eproto::TableStruct;
   friend void ::protobuf_SIMPLE_2eproto::InitDefaultsCAPABILITYImpl();
 };
@@ -870,7 +669,7 @@ class Pos : public ::google::protobuf::Message /* @@protoc_insertion_point(class
                &_Pos_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    4;
+    3;
 
   void Swap(Pos* other);
   friend void swap(Pos& a, Pos& b) {
@@ -1000,7 +799,7 @@ class Orientation : public ::google::protobuf::Message /* @@protoc_insertion_poi
                &_Orientation_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    5;
+    4;
 
   void Swap(Orientation* other);
   friend void swap(Orientation& a, Orientation& b) {
@@ -1190,7 +989,7 @@ class Quaternion : public ::google::protobuf::Message /* @@protoc_insertion_poin
                &_Quaternion_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    6;
+    5;
 
   void Swap(Quaternion* other);
   friend void swap(Quaternion& a, Quaternion& b) {
@@ -1330,7 +1129,7 @@ class POSITION : public ::google::protobuf::Message /* @@protoc_insertion_point(
                &_POSITION_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    7;
+    6;
 
   void Swap(POSITION* other);
   friend void swap(POSITION& a, POSITION& b) {
@@ -1395,18 +1194,30 @@ class POSITION : public ::google::protobuf::Message /* @@protoc_insertion_point(
   ::SIMPLE::Quaternion* release_orient();
   void set_allocated_orient(::SIMPLE::Quaternion* orient);
 
+  // required .SIMPLE.HEADER header = 3;
+  bool has_header() const;
+  void clear_header();
+  static const int kHeaderFieldNumber = 3;
+  const ::SIMPLE::HEADER& header() const;
+  ::SIMPLE::HEADER* mutable_header();
+  ::SIMPLE::HEADER* release_header();
+  void set_allocated_header(::SIMPLE::HEADER* header);
+
   // @@protoc_insertion_point(class_scope:SIMPLE.POSITION)
  private:
   void set_has_position();
   void clear_has_position();
   void set_has_orient();
   void clear_has_orient();
+  void set_has_header();
+  void clear_has_header();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable int _cached_size_;
   ::SIMPLE::Pos* position_;
   ::SIMPLE::Quaternion* orient_;
+  ::SIMPLE::HEADER* header_;
   friend struct ::protobuf_SIMPLE_2eproto::TableStruct;
   friend void ::protobuf_SIMPLE_2eproto::InitDefaultsPOSITIONImpl();
 };
@@ -1454,7 +1265,7 @@ class TRANSFORM : public ::google::protobuf::Message /* @@protoc_insertion_point
                &_TRANSFORM_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    8;
+    7;
 
   void Swap(TRANSFORM* other);
   friend void swap(TRANSFORM& a, TRANSFORM& b) {
@@ -1519,18 +1330,30 @@ class TRANSFORM : public ::google::protobuf::Message /* @@protoc_insertion_point
   ::SIMPLE::Orientation* release_orient();
   void set_allocated_orient(::SIMPLE::Orientation* orient);
 
+  // required .SIMPLE.HEADER header = 3;
+  bool has_header() const;
+  void clear_header();
+  static const int kHeaderFieldNumber = 3;
+  const ::SIMPLE::HEADER& header() const;
+  ::SIMPLE::HEADER* mutable_header();
+  ::SIMPLE::HEADER* release_header();
+  void set_allocated_header(::SIMPLE::HEADER* header);
+
   // @@protoc_insertion_point(class_scope:SIMPLE.TRANSFORM)
  private:
   void set_has_position();
   void clear_has_position();
   void set_has_orient();
   void clear_has_orient();
+  void set_has_header();
+  void clear_has_header();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable int _cached_size_;
   ::SIMPLE::Pos* position_;
   ::SIMPLE::Orientation* orient_;
+  ::SIMPLE::HEADER* header_;
   friend struct ::protobuf_SIMPLE_2eproto::TableStruct;
   friend void ::protobuf_SIMPLE_2eproto::InitDefaultsTRANSFORMImpl();
 };
@@ -1578,7 +1401,7 @@ class IMAGE_METRICS : public ::google::protobuf::Message /* @@protoc_insertion_p
                &_IMAGE_METRICS_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    9;
+    8;
 
   void Swap(IMAGE_METRICS* other);
   friend void swap(IMAGE_METRICS& a, IMAGE_METRICS& b) {
@@ -1814,7 +1637,7 @@ class IMAGE_SUBVOLUME : public ::google::protobuf::Message /* @@protoc_insertion
                &_IMAGE_SUBVOLUME_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    10;
+    9;
 
   void Swap(IMAGE_SUBVOLUME* other);
   friend void swap(IMAGE_SUBVOLUME& a, IMAGE_SUBVOLUME& b) {
@@ -1974,7 +1797,7 @@ class IMAGE_imageArray : public ::google::protobuf::Message /* @@protoc_insertio
                &_IMAGE_imageArray_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    11;
+    10;
 
   void Swap(IMAGE_imageArray* other);
   friend void swap(IMAGE_imageArray& a, IMAGE_imageArray& b) {
@@ -2146,7 +1969,7 @@ class IMAGE : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
                &_IMAGE_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    12;
+    11;
 
   void Swap(IMAGE* other);
   friend void swap(IMAGE& a, IMAGE& b) {
@@ -2224,6 +2047,15 @@ class IMAGE : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::SIMPLE::IMAGE_imageArray* release_imagedata();
   void set_allocated_imagedata(::SIMPLE::IMAGE_imageArray* imagedata);
 
+  // required .SIMPLE.HEADER header = 5;
+  bool has_header() const;
+  void clear_header();
+  static const int kHeaderFieldNumber = 5;
+  const ::SIMPLE::HEADER& header() const;
+  ::SIMPLE::HEADER* mutable_header();
+  ::SIMPLE::HEADER* release_header();
+  void set_allocated_header(::SIMPLE::HEADER* header);
+
   // optional bool existSUBVOLUME = 3;
   bool has_existsubvolume() const;
   void clear_existsubvolume();
@@ -2241,6 +2073,8 @@ class IMAGE : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   void clear_has_existsubvolume();
   void set_has_imagedata();
   void clear_has_imagedata();
+  void set_has_header();
+  void clear_has_header();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
@@ -2248,6 +2082,7 @@ class IMAGE : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::SIMPLE::IMAGE_METRICS* metric_;
   ::SIMPLE::IMAGE_SUBVOLUME* subvolume_;
   ::SIMPLE::IMAGE_imageArray* imagedata_;
+  ::SIMPLE::HEADER* header_;
   bool existsubvolume_;
   friend struct ::protobuf_SIMPLE_2eproto::TableStruct;
   friend void ::protobuf_SIMPLE_2eproto::InitDefaultsIMAGEImpl();
@@ -2305,7 +2140,7 @@ class GENERIC : public ::google::protobuf::Message /* @@protoc_insertion_point(c
                &_GENERIC_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    13;
+    12;
 
   void Swap(GENERIC* other);
   friend void swap(GENERIC& a, GENERIC& b) {
@@ -2351,6 +2186,15 @@ class GENERIC : public ::google::protobuf::Message /* @@protoc_insertion_point(c
   // nested types ----------------------------------------------------
 
   // accessors -------------------------------------------------------
+
+  // required .SIMPLE.HEADER header = 6;
+  bool has_header() const;
+  void clear_header();
+  static const int kHeaderFieldNumber = 6;
+  const ::SIMPLE::HEADER& header() const;
+  ::SIMPLE::HEADER* mutable_header();
+  ::SIMPLE::HEADER* release_header();
+  void set_allocated_header(::SIMPLE::HEADER* header);
 
   // optional bool basicBool = 1;
   bool has_basicbool() const;
@@ -2403,6 +2247,8 @@ class GENERIC : public ::google::protobuf::Message /* @@protoc_insertion_point(c
   void set_has_basicfloat();
   void set_has_basicdouble();
   void set_has_basicstring();
+  void set_has_header();
+  void clear_has_header();
 
   inline bool has_data() const;
   void clear_data();
@@ -2411,6 +2257,7 @@ class GENERIC : public ::google::protobuf::Message /* @@protoc_insertion_point(c
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable int _cached_size_;
+  ::SIMPLE::HEADER* header_;
   union DataUnion {
     DataUnion() {}
     bool basicbool_;
@@ -2433,416 +2280,6 @@ class GENERIC : public ::google::protobuf::Message /* @@protoc_insertion_point(c
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
-// BASEMSG
-
-// required string flag = 1;
-inline bool BASEMSG::has_flag() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void BASEMSG::set_has_flag() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void BASEMSG::clear_has_flag() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void BASEMSG::clear_flag() {
-  flag_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  clear_has_flag();
-}
-inline const ::std::string& BASEMSG::flag() const {
-  // @@protoc_insertion_point(field_get:SIMPLE.BASEMSG.flag)
-  return flag_.GetNoArena();
-}
-inline void BASEMSG::set_flag(const ::std::string& value) {
-  set_has_flag();
-  flag_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:SIMPLE.BASEMSG.flag)
-}
-#if LANG_CXX11
-inline void BASEMSG::set_flag(::std::string&& value) {
-  set_has_flag();
-  flag_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:SIMPLE.BASEMSG.flag)
-}
-#endif
-inline void BASEMSG::set_flag(const char* value) {
-  GOOGLE_DCHECK(value != NULL);
-  set_has_flag();
-  flag_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:SIMPLE.BASEMSG.flag)
-}
-inline void BASEMSG::set_flag(const char* value, size_t size) {
-  set_has_flag();
-  flag_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:SIMPLE.BASEMSG.flag)
-}
-inline ::std::string* BASEMSG::mutable_flag() {
-  set_has_flag();
-  // @@protoc_insertion_point(field_mutable:SIMPLE.BASEMSG.flag)
-  return flag_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline ::std::string* BASEMSG::release_flag() {
-  // @@protoc_insertion_point(field_release:SIMPLE.BASEMSG.flag)
-  clear_has_flag();
-  return flag_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline void BASEMSG::set_allocated_flag(::std::string* flag) {
-  if (flag != NULL) {
-    set_has_flag();
-  } else {
-    clear_has_flag();
-  }
-  flag_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), flag);
-  // @@protoc_insertion_point(field_set_allocated:SIMPLE.BASEMSG.flag)
-}
-
-// optional .SIMPLE.STATUS status = 2;
-inline bool BASEMSG::has_status() const {
-  return data_case() == kStatus;
-}
-inline void BASEMSG::set_has_status() {
-  _oneof_case_[0] = kStatus;
-}
-inline void BASEMSG::clear_status() {
-  if (has_status()) {
-    delete data_.status_;
-    clear_has_data();
-  }
-}
-inline  const ::SIMPLE::STATUS& BASEMSG::status() const {
-  // @@protoc_insertion_point(field_get:SIMPLE.BASEMSG.status)
-  return has_status()
-      ? *data_.status_
-      : ::SIMPLE::STATUS::default_instance();
-}
-inline ::SIMPLE::STATUS* BASEMSG::mutable_status() {
-  if (!has_status()) {
-    clear_data();
-    set_has_status();
-    data_.status_ = new ::SIMPLE::STATUS;
-  }
-  // @@protoc_insertion_point(field_mutable:SIMPLE.BASEMSG.status)
-  return data_.status_;
-}
-inline ::SIMPLE::STATUS* BASEMSG::release_status() {
-  // @@protoc_insertion_point(field_release:SIMPLE.BASEMSG.status)
-  if (has_status()) {
-    clear_has_data();
-    ::SIMPLE::STATUS* temp = data_.status_;
-    data_.status_ = NULL;
-    return temp;
-  } else {
-    return NULL;
-  }
-}
-inline void BASEMSG::set_allocated_status(::SIMPLE::STATUS* status) {
-  clear_data();
-  if (status) {
-    set_has_status();
-    data_.status_ = status;
-  }
-  // @@protoc_insertion_point(field_set_allocated:SIMPLE.BASEMSG.status)
-}
-
-// optional .SIMPLE.CAPABILITY capability = 3;
-inline bool BASEMSG::has_capability() const {
-  return data_case() == kCapability;
-}
-inline void BASEMSG::set_has_capability() {
-  _oneof_case_[0] = kCapability;
-}
-inline void BASEMSG::clear_capability() {
-  if (has_capability()) {
-    delete data_.capability_;
-    clear_has_data();
-  }
-}
-inline  const ::SIMPLE::CAPABILITY& BASEMSG::capability() const {
-  // @@protoc_insertion_point(field_get:SIMPLE.BASEMSG.capability)
-  return has_capability()
-      ? *data_.capability_
-      : ::SIMPLE::CAPABILITY::default_instance();
-}
-inline ::SIMPLE::CAPABILITY* BASEMSG::mutable_capability() {
-  if (!has_capability()) {
-    clear_data();
-    set_has_capability();
-    data_.capability_ = new ::SIMPLE::CAPABILITY;
-  }
-  // @@protoc_insertion_point(field_mutable:SIMPLE.BASEMSG.capability)
-  return data_.capability_;
-}
-inline ::SIMPLE::CAPABILITY* BASEMSG::release_capability() {
-  // @@protoc_insertion_point(field_release:SIMPLE.BASEMSG.capability)
-  if (has_capability()) {
-    clear_has_data();
-    ::SIMPLE::CAPABILITY* temp = data_.capability_;
-    data_.capability_ = NULL;
-    return temp;
-  } else {
-    return NULL;
-  }
-}
-inline void BASEMSG::set_allocated_capability(::SIMPLE::CAPABILITY* capability) {
-  clear_data();
-  if (capability) {
-    set_has_capability();
-    data_.capability_ = capability;
-  }
-  // @@protoc_insertion_point(field_set_allocated:SIMPLE.BASEMSG.capability)
-}
-
-// optional .SIMPLE.IMAGE image = 4;
-inline bool BASEMSG::has_image() const {
-  return data_case() == kImage;
-}
-inline void BASEMSG::set_has_image() {
-  _oneof_case_[0] = kImage;
-}
-inline void BASEMSG::clear_image() {
-  if (has_image()) {
-    delete data_.image_;
-    clear_has_data();
-  }
-}
-inline  const ::SIMPLE::IMAGE& BASEMSG::image() const {
-  // @@protoc_insertion_point(field_get:SIMPLE.BASEMSG.image)
-  return has_image()
-      ? *data_.image_
-      : ::SIMPLE::IMAGE::default_instance();
-}
-inline ::SIMPLE::IMAGE* BASEMSG::mutable_image() {
-  if (!has_image()) {
-    clear_data();
-    set_has_image();
-    data_.image_ = new ::SIMPLE::IMAGE;
-  }
-  // @@protoc_insertion_point(field_mutable:SIMPLE.BASEMSG.image)
-  return data_.image_;
-}
-inline ::SIMPLE::IMAGE* BASEMSG::release_image() {
-  // @@protoc_insertion_point(field_release:SIMPLE.BASEMSG.image)
-  if (has_image()) {
-    clear_has_data();
-    ::SIMPLE::IMAGE* temp = data_.image_;
-    data_.image_ = NULL;
-    return temp;
-  } else {
-    return NULL;
-  }
-}
-inline void BASEMSG::set_allocated_image(::SIMPLE::IMAGE* image) {
-  clear_data();
-  if (image) {
-    set_has_image();
-    data_.image_ = image;
-  }
-  // @@protoc_insertion_point(field_set_allocated:SIMPLE.BASEMSG.image)
-}
-
-// optional .SIMPLE.TRANSFORM transform = 5;
-inline bool BASEMSG::has_transform() const {
-  return data_case() == kTransform;
-}
-inline void BASEMSG::set_has_transform() {
-  _oneof_case_[0] = kTransform;
-}
-inline void BASEMSG::clear_transform() {
-  if (has_transform()) {
-    delete data_.transform_;
-    clear_has_data();
-  }
-}
-inline  const ::SIMPLE::TRANSFORM& BASEMSG::transform() const {
-  // @@protoc_insertion_point(field_get:SIMPLE.BASEMSG.transform)
-  return has_transform()
-      ? *data_.transform_
-      : ::SIMPLE::TRANSFORM::default_instance();
-}
-inline ::SIMPLE::TRANSFORM* BASEMSG::mutable_transform() {
-  if (!has_transform()) {
-    clear_data();
-    set_has_transform();
-    data_.transform_ = new ::SIMPLE::TRANSFORM;
-  }
-  // @@protoc_insertion_point(field_mutable:SIMPLE.BASEMSG.transform)
-  return data_.transform_;
-}
-inline ::SIMPLE::TRANSFORM* BASEMSG::release_transform() {
-  // @@protoc_insertion_point(field_release:SIMPLE.BASEMSG.transform)
-  if (has_transform()) {
-    clear_has_data();
-    ::SIMPLE::TRANSFORM* temp = data_.transform_;
-    data_.transform_ = NULL;
-    return temp;
-  } else {
-    return NULL;
-  }
-}
-inline void BASEMSG::set_allocated_transform(::SIMPLE::TRANSFORM* transform) {
-  clear_data();
-  if (transform) {
-    set_has_transform();
-    data_.transform_ = transform;
-  }
-  // @@protoc_insertion_point(field_set_allocated:SIMPLE.BASEMSG.transform)
-}
-
-// optional .SIMPLE.POSITION position = 6;
-inline bool BASEMSG::has_position() const {
-  return data_case() == kPosition;
-}
-inline void BASEMSG::set_has_position() {
-  _oneof_case_[0] = kPosition;
-}
-inline void BASEMSG::clear_position() {
-  if (has_position()) {
-    delete data_.position_;
-    clear_has_data();
-  }
-}
-inline  const ::SIMPLE::POSITION& BASEMSG::position() const {
-  // @@protoc_insertion_point(field_get:SIMPLE.BASEMSG.position)
-  return has_position()
-      ? *data_.position_
-      : ::SIMPLE::POSITION::default_instance();
-}
-inline ::SIMPLE::POSITION* BASEMSG::mutable_position() {
-  if (!has_position()) {
-    clear_data();
-    set_has_position();
-    data_.position_ = new ::SIMPLE::POSITION;
-  }
-  // @@protoc_insertion_point(field_mutable:SIMPLE.BASEMSG.position)
-  return data_.position_;
-}
-inline ::SIMPLE::POSITION* BASEMSG::release_position() {
-  // @@protoc_insertion_point(field_release:SIMPLE.BASEMSG.position)
-  if (has_position()) {
-    clear_has_data();
-    ::SIMPLE::POSITION* temp = data_.position_;
-    data_.position_ = NULL;
-    return temp;
-  } else {
-    return NULL;
-  }
-}
-inline void BASEMSG::set_allocated_position(::SIMPLE::POSITION* position) {
-  clear_data();
-  if (position) {
-    set_has_position();
-    data_.position_ = position;
-  }
-  // @@protoc_insertion_point(field_set_allocated:SIMPLE.BASEMSG.position)
-}
-
-// optional .SIMPLE.GENERIC gener = 7;
-inline bool BASEMSG::has_gener() const {
-  return data_case() == kGener;
-}
-inline void BASEMSG::set_has_gener() {
-  _oneof_case_[0] = kGener;
-}
-inline void BASEMSG::clear_gener() {
-  if (has_gener()) {
-    delete data_.gener_;
-    clear_has_data();
-  }
-}
-inline  const ::SIMPLE::GENERIC& BASEMSG::gener() const {
-  // @@protoc_insertion_point(field_get:SIMPLE.BASEMSG.gener)
-  return has_gener()
-      ? *data_.gener_
-      : ::SIMPLE::GENERIC::default_instance();
-}
-inline ::SIMPLE::GENERIC* BASEMSG::mutable_gener() {
-  if (!has_gener()) {
-    clear_data();
-    set_has_gener();
-    data_.gener_ = new ::SIMPLE::GENERIC;
-  }
-  // @@protoc_insertion_point(field_mutable:SIMPLE.BASEMSG.gener)
-  return data_.gener_;
-}
-inline ::SIMPLE::GENERIC* BASEMSG::release_gener() {
-  // @@protoc_insertion_point(field_release:SIMPLE.BASEMSG.gener)
-  if (has_gener()) {
-    clear_has_data();
-    ::SIMPLE::GENERIC* temp = data_.gener_;
-    data_.gener_ = NULL;
-    return temp;
-  } else {
-    return NULL;
-  }
-}
-inline void BASEMSG::set_allocated_gener(::SIMPLE::GENERIC* gener) {
-  clear_data();
-  if (gener) {
-    set_has_gener();
-    data_.gener_ = gener;
-  }
-  // @@protoc_insertion_point(field_set_allocated:SIMPLE.BASEMSG.gener)
-}
-
-// required .SIMPLE.HEADER header = 8;
-inline bool BASEMSG::has_header() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void BASEMSG::set_has_header() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void BASEMSG::clear_has_header() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void BASEMSG::clear_header() {
-  if (header_ != NULL) header_->::SIMPLE::HEADER::Clear();
-  clear_has_header();
-}
-inline const ::SIMPLE::HEADER& BASEMSG::header() const {
-  const ::SIMPLE::HEADER* p = header_;
-  // @@protoc_insertion_point(field_get:SIMPLE.BASEMSG.header)
-  return p != NULL ? *p : *reinterpret_cast<const ::SIMPLE::HEADER*>(
-      &::SIMPLE::_HEADER_default_instance_);
-}
-inline ::SIMPLE::HEADER* BASEMSG::mutable_header() {
-  set_has_header();
-  if (header_ == NULL) {
-    header_ = new ::SIMPLE::HEADER;
-  }
-  // @@protoc_insertion_point(field_mutable:SIMPLE.BASEMSG.header)
-  return header_;
-}
-inline ::SIMPLE::HEADER* BASEMSG::release_header() {
-  // @@protoc_insertion_point(field_release:SIMPLE.BASEMSG.header)
-  clear_has_header();
-  ::SIMPLE::HEADER* temp = header_;
-  header_ = NULL;
-  return temp;
-}
-inline void BASEMSG::set_allocated_header(::SIMPLE::HEADER* header) {
-  delete header_;
-  header_ = header;
-  if (header) {
-    set_has_header();
-  } else {
-    clear_has_header();
-  }
-  // @@protoc_insertion_point(field_set_allocated:SIMPLE.BASEMSG.header)
-}
-
-inline bool BASEMSG::has_data() const {
-  return data_case() != DATA_NOT_SET;
-}
-inline void BASEMSG::clear_has_data() {
-  _oneof_case_[0] = DATA_NOT_SET;
-}
-inline BASEMSG::DataCase BASEMSG::data_case() const {
-  return BASEMSG::DataCase(_oneof_case_[0]);
-}
-// -------------------------------------------------------------------
-
 // HEADER
 
 // optional int32 VersionNumber = 1;
@@ -3025,13 +2462,13 @@ inline void HEADER::set_timestamp(double value) {
 
 // optional int32 statusCode = 1;
 inline bool STATUS::has_statuscode() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
+  return (_has_bits_[0] & 0x00000010u) != 0;
 }
 inline void STATUS::set_has_statuscode() {
-  _has_bits_[0] |= 0x00000008u;
+  _has_bits_[0] |= 0x00000010u;
 }
 inline void STATUS::clear_has_statuscode() {
-  _has_bits_[0] &= ~0x00000008u;
+  _has_bits_[0] &= ~0x00000010u;
 }
 inline void STATUS::clear_statuscode() {
   statuscode_ = 0;
@@ -3049,13 +2486,13 @@ inline void STATUS::set_statuscode(::google::protobuf::int32 value) {
 
 // optional int64 subcode = 2;
 inline bool STATUS::has_subcode() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
+  return (_has_bits_[0] & 0x00000008u) != 0;
 }
 inline void STATUS::set_has_subcode() {
-  _has_bits_[0] |= 0x00000004u;
+  _has_bits_[0] |= 0x00000008u;
 }
 inline void STATUS::clear_has_subcode() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000008u;
 }
 inline void STATUS::clear_subcode() {
   subcode_ = GOOGLE_LONGLONG(0);
@@ -3197,6 +2634,52 @@ inline void STATUS::set_allocated_errormsg(::std::string* errormsg) {
   // @@protoc_insertion_point(field_set_allocated:SIMPLE.STATUS.errorMsg)
 }
 
+// required .SIMPLE.HEADER header = 5;
+inline bool STATUS::has_header() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void STATUS::set_has_header() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void STATUS::clear_has_header() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void STATUS::clear_header() {
+  if (header_ != NULL) header_->::SIMPLE::HEADER::Clear();
+  clear_has_header();
+}
+inline const ::SIMPLE::HEADER& STATUS::header() const {
+  const ::SIMPLE::HEADER* p = header_;
+  // @@protoc_insertion_point(field_get:SIMPLE.STATUS.header)
+  return p != NULL ? *p : *reinterpret_cast<const ::SIMPLE::HEADER*>(
+      &::SIMPLE::_HEADER_default_instance_);
+}
+inline ::SIMPLE::HEADER* STATUS::mutable_header() {
+  set_has_header();
+  if (header_ == NULL) {
+    header_ = new ::SIMPLE::HEADER;
+  }
+  // @@protoc_insertion_point(field_mutable:SIMPLE.STATUS.header)
+  return header_;
+}
+inline ::SIMPLE::HEADER* STATUS::release_header() {
+  // @@protoc_insertion_point(field_release:SIMPLE.STATUS.header)
+  clear_has_header();
+  ::SIMPLE::HEADER* temp = header_;
+  header_ = NULL;
+  return temp;
+}
+inline void STATUS::set_allocated_header(::SIMPLE::HEADER* header) {
+  delete header_;
+  header_ = header;
+  if (header) {
+    set_has_header();
+  } else {
+    clear_has_header();
+  }
+  // @@protoc_insertion_point(field_set_allocated:SIMPLE.STATUS.header)
+}
+
 // -------------------------------------------------------------------
 
 // CAPABILITY
@@ -3268,6 +2751,52 @@ inline ::google::protobuf::RepeatedPtrField< ::std::string>*
 CAPABILITY::mutable_messagename() {
   // @@protoc_insertion_point(field_mutable_list:SIMPLE.CAPABILITY.messageName)
   return &messagename_;
+}
+
+// required .SIMPLE.HEADER header = 2;
+inline bool CAPABILITY::has_header() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void CAPABILITY::set_has_header() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void CAPABILITY::clear_has_header() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void CAPABILITY::clear_header() {
+  if (header_ != NULL) header_->::SIMPLE::HEADER::Clear();
+  clear_has_header();
+}
+inline const ::SIMPLE::HEADER& CAPABILITY::header() const {
+  const ::SIMPLE::HEADER* p = header_;
+  // @@protoc_insertion_point(field_get:SIMPLE.CAPABILITY.header)
+  return p != NULL ? *p : *reinterpret_cast<const ::SIMPLE::HEADER*>(
+      &::SIMPLE::_HEADER_default_instance_);
+}
+inline ::SIMPLE::HEADER* CAPABILITY::mutable_header() {
+  set_has_header();
+  if (header_ == NULL) {
+    header_ = new ::SIMPLE::HEADER;
+  }
+  // @@protoc_insertion_point(field_mutable:SIMPLE.CAPABILITY.header)
+  return header_;
+}
+inline ::SIMPLE::HEADER* CAPABILITY::release_header() {
+  // @@protoc_insertion_point(field_release:SIMPLE.CAPABILITY.header)
+  clear_has_header();
+  ::SIMPLE::HEADER* temp = header_;
+  header_ = NULL;
+  return temp;
+}
+inline void CAPABILITY::set_allocated_header(::SIMPLE::HEADER* header) {
+  delete header_;
+  header_ = header;
+  if (header) {
+    set_has_header();
+  } else {
+    clear_has_header();
+  }
+  // @@protoc_insertion_point(field_set_allocated:SIMPLE.CAPABILITY.header)
 }
 
 // -------------------------------------------------------------------
@@ -3762,6 +3291,52 @@ inline void POSITION::set_allocated_orient(::SIMPLE::Quaternion* orient) {
   // @@protoc_insertion_point(field_set_allocated:SIMPLE.POSITION.orient)
 }
 
+// required .SIMPLE.HEADER header = 3;
+inline bool POSITION::has_header() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void POSITION::set_has_header() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void POSITION::clear_has_header() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void POSITION::clear_header() {
+  if (header_ != NULL) header_->::SIMPLE::HEADER::Clear();
+  clear_has_header();
+}
+inline const ::SIMPLE::HEADER& POSITION::header() const {
+  const ::SIMPLE::HEADER* p = header_;
+  // @@protoc_insertion_point(field_get:SIMPLE.POSITION.header)
+  return p != NULL ? *p : *reinterpret_cast<const ::SIMPLE::HEADER*>(
+      &::SIMPLE::_HEADER_default_instance_);
+}
+inline ::SIMPLE::HEADER* POSITION::mutable_header() {
+  set_has_header();
+  if (header_ == NULL) {
+    header_ = new ::SIMPLE::HEADER;
+  }
+  // @@protoc_insertion_point(field_mutable:SIMPLE.POSITION.header)
+  return header_;
+}
+inline ::SIMPLE::HEADER* POSITION::release_header() {
+  // @@protoc_insertion_point(field_release:SIMPLE.POSITION.header)
+  clear_has_header();
+  ::SIMPLE::HEADER* temp = header_;
+  header_ = NULL;
+  return temp;
+}
+inline void POSITION::set_allocated_header(::SIMPLE::HEADER* header) {
+  delete header_;
+  header_ = header;
+  if (header) {
+    set_has_header();
+  } else {
+    clear_has_header();
+  }
+  // @@protoc_insertion_point(field_set_allocated:SIMPLE.POSITION.header)
+}
+
 // -------------------------------------------------------------------
 
 // TRANSFORM
@@ -3856,6 +3431,52 @@ inline void TRANSFORM::set_allocated_orient(::SIMPLE::Orientation* orient) {
     clear_has_orient();
   }
   // @@protoc_insertion_point(field_set_allocated:SIMPLE.TRANSFORM.orient)
+}
+
+// required .SIMPLE.HEADER header = 3;
+inline bool TRANSFORM::has_header() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void TRANSFORM::set_has_header() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void TRANSFORM::clear_has_header() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void TRANSFORM::clear_header() {
+  if (header_ != NULL) header_->::SIMPLE::HEADER::Clear();
+  clear_has_header();
+}
+inline const ::SIMPLE::HEADER& TRANSFORM::header() const {
+  const ::SIMPLE::HEADER* p = header_;
+  // @@protoc_insertion_point(field_get:SIMPLE.TRANSFORM.header)
+  return p != NULL ? *p : *reinterpret_cast<const ::SIMPLE::HEADER*>(
+      &::SIMPLE::_HEADER_default_instance_);
+}
+inline ::SIMPLE::HEADER* TRANSFORM::mutable_header() {
+  set_has_header();
+  if (header_ == NULL) {
+    header_ = new ::SIMPLE::HEADER;
+  }
+  // @@protoc_insertion_point(field_mutable:SIMPLE.TRANSFORM.header)
+  return header_;
+}
+inline ::SIMPLE::HEADER* TRANSFORM::release_header() {
+  // @@protoc_insertion_point(field_release:SIMPLE.TRANSFORM.header)
+  clear_has_header();
+  ::SIMPLE::HEADER* temp = header_;
+  header_ = NULL;
+  return temp;
+}
+inline void TRANSFORM::set_allocated_header(::SIMPLE::HEADER* header) {
+  delete header_;
+  header_ = header;
+  if (header) {
+    set_has_header();
+  } else {
+    clear_has_header();
+  }
+  // @@protoc_insertion_point(field_set_allocated:SIMPLE.TRANSFORM.header)
 }
 
 // -------------------------------------------------------------------
@@ -4602,13 +4223,13 @@ inline void IMAGE::set_allocated_subvolume(::SIMPLE::IMAGE_SUBVOLUME* subvolume)
 
 // optional bool existSUBVOLUME = 3;
 inline bool IMAGE::has_existsubvolume() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
+  return (_has_bits_[0] & 0x00000010u) != 0;
 }
 inline void IMAGE::set_has_existsubvolume() {
-  _has_bits_[0] |= 0x00000008u;
+  _has_bits_[0] |= 0x00000010u;
 }
 inline void IMAGE::clear_has_existsubvolume() {
-  _has_bits_[0] &= ~0x00000008u;
+  _has_bits_[0] &= ~0x00000010u;
 }
 inline void IMAGE::clear_existsubvolume() {
   existsubvolume_ = false;
@@ -4668,6 +4289,52 @@ inline void IMAGE::set_allocated_imagedata(::SIMPLE::IMAGE_imageArray* imagedata
     clear_has_imagedata();
   }
   // @@protoc_insertion_point(field_set_allocated:SIMPLE.IMAGE.imageData)
+}
+
+// required .SIMPLE.HEADER header = 5;
+inline bool IMAGE::has_header() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void IMAGE::set_has_header() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void IMAGE::clear_has_header() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void IMAGE::clear_header() {
+  if (header_ != NULL) header_->::SIMPLE::HEADER::Clear();
+  clear_has_header();
+}
+inline const ::SIMPLE::HEADER& IMAGE::header() const {
+  const ::SIMPLE::HEADER* p = header_;
+  // @@protoc_insertion_point(field_get:SIMPLE.IMAGE.header)
+  return p != NULL ? *p : *reinterpret_cast<const ::SIMPLE::HEADER*>(
+      &::SIMPLE::_HEADER_default_instance_);
+}
+inline ::SIMPLE::HEADER* IMAGE::mutable_header() {
+  set_has_header();
+  if (header_ == NULL) {
+    header_ = new ::SIMPLE::HEADER;
+  }
+  // @@protoc_insertion_point(field_mutable:SIMPLE.IMAGE.header)
+  return header_;
+}
+inline ::SIMPLE::HEADER* IMAGE::release_header() {
+  // @@protoc_insertion_point(field_release:SIMPLE.IMAGE.header)
+  clear_has_header();
+  ::SIMPLE::HEADER* temp = header_;
+  header_ = NULL;
+  return temp;
+}
+inline void IMAGE::set_allocated_header(::SIMPLE::HEADER* header) {
+  delete header_;
+  header_ = header;
+  if (header) {
+    set_has_header();
+  } else {
+    clear_has_header();
+  }
+  // @@protoc_insertion_point(field_set_allocated:SIMPLE.IMAGE.header)
 }
 
 // -------------------------------------------------------------------
@@ -4885,6 +4552,52 @@ inline void GENERIC::set_allocated_basicstring(::std::string* basicstring) {
   // @@protoc_insertion_point(field_set_allocated:SIMPLE.GENERIC.basicString)
 }
 
+// required .SIMPLE.HEADER header = 6;
+inline bool GENERIC::has_header() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void GENERIC::set_has_header() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void GENERIC::clear_has_header() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void GENERIC::clear_header() {
+  if (header_ != NULL) header_->::SIMPLE::HEADER::Clear();
+  clear_has_header();
+}
+inline const ::SIMPLE::HEADER& GENERIC::header() const {
+  const ::SIMPLE::HEADER* p = header_;
+  // @@protoc_insertion_point(field_get:SIMPLE.GENERIC.header)
+  return p != NULL ? *p : *reinterpret_cast<const ::SIMPLE::HEADER*>(
+      &::SIMPLE::_HEADER_default_instance_);
+}
+inline ::SIMPLE::HEADER* GENERIC::mutable_header() {
+  set_has_header();
+  if (header_ == NULL) {
+    header_ = new ::SIMPLE::HEADER;
+  }
+  // @@protoc_insertion_point(field_mutable:SIMPLE.GENERIC.header)
+  return header_;
+}
+inline ::SIMPLE::HEADER* GENERIC::release_header() {
+  // @@protoc_insertion_point(field_release:SIMPLE.GENERIC.header)
+  clear_has_header();
+  ::SIMPLE::HEADER* temp = header_;
+  header_ = NULL;
+  return temp;
+}
+inline void GENERIC::set_allocated_header(::SIMPLE::HEADER* header) {
+  delete header_;
+  header_ = header;
+  if (header) {
+    set_has_header();
+  } else {
+    clear_has_header();
+  }
+  // @@protoc_insertion_point(field_set_allocated:SIMPLE.GENERIC.header)
+}
+
 inline bool GENERIC::has_data() const {
   return data_case() != DATA_NOT_SET;
 }
@@ -4897,8 +4610,6 @@ inline GENERIC::DataCase GENERIC::data_case() const {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
-// -------------------------------------------------------------------
-
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
