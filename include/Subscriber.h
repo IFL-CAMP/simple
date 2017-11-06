@@ -21,13 +21,12 @@ public:
   /// of the class instance. Filter for the subscriber socket shall be taken from the message type
   ///@return Protobuf-type message, matching the instance type
   std::unique_ptr<T> subscribe();
-  void readMsg(const SIMPLE::TRANSFORM& msg, SIMPLE::HEADER& header, double& px, double& py, double& pz,
-               double& r11, double& r12, double& r13, double& r21, double& r22, double& r23, double& r31, double& r32,
-               double& r33);
-  void readMsg(const SIMPLE::POSITION& msg, SIMPLE::HEADER& header, double& px, double& py, double& pz,
-               double& e1, double& e2, double& e3, double& e4);
-  void readMsg(const SIMPLE::STATUS& msg, SIMPLE::HEADER& header, int& code, int& subcode,
-               std::string& errorName, std::string& errorMsg);
+  void readMsg(const SIMPLE::TRANSFORM& msg, SIMPLE::HEADER& header, double& px, double& py, double& pz, double& r11,
+               double& r12, double& r13, double& r21, double& r22, double& r23, double& r31, double& r32, double& r33);
+  void readMsg(const SIMPLE::POSITION& msg, SIMPLE::HEADER& header, double& px, double& py, double& pz, double& e1,
+               double& e2, double& e3, double& e4);
+  void readMsg(const SIMPLE::STATUS& msg, SIMPLE::HEADER& header, int& code, int& subcode, std::string& errorName,
+               std::string& errorMsg);
   void readMsg(const SIMPLE::CAPABILITY& msg, SIMPLE::HEADER& header, std::vector<std::string>& msgNames);
   void readMsg(const SIMPLE::GENERIC& msg, SIMPLE::HEADER& header, bool& data);
   void readMsg(const SIMPLE::GENERIC& msg, SIMPLE::HEADER& header, int& data);

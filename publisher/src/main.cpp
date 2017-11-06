@@ -32,22 +32,50 @@ int main(int argc, char* argv[]) {
 	//start context
 	simple::myContext globalContext;
 
-	simple::Publisher<SIMPLE::CAPABILITY> pub("tcp://*:5556", *globalContext.context);
+	//start one instance of publisher for each message type
 
-	SIMPLE::HEADER* header = pub.createHEADER(1, "GENERIC", "My PC", 0);
+	simple::Publisher<SIMPLE::CAPABILITY> pubCap("tcp://*:5555", *globalContext.context);
+	simple::Publisher<SIMPLE::TRANSFORM> pubTrans("tcp://*:5556", *globalContext.context);
+	simple::Publisher<SIMPLE::POSITION> pubPos("tcp://*:5557", *globalContext.context);
+	simple::Publisher<SIMPLE::STATUS> pubStat("tcp://*:5558", *globalContext.context);
+	simple::Publisher<SIMPLE::GENERIC> pubGen("tcp://*:5559", *globalContext.context);
+
+	//put random stuff on each message, for testing
+
+	SIMPLE::HEADER* headerCap = pubCap.createHEADER(1, "CAPABILITY", "My PC", 0);
+	SIMPLE::HEADER* headerTrans = pubTrans.createHEADER(1, "TRANSFORM", "My PC", 0);
+	SIMPLE::HEADER* headerPos = pubPos.createHEADER(1, "POSITION", "My PC", 0);
+	SIMPLE::HEADER* headerStat = pubStat.createHEADER(1, "STATUS", "My PC", 0);
+	SIMPLE::HEADER* headerGen = pubGen.createHEADER(1, "GENERIC", "My PC", 0);
 
 	std::vector<std::string> vec = { "POSITION", "STATUS", "TRANSFORM" };
-	std::unique_ptr<SIMPLE::CAPABILITY> baseMSG = pub.createMSG(header, vec);
+	std::unique_ptr<SIMPLE::CAPABILITY> capMSG = pubCap.createMSG(headerCap, vec);
+
+	std::unique_ptr<SIMPLE::TRANSFORM> transMSG = pubTrans.createMSG(headerTrans, 2.1, 2.2, 2.3, 1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 3.1, 3.2, 3.3);
+
+	std::unique_ptr<SIMPLE::POSITION> posMSG = pubPos.createMSG(headerPos, 1.0, 1.1, 1.2, 2.1, 2.2, 2.3, 2.4);
+
+	std::unique_ptr<SIMPLE::STATUS> statMSG = pubStat.createMSG(headerStat, 1, 2, "Error Name", "Random message");
+
+	std::unique_ptr<SIMPLE::GENERIC> genMSG = pubGen.createMSG(headerGen, true);
 
 	s_catch_signals();
 	while (!s_interrupted)
 	{
-		try{
-			pub.publish(*baseMSG);
-			std::cout << "Message published" << "\n";
+		try{//send all messages one after the other
+			pubCap.publish(*capMSG);
+			std::cout << "Capability Message published" << "\n";
+			pubGen.publish(*genMSG);
+			std::cout << "Generic Message published" << "\n";
+			pubPos.publish(*posMSG);
+			std::cout << "Position Message published" << "\n";
+			pubStat.publish(*statMSG);
+			std::cout << "Status Message published" << "\n";
+			pubTrans.publish(*transMSG);
+			std::cout << "Transform Message published" << "\n";
 		}
 		catch (zmq::error_t& e){
-			std::cout << "Interruption received" << "\n";
+			std::cout << "Something went wrong with the publishing..." << "\n";
 		}
 	}
 
