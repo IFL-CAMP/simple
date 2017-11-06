@@ -1036,52 +1036,52 @@ class Quaternion : public ::google::protobuf::Message /* @@protoc_insertion_poin
 
   // accessors -------------------------------------------------------
 
-  // optional double qi = 1;
-  bool has_qi() const;
-  void clear_qi();
-  static const int kQiFieldNumber = 1;
-  double qi() const;
-  void set_qi(double value);
+  // optional double e1 = 1;
+  bool has_e1() const;
+  void clear_e1();
+  static const int kE1FieldNumber = 1;
+  double e1() const;
+  void set_e1(double value);
 
-  // optional double qj = 2;
-  bool has_qj() const;
-  void clear_qj();
-  static const int kQjFieldNumber = 2;
-  double qj() const;
-  void set_qj(double value);
+  // optional double e2 = 2;
+  bool has_e2() const;
+  void clear_e2();
+  static const int kE2FieldNumber = 2;
+  double e2() const;
+  void set_e2(double value);
 
-  // optional double qk = 3;
-  bool has_qk() const;
-  void clear_qk();
-  static const int kQkFieldNumber = 3;
-  double qk() const;
-  void set_qk(double value);
+  // optional double e3 = 3;
+  bool has_e3() const;
+  void clear_e3();
+  static const int kE3FieldNumber = 3;
+  double e3() const;
+  void set_e3(double value);
 
-  // optional double qr = 4;
-  bool has_qr() const;
-  void clear_qr();
-  static const int kQrFieldNumber = 4;
-  double qr() const;
-  void set_qr(double value);
+  // optional double e4 = 4;
+  bool has_e4() const;
+  void clear_e4();
+  static const int kE4FieldNumber = 4;
+  double e4() const;
+  void set_e4(double value);
 
   // @@protoc_insertion_point(class_scope:SIMPLE.Quaternion)
  private:
-  void set_has_qi();
-  void clear_has_qi();
-  void set_has_qj();
-  void clear_has_qj();
-  void set_has_qk();
-  void clear_has_qk();
-  void set_has_qr();
-  void clear_has_qr();
+  void set_has_e1();
+  void clear_has_e1();
+  void set_has_e2();
+  void clear_has_e2();
+  void set_has_e3();
+  void clear_has_e3();
+  void set_has_e4();
+  void clear_has_e4();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable int _cached_size_;
-  double qi_;
-  double qj_;
-  double qk_;
-  double qr_;
+  double e1_;
+  double e2_;
+  double e3_;
+  double e4_;
   friend struct ::protobuf_SIMPLE_2eproto::TableStruct;
   friend void ::protobuf_SIMPLE_2eproto::InitDefaultsQuaternionImpl();
 };
@@ -3099,100 +3099,100 @@ inline void Orientation::set_r33(double value) {
 
 // Quaternion
 
-// optional double qi = 1;
-inline bool Quaternion::has_qi() const {
+// optional double e1 = 1;
+inline bool Quaternion::has_e1() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void Quaternion::set_has_qi() {
+inline void Quaternion::set_has_e1() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void Quaternion::clear_has_qi() {
+inline void Quaternion::clear_has_e1() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void Quaternion::clear_qi() {
-  qi_ = 0;
-  clear_has_qi();
+inline void Quaternion::clear_e1() {
+  e1_ = 0;
+  clear_has_e1();
 }
-inline double Quaternion::qi() const {
-  // @@protoc_insertion_point(field_get:SIMPLE.Quaternion.qi)
-  return qi_;
+inline double Quaternion::e1() const {
+  // @@protoc_insertion_point(field_get:SIMPLE.Quaternion.e1)
+  return e1_;
 }
-inline void Quaternion::set_qi(double value) {
-  set_has_qi();
-  qi_ = value;
-  // @@protoc_insertion_point(field_set:SIMPLE.Quaternion.qi)
+inline void Quaternion::set_e1(double value) {
+  set_has_e1();
+  e1_ = value;
+  // @@protoc_insertion_point(field_set:SIMPLE.Quaternion.e1)
 }
 
-// optional double qj = 2;
-inline bool Quaternion::has_qj() const {
+// optional double e2 = 2;
+inline bool Quaternion::has_e2() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void Quaternion::set_has_qj() {
+inline void Quaternion::set_has_e2() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void Quaternion::clear_has_qj() {
+inline void Quaternion::clear_has_e2() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void Quaternion::clear_qj() {
-  qj_ = 0;
-  clear_has_qj();
+inline void Quaternion::clear_e2() {
+  e2_ = 0;
+  clear_has_e2();
 }
-inline double Quaternion::qj() const {
-  // @@protoc_insertion_point(field_get:SIMPLE.Quaternion.qj)
-  return qj_;
+inline double Quaternion::e2() const {
+  // @@protoc_insertion_point(field_get:SIMPLE.Quaternion.e2)
+  return e2_;
 }
-inline void Quaternion::set_qj(double value) {
-  set_has_qj();
-  qj_ = value;
-  // @@protoc_insertion_point(field_set:SIMPLE.Quaternion.qj)
+inline void Quaternion::set_e2(double value) {
+  set_has_e2();
+  e2_ = value;
+  // @@protoc_insertion_point(field_set:SIMPLE.Quaternion.e2)
 }
 
-// optional double qk = 3;
-inline bool Quaternion::has_qk() const {
+// optional double e3 = 3;
+inline bool Quaternion::has_e3() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void Quaternion::set_has_qk() {
+inline void Quaternion::set_has_e3() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void Quaternion::clear_has_qk() {
+inline void Quaternion::clear_has_e3() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void Quaternion::clear_qk() {
-  qk_ = 0;
-  clear_has_qk();
+inline void Quaternion::clear_e3() {
+  e3_ = 0;
+  clear_has_e3();
 }
-inline double Quaternion::qk() const {
-  // @@protoc_insertion_point(field_get:SIMPLE.Quaternion.qk)
-  return qk_;
+inline double Quaternion::e3() const {
+  // @@protoc_insertion_point(field_get:SIMPLE.Quaternion.e3)
+  return e3_;
 }
-inline void Quaternion::set_qk(double value) {
-  set_has_qk();
-  qk_ = value;
-  // @@protoc_insertion_point(field_set:SIMPLE.Quaternion.qk)
+inline void Quaternion::set_e3(double value) {
+  set_has_e3();
+  e3_ = value;
+  // @@protoc_insertion_point(field_set:SIMPLE.Quaternion.e3)
 }
 
-// optional double qr = 4;
-inline bool Quaternion::has_qr() const {
+// optional double e4 = 4;
+inline bool Quaternion::has_e4() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void Quaternion::set_has_qr() {
+inline void Quaternion::set_has_e4() {
   _has_bits_[0] |= 0x00000008u;
 }
-inline void Quaternion::clear_has_qr() {
+inline void Quaternion::clear_has_e4() {
   _has_bits_[0] &= ~0x00000008u;
 }
-inline void Quaternion::clear_qr() {
-  qr_ = 0;
-  clear_has_qr();
+inline void Quaternion::clear_e4() {
+  e4_ = 0;
+  clear_has_e4();
 }
-inline double Quaternion::qr() const {
-  // @@protoc_insertion_point(field_get:SIMPLE.Quaternion.qr)
-  return qr_;
+inline double Quaternion::e4() const {
+  // @@protoc_insertion_point(field_get:SIMPLE.Quaternion.e4)
+  return e4_;
 }
-inline void Quaternion::set_qr(double value) {
-  set_has_qr();
-  qr_ = value;
-  // @@protoc_insertion_point(field_set:SIMPLE.Quaternion.qr)
+inline void Quaternion::set_e4(double value) {
+  set_has_e4();
+  e4_ = value;
+  // @@protoc_insertion_point(field_set:SIMPLE.Quaternion.e4)
 }
 
 // -------------------------------------------------------------------

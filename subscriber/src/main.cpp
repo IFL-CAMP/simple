@@ -35,11 +35,11 @@ int main(int argc, char* argv[]) {
 	{
 		try{
 			
-			std::pair<std::unique_ptr<SIMPLE::CAPABILITY>, std::unique_ptr<SIMPLE::HEADER>> income = sub.subscribe();
+			std::unique_ptr<SIMPLE::CAPABILITY> income = sub.subscribe();
 			//write the content of the message
 			std::string msgSTR;
 			
-			google::protobuf::TextFormat::PrintToString(*income.first, &msgSTR);
+			google::protobuf::TextFormat::PrintToString(*income, &msgSTR);
 			std::cout << msgSTR << "\n";
 
 		}

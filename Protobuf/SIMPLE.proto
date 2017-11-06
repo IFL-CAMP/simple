@@ -53,10 +53,10 @@ message Orientation {
 
 message Quaternion {
 
-	optional double qi = 1;
-	optional double qj = 2;
-	optional double qk = 3;
-	optional double qr = 4;
+	optional double e1 = 1;
+	optional double e2 = 2;
+	optional double e3 = 3;
+	optional double e4 = 4;
 
 
 }

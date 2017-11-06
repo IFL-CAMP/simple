@@ -28,12 +28,13 @@ std::unique_ptr<SIMPLE::TRANSFORM> simple::MSGcreator::createTRANSFORM(SIMPLE::H
 
   transform->set_allocated_orient(orientation);
   transform->set_allocated_position(pos);
+  transform->set_allocated_header(header);
 
   return transform;
 }
 std::unique_ptr<SIMPLE::POSITION> simple::MSGcreator::createPOSITION(SIMPLE::HEADER* header, double px, double py,
-                                                                    double pz, double qi, double qj, double qk,
-                                                                    double qr)
+                                                                    double pz, double e1, double e2, double e3,
+                                                                    double e4)
 {
   /// Creates a message of type POSITION
 
@@ -42,10 +43,10 @@ std::unique_ptr<SIMPLE::POSITION> simple::MSGcreator::createPOSITION(SIMPLE::HEA
   SIMPLE::Pos* pos = new SIMPLE::Pos();
   SIMPLE::Quaternion* quaternion = new SIMPLE::Quaternion();
 
-  quaternion->set_qi(qi);
-  quaternion->set_qj(qj);
-  quaternion->set_qk(qk);
-  quaternion->set_qr(qr);
+  quaternion->set_e1(e1);
+  quaternion->set_e2(e2);
+  quaternion->set_e3(e3);
+  quaternion->set_e4(e4);
 
   pos->set_px(px);
   pos->set_py(py);
@@ -53,6 +54,7 @@ std::unique_ptr<SIMPLE::POSITION> simple::MSGcreator::createPOSITION(SIMPLE::HEA
 
   position->set_allocated_orient(quaternion);
   position->set_allocated_position(pos);
+  position->set_allocated_header(header);
 
   return position;
 }
@@ -67,6 +69,7 @@ std::unique_ptr<SIMPLE::STATUS> simple::MSGcreator::createSTATUS(SIMPLE::HEADER*
   stat->set_statuscode(code);
   stat->set_errormsg(errorMsg);
   stat->set_errorname(errorName);
+  stat->set_allocated_header(header);
 
   return stat;
 }
@@ -80,82 +83,54 @@ std::unique_ptr<SIMPLE::CAPABILITY> simple::MSGcreator::createCAPABILITY(SIMPLE:
     cap->add_messagename(msgNames.at(i));
   }
 
+  cap->set_allocated_header(header);
+
   return cap;
 }
 std::unique_ptr<SIMPLE::GENERIC> simple::MSGcreator::createGENERIC_BOOL(SIMPLE::HEADER* header, bool data)
 {
-  std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
+	std::unique_ptr<SIMPLE::GENERIC> gen = std::make_unique<SIMPLE::GENERIC>();
 
-  SIMPLE::GENERIC* gen = new SIMPLE::GENERIC();
   gen->set_basicbool(data);
+  gen->set_allocated_header(header);
 
-  std::string* flag = new std::string("GEN");
-
-  msg->set_allocated_flag(flag);
-  msg->set_allocated_header(header);
-  msg->set_allocated_gener(gen);
-
-  return msg;
+  return gen;
 }
 std::unique_ptr<SIMPLE::GENERIC> simple::MSGcreator::createGENERIC_INT(SIMPLE::HEADER* header, int data)
 {
-  std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
-  SIMPLE::GENERIC* gen = new SIMPLE::GENERIC();
+	std::unique_ptr<SIMPLE::GENERIC> gen = std::make_unique<SIMPLE::GENERIC>();
 
-  gen->set_basicint(data);
+	gen->set_basicint(data);
+	gen->set_allocated_header(header);
 
-  std::string* flag = new std::string("GEN");
-
-  msg->set_allocated_flag(flag);
-  msg->set_allocated_header(header);
-  msg->set_allocated_gener(gen);  // takes ownership of GENERIC
-
-  return msg;
+  return gen;
 }
 std::unique_ptr<SIMPLE::GENERIC> simple::MSGcreator::createGENERIC_FLOAT(SIMPLE::HEADER* header, float data)
 {
-  std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
+	std::unique_ptr<SIMPLE::GENERIC> gen = std::make_unique<SIMPLE::GENERIC>();
 
-  SIMPLE::GENERIC* gen = new SIMPLE::GENERIC();
-  gen->set_basicfloat(data);
+	gen->set_basicfloat(data);
+	gen->set_allocated_header(header);
 
-  std::string* flag = new std::string("GEN");
-
-  msg->set_allocated_flag(flag);
-  msg->set_allocated_header(header);
-  msg->set_allocated_gener(gen);
-
-  return msg;
+  return gen;
 }
 std::unique_ptr<SIMPLE::GENERIC> simple::MSGcreator::createGENERIC_DOUBLE(SIMPLE::HEADER* header, double data)
 {
-  std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
+	std::unique_ptr<SIMPLE::GENERIC> gen = std::make_unique<SIMPLE::GENERIC>();
 
-  SIMPLE::GENERIC* gen = new SIMPLE::GENERIC();
-  gen->set_basicdouble(data);
+	gen->set_basicdouble(data);
+	gen->set_allocated_header(header);
 
-  std::string* flag = new std::string("GEN");
-
-  msg->set_allocated_flag(flag);
-  msg->set_allocated_header(header);
-  msg->set_allocated_gener(gen);
-
-  return msg;
+  return gen;
 }
 std::unique_ptr<SIMPLE::GENERIC> simple::MSGcreator::createGENERIC_STR(SIMPLE::HEADER* header, std::string data)
 {
-  std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
-  SIMPLE::GENERIC* gen = new SIMPLE::GENERIC();
+	std::unique_ptr<SIMPLE::GENERIC> gen = std::make_unique<SIMPLE::GENERIC>();
 
-  gen->set_basicstring(data);
+	gen->set_basicstring(data);
+	gen->set_allocated_header(header);
 
-  std::string* flag = new std::string("GEN");  // always 3 letters
-
-  msg->set_allocated_flag(flag);
-  msg->set_allocated_header(header);
-  msg->set_allocated_gener(gen);
-
-  return msg;
+  return gen;
 }
 
 SIMPLE::HEADER* simple::MSGcreator::createHEADER(int versionNum, std::string dataTypeName, std::string deviceName,

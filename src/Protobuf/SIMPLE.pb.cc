@@ -404,10 +404,10 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::Quaternion, qi_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::Quaternion, qj_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::Quaternion, qk_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::Quaternion, qr_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::Quaternion, e1_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::Quaternion, e2_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::Quaternion, e3_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::SIMPLE::Quaternion, e4_),
   0,
   1,
   2,
@@ -585,8 +585,8 @@ void AddDescriptorsImpl() {
       "\n\003r11\030\001 \001(\001\022\013\n\003r12\030\002 \001(\001\022\013\n\003r13\030\003 \001(\001\022\013\n"
       "\003r21\030\004 \001(\001\022\013\n\003r22\030\005 \001(\001\022\013\n\003r23\030\006 \001(\001\022\013\n\003"
       "r31\030\007 \001(\001\022\013\n\003r32\030\010 \001(\001\022\013\n\003r33\030\t \001(\001\"<\n\nQ"
-      "uaternion\022\n\n\002qi\030\001 \001(\001\022\n\n\002qj\030\002 \001(\001\022\n\n\002qk\030"
-      "\003 \001(\001\022\n\n\002qr\030\004 \001(\001\"m\n\010POSITION\022\035\n\010positio"
+      "uaternion\022\n\n\002e1\030\001 \001(\001\022\n\n\002e2\030\002 \001(\001\022\n\n\002e3\030"
+      "\003 \001(\001\022\n\n\002e4\030\004 \001(\001\"m\n\010POSITION\022\035\n\010positio"
       "n\030\001 \001(\0132\013.SIMPLE.Pos\022\"\n\006orient\030\002 \001(\0132\022.S"
       "IMPLE.Quaternion\022\036\n\006header\030\003 \002(\0132\016.SIMPL"
       "E.HEADER\"o\n\tTRANSFORM\022\035\n\010position\030\001 \001(\0132"
@@ -2720,10 +2720,10 @@ void Orientation::InternalSwap(Orientation* other) {
 void Quaternion::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int Quaternion::kQiFieldNumber;
-const int Quaternion::kQjFieldNumber;
-const int Quaternion::kQkFieldNumber;
-const int Quaternion::kQrFieldNumber;
+const int Quaternion::kE1FieldNumber;
+const int Quaternion::kE2FieldNumber;
+const int Quaternion::kE3FieldNumber;
+const int Quaternion::kE4FieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 Quaternion::Quaternion()
@@ -2740,17 +2740,17 @@ Quaternion::Quaternion(const Quaternion& from)
       _has_bits_(from._has_bits_),
       _cached_size_(0) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::memcpy(&qi_, &from.qi_,
-    static_cast<size_t>(reinterpret_cast<char*>(&qr_) -
-    reinterpret_cast<char*>(&qi_)) + sizeof(qr_));
+  ::memcpy(&e1_, &from.e1_,
+    static_cast<size_t>(reinterpret_cast<char*>(&e4_) -
+    reinterpret_cast<char*>(&e1_)) + sizeof(e4_));
   // @@protoc_insertion_point(copy_constructor:SIMPLE.Quaternion)
 }
 
 void Quaternion::SharedCtor() {
   _cached_size_ = 0;
-  ::memset(&qi_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&qr_) -
-      reinterpret_cast<char*>(&qi_)) + sizeof(qr_));
+  ::memset(&e1_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&e4_) -
+      reinterpret_cast<char*>(&e1_)) + sizeof(e4_));
 }
 
 Quaternion::~Quaternion() {
@@ -2792,9 +2792,9 @@ void Quaternion::Clear() {
 
   cached_has_bits = _has_bits_[0];
   if (cached_has_bits & 15u) {
-    ::memset(&qi_, 0, static_cast<size_t>(
-        reinterpret_cast<char*>(&qr_) -
-        reinterpret_cast<char*>(&qi_)) + sizeof(qr_));
+    ::memset(&e1_, 0, static_cast<size_t>(
+        reinterpret_cast<char*>(&e4_) -
+        reinterpret_cast<char*>(&e1_)) + sizeof(e4_));
   }
   _has_bits_.Clear();
   _internal_metadata_.Clear();
@@ -2810,56 +2810,56 @@ bool Quaternion::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional double qi = 1;
+      // optional double e1 = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(9u /* 9 & 0xFF */)) {
-          set_has_qi();
+          set_has_e1();
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
-                 input, &qi_)));
+                 input, &e1_)));
         } else {
           goto handle_unusual;
         }
         break;
       }
 
-      // optional double qj = 2;
+      // optional double e2 = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(17u /* 17 & 0xFF */)) {
-          set_has_qj();
+          set_has_e2();
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
-                 input, &qj_)));
+                 input, &e2_)));
         } else {
           goto handle_unusual;
         }
         break;
       }
 
-      // optional double qk = 3;
+      // optional double e3 = 3;
       case 3: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(25u /* 25 & 0xFF */)) {
-          set_has_qk();
+          set_has_e3();
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
-                 input, &qk_)));
+                 input, &e3_)));
         } else {
           goto handle_unusual;
         }
         break;
       }
 
-      // optional double qr = 4;
+      // optional double e4 = 4;
       case 4: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(33u /* 33 & 0xFF */)) {
-          set_has_qr();
+          set_has_e4();
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
-                 input, &qr_)));
+                 input, &e4_)));
         } else {
           goto handle_unusual;
         }
@@ -2893,24 +2893,24 @@ void Quaternion::SerializeWithCachedSizes(
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  // optional double qi = 1;
+  // optional double e1 = 1;
   if (cached_has_bits & 0x00000001u) {
-    ::google::protobuf::internal::WireFormatLite::WriteDouble(1, this->qi(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(1, this->e1(), output);
   }
 
-  // optional double qj = 2;
+  // optional double e2 = 2;
   if (cached_has_bits & 0x00000002u) {
-    ::google::protobuf::internal::WireFormatLite::WriteDouble(2, this->qj(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(2, this->e2(), output);
   }
 
-  // optional double qk = 3;
+  // optional double e3 = 3;
   if (cached_has_bits & 0x00000004u) {
-    ::google::protobuf::internal::WireFormatLite::WriteDouble(3, this->qk(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(3, this->e3(), output);
   }
 
-  // optional double qr = 4;
+  // optional double e4 = 4;
   if (cached_has_bits & 0x00000008u) {
-    ::google::protobuf::internal::WireFormatLite::WriteDouble(4, this->qr(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(4, this->e4(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -2928,24 +2928,24 @@ void Quaternion::SerializeWithCachedSizes(
   (void) cached_has_bits;
 
   cached_has_bits = _has_bits_[0];
-  // optional double qi = 1;
+  // optional double e1 = 1;
   if (cached_has_bits & 0x00000001u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(1, this->qi(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(1, this->e1(), target);
   }
 
-  // optional double qj = 2;
+  // optional double e2 = 2;
   if (cached_has_bits & 0x00000002u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(2, this->qj(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(2, this->e2(), target);
   }
 
-  // optional double qk = 3;
+  // optional double e3 = 3;
   if (cached_has_bits & 0x00000004u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(3, this->qk(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(3, this->e3(), target);
   }
 
-  // optional double qr = 4;
+  // optional double e4 = 4;
   if (cached_has_bits & 0x00000008u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(4, this->qr(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(4, this->e4(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -2966,23 +2966,23 @@ size_t Quaternion::ByteSizeLong() const {
         _internal_metadata_.unknown_fields());
   }
   if (_has_bits_[0 / 32] & 15u) {
-    // optional double qi = 1;
-    if (has_qi()) {
+    // optional double e1 = 1;
+    if (has_e1()) {
       total_size += 1 + 8;
     }
 
-    // optional double qj = 2;
-    if (has_qj()) {
+    // optional double e2 = 2;
+    if (has_e2()) {
       total_size += 1 + 8;
     }
 
-    // optional double qk = 3;
-    if (has_qk()) {
+    // optional double e3 = 3;
+    if (has_e3()) {
       total_size += 1 + 8;
     }
 
-    // optional double qr = 4;
-    if (has_qr()) {
+    // optional double e4 = 4;
+    if (has_e4()) {
       total_size += 1 + 8;
     }
 
@@ -3019,16 +3019,16 @@ void Quaternion::MergeFrom(const Quaternion& from) {
   cached_has_bits = from._has_bits_[0];
   if (cached_has_bits & 15u) {
     if (cached_has_bits & 0x00000001u) {
-      qi_ = from.qi_;
+      e1_ = from.e1_;
     }
     if (cached_has_bits & 0x00000002u) {
-      qj_ = from.qj_;
+      e2_ = from.e2_;
     }
     if (cached_has_bits & 0x00000004u) {
-      qk_ = from.qk_;
+      e3_ = from.e3_;
     }
     if (cached_has_bits & 0x00000008u) {
-      qr_ = from.qr_;
+      e4_ = from.e4_;
     }
     _has_bits_[0] |= cached_has_bits;
   }
@@ -3058,10 +3058,10 @@ void Quaternion::Swap(Quaternion* other) {
 }
 void Quaternion::InternalSwap(Quaternion* other) {
   using std::swap;
-  swap(qi_, other->qi_);
-  swap(qj_, other->qj_);
-  swap(qk_, other->qk_);
-  swap(qr_, other->qr_);
+  swap(e1_, other->e1_);
+  swap(e2_, other->e2_);
+  swap(e3_, other->e3_);
+  swap(e4_, other->e4_);
   swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   swap(_cached_size_, other->_cached_size_);

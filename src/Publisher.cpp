@@ -1,247 +1,78 @@
 #include "Publisher.h"
 
-void simple::Publisher::publish(const SIMPLE::BASEMSG& msg)
-{
-  /// Sends the message by the open socket of the publisher. Any type of message
-  /// is supported
 
-  std::string strMSG;
 
-  msg.SerializeToString(&strMSG);  // serialize the protobuf message into a
-                                   // string
-
-  zmq::message_t ZMQmsg(strMSG.size());
-
-  memcpy(ZMQmsg.data(), strMSG.c_str(), strMSG.size());
-
-  try
-  {
-    socket->send(ZMQmsg);
-  }
-  catch (zmq::error_t& e)
-  {
-    std::cout << "Could not send message: " << e.what();
-  }
-}
-simple::Publisher::Publisher(std::string port, zmq::context_t& context)
-{
-  /// Class constructor: opens a socket of type ZMQ_PUB and binds it to port
-
-  socket = std::make_unique<zmq::socket_t>(context, ZMQ_PUB);
-  try
-  {
-    socket->bind(port);
-  }
-  catch (zmq::error_t& e)
-  {
-    std::cout << "could not bind to socket:" << e.what();
-  }
-}
-simple::Publisher::~Publisher()
-{
-  /// Class destructor: Closes the socket
-  socket->close();
-}
-std::unique_ptr<SIMPLE::BASEMSG> simple::Publisher::createTRANSFORM(SIMPLE::HEADER* header, double px, double py,
+std::unique_ptr<SIMPLE::TRANSFORM> simple::Publisher<SIMPLE::TRANSFORM>::createMSG(SIMPLE::HEADER* header, double px, double py,
                                                                     double pz, double r11, double r12, double r13,
                                                                     double r21, double r22, double r23, double r31,
                                                                     double r32, double r33)
 {
   /// Creates a message of type TRANSFORM
-
-  std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
-
-  SIMPLE::TRANSFORM* transform = new SIMPLE::TRANSFORM();
-
-  SIMPLE::Pos* pos = new SIMPLE::Pos();
-  SIMPLE::Orientation* orientation = new SIMPLE::Orientation();
-
-  pos->set_px(px);
-  pos->set_py(py);
-  pos->set_pz(pz);
-
-  orientation->set_r11(r11);
-  orientation->set_r12(r12);
-  orientation->set_r13(r13);
-  orientation->set_r21(r21);
-  orientation->set_r22(r22);
-  orientation->set_r23(r23);
-  orientation->set_r31(r31);
-  orientation->set_r32(r32);
-  orientation->set_r33(r33);
-
-  transform->set_allocated_orient(orientation);
-  transform->set_allocated_position(pos);
-
-  std::string* flag = new std::string("TRF");
-
-  msg->set_allocated_flag(flag);
-  msg->set_allocated_header(header);
-  msg->set_allocated_transform(transform);
-
+	std::unique_ptr<SIMPLE::TRANSFORM> msg=msgCreator.createTRANSFORM(header, px, py, pz, r11, r12, r13, r21, r22, r23, r31, r32, r33);
+  
   return msg;
 }
-std::unique_ptr<SIMPLE::BASEMSG> simple::Publisher::createPOSITION(SIMPLE::HEADER* header, double px, double py,
-                                                                   double pz, double qi, double qj, double qk,
-                                                                   double qr)
+std::unique_ptr<SIMPLE::POSITION> simple::Publisher<SIMPLE::POSITION>::createMSG(SIMPLE::HEADER* header, double px, double py,
+                                                                   double pz, double e1, double e2, double e3,
+                                                                   double e4)
 {
   /// Creates a message of type POSITION
 
-  std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
-
-  SIMPLE::POSITION* position = new SIMPLE::POSITION();
-
-  SIMPLE::Pos* pos = new SIMPLE::Pos();
-  SIMPLE::Quaternion* quaternion = new SIMPLE::Quaternion();
-
-  quaternion->set_qi(qi);
-  quaternion->set_qj(qj);
-  quaternion->set_qk(qk);
-  quaternion->set_qr(qr);
-
-  pos->set_px(px);
-  pos->set_py(py);
-  pos->set_pz(pz);
-
-  position->set_allocated_orient(quaternion);
-  position->set_allocated_position(pos);
-
-  std::string* flag = new std::string("POS");
-
-  msg->set_allocated_flag(flag);
-  msg->set_allocated_header(header);
-  msg->set_allocated_position(position);
+	std::unique_ptr<SIMPLE::POSITION> msg = msgCreator.createPOSITION(header, px, py, pz, e1, e2, e3, e4);
 
   return msg;
 }
-std::unique_ptr<SIMPLE::BASEMSG> simple::Publisher::createSTATUS(SIMPLE::HEADER* header, int code, int subcode,
+std::unique_ptr<SIMPLE::STATUS> simple::Publisher<SIMPLE::STATUS>::createMSG(SIMPLE::HEADER* header, int code, int subcode,
                                                                  std::string errorName, std::string errorMsg)
 {
   /// Creates a message of type STATUS
 
-  std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
-
-  SIMPLE::STATUS* stat = new SIMPLE::STATUS();
-
-  stat->set_subcode(subcode);
-  stat->set_statuscode(code);
-  stat->set_errormsg(errorMsg);
-  stat->set_errorname(errorName);
-
-  std::string* flag = new std::string("STT");
-
-  msg->set_allocated_flag(flag);
-  msg->set_allocated_header(header);
-  msg->set_allocated_status(stat);
+	std::unique_ptr<SIMPLE::STATUS> msg = msgCreator.createSTATUS(header, code, subcode, errorName, errorMsg);
 
   return msg;
 }
-std::unique_ptr<SIMPLE::BASEMSG> simple::Publisher::createCAPABILITY(SIMPLE::HEADER* header,
+std::unique_ptr<SIMPLE::CAPABILITY> simple::Publisher<SIMPLE::CAPABILITY>::createMSG(SIMPLE::HEADER* header,
                                                                      std::vector<std::string> msgNames)
 {
-  std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
-
-  SIMPLE::CAPABILITY* cap = new SIMPLE::CAPABILITY();
-
-  for (size_t i = 0; i < msgNames.size(); i++)
-  {
-    cap->add_messagename(msgNames.at(i));
-  }
-
-  std::string* flag = new std::string("TYP");
-
-  msg->set_allocated_flag(flag);
-  msg->set_allocated_header(header);
-  msg->set_allocated_capability(cap);
+	//Creates a message of type CAPABILITY
+	std::unique_ptr<SIMPLE::CAPABILITY> msg = msgCreator.createCAPABILITY(header, msgNames);
 
   return msg;
 }
-std::unique_ptr<SIMPLE::BASEMSG> simple::Publisher::createGENERIC_BOOL(SIMPLE::HEADER* header, bool data)
+std::unique_ptr<SIMPLE::GENERIC> simple::Publisher<SIMPLE::GENERIC>::createMSG(SIMPLE::HEADER* header, bool data)
 {
-  std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
-
-  SIMPLE::GENERIC* gen = new SIMPLE::GENERIC();
-  gen->set_basicbool(data);
-
-  std::string* flag = new std::string("GEN");
-
-  msg->set_allocated_flag(flag);
-  msg->set_allocated_header(header);
-  msg->set_allocated_gener(gen);
+	//Creates a message of type GENERIC - BOOL
+	std::unique_ptr<SIMPLE::GENERIC> msg = msgCreator.createGENERIC_BOOL(header, data);
 
   return msg;
 }
-std::unique_ptr<SIMPLE::BASEMSG> simple::Publisher::createGENERIC_INT(SIMPLE::HEADER* header, int data)
+std::unique_ptr<SIMPLE::GENERIC> simple::Publisher<SIMPLE::GENERIC>::createMSG(SIMPLE::HEADER* header, int data)
 {
-  std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
-  SIMPLE::GENERIC* gen = new SIMPLE::GENERIC();
+	//Creates a message of type GENERIC - INT
+	std::unique_ptr<SIMPLE::GENERIC> msg = msgCreator.createGENERIC_INT(header, data);
 
-  gen->set_basicint(data);
-
-  std::string* flag = new std::string("GEN");
-
-  msg->set_allocated_flag(flag);
-  msg->set_allocated_header(header);
-  msg->set_allocated_gener(gen);  // takes ownership of GENERIC
-
-  return msg;
+	return msg;
 }
-std::unique_ptr<SIMPLE::BASEMSG> simple::Publisher::createGENERIC_FLOAT(SIMPLE::HEADER* header, float data)
+std::unique_ptr<SIMPLE::GENERIC> simple::Publisher<SIMPLE::GENERIC>::createMSG(SIMPLE::HEADER* header, float data)
 {
-  std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
+	//Creates a message of type GENERIC - FLOAT
+	std::unique_ptr<SIMPLE::GENERIC> msg = msgCreator.createGENERIC_FLOAT(header, data);
 
-  SIMPLE::GENERIC* gen = new SIMPLE::GENERIC();
-  gen->set_basicfloat(data);
-
-  std::string* flag = new std::string("GEN");
-
-  msg->set_allocated_flag(flag);
-  msg->set_allocated_header(header);
-  msg->set_allocated_gener(gen);
-
-  return msg;
+	return msg;
 }
-std::unique_ptr<SIMPLE::BASEMSG> simple::Publisher::createGENERIC_DOUBLE(SIMPLE::HEADER* header, double data)
+std::unique_ptr<SIMPLE::GENERIC> simple::Publisher<SIMPLE::GENERIC>::createMSG(SIMPLE::HEADER* header, double data)
 {
-  std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
+	//Creates a message of type GENERIC - DOUBLE
+	std::unique_ptr<SIMPLE::GENERIC> msg = msgCreator.createGENERIC_DOUBLE(header, data);
 
-  SIMPLE::GENERIC* gen = new SIMPLE::GENERIC();
-  gen->set_basicdouble(data);
-
-  std::string* flag = new std::string("GEN");
-
-  msg->set_allocated_flag(flag);
-  msg->set_allocated_header(header);
-  msg->set_allocated_gener(gen);
-
-  return msg;
+	return msg;
 }
-std::unique_ptr<SIMPLE::BASEMSG> simple::Publisher::createGENERIC_STR(SIMPLE::HEADER* header, std::string data)
+std::unique_ptr<SIMPLE::GENERIC> simple::Publisher<SIMPLE::GENERIC>::createMSG(SIMPLE::HEADER* header, std::string data)
 {
-  std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
-  SIMPLE::GENERIC* gen = new SIMPLE::GENERIC();
+	//Creates a message of type GENERIC - STRING
+	std::unique_ptr<SIMPLE::GENERIC> msg = msgCreator.createGENERIC_STR(header, data);
 
-  gen->set_basicstring(data);
-
-  std::string* flag = new std::string("GEN");  // always 3 letters
-
-  msg->set_allocated_flag(flag);
-  msg->set_allocated_header(header);
-  msg->set_allocated_gener(gen);
-
-  return msg;
+	return msg;
 }
 
-SIMPLE::HEADER* simple::Publisher::createHEADER(int versionNum, std::string dataTypeName, std::string deviceName,
-                                                double timeStamp)
-{
-  /// Creates the header of the message, including version number,type of the
-  /// data, name of the transmiting device and time stamp of the message.
 
-  SIMPLE::HEADER* header = new SIMPLE::HEADER();
-  header->set_datatypename(dataTypeName);
-  header->set_devicename(deviceName);
-  header->set_timestamp(timeStamp);
-  header->set_versionnumber(versionNum);
-  return header;
-}

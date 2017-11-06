@@ -1,6 +1,6 @@
-#include "MSGcreator.h"
+#include "MSGreader.h"
 
-std::unique_ptr<SIMPLE::BASEMSG> simple::MSGcreator::createTRANSFORM(SIMPLE::HEADER* header, double px, double py,
+void simple::MSGreader::readTRANSFORM(std::unique_ptr<SIMPLE::TRANSFORM>, SIMPLE::HEADER* header, double px, double py,
                                                                      double pz, double r11, double r12, double r13,
                                                                      double r21, double r22, double r23, double r31,
                                                                      double r32, double r33)
@@ -39,7 +39,7 @@ std::unique_ptr<SIMPLE::BASEMSG> simple::MSGcreator::createTRANSFORM(SIMPLE::HEA
 
   return msg;
 }
-std::unique_ptr<SIMPLE::BASEMSG> simple::MSGcreator::createPOSITION(SIMPLE::HEADER* header, double px, double py,
+void simple::MSGreader::readPOSITION(std::unique_ptr<SIMPLE::POSITION>, SIMPLE::HEADER* header, double px, double py,
                                                                     double pz, double qi, double qj, double qk,
                                                                     double qr)
 {
@@ -72,7 +72,7 @@ std::unique_ptr<SIMPLE::BASEMSG> simple::MSGcreator::createPOSITION(SIMPLE::HEAD
 
   return msg;
 }
-std::unique_ptr<SIMPLE::BASEMSG> simple::MSGcreator::createSTATUS(SIMPLE::HEADER* header, int code, int subcode,
+void simple::MSGreader::readSTATUS(std::unique_ptr<SIMPLE::STATUS>, SIMPLE::HEADER* header, int code, int subcode,
                                                                   std::string errorName, std::string errorMsg)
 {
   /// Creates a message of type STATUS
@@ -94,7 +94,7 @@ std::unique_ptr<SIMPLE::BASEMSG> simple::MSGcreator::createSTATUS(SIMPLE::HEADER
 
   return msg;
 }
-std::unique_ptr<SIMPLE::BASEMSG> simple::MSGcreator::createCAPABILITY(SIMPLE::HEADER* header,
+void simple::MSGreader::readCAPABILITY(std::unique_ptr<SIMPLE::CAPABILITY>, SIMPLE::HEADER* header,
                                                                       std::vector<std::string> msgNames)
 {
   std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
@@ -114,7 +114,7 @@ std::unique_ptr<SIMPLE::BASEMSG> simple::MSGcreator::createCAPABILITY(SIMPLE::HE
 
   return msg;
 }
-std::unique_ptr<SIMPLE::BASEMSG> simple::MSGcreator::createGENERIC_BOOL(SIMPLE::HEADER* header, bool data)
+void simple::MSGreader::readGENERIC_BOOL(std::unique_ptr<SIMPLE::GENERIC>, SIMPLE::HEADER* header, bool data)
 {
   std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
 
@@ -129,7 +129,7 @@ std::unique_ptr<SIMPLE::BASEMSG> simple::MSGcreator::createGENERIC_BOOL(SIMPLE::
 
   return msg;
 }
-std::unique_ptr<SIMPLE::BASEMSG> simple::MSGcreator::createGENERIC_INT(SIMPLE::HEADER* header, int data)
+void simple::MSGreader::readGENERIC_INT(std::unique_ptr<SIMPLE::GENERIC>, SIMPLE::HEADER* header, int data)
 {
   std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
   SIMPLE::GENERIC* gen = new SIMPLE::GENERIC();
@@ -144,7 +144,7 @@ std::unique_ptr<SIMPLE::BASEMSG> simple::MSGcreator::createGENERIC_INT(SIMPLE::H
 
   return msg;
 }
-std::unique_ptr<SIMPLE::BASEMSG> simple::MSGcreator::createGENERIC_FLOAT(SIMPLE::HEADER* header, float data)
+void simple::MSGreader::readGENERIC_FLOAT(std::unique_ptr<SIMPLE::GENERIC>, SIMPLE::HEADER* header, float data)
 {
   std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
 
@@ -159,7 +159,7 @@ std::unique_ptr<SIMPLE::BASEMSG> simple::MSGcreator::createGENERIC_FLOAT(SIMPLE:
 
   return msg;
 }
-std::unique_ptr<SIMPLE::BASEMSG> simple::MSGcreator::createGENERIC_DOUBLE(SIMPLE::HEADER* header, double data)
+void simple::MSGreader::readGENERIC_DOUBLE(std::unique_ptr<SIMPLE::GENERIC>, SIMPLE::HEADER* header, double data)
 {
   std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
 
@@ -174,7 +174,7 @@ std::unique_ptr<SIMPLE::BASEMSG> simple::MSGcreator::createGENERIC_DOUBLE(SIMPLE
 
   return msg;
 }
-std::unique_ptr<SIMPLE::BASEMSG> simple::MSGcreator::createGENERIC_STR(SIMPLE::HEADER* header, std::string data)
+void simple::MSGreader::readGENERIC_STR(std::unique_ptr<SIMPLE::GENERIC>, SIMPLE::HEADER* header, std::string data)
 {
   std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
   SIMPLE::GENERIC* gen = new SIMPLE::GENERIC();
@@ -190,7 +190,7 @@ std::unique_ptr<SIMPLE::BASEMSG> simple::MSGcreator::createGENERIC_STR(SIMPLE::H
   return msg;
 }
 
-SIMPLE::HEADER* simple::MSGcreator::createHEADER(int versionNum, std::string dataTypeName, std::string deviceName,
+void simple::MSGreader::readHEADER(SIMPLE::HEADER*, int versionNum, std::string dataTypeName, std::string deviceName,
                                                  double timeStamp)
 {
   /// Creates the header of the message, including version number,type of the data, name of the transmiting device and

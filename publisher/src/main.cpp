@@ -32,12 +32,12 @@ int main(int argc, char* argv[]) {
 	//start context
 	simple::myContext globalContext;
 
-	simple::Publisher pub("tcp://*:5556", *globalContext.context);
+	simple::Publisher<SIMPLE::CAPABILITY> pub("tcp://*:5556", *globalContext.context);
 
 	SIMPLE::HEADER* header = pub.createHEADER(1, "GENERIC", "My PC", 0);
 
 	std::vector<std::string> vec = { "POSITION", "STATUS", "TRANSFORM" };
-	std::unique_ptr<SIMPLE::BASEMSG> baseMSG = pub.createCAPABILITY(header, vec);
+	std::unique_ptr<SIMPLE::CAPABILITY> baseMSG = pub.createMSG(header, vec);
 
 	s_catch_signals();
 	while (!s_interrupted)
@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	std::cout << "Interruption received, killing server" << "\n";
-
+	
 	//delete all global objects allocated by libprotobuf
 	google::protobuf::ShutdownProtobufLibrary();
 
