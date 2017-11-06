@@ -15,11 +15,11 @@ template <typename T>
 class Publisher
 {
 public:
-	///
+  ///
   ///@brief Class constructor. Creates a ZMQ_PUB socket and binds it to the port
   ///@param port string for the connection port. Ex: "tcp://*:5556"
   ///@param context reference to the existing context
-	///
+  ///
   Publisher(std::string port, zmq::context_t& context);
   ///@brief Class destructor. Closes the existing socket
   ~Publisher();
@@ -95,7 +95,7 @@ public:
   ///@param data string to be sent in the message
   ///@return pointer to message of type GENERIC
   std::unique_ptr<SIMPLE::GENERIC> createMSG(SIMPLE::HEADER* header, std::string data);
-  
+
   SIMPLE::HEADER* createHEADER(int versionNum, std::string dataTypeName, std::string deviceName, double timeStamp);
 
 private:
@@ -116,7 +116,7 @@ void simple::Publisher<T>::publish(const T& msg)
   msg.SerializeToString(&strMSG);  // serialize the protobuf message into a
   // string
 
-  std::string topic = msg.GetTypeName();//add message topic to allow subscription filter
+  std::string topic = msg.GetTypeName();  // add message topic to allow subscription filter
 
   topic.append(strMSG);
 
@@ -160,7 +160,7 @@ SIMPLE::HEADER* simple::Publisher<T>::createHEADER(int versionNum, std::string d
 {
   /// Creates the header of the message, including version number,type of the
   /// data, name of the transmiting device and time stamp of the message.
-	SIMPLE::HEADER* header =msgCreator.createHEADER(versionNum, dataTypeName, deviceName, timeStamp);
+  SIMPLE::HEADER* header = msgCreator.createHEADER(versionNum, dataTypeName, deviceName, timeStamp);
 
   return header;
 }

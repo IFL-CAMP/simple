@@ -16,7 +16,7 @@ class Client
 public:
   Client(std::string port, zmq::context_t& context);
   ~Client();
-  T request();
+  std::unique_ptr<T> request();
 
 private:
   MSGreader msgReader;
@@ -48,13 +48,13 @@ simple::Client<T>::~Client()
   socket->close();
 }
 template <typename T>
-T simple::Client<T>::request()
+std::unique_ptr<T> simple::Client<T>::request()
 {
   // send a request to the server, containing the type of message desired and wait for a reply
 
-  T SIMPLEreply;
+  std::unique_ptr<T> SIMPLEreply = std::make_unique<T>();
 
-  std::string msgType = SIMPLEreply.GetTypeName();
+  std::string msgType = SIMPLEreply->GetTypeName();
 
   zmq::message_t ZMQmsg(msgType.size());
 
@@ -84,7 +84,7 @@ T simple::Client<T>::request()
   std::string strMessage(static_cast<char*>(MSGreply.data()),
                          MSGreply.size());  // copy data from ZMQ message into string
 
-  SIMPLEreply.ParseFromString(strMessage);  // copy data from string to protobuf message
+  SIMPLEreply->ParseFromString(strMessage);  // copy data from string to protobuf message
 
   return SIMPLEreply;
 }
