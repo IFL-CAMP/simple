@@ -1,205 +1,101 @@
 #include "MSGreader.h"
 
-void simple::MSGreader::readTRANSFORM(std::unique_ptr<SIMPLE::TRANSFORM>, SIMPLE::HEADER* header, double px, double py,
-                                                                     double pz, double r11, double r12, double r13,
-                                                                     double r21, double r22, double r23, double r31,
-                                                                     double r32, double r33)
+void simple::MSGreader::readTRANSFORM(std::unique_ptr<SIMPLE::TRANSFORM> msg, SIMPLE::HEADER& header, double& px,
+                                      double& py, double& pz, double& r11, double& r12, double& r13, double& r21,
+                                      double& r22, double& r23, double& r31, double& r32, double& r33)
 {
-  /// Creates a message of type TRANSFORM
+  /// Reads a message of type TRANSFORM
 
-  std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
+  SIMPLE::Pos pos = msg->position();
+  SIMPLE::Orientation orientation = msg->orient();
 
-  SIMPLE::TRANSFORM* transform = new SIMPLE::TRANSFORM();
+  px = pos.px();
+  py = pos.py();
+  pz = pos.pz();
 
-  SIMPLE::Pos* pos = new SIMPLE::Pos();
-  SIMPLE::Orientation* orientation = new SIMPLE::Orientation();
+  r11 = orientation.r11();
+  r12 = orientation.r12();
+  r13 = orientation.r13();
+  r21 = orientation.r21();
+  r22 = orientation.r22();
+  r23 = orientation.r23();
+  r31 = orientation.r31();
+  r32 = orientation.r32();
+  r33 = orientation.r33();
 
-  pos->set_px(px);
-  pos->set_py(py);
-  pos->set_pz(pz);
-
-  orientation->set_r11(r11);
-  orientation->set_r12(r12);
-  orientation->set_r13(r13);
-  orientation->set_r21(r21);
-  orientation->set_r22(r22);
-  orientation->set_r23(r23);
-  orientation->set_r31(r31);
-  orientation->set_r32(r32);
-  orientation->set_r33(r33);
-
-  transform->set_allocated_orient(orientation);
-  transform->set_allocated_position(pos);
-
-  std::string* flag = new std::string("TRF");
-
-  msg->set_allocated_flag(flag);
-  msg->set_allocated_header(header);
-  msg->set_allocated_transform(transform);
-
-  return msg;
+  header = msg->header();
 }
-void simple::MSGreader::readPOSITION(std::unique_ptr<SIMPLE::POSITION>, SIMPLE::HEADER* header, double px, double py,
-                                                                    double pz, double qi, double qj, double qk,
-                                                                    double qr)
+void simple::MSGreader::readPOSITION(std::unique_ptr<SIMPLE::POSITION> msg, SIMPLE::HEADER& header, double& px,
+                                     double& py, double& pz, double& e1, double& e2, double& e3, double& e4)
 {
-  /// Creates a message of type POSITION
+  /// Reads a message of type POSITION
 
-  std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
+  SIMPLE::Pos pos = msg->position();
+  SIMPLE::Quaternion quaternion = msg->orient();
 
-  SIMPLE::POSITION* position = new SIMPLE::POSITION();
+  header = msg->header();
+  px = pos.px();
+  py = pos.py();
+  pz = pos.pz();
 
-  SIMPLE::Pos* pos = new SIMPLE::Pos();
-  SIMPLE::Quaternion* quaternion = new SIMPLE::Quaternion();
-
-  quaternion->set_qi(qi);
-  quaternion->set_qj(qj);
-  quaternion->set_qk(qk);
-  quaternion->set_qr(qr);
-
-  pos->set_px(px);
-  pos->set_py(py);
-  pos->set_pz(pz);
-
-  position->set_allocated_orient(quaternion);
-  position->set_allocated_position(pos);
-
-  std::string* flag = new std::string("POS");
-
-  msg->set_allocated_flag(flag);
-  msg->set_allocated_header(header);
-  msg->set_allocated_position(position);
-
-  return msg;
+  e1 = quaternion.e1();
+  e2 = quaternion.e2();
+  e3 = quaternion.e3();
+  e4 = quaternion.e4();
 }
-void simple::MSGreader::readSTATUS(std::unique_ptr<SIMPLE::STATUS>, SIMPLE::HEADER* header, int code, int subcode,
-                                                                  std::string errorName, std::string errorMsg)
+void simple::MSGreader::readSTATUS(std::unique_ptr<SIMPLE::STATUS> msg, SIMPLE::HEADER& header, int& code, int& subcode,
+                                   std::string& errorName, std::string& errorMsg)
 {
-  /// Creates a message of type STATUS
+  /// Reads a message of type STATUS
 
-  std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
-
-  SIMPLE::STATUS* stat = new SIMPLE::STATUS();
-
-  stat->set_subcode(subcode);
-  stat->set_statuscode(code);
-  stat->set_errormsg(errorMsg);
-  stat->set_errorname(errorName);
-
-  std::string* flag = new std::string("STT");
-
-  msg->set_allocated_flag(flag);
-  msg->set_allocated_header(header);
-  msg->set_allocated_status(stat);
-
-  return msg;
+  header = msg->header();
+  code = msg->statuscode();
+  subcode = msg->subcode();
+  errorName = msg->errorname();
+  errorMsg = msg->errormsg();
 }
-void simple::MSGreader::readCAPABILITY(std::unique_ptr<SIMPLE::CAPABILITY>, SIMPLE::HEADER* header,
-                                                                      std::vector<std::string> msgNames)
+void simple::MSGreader::readCAPABILITY(std::unique_ptr<SIMPLE::CAPABILITY> msg, SIMPLE::HEADER& header,
+                                       std::vector<std::string>& msgNames)
 {
-  std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
+  header = msg->header();
 
-  SIMPLE::CAPABILITY* cap = new SIMPLE::CAPABILITY();
-
-  for (size_t i = 0; i < msgNames.size(); i++)
+  for (int i = 0; i < msg->messagename_size(); i++)
   {
-    cap->add_messagename(msgNames.at(i));
+    msgNames.push_back(msg->messagename(i));
   }
-
-  std::string* flag = new std::string("TYP");
-
-  msg->set_allocated_flag(flag);
-  msg->set_allocated_header(header);
-  msg->set_allocated_capability(cap);
-
-  return msg;
 }
-void simple::MSGreader::readGENERIC_BOOL(std::unique_ptr<SIMPLE::GENERIC>, SIMPLE::HEADER* header, bool data)
+void simple::MSGreader::readGENERIC_BOOL(std::unique_ptr<SIMPLE::GENERIC> msg, SIMPLE::HEADER& header, bool& data)
 {
-  std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
-
-  SIMPLE::GENERIC* gen = new SIMPLE::GENERIC();
-  gen->set_basicbool(data);
-
-  std::string* flag = new std::string("GEN");
-
-  msg->set_allocated_flag(flag);
-  msg->set_allocated_header(header);
-  msg->set_allocated_gener(gen);
-
-  return msg;
+	header = msg->header();
+	data = msg->basicbool();
 }
-void simple::MSGreader::readGENERIC_INT(std::unique_ptr<SIMPLE::GENERIC>, SIMPLE::HEADER* header, int data)
+void simple::MSGreader::readGENERIC_INT(std::unique_ptr<SIMPLE::GENERIC> msg, SIMPLE::HEADER& header, int& data)
 {
-  std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
-  SIMPLE::GENERIC* gen = new SIMPLE::GENERIC();
-
-  gen->set_basicint(data);
-
-  std::string* flag = new std::string("GEN");
-
-  msg->set_allocated_flag(flag);
-  msg->set_allocated_header(header);
-  msg->set_allocated_gener(gen);  // takes ownership of GENERIC
-
-  return msg;
+	header = msg->header();
+	data = msg->basicint();
 }
-void simple::MSGreader::readGENERIC_FLOAT(std::unique_ptr<SIMPLE::GENERIC>, SIMPLE::HEADER* header, float data)
+void simple::MSGreader::readGENERIC_FLOAT(std::unique_ptr<SIMPLE::GENERIC> msg, SIMPLE::HEADER& header, float& data)
 {
-  std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
-
-  SIMPLE::GENERIC* gen = new SIMPLE::GENERIC();
-  gen->set_basicfloat(data);
-
-  std::string* flag = new std::string("GEN");
-
-  msg->set_allocated_flag(flag);
-  msg->set_allocated_header(header);
-  msg->set_allocated_gener(gen);
-
-  return msg;
+	header = msg->header();
+	data = msg->basicfloat();
 }
-void simple::MSGreader::readGENERIC_DOUBLE(std::unique_ptr<SIMPLE::GENERIC>, SIMPLE::HEADER* header, double data)
+void simple::MSGreader::readGENERIC_DOUBLE(std::unique_ptr<SIMPLE::GENERIC> msg, SIMPLE::HEADER& header, double& data)
 {
-  std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
-
-  SIMPLE::GENERIC* gen = new SIMPLE::GENERIC();
-  gen->set_basicdouble(data);
-
-  std::string* flag = new std::string("GEN");
-
-  msg->set_allocated_flag(flag);
-  msg->set_allocated_header(header);
-  msg->set_allocated_gener(gen);
-
-  return msg;
+	header = msg->header();
+	data = msg->basicdouble();
 }
-void simple::MSGreader::readGENERIC_STR(std::unique_ptr<SIMPLE::GENERIC>, SIMPLE::HEADER* header, std::string data)
+void simple::MSGreader::readGENERIC_STR(std::unique_ptr<SIMPLE::GENERIC> msg, SIMPLE::HEADER& header, std::string& data)
 {
-  std::unique_ptr<SIMPLE::BASEMSG> msg = std::make_unique<SIMPLE::BASEMSG>();
-  SIMPLE::GENERIC* gen = new SIMPLE::GENERIC();
-
-  gen->set_basicstring(data);
-
-  std::string* flag = new std::string("GEN");  // always 3 letters
-
-  msg->set_allocated_flag(flag);
-  msg->set_allocated_header(header);
-  msg->set_allocated_gener(gen);
-
-  return msg;
+	header = msg->header();
+	data = msg->basicstring();
 }
 
-void simple::MSGreader::readHEADER(SIMPLE::HEADER*, int versionNum, std::string dataTypeName, std::string deviceName,
-                                                 double timeStamp)
+void simple::MSGreader::readHEADER(SIMPLE::HEADER* header, int& versionNum, std::string& dataTypeName, std::string& deviceName,
+                                   double& timeStamp)
 {
-  /// Creates the header of the message, including version number,type of the data, name of the transmiting device and
-  /// time stamp of the message.
-
-  SIMPLE::HEADER* header = new SIMPLE::HEADER();
-  header->set_datatypename(dataTypeName);
-  header->set_devicename(deviceName);
-  header->set_timestamp(timeStamp);
-  header->set_versionnumber(versionNum);
-  return header;
+  /// Reads the message header
+	versionNum = header->versionnumber();
+	dataTypeName = header->datatypename();
+	deviceName = header->devicename();
+	timeStamp = header->timestamp();
 }
