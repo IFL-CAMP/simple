@@ -32,16 +32,61 @@ int main(int argc, char* argv[]) {
 	//start context
 	simple::myContext globalContext;
 
+	//start a client for each type of message, for testing
+
+	simple::Client<SIMPLE::CAPABILITY> clientCap("tcp://localhost:5555", *globalContext.context);
+	simple::Client<SIMPLE::TRANSFORM> clientTrans("tcp://localhost:5556", *globalContext.context);
+	simple::Client<SIMPLE::POSITION> clientPos("tcp://localhost:5557", *globalContext.context);
+	simple::Client<SIMPLE::STATUS> clientStat("tcp://localhost:5558", *globalContext.context);
+	simple::Client<SIMPLE::GENERIC> clientGen("tcp://localhost:5559", *globalContext.context);
+
+	// create the holders for the incoming data
+
+	std::vector<std::string> Capabilities;
+	SIMPLE::HEADER CapHeader;
+
+	SIMPLE::HEADER TransHeader;
+	double px, py, pz, r11, r12, r13, r21, r22, r23, r31, r32, r33;
+
+	SIMPLE::HEADER PosHeader;
+	double pospx, pospy, pospz, e1, e2, e3, e4;
+
+	SIMPLE::HEADER StatHeader;
+	int code, subcode;
+	std::string errorName, errorMsg;
+
+	SIMPLE::HEADER GenHeader;
+	bool data;
 
 	s_catch_signals();
 	while (!s_interrupted)
 	{
 		try{
-			std::cout << "Message published" << "\n";
+			std::unique_ptr<SIMPLE::CAPABILITY> recvCap = clientCap.request();
+			clientCap.readMsg(*recvCap, CapHeader, Capabilities);
+
+			std::unique_ptr<SIMPLE::TRANSFORM> recvTrans = clientTrans.request();
+			clientTrans.readMsg(*recvTrans, TransHeader, px, py, pz, r11, r12, r13, r21, r22, r23, r31, r32, r33);
+
+			std::unique_ptr<SIMPLE::POSITION> recvPos = clientPos.request();
+			clientPos.readMsg(*recvPos, PosHeader, pospx, pospy, pospz, e1, e2, e3, e4);
+
+			std::unique_ptr<SIMPLE::STATUS> recvStat = clientStat.request();
+			clientStat.readMsg(*recvStat, StatHeader, code, subcode, errorName, errorMsg);
+
+			std::unique_ptr<SIMPLE::GENERIC> recvGen = clientGen.request();
+			clientGen.readMsg(*recvGen, GenHeader, data);
 		}
 		catch (zmq::error_t& e){
-			std::cout << "Interruption received" << "\n";
+			std::cout << "Something went wrong with the request!" << "\n";
 		}
+
+		//print the received data
+		std::cout << "Capability received: " << Capabilities.at(0) << ", " << Capabilities.at(1) << ", " << Capabilities.at(2) << "\n";
+		std::cout << "Transform received: px=" << px << ", py=" << py << ", pz=" << pz << ", r11=" << r11 << "\n";
+		std::cout << "Position received: px=" << pospx << ", py=" << pospy << ", pz=" << pospz << ", e1=" << e1 << ", e2=" << e2 << "\n";
+		std::cout << "Status received: code=" << code << ", subcode=" << subcode << ", errorName=" << errorName << ", errorMsg=" << errorMsg << "\n";
+		std::cout << "Generic received: bool=" << data << "\n";
 	}
 
 	std::cout << "Interruption received, killing server" << "\n";

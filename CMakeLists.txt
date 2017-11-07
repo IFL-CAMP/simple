@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -9,7 +9,7 @@ include_directories(include include/Protobuf include/ZMQ)
 file(GLOB_RECURSE Headers "*.h" "*.hpp")
 
 
-set(LIB_SRCS src/Protobuf/SIMPLE.pb.cc src/Server.cpp src/Publisher.cpp src/Proxy.cpp src/Client.cpp)
+set(LIB_SRCS src/Protobuf/SIMPLE.pb.cc src/Server.cpp src/Publisher.cpp src/Proxy.cpp src/Client.cpp src/Subscriber.cpp src/MSGcreator.cpp src/MSGreader.cpp)
 
 add_library(SIMPLE_Lib STATIC ${LIB_SRCS})
 
