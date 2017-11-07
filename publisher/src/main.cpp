@@ -42,11 +42,11 @@ int main(int argc, char* argv[]) {
 
 	//put random stuff on each message, for testing
 
-	SIMPLE::HEADER* headerCap = pubCap.createHEADER(1, "CAPABILITY", "My PC", 0);
-	SIMPLE::HEADER* headerTrans = pubTrans.createHEADER(1, "TRANSFORM", "My PC", 0);
-	SIMPLE::HEADER* headerPos = pubPos.createHEADER(1, "POSITION", "My PC", 0);
-	SIMPLE::HEADER* headerStat = pubStat.createHEADER(1, "STATUS", "My PC", 0);
-	SIMPLE::HEADER* headerGen = pubGen.createHEADER(1, "GENERIC", "My PC", 0);
+	SIMPLE::HEADER* headerCap = pubCap.createHEADER(1, "CAPABILITY", "My PC");
+	SIMPLE::HEADER* headerTrans = pubTrans.createHEADER(1, "TRANSFORM", "My PC");
+	SIMPLE::HEADER* headerPos = pubPos.createHEADER(1, "POSITION", "My PC");
+	SIMPLE::HEADER* headerStat = pubStat.createHEADER(1, "STATUS", "My PC");
+	SIMPLE::HEADER* headerGen = pubGen.createHEADER(1, "GENERIC", "My PC");
 
 	std::vector<std::string> vec = { "POSITION", "STATUS", "TRANSFORM" };
 	std::unique_ptr<SIMPLE::CAPABILITY> capMSG = pubCap.createMSG(headerCap, vec);

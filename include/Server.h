@@ -13,9 +13,13 @@ namespace simple
 template <typename T>
 class Server
 {
-  /// Server class.
+  ///@brief Server class.
 public:
+  ///@brief Class constructor, opens a socket of type ZMQ_REP and connects it to the given port
+  ///@param port String containing the port to be connected to
+  ///@param context ZMQ context used for creating the socket
   Server(std::string port, zmq::context_t& context);
+  ///@brief Class destructor, closes the socket
   ~Server();
   ///@brief Replies with the content provided
   ///@param msg Protobuf message containing the data to be replied
@@ -23,7 +27,7 @@ public:
   ///@brief Receives a request from a client through the socket and checks if the type requested matches the server
   /// instance type
   ///@return Returns True if the request can be answered, False otherwise
-  bool receiveRequest();
+  bool receivedRequest();
   ///@brief Creates a message of type TRANSFORM
   ///@param header pointer to the header of the message
   ///@param px element e14 of 4x4 transformation matrix
@@ -40,8 +44,8 @@ public:
   ///@param r33 element e33 of 4x4 transformation matrix
   ///@return pointer to message of type TRANSFORM
   std::unique_ptr<SIMPLE::TRANSFORM> createMSG(SIMPLE::HEADER* header, double px, double py, double pz, double r11,
-	  double r12, double r13, double r21, double r22, double r23, double r31,
-	  double r32, double r33);
+                                               double r12, double r13, double r21, double r22, double r23, double r31,
+                                               double r32, double r33);
   ///@brief Creates a message of type POSITION
   ///@param header pointer to the header of the message
   ///@param px first element of 3D vector for the position
@@ -53,7 +57,7 @@ public:
   ///@param e4 fourth quaternion: e4 = cos(theta/2)
   ///@return pointer to message of type POSITION
   std::unique_ptr<SIMPLE::POSITION> createMSG(SIMPLE::HEADER* header, double px, double py, double pz, double e1,
-	  double e2, double e3, double e4);
+                                              double e2, double e3, double e4);
   ///@brief Creates a message of type STATUS
   ///@param header pointer to the header of the message
   ///@param code device status code - 0 to 19
@@ -62,7 +66,7 @@ public:
   ///@param errorMsg Message detailing the error
   ///@return pointer to message of type STATUS
   std::unique_ptr<SIMPLE::STATUS> createMSG(SIMPLE::HEADER* header, int code, int subcode, std::string errorName,
-	  std::string errorMsg);
+                                            std::string errorMsg);
   ///@brief Creates a message of type CAPABILITY
   ///@param header pointer to the header of the message
   ///@param msgNames Vector containing the name of the types of messages supported by the device
@@ -93,6 +97,13 @@ public:
   ///@param data string to be sent in the message
   ///@return pointer to message of type GENERIC
   std::unique_ptr<SIMPLE::GENERIC> createMSG(SIMPLE::HEADER* header, std::string data);
+  ///@brief Creates a header for the message
+  ///@param versionNum Number of the protocol version used
+  ///@param dataTypeName Data type contained in the message
+  ///@param deviceName Identifies the sending device
+  ///@return Protobuf header for the message
+  SIMPLE::HEADER* createHEADER(int versionNum, std::string dataTypeName, std::string deviceName);
+
 private:
   std::unique_ptr<zmq::socket_t> socket;
   MSGcreator msgCreator;
@@ -108,7 +119,7 @@ simple::Server<T>::Server(std::string port, zmq::context_t& context)
 
   try
   {
-    socket->connect(port);
+    socket->bind(port);
   }
   catch (zmq::error_t& e)
   {
@@ -122,7 +133,7 @@ simple::Server<T>::~Server()
   socket->close();
 }
 template <typename T>
-bool simple::Server<T>::receiveRequest()
+bool simple::Server<T>::receivedRequest()
 {
   // wait for next request.
   zmq::message_t recvREQ;
@@ -154,7 +165,7 @@ void simple::Server<T>::reply(const T& msg)
 
   // serialize data to string
   std::string strReply;
-  msg.SerializeoString(&strReply);
+  msg.SerializeToString(&strReply);
   // create ZMQ message for reply
   zmq::message_t ZMQreply(strReply.size());
   // copy data to ZMQ message
@@ -168,4 +179,13 @@ void simple::Server<T>::reply(const T& msg)
   {
     std::cout << "Could not send message: " << e.what();
   }
+}
+template <typename T>
+SIMPLE::HEADER* simple::Server<T>::createHEADER(int versionNum, std::string dataTypeName, std::string deviceName)
+{
+  /// Creates the header of the message, including version number,type of the
+  /// data, name of the transmiting device and time stamp of the message.
+  SIMPLE::HEADER* header = msgCreator.createHEADER(versionNum, dataTypeName, deviceName);
+
+  return header;
 }

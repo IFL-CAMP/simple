@@ -133,16 +133,22 @@ std::unique_ptr<SIMPLE::GENERIC> simple::MSGcreator::createGENERIC_STR(SIMPLE::H
   return gen;
 }
 
-SIMPLE::HEADER* simple::MSGcreator::createHEADER(int versionNum, std::string dataTypeName, std::string deviceName,
-                                                 double timeStamp)
+SIMPLE::HEADER* simple::MSGcreator::createHEADER(int versionNum, std::string dataTypeName, std::string deviceName)
 {
-  /// Creates the header of the message, including version number,type of the data, name of the transmiting device and
+  /// Creates the header of the message, including version number, type of the data, name of the transmiting device and
   /// time stamp of the message.
 
   SIMPLE::HEADER* header = new SIMPLE::HEADER();
   header->set_datatypename(dataTypeName);
   header->set_devicename(deviceName);
-  header->set_timestamp(timeStamp);
+  header->set_timestamp(getCurrentTime());
   header->set_versionnumber(versionNum);
   return header;
+}
+double simple::MSGcreator::getCurrentTime()
+{
+  std::chrono::time_point<std::chrono::system_clock> nowTime = std::chrono::system_clock::now();
+  std::chrono::duration<double, std::ratio<1>> duration =
+      std::chrono::duration_cast<std::chrono::seconds>(nowTime.time_since_epoch());
+  return duration.count();
 }

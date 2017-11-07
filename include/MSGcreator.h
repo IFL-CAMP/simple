@@ -2,6 +2,7 @@
 
 #include "SIMPLE.pb.h"
 #include <memory>
+#include <chrono>
 
 namespace simple
 {
@@ -78,7 +79,10 @@ public:
   ///@return pointer to message of type GENERIC
   std::unique_ptr<SIMPLE::GENERIC> createGENERIC_STR(SIMPLE::HEADER* header, std::string data);
 
-  SIMPLE::HEADER* createHEADER(int versionNum, std::string dataTypeName, std::string deviceName, double timeStamp);
+  SIMPLE::HEADER* createHEADER(int versionNum, std::string dataTypeName, std::string deviceName);
+
+private:
+  double getCurrentTime();
 };
 
 }  // namespace simple

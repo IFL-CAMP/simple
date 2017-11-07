@@ -95,8 +95,12 @@ public:
   ///@param data string to be sent in the message
   ///@return pointer to message of type GENERIC
   std::unique_ptr<SIMPLE::GENERIC> createMSG(SIMPLE::HEADER* header, std::string data);
-
-  SIMPLE::HEADER* createHEADER(int versionNum, std::string dataTypeName, std::string deviceName, double timeStamp);
+  ///@brief Creates a header for the message
+  ///@param versionNum Number of the protocol version used
+  ///@param dataTypeName Data type contained in the message
+  ///@param deviceName Identifies the sending device
+  ///@return Protobuf header for the message
+  SIMPLE::HEADER* createHEADER(int versionNum, std::string dataTypeName, std::string deviceName);
 
 private:
   MSGcreator msgCreator;
@@ -155,12 +159,11 @@ simple::Publisher<T>::~Publisher()
   socket->close();
 }
 template <typename T>
-SIMPLE::HEADER* simple::Publisher<T>::createHEADER(int versionNum, std::string dataTypeName, std::string deviceName,
-                                                   double timeStamp)
+SIMPLE::HEADER* simple::Publisher<T>::createHEADER(int versionNum, std::string dataTypeName, std::string deviceName)
 {
   /// Creates the header of the message, including version number,type of the
   /// data, name of the transmiting device and time stamp of the message.
-  SIMPLE::HEADER* header = msgCreator.createHEADER(versionNum, dataTypeName, deviceName, timeStamp);
+  SIMPLE::HEADER* header = msgCreator.createHEADER(versionNum, dataTypeName, deviceName);
 
   return header;
 }
