@@ -1,20 +1,20 @@
 #pragma once
 
-#include <string>
-#include "SIMPLE.pb.h"
-#include <zmq.hpp>
+#define ZMQ_STATIC
+
 #include <zmq_utils.h>
 #include <memory>
+#include <string>
 #include <vector>
+#include <zmq.hpp>
 #include "MSGcreator.h"
+#include "simple_msgs/simple.pb.h"
 
-namespace simple
-{
+namespace simple {
 ///@brief Creates a publisher socket for a specific type of message
 template <typename T>
-class Publisher
-{
-public:
+class Publisher {
+ public:
   ///
   ///@brief Class constructor. Creates a ZMQ_PUB socket and binds it to the port
   ///@param port string for the connection port. Ex: "tcp://*:5556"
@@ -41,9 +41,10 @@ public:
   ///@param r32 element e32 of 4x4 transformation matrix
   ///@param r33 element e33 of 4x4 transformation matrix
   ///@return pointer to message of type TRANSFORM
-  std::unique_ptr<SIMPLE::TRANSFORM> createMSG(SIMPLE::HEADER* header, double px, double py, double pz, double r11,
-                                               double r12, double r13, double r21, double r22, double r23, double r31,
-                                               double r32, double r33);
+  std::unique_ptr<simple::TRANSFORM> createMSG(
+      simple::HEADER* header, double px, double py, double pz, double r11,
+      double r12, double r13, double r21, double r22, double r23, double r31,
+      double r32, double r33);
   ///@brief Creates a message of type POSITION
   ///@param header pointer to the header of the message
   ///@param px first element of 3D vector for the position
@@ -54,7 +55,8 @@ public:
   ///@param e3 third quaternion: e3 = k_z*sin(theta/2)
   ///@param e4 fourth quaternion: e4 = cos(theta/2)
   ///@return pointer to message of type POSITION
-  std::unique_ptr<SIMPLE::POSITION> createMSG(SIMPLE::HEADER* header, double px, double py, double pz, double e1,
+  std::unique_ptr<simple::POSITION> createMSG(simple::HEADER* header, double px,
+                                              double py, double pz, double e1,
                                               double e2, double e3, double e4);
   ///@brief Creates a message of type STATUS
   ///@param header pointer to the header of the message
@@ -63,46 +65,53 @@ public:
   ///@param errorName Name of the error
   ///@param errorMsg Message detailing the error
   ///@return pointer to message of type STATUS
-  std::unique_ptr<SIMPLE::STATUS> createMSG(SIMPLE::HEADER* header, int code, int subcode, std::string errorName,
+  std::unique_ptr<simple::STATUS> createMSG(simple::HEADER* header, int code,
+                                            int subcode, std::string errorName,
                                             std::string errorMsg);
   ///@brief Creates a message of type CAPABILITY
   ///@param header pointer to the header of the message
-  ///@param msgNames Vector containing the name of the types of messages supported by the device
+  ///@param msgNames Vector containing the name of the types of messages
+  ///supported by the device
   ///@return pointer to message of type CAPABILITY
-  std::unique_ptr<SIMPLE::CAPABILITY> createMSG(SIMPLE::HEADER* header, std::vector<std::string> msgNames);
+  std::unique_ptr<simple::CAPABILITY> createMSG(
+      simple::HEADER* header, std::vector<std::string> msgNames);
   ///@brief Creates a message of type GENERIC containing a BOOL
   ///@param header pointer to the header of the message
   ///@param data bool to be sent in the message
   ///@return pointer to message of type GENERIC
-  std::unique_ptr<SIMPLE::GENERIC> createMSG(SIMPLE::HEADER* header, bool data);
+  std::unique_ptr<simple::GENERIC> createMSG(simple::HEADER* header, bool data);
   ///@brief Creates a message of type GENERIC containing a INT
   ///@param header pointer to the header of the message
   ///@param data int to be sent in the message
   ///@return pointer to message of type GENERIC
-  std::unique_ptr<SIMPLE::GENERIC> createMSG(SIMPLE::HEADER* header, int data);
+  std::unique_ptr<simple::GENERIC> createMSG(simple::HEADER* header, int data);
   ///@brief Creates a message of type GENERIC containing a FLOAT
   ///@param header pointer to the header of the message
   ///@param data float to be sent in the message
   ///@return pointer to message of type GENERIC
-  std::unique_ptr<SIMPLE::GENERIC> createMSG(SIMPLE::HEADER* header, float data);
+  std::unique_ptr<simple::GENERIC> createMSG(simple::HEADER* header,
+                                             float data);
   ///@brief Creates a message of type GENERIC containing a DOUBLE
   ///@param header pointer to the header of the message
   ///@param data double to be sent in the message
   ///@return pointer to message of type GENERIC
-  std::unique_ptr<SIMPLE::GENERIC> createMSG(SIMPLE::HEADER* header, double data);
+  std::unique_ptr<simple::GENERIC> createMSG(simple::HEADER* header,
+                                             double data);
   ///@brief Creates a message of type GENERIC containing a STRING
   ///@param header pointer to the header of the message
   ///@param data string to be sent in the message
   ///@return pointer to message of type GENERIC
-  std::unique_ptr<SIMPLE::GENERIC> createMSG(SIMPLE::HEADER* header, std::string data);
+  std::unique_ptr<simple::GENERIC> createMSG(simple::HEADER* header,
+                                             std::string data);
   ///@brief Creates a header for the message
   ///@param versionNum Number of the protocol version used
   ///@param dataTypeName Data type contained in the message
   ///@param deviceName Identifies the sending device
   ///@return Protobuf header for the message
-  SIMPLE::HEADER* createHEADER(int versionNum, std::string dataTypeName, std::string deviceName);
+  simple::HEADER* createHEADER(int versionNum, std::string dataTypeName,
+                               std::string deviceName);
 
-private:
+ private:
   MSGcreator msgCreator;
   std::unique_ptr<zmq::socket_t> socket;
 };
@@ -110,8 +119,7 @@ private:
 }  // namespace simple
 
 template <typename T>
-void simple::Publisher<T>::publish(const T& msg)
-{
+void simple::Publisher<T>::publish(const T& msg) {
   /// Sends the message by the open socket of the publisher. Any type of message
   /// is supported
 
@@ -120,7 +128,8 @@ void simple::Publisher<T>::publish(const T& msg)
   msg.SerializeToString(&strMSG);  // serialize the protobuf message into a
   // string
 
-  std::string topic = msg.GetTypeName();  // add message topic to allow subscription filter
+  std::string topic =
+      msg.GetTypeName();  // add message topic to allow subscription filter
 
   topic.append(strMSG);
 
@@ -128,42 +137,36 @@ void simple::Publisher<T>::publish(const T& msg)
 
   memcpy(ZMQmsg.data(), topic.c_str(), topic.size());
 
-  try
-  {
+  try {
     socket->send(ZMQmsg);
-  }
-  catch (zmq::error_t& e)
-  {
+  } catch (zmq::error_t& e) {
     std::cout << "Could not send message: " << e.what();
   }
 }
 template <typename T>
-simple::Publisher<T>::Publisher(std::string port, zmq::context_t& context)
-{
+simple::Publisher<T>::Publisher(std::string port, zmq::context_t& context) {
   /// Class constructor: opens a socket of type ZMQ_PUB and binds it to port
 
   socket = std::make_unique<zmq::socket_t>(context, ZMQ_PUB);
-  try
-  {
+  try {
     socket->bind(port);
-  }
-  catch (zmq::error_t& e)
-  {
+  } catch (zmq::error_t& e) {
     std::cout << "could not bind to socket:" << e.what();
   }
 }
 template <typename T>
-simple::Publisher<T>::~Publisher()
-{
+simple::Publisher<T>::~Publisher() {
   /// Class destructor: Closes the socket
   socket->close();
 }
 template <typename T>
-SIMPLE::HEADER* simple::Publisher<T>::createHEADER(int versionNum, std::string dataTypeName, std::string deviceName)
-{
+simple::HEADER* simple::Publisher<T>::createHEADER(int versionNum,
+                                                   std::string dataTypeName,
+                                                   std::string deviceName) {
   /// Creates the header of the message, including version number,type of the
   /// data, name of the transmiting device and time stamp of the message.
-  SIMPLE::HEADER* header = msgCreator.createHEADER(versionNum, dataTypeName, deviceName);
+  simple::HEADER* header =
+      msgCreator.createHEADER(versionNum, dataTypeName, deviceName);
 
   return header;
 }
