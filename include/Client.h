@@ -16,21 +16,13 @@ class Client
 public:
   Client(std::string port, zmq::context_t& context);
   ~Client();
-  std::unique_ptr<T> request();
-  void readMsg(const SIMPLE::TRANSFORM& msg, SIMPLE::HEADER& header, double& px, double& py, double& pz, double& r11,
-	  double& r12, double& r13, double& r21, double& r22, double& r23, double& r31, double& r32, double& r33);
-  void readMsg(const SIMPLE::POSITION& msg, SIMPLE::HEADER& header, double& px, double& py, double& pz, double& e1,
-	  double& e2, double& e3, double& e4);
-  void readMsg(const SIMPLE::STATUS& msg, SIMPLE::HEADER& header, int& code, int& subcode, std::string& errorName,
-	  std::string& errorMsg);
-  void readMsg(const SIMPLE::CAPABILITY& msg, SIMPLE::HEADER& header, std::vector<std::string>& msgNames);
-  void readMsg(const SIMPLE::GENERIC& msg, SIMPLE::HEADER& header, bool& data);
-  void readMsg(const SIMPLE::GENERIC& msg, SIMPLE::HEADER& header, int& data);
-  void readMsg(const SIMPLE::GENERIC& msg, SIMPLE::HEADER& header, float& data);
-  void readMsg(const SIMPLE::GENERIC& msg, SIMPLE::HEADER& header, double& data);
-  void readMsg(const SIMPLE::GENERIC& msg, SIMPLE::HEADER& header, std::string& data);
+  ///@brief Sends the request through the open socket and fills the message with the data received. Methods hangs until
+  /// a reply is received
+  ///@param req Message containing the data to be processed at the server, with an empty field to be filled by the reply
+  ///@return Returns true if a suitable reply was received, false otherwise
+  bool request(T& req);
+
 private:
-  MSGreader msgReader;
   std::unique_ptr<zmq::socket_t> socket;
 };
 
@@ -59,17 +51,16 @@ simple::Client<T>::~Client()
   socket->close();
 }
 template <typename T>
-std::unique_ptr<T> simple::Client<T>::request()
+bool simple::Client<T>::request(T& req)
 {
-  // send a request to the server, containing the type of message desired and wait for a reply
+  // send a request to the server, containing a message of the type desired and wait for a reply
 
-  std::unique_ptr<T> SIMPLEreply = std::make_unique<T>();
+  std::string msgReq;
+  req.SerializeToString(&msgReq);
 
-  std::string msgType = SIMPLEreply->GetTypeName();
+  zmq::message_t ZMQmsg(msgReq.size());
 
-  zmq::message_t ZMQmsg(msgType.size());
-
-  memcpy(ZMQmsg.data(), msgType.c_str(), msgType.size());
+  memcpy(ZMQmsg.data(), msgReq.c_str(), msgReq.size());
 
   try
   {
@@ -78,6 +69,7 @@ std::unique_ptr<T> simple::Client<T>::request()
   catch (zmq::error_t& e)
   {
     std::cout << "Could not send request: " << e.what();
+    return false;
   }
 
   // get reply
@@ -90,12 +82,13 @@ std::unique_ptr<T> simple::Client<T>::request()
   catch (zmq::error_t& e)
   {
     std::cout << "Could not receive message: " << e.what();
+    return false;
   }
 
   std::string strMessage(static_cast<char*>(MSGreply.data()),
                          MSGreply.size());  // copy data from ZMQ message into string
 
-  SIMPLEreply->ParseFromString(strMessage);  // copy data from string to protobuf message
+  bool success = req.ParseFromString(strMessage);  // copy data from string to protobuf message
 
-  return SIMPLEreply;
+  return success;
 }
