@@ -3,7 +3,7 @@ syntax = "proto2";
 package simple;
 
 
-message HEADER {
+message header {
 
 	optional int32 VersionNumber =1;
 	optional string dataTypeName =2;
@@ -12,24 +12,24 @@ message HEADER {
 
 }
 
-message STATUS {
+message status {
 
 	optional int32 statusCode =1;
 	optional int64 subcode =2;
 	optional string errorName =3;
 	optional string errorMsg =4;
-	required HEADER header=5;
+	required header header=5;
 
 }
 
-message CAPABILITY {
+message capability {
 
 	repeated string messageName =1;
-	required HEADER header=2;
+	required header header=2;
 
 }
 
-message Pos {
+message pos {
 
 	optional double px =1;
 	optional double py =2;
@@ -37,7 +37,7 @@ message Pos {
 
 }
 
-message Orientation {
+message orientation {
 
 	optional double r11 =1;
 	optional double r12 =2;
@@ -51,7 +51,7 @@ message Orientation {
 
 }
 
-message Quaternion {
+message quaternion {
 
 	optional double e1 = 1;
 	optional double e2 = 2;
@@ -61,24 +61,24 @@ message Quaternion {
 
 }
 
-message POSITION {
+message position {
 
-	optional Pos position =1;
-	optional Quaternion orient =2;
-	required HEADER header=3;
+	optional pos position =1;
+	optional quaternion orient =2;
+	required header header=3;
 
 }
 
-message TRANSFORM {
+message transform {
 
-	optional Pos position =1;
-	optional Orientation orient =2;
-	required HEADER header=3;
+	optional pos position =1;
+	optional orientation orient =2;
+	required header header=3;
 }
 
-message IMAGE {
+message image {
 
-	message METRICS {
+	message metrics {
 
 		optional double voxelSize = 1;
 
@@ -93,8 +93,8 @@ message IMAGE {
 	}
 
 	optional COStype COS = 2;
-	optional Pos position = 3;
-	optional Orientation orient = 4;
+	optional pos position = 3;
+	optional orientation orient = 4;
 	optional int32 matrixSizeX = 5;
 	optional int32 matrixSizeY = 6;
 	optional int32 matrixSizeZ = 7;
@@ -102,7 +102,7 @@ message IMAGE {
 
 }
 
-	message SUBVOLUME {
+	message subvolume {
 
 		optional int32 cornerVoxelIdxX = 1;
 		optional int32 cornerVoxelIdxY = 2;
@@ -123,16 +123,16 @@ message IMAGE {
 	}
 
 
-	optional METRICS metric= 1;
-	optional SUBVOLUME subvolume= 2;
+	optional metrics metric= 1;
+	optional subvolume subvolume= 2;
 	optional bool existSUBVOLUME = 3;
 	optional imageArray imageData =4;
-	required HEADER header=5;
+	required header header=5;
 
 }
 
 
-message GENERIC {
+message generic {
 
 	oneof data{
 
@@ -143,6 +143,6 @@ message GENERIC {
 		string basicString = 5;
 
 	}
-	required HEADER header=6;
+	required header header=6;
 }
 
