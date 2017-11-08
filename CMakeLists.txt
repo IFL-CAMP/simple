@@ -1,21 +1,30 @@
 cmake_minimum_required(VERSION 3.5)
-set(CMAKE_CXX_STANDARD 11)
+project(simple)
+
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
 
+add_subdirectory(simple_msgs)
 
-include_directories(include include/Protobuf include/ZMQ)
+find_package(cppzmq REQUIRED)
+
+# Maybe change the directory where the protobuf messages generated binaries are dropped and change this to that
+include_directories(${CMAKE_CURRENT_BINARY_DIR} include ${cppzmq_INCLUDE_DIR})
 
 file(GLOB_RECURSE Headers "*.h" "*.hpp")
 
+set(LIB_SRCS 
+  ${Headers}
+	src/Server.cpp src/Publisher.cpp 
+	src/Proxy.cpp src/Client.cpp 
+	src/Subscriber.cpp 
+	src/MSGcreator.cpp 
+	src/MSGreader.cpp)
 
-set(LIB_SRCS src/Protobuf/SIMPLE.pb.cc src/Server.cpp src/Publisher.cpp src/Proxy.cpp src/Client.cpp src/Subscriber.cpp src/MSGcreator.cpp src/MSGreader.cpp)
+add_library(${PROJECT_NAME} ${LIB_SRCS})
+target_link_libraries(${PROJECT_NAME} simple_msgs ${cppzmq_STATIC_LIBRARY})
 
-add_library(SIMPLE_Lib STATIC ${LIB_SRCS})
+## TESTS
 
-add_subdirectory("publisher")
-add_subdirectory("subscriber")
-add_subdirectory("proxy")
-add_subdirectory("client")
-add_subdirectory("server")
+add_subdirectory(tests)
 

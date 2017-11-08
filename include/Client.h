@@ -1,19 +1,18 @@
 #pragma once
 
 #include <string>
-#include "SIMPLE.pb.h"
-#include <zmq.hpp>
+#include "simple_msgs/simple.pb.h"
+#define ZMQ_STATIC
 #include <zmq_utils.h>
 #include <memory>
 #include <vector>
+#include <zmq.hpp>
 #include "MSGreader.h"
 
-namespace simple
-{
+namespace simple {
 template <typename T>
-class Client
-{
-public:
+class Client {
+ public:
   Client(std::string port, zmq::context_t& context);
   ~Client();
   ///@brief Sends the request through the open socket and fills the message with the data received. Methods hangs until
@@ -28,25 +27,20 @@ private:
 
 }  // namespace simple
 template <typename T>
-simple::Client<T>::Client(std::string port, zmq::context_t& context)
-{
+simple::Client<T>::Client(std::string port, zmq::context_t& context) {
   /// Class constructor: opens the socket, of type ZMQ_REQ
   /// Binds socket to port
 
   socket = std::make_unique<zmq::socket_t>(context, ZMQ_REQ);
 
-  try
-  {
+  try {
     socket->connect(port);
-  }
-  catch (zmq::error_t& e)
-  {
+  } catch (zmq::error_t& e) {
     std::cout << "could not bind socket:" << e.what();
   }
 }
 template <typename T>
-simple::Client<T>::~Client()
-{
+simple::Client<T>::~Client() {
   /// Class destructor: Closes the socket
   socket->close();
 }
@@ -62,12 +56,9 @@ bool simple::Client<T>::request(T& req)
 
   memcpy(ZMQmsg.data(), msgReq.c_str(), msgReq.size());
 
-  try
-  {
+  try {
     socket->send(ZMQmsg);
-  }
-  catch (zmq::error_t& e)
-  {
+  } catch (zmq::error_t& e) {
     std::cout << "Could not send request: " << e.what();
     return false;
   }
@@ -75,18 +66,16 @@ bool simple::Client<T>::request(T& req)
   // get reply
   zmq::message_t MSGreply;
 
-  try
-  {
+  try {
     socket->recv(&MSGreply);
-  }
-  catch (zmq::error_t& e)
-  {
+  } catch (zmq::error_t& e) {
     std::cout << "Could not receive message: " << e.what();
     return false;
   }
 
-  std::string strMessage(static_cast<char*>(MSGreply.data()),
-                         MSGreply.size());  // copy data from ZMQ message into string
+  std::string strMessage(
+      static_cast<char*>(MSGreply.data()),
+      MSGreply.size());  // copy data from ZMQ message into string
 
   bool success = req.ParseFromString(strMessage);  // copy data from string to protobuf message
 

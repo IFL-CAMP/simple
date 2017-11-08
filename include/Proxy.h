@@ -1,26 +1,25 @@
 #pragma once
 
-#include <string>
-#include "SIMPLE.pb.h"
-#include <zmq.hpp>
+#define ZMQ_STATIC
+
 #include <zmq_utils.h>
 #include <memory>
+#include <string>
 #include <vector>
+#include <zmq.hpp>
+#include "simple_msgs/simple.pb.h"
 
-namespace simple{
+namespace simple {
 
-	class Proxy{
-		///Proxy class. 
-	public:
-		Proxy(std::string backport, std::string frontport, zmq::context_t& context);
-		~Proxy();
+class Proxy {
+  /// Proxy class.
+ public:
+  Proxy(std::string backport, std::string frontport, zmq::context_t& context);
+  ~Proxy();
 
-	private:
+ private:
+  std::unique_ptr<zmq::socket_t> frontend;
+  std::unique_ptr<zmq::socket_t> backend;
+};
 
-		std::unique_ptr<zmq::socket_t> frontend;
-		std::unique_ptr<zmq::socket_t> backend;
-
-	};
-	
-
-}
+}  // namespace simple

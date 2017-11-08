@@ -1,0 +1,148 @@
+syntax = "proto2";
+
+package simple;
+
+
+message header {
+
+	optional int32 VersionNumber =1;
+	optional string dataTypeName =2;
+	optional string deviceName =3;
+	optional double timeStamp =4;
+
+}
+
+message status {
+
+	optional int32 statusCode =1;
+	optional int64 subcode =2;
+	optional string errorName =3;
+	optional string errorMsg =4;
+	required header header=5;
+
+}
+
+message capability {
+
+	repeated string messageName =1;
+	required header header=2;
+
+}
+
+message pos {
+
+	optional double px =1;
+	optional double py =2;
+	optional double pz =3;
+
+}
+
+message orientation {
+
+	optional double r11 =1;
+	optional double r12 =2;
+	optional double r13 =3;
+	optional double r21 =4;
+	optional double r22 =5;
+	optional double r23 =6;
+	optional double r31 =7;
+	optional double r32 =8;
+	optional double r33 =9;
+
+}
+
+message quaternion {
+
+	optional double e1 = 1;
+	optional double e2 = 2;
+	optional double e3 = 3;
+	optional double e4 = 4;
+
+
+}
+
+message position {
+
+	optional pos position =1;
+	optional quaternion orient =2;
+	required header header=3;
+
+}
+
+message transform {
+
+	optional pos position =1;
+	optional orientation orient =2;
+	required header header=3;
+}
+
+message image {
+
+	message metrics {
+
+		optional double voxelSize = 1;
+
+		enum COStype {
+			LPS =0;
+			RAS =1;
+		}
+
+	enum dataType {
+		RGB =0;
+		SCALAR =1;
+	}
+
+	optional COStype COS = 2;
+	optional pos position = 3;
+	optional orientation orient = 4;
+	optional int32 matrixSizeX = 5;
+	optional int32 matrixSizeY = 6;
+	optional int32 matrixSizeZ = 7;
+	optional dataType type =8;
+
+}
+
+	message subvolume {
+
+		optional int32 cornerVoxelIdxX = 1;
+		optional int32 cornerVoxelIdxY = 2;
+		optional int32 cornerVoxelIdxZ = 3;
+		optional int32 numVoxelX = 4;
+		optional int32 numVoxelY = 5;
+		optional int32 numVoxelZ = 6;
+
+	}
+
+	message imageArray {
+
+		optional bytes dataRed = 1;
+		optional bytes dataGreen = 2;
+		optional bytes dataBlue = 3;
+		optional bytes data = 4;
+
+	}
+
+
+	optional metrics metric= 1;
+	optional subvolume subvolume= 2;
+	optional bool existSUBVOLUME = 3;
+	optional imageArray imageData =4;
+	required header header=5;
+
+}
+
+
+message generic {
+
+	oneof data{
+
+		bool basicBool = 1;
+		int32 basicInt = 2;
+		float basicFloat = 3;
+		double basicDouble = 4;
+		string basicString = 5;
+
+	}
+	required header header=6;
+}
+

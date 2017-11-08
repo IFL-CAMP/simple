@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SIMPLE.pb.h"
+#include "simple_msgs/simple.pb.h"
 #include <memory>
 
 namespace simple
@@ -24,7 +24,7 @@ public:
   ///@param r31 Return by reference, element e31 of 4x4 transformation matrix
   ///@param r32 Return by reference, element e32 of 4x4 transformation matrix
   ///@param r33 Return by reference, element e33 of 4x4 transformation matrix
-  void readTRANSFORM(const SIMPLE::TRANSFORM& msg, SIMPLE::HEADER& header, double& px, double& py, double& pz,
+  void readTRANSFORM(const simple::TRANSFORM& msg, simple::HEADER& header, double& px, double& py, double& pz,
                      double& r11, double& r12, double& r13, double& r21, double& r22, double& r23, double& r31,
                      double& r32, double& r33);
   ///@brief Reads the content of the input message and returns the values through the reference inputs
@@ -37,7 +37,7 @@ public:
   ///@param e2 return by reference, second quaternion: e2 = k_y*sin(theta/2)
   ///@param e3 return by reference, third quaternion: e3 = k_z*sin(theta/2)
   ///@param e4 return by reference, fourth quaternion: e4 = cos(theta/2)
-  void readPOSITION(const SIMPLE::POSITION& msg, SIMPLE::HEADER& header, double& px, double& py, double& pz,
+  void readPOSITION(const simple::POSITION& msg, simple::HEADER& header, double& px, double& py, double& pz,
                     double& e1, double& e2, double& e3, double& e4);
   ///@brief Reads the content of the input message and returns the values through the reference inputs
   ///@param msg Pointer to the message whose content will be read
@@ -46,41 +46,41 @@ public:
   ///@param subcode return by reference, device-specific code, defined by developer
   ///@param errorName return by reference, Name of the error
   ///@param errorMsg return by reference, Message detailing the error
-  void readSTATUS(const SIMPLE::STATUS& msg, SIMPLE::HEADER& header, int& code, int& subcode,
+  void readSTATUS(const simple::STATUS& msg, simple::HEADER& header, int& code, int& subcode,
                   std::string& errorName, std::string& errorMsg);
   ///@brief Reads the content of the input message and returns the values through the reference inputs
   ///@param msg Pointer to the message whose content will be read
   ///@param header return by reference, the header of the message
   ///@param msgNames return by reference, Vector containing the name of the types of messages supported by the device
-  void readCAPABILITY(const SIMPLE::CAPABILITY& msg, SIMPLE::HEADER& header,
+  void readCAPABILITY(const simple::CAPABILITY& msg, simple::HEADER& header,
                       std::vector<std::string>& msgNames);
   ///@brief Reads the content of the input message and returns the values through the reference inputs
   ///@param msg Pointer to the message whose content will be read
   ///@param header return by reference, the header of the message
   ///@param data return by reference, bool content of the message
-  void readGENERIC_BOOL(const SIMPLE::GENERIC& msg, SIMPLE::HEADER& header, bool& data);
+  void readGENERIC_BOOL(const simple::GENERIC& msg, simple::HEADER& header, bool& data);
   ///@brief Reads the content of the input message and returns the values through the reference inputs
   ///@param msg Pointer to the message whose content will be read
   ///@param header return by reference, the header of the message
   ///@param data return by reference, int content of the message
-  void readGENERIC_INT(const SIMPLE::GENERIC& msg, SIMPLE::HEADER& header, int& data);
+  void readGENERIC_INT(const simple::GENERIC& msg, simple::HEADER& header, int& data);
   ///@brief Reads the content of the input message and returns the values through the reference inputs
   ///@param msg Pointer to the message whose content will be read
   ///@param header return by reference, the header of the message
   ///@param data return by reference, float content of the message
-  void readGENERIC_FLOAT(const SIMPLE::GENERIC& msg, SIMPLE::HEADER& header, float& data);
+  void readGENERIC_FLOAT(const simple::GENERIC& msg, simple::HEADER& header, float& data);
   ///@brief Reads the content of the input message and returns the values through the reference inputs
   ///@param msg Pointer to the message whose content will be read
   ///@param header return by reference, the header of the message
   ///@param data return by reference, double content of the message
-  void readGENERIC_DOUBLE(const SIMPLE::GENERIC& msg, SIMPLE::HEADER& header, double& data);
+  void readGENERIC_DOUBLE(const simple::GENERIC& msg, simple::HEADER& header, double& data);
   ///@brief Reads the content of the input message and returns the values through the reference inputs
   ///@param msg Pointer to the message whose content will be read
   ///@param header return by reference, the header of the message
   ///@param data return by reference, string content of the message
-  void readGENERIC_STR(const SIMPLE::GENERIC& msg, SIMPLE::HEADER& header, std::string& data);
+  void readGENERIC_STR(const simple::GENERIC& msg, simple::HEADER& header, std::string& data);
 
-  void readHEADER(const SIMPLE::HEADER& header, int& versionNum, std::string& dataTypeName, std::string& deviceName,
+  void readHEADER(const simple::HEADER& header, int& versionNum, std::string& dataTypeName, std::string& deviceName,
                   double& timeStamp);
 };
 
