@@ -1,6 +1,5 @@
 #pragma once
 
-#define ZMQ_STATIC
 
 #include <chrono>
 #include <memory>

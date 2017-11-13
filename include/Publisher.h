@@ -55,7 +55,7 @@ void simple::Publisher<T>::publish(const T& msg) {
   try {
     socket->send(ZMQmsg);
   } catch (zmq::error_t& e) {
-    std::cout << "Could not send message: " << e.what();
+    std::cerr << "Could not send message: " << e.what();
   }
 }
 template <typename T>
@@ -66,7 +66,7 @@ simple::Publisher<T>::Publisher(std::string port, zmq::context_t& context) {
   try {
     socket->bind(port);
   } catch (zmq::error_t& e) {
-    std::cout << "could not bind to socket:" << e.what();
+    std::cerr << "could not bind to socket:" << e.what();
   }
 }
 template <typename T>

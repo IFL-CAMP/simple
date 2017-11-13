@@ -28,5 +28,5 @@ target_link_libraries(${PROJECT_NAME} simple_msgs ${cppzmq_STATIC_LIBRARY})
 
 ## TESTS
 
-#add_subdirectory(tests)
+add_subdirectory(tests)
 

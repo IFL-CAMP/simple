@@ -36,8 +36,12 @@ simple::Client<T>::Client(std::string port, zmq::context_t& context) {
   try {
     socket->connect(port);
   } catch (zmq::error_t& e) {
-    std::cout << "could not bind socket:" << e.what();
+    std::cerr << "could not bind socket:" << e.what();
   }
+  //set maximum time out for sending requests: time out = 600ms
+  socket->setsockopt(ZMQ_SNDTIMEO, 600);
+  //set maximum time out for receiving replies from the server: time out = 4000ms
+  socket->setsockopt(ZMQ_RCVTIMEO, 4000);
 }
 template <typename T>
 simple::Client<T>::~Client() {
@@ -59,7 +63,8 @@ bool simple::Client<T>::request(T& req)
   try {
     socket->send(ZMQmsg);
   } catch (zmq::error_t& e) {
-    std::cout << "Could not send request: " << e.what();
+    std::cerr << "Could not send request: " << e.what();
+	//fail if request not sent
     return false;
   }
 
@@ -69,7 +74,8 @@ bool simple::Client<T>::request(T& req)
   try {
     socket->recv(&MSGreply);
   } catch (zmq::error_t& e) {
-    std::cout << "Could not receive message: " << e.what();
+    std::cerr << "Could not receive message: " << e.what();
+	//fail if reply not received
     return false;
   }
 
@@ -77,6 +83,7 @@ bool simple::Client<T>::request(T& req)
       static_cast<char*>(MSGreply.data()),
       MSGreply.size());  // copy data from ZMQ message into string
 
+  //check if this fails when received type is wrong
   bool success = req.ParseFromString(strMessage);  // copy data from string to protobuf message
 
   return success;

@@ -1,6 +1,6 @@
 #pragma once
 
-#define ZMQ_STATIC
+//#define ZMQ_STATIC
 #include <zmq_utils.h>
 #include <memory>
 #include <zmq.hpp>

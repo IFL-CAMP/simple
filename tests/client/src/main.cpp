@@ -5,6 +5,7 @@
 #include "Client.h"
 #include "myContext.h"
 #include "simple_msgs/simple.pb.h"
+#include "MSGcreator.h"
 
 // handle interruptions
 static int s_interrupted = 0;
@@ -26,71 +27,77 @@ int main(int argc, char* argv[]) {
 
   // start a client for each type of message, for testing
 
-  simple::Client<simple::CAPABILITY> clientCap("tcp://localhost:5555",
+  simple::Client<simple::capability> clientCap("tcp://localhost:5555",
                                                *globalContext.context);
-  simple::Client<simple::TRANSFORM> clientTrans("tcp://localhost:5556",
+  simple::Client<simple::transform> clientTrans("tcp://localhost:5556",
                                                 *globalContext.context);
-  simple::Client<simple::POSITION> clientPos("tcp://localhost:5557",
+  simple::Client<simple::position> clientPos("tcp://localhost:5557",
                                              *globalContext.context);
-  simple::Client<simple::STATUS> clientStat("tcp://localhost:5558",
+  simple::Client<simple::status> clientStat("tcp://localhost:5558",
                                             *globalContext.context);
-  simple::Client<simple::GENERIC> clientGen("tcp://localhost:5559",
+  simple::Client<simple::generic> clientGen("tcp://localhost:5559",
                                             *globalContext.context);
+  //start message creator
+  simple::MSGcreator msgCreator;
 
   // create the holders for the incoming data
+  simple::header* headerCap = msgCreator.createHEADER(1, "Capability", "PC");
+  simple::header* headerTrans = msgCreator.createHEADER(1, "Transform", "PC");
+  simple::header* headerPos = msgCreator.createHEADER(1, "Position", "PC");
+  simple::header* headerStat = msgCreator.createHEADER(1, "Status", "PC");
+  simple::header* headerGen = msgCreator.createHEADER(1, "Generic", "PC");
 
-  std::vector<std::string> Capabilities;
-  simple::HEADER CapHeader;
+  std::vector<std::string> vec{ "status", "transform" };
 
-  simple::HEADER TransHeader;
-  double px, py, pz, r11, r12, r13, r21, r22, r23, r31, r32, r33;
-
-  simple::HEADER PosHeader;
-  double pospx, pospy, pospz, e1, e2, e3, e4;
-
-  simple::HEADER StatHeader;
-  int code, subcode;
-  std::string errorName, errorMsg;
-
-  simple::HEADER GenHeader;
-  bool data;
+  std::unique_ptr<simple::capability> msgCap = msgCreator.createCAPABILITY(headerCap, vec);
+  std::unique_ptr<simple::transform> msgTrans = msgCreator.createTRANSFORM(headerTrans, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  std::unique_ptr<simple::position> msgPos = msgCreator.createPOSITION(headerPos, 0, 0, 0, 0, 0, 0, 0);
+  std::unique_ptr<simple::status> msgStat = msgCreator.createSTATUS(headerStat, 1, 1, "", "");
+  std::unique_ptr<simple::generic> msgGen = msgCreator.createGENERIC_BOOL(headerGen, true);
 
   s_catch_signals();
   while (!s_interrupted) {
-    try {
-      std::unique_ptr<simple::CAPABILITY> recvCap = clientCap.request();
-      clientCap.readMsg(*recvCap, CapHeader, Capabilities);
-
-      std::unique_ptr<simple::TRANSFORM> recvTrans = clientTrans.request();
-      clientTrans.readMsg(*recvTrans, TransHeader, px, py, pz, r11, r12, r13,
-                          r21, r22, r23, r31, r32, r33);
-
-      std::unique_ptr<simple::POSITION> recvPos = clientPos.request();
-      clientPos.readMsg(*recvPos, PosHeader, pospx, pospy, pospz, e1, e2, e3,
-                        e4);
-
-      std::unique_ptr<simple::STATUS> recvStat = clientStat.request();
-      clientStat.readMsg(*recvStat, StatHeader, code, subcode, errorName,
-                         errorMsg);
-
-      std::unique_ptr<simple::GENERIC> recvGen = clientGen.request();
-      clientGen.readMsg(*recvGen, GenHeader, data);
-    } catch (zmq::error_t& e) {
-      std::cout << "Something went wrong with the request!"
-                << "\n";
-    }
-
-    // print the received data
-    std::cout << "Capability received: " << Capabilities.at(0) << ", "
-              << Capabilities.at(1) << ", " << Capabilities.at(2) << "\n";
-    std::cout << "Transform received: px=" << px << ", py=" << py
-              << ", pz=" << pz << ", r11=" << r11 << "\n";
-    std::cout << "Position received: px=" << pospx << ", py=" << pospy
-              << ", pz=" << pospz << ", e1=" << e1 << ", e2=" << e2 << "\n";
-    std::cout << "Status received: code=" << code << ", subcode=" << subcode
-              << ", errorName=" << errorName << ", errorMsg=" << errorMsg
-              << "\n";
-    std::cout << "Generic received: bool=" << data << "\n";
+		if (clientCap.request(*msgCap))
+		{
+			std::cout << "Message capability requested and received" << "\n";
+		}
+		else
+		{
+			std::cout << "Message capability not received" << "\n";
+		}
+		if (clientTrans.request(*msgTrans))
+		{
+			std::cout << "Message transform requested and received" << "\n";
+		}
+		else
+		{
+			std::cout << "Message transform not received" << "\n";
+		}
+		if (clientPos.request(*msgPos))
+		{
+			std::cout << "Message position requested and received" << "\n";
+		}
+		else
+		{
+			std::cout << "Message position not received" << "\n";
+		}
+		if (clientStat.request(*msgStat))
+		{
+			std::cout << "Message status requested and received" << "\n";
+		}
+		else
+		{
+			std::cout << "Message status not received" << "\n";
+		}
+		if (clientGen.request(*msgGen))
+		{
+			std::cout << "Message generic requested and received" << "\n";
+		}
+		else
+		{
+			std::cout << "Message generic not received" << "\n";
+		}
+    
   }
 
   std::cout << "Interruption received, killing server"

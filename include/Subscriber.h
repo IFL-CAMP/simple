@@ -48,26 +48,25 @@ std::unique_ptr<T> simple::Subscriber<T>::subscribe() {
 
   zmq::message_t ZMQmessage;
 
-
   try {
     socket->recv(
         &ZMQmessage);  // receive messages that fit the filter of the socket
   } catch (zmq::error_t& e) {
-    std::cout << "Could not receive message: " << e.what();
+    std::cerr << "Could not receive message: " << e.what();
   }
 
   std::string strMessage(
       static_cast<char*>(ZMQmessage.data()),
       ZMQmessage.size());  // copy data from ZMQ message into string
 
+  std::unique_ptr<T> SIMPLEmsg = std::make_unique<T>();
+
   // remove the topic string in front of the message
-  strMessage.erase(0, BASEmsg->GetTypeName().length());
+  strMessage.erase(0, SIMPLEmsg->GetTypeName().length());
 
-  std::unique_ptr<T> BASEmsg = std::make_unique<T>();
+  SIMPLEmsg->ParseFromString(strMessage);  // copy data from string to protobuf message
 
-  BASEmsg->ParseFromString(strMessage);  // copy data from string to protobuf message
-
-  return BASEmsg;
+  return SIMPLEmsg;
 }
 
 template <typename T>
@@ -77,7 +76,7 @@ simple::Subscriber<T>::Subscriber(std::string port, zmq::context_t& context) {
   try {
     socket->connect(port);
   } catch (zmq::error_t& e) {
-    std::cout << "could not connect to socket:" << e.what();
+    std::cerr << "could not connect to socket:" << e.what();
   }
 
   T BASEmsg;

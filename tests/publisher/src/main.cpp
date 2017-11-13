@@ -5,6 +5,7 @@
 #include "Publisher.h"
 #include "myContext.h"
 #include "simple_msgs/simple.pb.h"
+#include "MSGcreator.h"
 
 // handle interruptions
 static int s_interrupted = 0;
@@ -26,38 +27,40 @@ int main(int argc, char* argv[]) {
 
   // start one instance of publisher for each message type
 
-  simple::Publisher<simple::CAPABILITY> pubCap("tcp://*:5555",
+  simple::Publisher<simple::capability> pubCap("tcp://*:5555",
                                                *globalContext.context);
-  simple::Publisher<simple::TRANSFORM> pubTrans("tcp://*:5556",
+  simple::Publisher<simple::transform> pubTrans("tcp://*:5556",
                                                 *globalContext.context);
-  simple::Publisher<simple::POSITION> pubPos("tcp://*:5557",
+  simple::Publisher<simple::position> pubPos("tcp://*:5557",
                                              *globalContext.context);
-  simple::Publisher<simple::STATUS> pubStat("tcp://*:5558",
+  simple::Publisher<simple::status> pubStat("tcp://*:5558",
                                             *globalContext.context);
-  simple::Publisher<simple::GENERIC> pubGen("tcp://*:5559",
+  simple::Publisher<simple::generic> pubGen("tcp://*:5559",
                                             *globalContext.context);
+  //start message creator
+  simple::MSGcreator msgCreator;
 
   // put random stuff on each message, for testing
 
-  simple::HEADER* headerCap = pubCap.createHEADER(1, "CAPABILITY", "My PC");
-  simple::HEADER* headerTrans = pubTrans.createHEADER(1, "TRANSFORM", "My PC");
-  simple::HEADER* headerPos = pubPos.createHEADER(1, "POSITION", "My PC");
-  simple::HEADER* headerStat = pubStat.createHEADER(1, "STATUS", "My PC");
-  simple::HEADER* headerGen = pubGen.createHEADER(1, "GENERIC", "My PC");
+  simple::header* headerCap = msgCreator.createHEADER(1, "CAPABILITY", "My PC");
+  simple::header* headerTrans = msgCreator.createHEADER(1, "TRANSFORM", "My PC");
+  simple::header* headerPos = msgCreator.createHEADER(1, "POSITION", "My PC");
+  simple::header* headerStat = msgCreator.createHEADER(1, "STATUS", "My PC");
+  simple::header* headerGen = msgCreator.createHEADER(1, "GENERIC", "My PC");
 
   std::vector<std::string> vec = {"POSITION", "STATUS", "TRANSFORM"};
-  std::unique_ptr<simple::CAPABILITY> capMSG = pubCap.createMSG(headerCap, vec);
+  std::unique_ptr<simple::capability> capMSG = msgCreator.createCAPABILITY(headerCap, vec);
 
-  std::unique_ptr<simple::TRANSFORM> transMSG = pubTrans.createMSG(
+  std::unique_ptr<simple::transform> transMSG = msgCreator.createTRANSFORM(
       headerTrans, 2.1, 2.2, 2.3, 1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 3.1, 3.2, 3.3);
 
-  std::unique_ptr<simple::POSITION> posMSG =
-      pubPos.createMSG(headerPos, 1.0, 1.1, 1.2, 2.1, 2.2, 2.3, 2.4);
+  std::unique_ptr<simple::position> posMSG =
+	  msgCreator.createPOSITION(headerPos, 1.0, 1.1, 1.2, 2.1, 2.2, 2.3, 2.4);
 
-  std::unique_ptr<simple::STATUS> statMSG =
-      pubStat.createMSG(headerStat, 1, 2, "Error Name", "Random message");
+  std::unique_ptr<simple::status> statMSG =
+	  msgCreator.createSTATUS(headerStat, 1, 2, "Error Name", "Random message");
 
-  std::unique_ptr<simple::GENERIC> genMSG = pubGen.createMSG(headerGen, true);
+  std::unique_ptr<simple::generic> genMSG = msgCreator.createGENERIC_BOOL(headerGen, true);
 
   s_catch_signals();
   while (!s_interrupted) {

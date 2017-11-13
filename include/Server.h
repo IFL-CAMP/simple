@@ -24,7 +24,7 @@ class Server {
   ~Server();
   ///@brief Replies with the content provided
   ///@param msg Protobuf message containing the data to be replied
-  void reply(const T& msg);
+  bool reply(const T& msg);
   ///@brief Receives a request from a client through the socket and checks if
   ///the type requested matches the server
   /// instance type
@@ -46,8 +46,10 @@ simple::Server<T>::Server(std::string port, zmq::context_t& context) {
   try {
     socket->bind(port);
   } catch (zmq::error_t& e) {
-    std::cout << "could not bind socket:" << e.what();
+    std::cerr << "could not bind socket:" << e.what();
   }
+  //set maximum time out for sending replies: time out = 200ms
+  socket->setsockopt(ZMQ_SNDTIMEO, 200);
 }
 template <typename T>
 simple::Server<T>::~Server() {
@@ -63,19 +65,22 @@ bool simple::Server<T>::receivedRequest(T& msg)
   try {
     socket->recv(&recvREQ);
   } catch (zmq::error_t& e) {
-    std::cout << "Could not receive message: " << e.what();
+    std::cerr << "Could not receive message: " << e.what();
+	//fails if couldn't receive the request
+	return false;
   }
 
   std::string strMessage(static_cast<char*>(recvREQ.data()),
                          recvREQ.size());          // copy data from ZMQ message into string
+  //check if this fails when types don't match
   bool success = msg.ParseFromString(strMessage);  // get data from string into protobuf message
 
   return success;
 }
 template <typename T>
-void simple::Server<T>::reply(const T& msg) {
+bool simple::Server<T>::reply(const T& msg) {
   // Reply with the data
-
+	bool success=true;
   // serialize data to string
   std::string strReply;
   msg.SerializeToString(&strReply);
@@ -87,6 +92,9 @@ void simple::Server<T>::reply(const T& msg) {
   try {
     socket->send(ZMQreply);
   } catch (zmq::error_t& e) {
-    std::cout << "Could not send message: " << e.what();
+    std::cerr << "Could not send message: " << e.what();
+	//fails if send is not successfull
+	success = false;
   }
+  return success;
 }
