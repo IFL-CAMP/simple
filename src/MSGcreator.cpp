@@ -1,16 +1,16 @@
 #include "MSGcreator.h"
 
-std::unique_ptr<simple::TRANSFORM> simple::MSGcreator::createTRANSFORM(
-    simple::HEADER* header, double px, double py, double pz, double r11,
+std::unique_ptr<simple::transform> simple::MSGcreator::createTRANSFORM(
+    simple::header* header, double px, double py, double pz, double r11,
     double r12, double r13, double r21, double r22, double r23, double r31,
     double r32, double r33) {
   /// Creates a message of type TRANSFORM
 
-  std::unique_ptr<simple::TRANSFORM> transform =
-      std::make_unique<simple::TRANSFORM>();
+  std::unique_ptr<simple::transform> transform =
+      std::make_unique<simple::transform>();
 
-  simple::Pos* pos = new simple::Pos();
-  simple::Orientation* orientation = new simple::Orientation();
+  simple::pos* pos = new simple::pos();
+  simple::orientation* orientation = new simple::orientation();
 
   pos->set_px(px);
   pos->set_py(py);
@@ -27,21 +27,21 @@ std::unique_ptr<simple::TRANSFORM> simple::MSGcreator::createTRANSFORM(
   orientation->set_r33(r33);
 
   transform->set_allocated_orient(orientation);
-  transform->set_allocated_position(pos);
+  transform->set_allocated_posit(pos);
   transform->set_allocated_header(header);
 
   return transform;
 }
-std::unique_ptr<simple::POSITION> simple::MSGcreator::createPOSITION(
-    simple::HEADER* header, double px, double py, double pz, double e1,
+std::unique_ptr<simple::position> simple::MSGcreator::createPOSITION(
+    simple::header* header, double px, double py, double pz, double e1,
     double e2, double e3, double e4) {
   /// Creates a message of type POSITION
 
-  std::unique_ptr<simple::POSITION> position =
-      std::make_unique<simple::POSITION>();
+  std::unique_ptr<simple::position> position =
+      std::make_unique<simple::position>();
 
-  simple::Pos* pos = new simple::Pos();
-  simple::Quaternion* quaternion = new simple::Quaternion();
+  simple::pos* pos = new simple::pos();
+  simple::quaternion* quaternion = new simple::quaternion();
 
   quaternion->set_e1(e1);
   quaternion->set_e2(e2);
@@ -53,17 +53,17 @@ std::unique_ptr<simple::POSITION> simple::MSGcreator::createPOSITION(
   pos->set_pz(pz);
 
   position->set_allocated_orient(quaternion);
-  position->set_allocated_position(pos);
+  position->set_allocated_posit(pos);
   position->set_allocated_header(header);
 
   return position;
 }
-std::unique_ptr<simple::STATUS> simple::MSGcreator::createSTATUS(
-    simple::HEADER* header, int code, int subcode, std::string errorName,
+std::unique_ptr<simple::status> simple::MSGcreator::createSTATUS(
+    simple::header* header, int code, int subcode, std::string errorName,
     std::string errorMsg) {
   /// Creates a message of type STATUS
 
-  std::unique_ptr<simple::STATUS> stat = std::make_unique<simple::STATUS>();
+  std::unique_ptr<simple::status> stat = std::make_unique<simple::status>();
 
   stat->set_subcode(subcode);
   stat->set_statuscode(code);
@@ -73,10 +73,10 @@ std::unique_ptr<simple::STATUS> simple::MSGcreator::createSTATUS(
 
   return stat;
 }
-std::unique_ptr<simple::CAPABILITY> simple::MSGcreator::createCAPABILITY(
-    simple::HEADER* header, std::vector<std::string> msgNames) {
-  std::unique_ptr<simple::CAPABILITY> cap =
-      std::make_unique<simple::CAPABILITY>();
+std::unique_ptr<simple::capability> simple::MSGcreator::createCAPABILITY(
+    simple::header* header, std::vector<std::string> msgNames) {
+  std::unique_ptr<simple::capability> cap =
+      std::make_unique<simple::capability>();
 
   for (size_t i = 0; i < msgNames.size(); i++) {
     cap->add_messagename(msgNames.at(i));
@@ -86,45 +86,45 @@ std::unique_ptr<simple::CAPABILITY> simple::MSGcreator::createCAPABILITY(
 
   return cap;
 }
-std::unique_ptr<simple::GENERIC> simple::MSGcreator::createGENERIC_BOOL(
-    simple::HEADER* header, bool data) {
-  std::unique_ptr<simple::GENERIC> gen = std::make_unique<simple::GENERIC>();
+std::unique_ptr<simple::generic> simple::MSGcreator::createGENERIC_BOOL(
+    simple::header* header, bool data) {
+  std::unique_ptr<simple::generic> gen = std::make_unique<simple::generic>();
 
   gen->set_basicbool(data);
   gen->set_allocated_header(header);
 
   return gen;
 }
-std::unique_ptr<simple::GENERIC> simple::MSGcreator::createGENERIC_INT(
-    simple::HEADER* header, int data) {
-  std::unique_ptr<simple::GENERIC> gen = std::make_unique<simple::GENERIC>();
+std::unique_ptr<simple::generic> simple::MSGcreator::createGENERIC_INT(
+    simple::header* header, int data) {
+	std::unique_ptr<simple::generic> gen = std::make_unique<simple::generic>();
 
   gen->set_basicint(data);
   gen->set_allocated_header(header);
 
   return gen;
 }
-std::unique_ptr<simple::GENERIC> simple::MSGcreator::createGENERIC_FLOAT(
-    simple::HEADER* header, float data) {
-  std::unique_ptr<simple::GENERIC> gen = std::make_unique<simple::GENERIC>();
+std::unique_ptr<simple::generic> simple::MSGcreator::createGENERIC_FLOAT(
+    simple::header* header, float data) {
+	std::unique_ptr<simple::generic> gen = std::make_unique<simple::generic>();
 
   gen->set_basicfloat(data);
   gen->set_allocated_header(header);
 
   return gen;
 }
-std::unique_ptr<simple::GENERIC> simple::MSGcreator::createGENERIC_DOUBLE(
-    simple::HEADER* header, double data) {
-  std::unique_ptr<simple::GENERIC> gen = std::make_unique<simple::GENERIC>();
+std::unique_ptr<simple::generic> simple::MSGcreator::createGENERIC_DOUBLE(
+    simple::header* header, double data) {
+	std::unique_ptr<simple::generic> gen = std::make_unique<simple::generic>();
 
   gen->set_basicdouble(data);
   gen->set_allocated_header(header);
 
   return gen;
 }
-std::unique_ptr<simple::GENERIC> simple::MSGcreator::createGENERIC_STR(
-    simple::HEADER* header, std::string data) {
-  std::unique_ptr<simple::GENERIC> gen = std::make_unique<simple::GENERIC>();
+std::unique_ptr<simple::generic> simple::MSGcreator::createGENERIC_STR(
+    simple::header* header, std::string data) {
+	std::unique_ptr<simple::generic> gen = std::make_unique<simple::generic>();
 
   gen->set_basicstring(data);
   gen->set_allocated_header(header);
@@ -132,13 +132,13 @@ std::unique_ptr<simple::GENERIC> simple::MSGcreator::createGENERIC_STR(
   return gen;
 }
 
-simple::HEADER* simple::MSGcreator::createHEADER(int versionNum,
+simple::header* simple::MSGcreator::createHEADER(int versionNum,
                                                  std::string dataTypeName,
                                                  std::string deviceName) {
   /// Creates the header of the message, including version number, type of the
   /// data, name of the transmiting device and time stamp of the message.
 
-  simple::HEADER* header = new simple::HEADER();
+  simple::header* header = new simple::header();
   // header->set_datatypename(dataTypeName);
   // header->set_devicename(deviceName);
   // header->set_timestamp(getCurrentTime());

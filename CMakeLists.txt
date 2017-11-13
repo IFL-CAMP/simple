@@ -8,6 +8,8 @@ add_subdirectory(simple_msgs)
 
 find_package(cppzmq REQUIRED)
 
+include_directories(${cppzmq_INCLUDE_DIR} ${ZeroMQ_INCLUDE_DIR} ${Protobuf_INCLUDE_DIR})
+
 # Maybe change the directory where the protobuf messages generated binaries are dropped and change this to that
 include_directories(${CMAKE_CURRENT_BINARY_DIR} include ${cppzmq_INCLUDE_DIR})
 
@@ -26,5 +28,5 @@ target_link_libraries(${PROJECT_NAME} simple_msgs ${cppzmq_STATIC_LIBRARY})
 
 ## TESTS
 
-add_subdirectory(tests)
+#add_subdirectory(tests)
 

@@ -63,7 +63,7 @@ message quaternion {
 
 message position {
 
-	optional pos position =1;
+	optional pos posit =1;
 	optional quaternion orient =2;
 	required header header=3;
 
@@ -71,7 +71,7 @@ message position {
 
 message transform {
 
-	optional pos position =1;
+	optional pos posit =1;
 	optional orientation orient =2;
 	required header header=3;
 }
@@ -93,7 +93,7 @@ message image {
 	}
 
 	optional COStype COS = 2;
-	optional pos position = 3;
+	optional pos posit = 3;
 	optional orientation orient = 4;
 	optional int32 matrixSizeX = 5;
 	optional int32 matrixSizeY = 6;
@@ -124,8 +124,8 @@ message image {
 
 
 	optional metrics metric= 1;
-	optional subvolume subvolume= 2;
-	optional bool existSUBVOLUME = 3;
+	optional subvolume subvol= 2;
+	optional bool existSubvolume = 3;
 	optional imageArray imageData =4;
 	required header header=5;
 

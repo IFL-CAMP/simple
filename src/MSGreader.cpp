@@ -1,15 +1,15 @@
 #include "MSGreader.h"
 
-void simple::MSGreader::readTRANSFORM(const simple::TRANSFORM& msg,
-                                      simple::HEADER& header, double& px,
+void simple::MSGreader::readTRANSFORM(const simple::transform& msg,
+                                      simple::header& header, double& px,
                                       double& py, double& pz, double& r11,
                                       double& r12, double& r13, double& r21,
                                       double& r22, double& r23, double& r31,
                                       double& r32, double& r33) {
   /// Reads a message of type TRANSFORM
 
-  simple::Pos pos = msg.position();
-  simple::Orientation orientation = msg.orient();
+  simple::pos pos = msg.posit();
+  simple::orientation orientation = msg.orient();
 
   px = pos.px();
   py = pos.py();
@@ -27,14 +27,14 @@ void simple::MSGreader::readTRANSFORM(const simple::TRANSFORM& msg,
 
   header = msg.header();
 }
-void simple::MSGreader::readPOSITION(const simple::POSITION& msg,
-                                     simple::HEADER& header, double& px,
+void simple::MSGreader::readPOSITION(const simple::position& msg,
+                                     simple::header& header, double& px,
                                      double& py, double& pz, double& e1,
                                      double& e2, double& e3, double& e4) {
   /// Reads a message of type POSITION
 
-  simple::Pos pos = msg.position();
-  simple::Quaternion quaternion = msg.orient();
+  simple::pos pos = msg.posit();
+  simple::quaternion quaternion = msg.orient();
 
   header = msg.header();
   px = pos.px();
@@ -46,8 +46,8 @@ void simple::MSGreader::readPOSITION(const simple::POSITION& msg,
   e3 = quaternion.e3();
   e4 = quaternion.e4();
 }
-void simple::MSGreader::readSTATUS(const simple::STATUS& msg,
-                                   simple::HEADER& header, int& code,
+void simple::MSGreader::readSTATUS(const simple::status& msg,
+                                   simple::header& header, int& code,
                                    int& subcode, std::string& errorName,
                                    std::string& errorMsg) {
   /// Reads a message of type STATUS
@@ -58,8 +58,8 @@ void simple::MSGreader::readSTATUS(const simple::STATUS& msg,
   errorName = msg.errorname();
   errorMsg = msg.errormsg();
 }
-void simple::MSGreader::readCAPABILITY(const simple::CAPABILITY& msg,
-                                       simple::HEADER& header,
+void simple::MSGreader::readCAPABILITY(const simple::capability& msg,
+                                       simple::header& header,
                                        std::vector<std::string>& msgNames) {
   header = msg.header();
 
@@ -67,35 +67,35 @@ void simple::MSGreader::readCAPABILITY(const simple::CAPABILITY& msg,
     msgNames.push_back(msg.messagename(i));
   }
 }
-void simple::MSGreader::readGENERIC_BOOL(const simple::GENERIC& msg,
-                                         simple::HEADER& header, bool& data) {
+void simple::MSGreader::readGENERIC_BOOL(const simple::generic& msg,
+                                         simple::header& header, bool& data) {
   header = msg.header();
   data = msg.basicbool();
 }
-void simple::MSGreader::readGENERIC_INT(const simple::GENERIC& msg,
-                                        simple::HEADER& header, int& data) {
+void simple::MSGreader::readGENERIC_INT(const simple::generic& msg,
+                                        simple::header& header, int& data) {
   header = msg.header();
   data = msg.basicint();
 }
-void simple::MSGreader::readGENERIC_FLOAT(const simple::GENERIC& msg,
-                                          simple::HEADER& header, float& data) {
+void simple::MSGreader::readGENERIC_FLOAT(const simple::generic& msg,
+                                          simple::header& header, float& data) {
   header = msg.header();
   data = msg.basicfloat();
 }
-void simple::MSGreader::readGENERIC_DOUBLE(const simple::GENERIC& msg,
-                                           simple::HEADER& header,
+void simple::MSGreader::readGENERIC_DOUBLE(const simple::generic& msg,
+                                           simple::header& header,
                                            double& data) {
   header = msg.header();
   data = msg.basicdouble();
 }
-void simple::MSGreader::readGENERIC_STR(const simple::GENERIC& msg,
-                                        simple::HEADER& header,
+void simple::MSGreader::readGENERIC_STR(const simple::generic& msg,
+                                        simple::header& header,
                                         std::string& data) {
   header = msg.header();
   data = msg.basicstring();
 }
 
-void simple::MSGreader::readHEADER(const simple::HEADER& header,
+void simple::MSGreader::readHEADER(const simple::header& header,
                                    int& versionNum, std::string& dataTypeName,
                                    std::string& deviceName, double& timeStamp) {
   /// Reads the message header
