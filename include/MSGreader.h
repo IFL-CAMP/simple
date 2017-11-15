@@ -1,5 +1,6 @@
 #pragma once
 
+/*
 #ifdef _WIN32
 #if defined(SIMPLE_LIBRARY_EXPORT)  // inside DLL
 #define SIMAPI __declspec(dllexport)
@@ -9,13 +10,14 @@
 #else
 #define SIMAPI
 #endif
+*/
 
 #include <memory>
 #include "simple_msgs/simple.pb.h"
 
 namespace simple {
 ///@brief Class for reading Protobuf messages and returning their content
-class SIMAPI MSGreader {
+class MSGreader {
  public:
   ///@brief Reads the content of the input message and returns the values
   ///through the reference inputs

@@ -1,5 +1,6 @@
 #pragma once
 
+/*
 #ifdef _WIN32
 #if defined(SIMPLE_LIBRARY_EXPORT)  // inside DLL
 #define SIMAPI __declspec(dllexport)
@@ -9,13 +10,14 @@
 #else
 #define SIMAPI
 #endif
+*/
 
 #include <chrono>
 #include <memory>
 #include "simple_msgs/simple.pb.h"
 
 namespace simple {
-class SIMAPI MSGcreator {
+class MSGcreator {
  public:
   ///@brief Creates a message of type TRANSFORM
   ///@param header pointer to the header of the message

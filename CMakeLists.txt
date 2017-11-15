@@ -10,7 +10,6 @@ if (WIN32)
   list(APPEND CMAKE_CXX_FLAGS_DEBUG " /MTd")
 endif(WIN32)
 
-
 add_subdirectory(simple_msgs)
 
 # From here on there is only stuff related to the lib "simple"
@@ -24,6 +23,10 @@ endif(WIN32)
 
 if ((NOT ((ZeroMQ_INCLUDE_DIR) AND (cppzmq_STATIC_LIBRARY) AND (cppzmq_INCLUDE_DIR))))
   message(FATAL_ERROR "Undefined ZEROMQ vars.")
+endif()
+
+if (WIN32)
+	set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 endif()
 
 # Maybe change the directory where the protobuf messages generated binaries are dropped and change this to that
