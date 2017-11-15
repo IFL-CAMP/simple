@@ -1,12 +1,17 @@
 #pragma once
 
+#if defined(SIMPLE_LIBRARY_EXPORT) // inside DLL
+#   define SIMAPI   __declspec(dllexport)
+#else // outside DLL
+#   define SIMAPI   __declspec(dllimport)
+#endif  // XYZLIBRARY_EXPORT
 
 #include <chrono>
 #include <memory>
 #include "simple_msgs/simple.pb.h"
 
 namespace simple {
-class MSGcreator {
+class SIMAPI MSGcreator {
  public:
   ///@brief Creates a message of type TRANSFORM
   ///@param header pointer to the header of the message

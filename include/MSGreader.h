@@ -1,12 +1,18 @@
 #pragma once
 
+#if defined(SIMPLE_LIBRARY_EXPORT) // inside DLL
+#   define SIMAPI   __declspec(dllexport)
+#else // outside DLL
+#   define SIMAPI   __declspec(dllimport)
+#endif  // XYZLIBRARY_EXPORT
+
 #include "simple_msgs/simple.pb.h"
 #include <memory>
 
 namespace simple
 {
 ///@brief Class for reading Protobuf messages and returning their content
-class MSGreader
+class SIMAPI MSGreader
 {
 public:
   ///@brief Reads the content of the input message and returns the values through the reference inputs
