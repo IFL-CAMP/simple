@@ -1,4 +1,4 @@
-#add cmake minimum version req 3.5
+cmake_minimum_required(VERSION 3.5)
 project(simple_msgs)
 
 find_package(Protobuf REQUIRED)

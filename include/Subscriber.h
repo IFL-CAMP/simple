@@ -26,7 +26,7 @@ class Subscriber {
 
  private:
   ///@brief set the socket option to match the message type according to the
-  ///class instance
+  /// class instance
   ///@param msg Reference to the message instance
   void filterSubscription(const T& msg);
   ///@brief Receive a message from the connected publisher. The subscription

@@ -1,17 +1,5 @@
 #pragma once
 
-/*
-#ifdef _WIN32
-#if defined(SIMPLE_LIBRARY_EXPORT)  // inside DLL
-#define SIMAPI __declspec(dllexport)
-#else  // outside DLL
-#define SIMAPI __declspec(dllimport)
-#endif  // XYZLIBRARY_EXPORT
-#else
-#define SIMAPI
-#endif
-*/
-
 #include <chrono>
 #include <memory>
 #include "simple_msgs/simple.pb.h"
