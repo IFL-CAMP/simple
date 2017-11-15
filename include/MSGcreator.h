@@ -1,10 +1,14 @@
 #pragma once
 
-#if defined(SIMPLE_LIBRARY_EXPORT) // inside DLL
-#   define SIMAPI   __declspec(dllexport)
-#else // outside DLL
-#   define SIMAPI   __declspec(dllimport)
+#ifdef _WIN32
+#if defined(SIMPLE_LIBRARY_EXPORT)  // inside DLL
+#define SIMAPI __declspec(dllexport)
+#else  // outside DLL
+#define SIMAPI __declspec(dllimport)
 #endif  // XYZLIBRARY_EXPORT
+#else
+#define SIMAPI
+#endif
 
 #include <chrono>
 #include <memory>
@@ -61,7 +65,7 @@ class SIMAPI MSGcreator {
   ///@brief Creates a message of type CAPABILITY
   ///@param header pointer to the header of the message
   ///@param msgNames Vector containing the name of the types of messages
-  ///supported by the device
+  /// supported by the device
   ///@return pointer to message of type CAPABILITY
   std::unique_ptr<simple::capability> createCAPABILITY(
       simple::header* header, std::vector<std::string> msgNames);
