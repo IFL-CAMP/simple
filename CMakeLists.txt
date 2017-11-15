@@ -8,7 +8,6 @@ add_subdirectory(simple_msgs)
 
 
 if (WIN32)
-  set(NAME_INCLUDE "default value" CACHE FILEPATH "description")
   set(ZeroMQ_INCLUDE_DIR "" CACHE FILEPATH "")
   set(cppzmq_STATIC_LIBRARY "" CACHE FILEPATH "")
   set(cppzmq_INCLUDE_DIR "" CACHE FILEPATH "")
