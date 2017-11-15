@@ -2,7 +2,6 @@
 
 #define ZMQ_STATIC
 
-#include <zmq_utils.h>
 #include <memory>
 #include <string>
 #include <vector>

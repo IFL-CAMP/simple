@@ -2,7 +2,6 @@
 
 #define ZMQ_STATIC
 
-#include <zmq_utils.h>
 #include <memory>
 #include <string>
 #include <vector>
@@ -15,21 +14,23 @@ template <typename T>
 class Subscriber {
  public:
   ///@brief Class constructor: opens a socket of type ZMQ_SUB and connects it to
-  ///the port. Context shall be provided
+  /// the port. Context shall be provided
   Subscriber(std::string port, zmq::context_t& context);
   ~Subscriber();
   ///@brief Returns a message from the data received through the socket. The
-  ///message type depends on the template type
+  /// message type depends on the template type
   /// of the class instance. Filter for the subscriber socket shall be taken
   /// from the message type
   ///@return Protobuf-type message, matching the instance type
   std::unique_ptr<T> subscribe();
-private:
-  ///@brief set the socket option to match the message type according to the class instance
+
+ private:
+  ///@brief set the socket option to match the message type according to the
+  ///class instance
   ///@param msg Reference to the message instance
   void filterSubscription(const T& msg);
   ///@brief Receive a message from the connected publisher. The subscription
-  ///filter is already set on the instance
+  /// filter is already set on the instance
   /// socket
   std::unique_ptr<zmq::socket_t> socket;
 };
@@ -64,7 +65,8 @@ std::unique_ptr<T> simple::Subscriber<T>::subscribe() {
   // remove the topic string in front of the message
   strMessage.erase(0, SIMPLEmsg->GetTypeName().length());
 
-  SIMPLEmsg->ParseFromString(strMessage);  // copy data from string to protobuf message
+  SIMPLEmsg->ParseFromString(
+      strMessage);  // copy data from string to protobuf message
 
   return SIMPLEmsg;
 }
@@ -80,7 +82,8 @@ simple::Subscriber<T>::Subscriber(std::string port, zmq::context_t& context) {
   }
 
   T BASEmsg;
-  // filter the type of messages this subscriber will receive. Filter type depends on the message type
+  // filter the type of messages this subscriber will receive. Filter type
+  // depends on the message type
   filterSubscription(BASEmsg);
 }
 
@@ -89,4 +92,3 @@ simple::Subscriber<T>::~Subscriber() {
   // close the socket and destroy the context
   socket->close();
 }
-

@@ -2,7 +2,6 @@
 
 #define ZMQ_STATIC
 
-#include <zmq_utils.h>
 #include <memory>
 #include <string>
 #include <vector>
@@ -27,7 +26,7 @@ class Publisher {
   ///@param msg Protobuf-type message to be published
   void publish(const T& msg);
 
-private:
+ private:
   std::unique_ptr<zmq::socket_t> socket;
 };
 
