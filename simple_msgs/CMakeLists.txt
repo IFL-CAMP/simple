@@ -4,6 +4,7 @@ project(simple_msgs)
 find_package(Protobuf REQUIRED)
 include_directories(${PROTOBUF_INCLUDE_DIR})
 
+#compile Protobuf message definitions
 protobuf_generate_cpp(PROTO_SRC PROTO_HEADER simple.proto)
 
 add_library(${PROJECT_NAME} STATIC ${PROTO_HEADER} ${PROTO_SRC})

@@ -29,7 +29,7 @@ endif()
 # Allows all symbols generated from the dynamic library to be exported
 if (WIN32)
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
-endif()
+endif(WIN32)
 
 # Maybe change the directory where the protobuf messages generated binaries are dropped and change this to that
 include_directories(${CMAKE_CURRENT_BINARY_DIR} include ${cppzmq_INCLUDE_DIR} ${ZeroMQ_INCLUDE_DIR} ${Protobuf_INCLUDE_DIR})
@@ -49,6 +49,21 @@ set(LIB_SRCS
 add_library(${PROJECT_NAME} SHARED ${LIB_SRCS})
 target_link_libraries(${PROJECT_NAME} simple_msgs ${cppzmq_LIBRARY})
 target_compile_definitions(${PROJECT_NAME} PRIVATE SIMPLE_LIBRARY_EXPORT)
+
+#install the simple library in the desired folder
+install(TARGETS ${PROJECT_NAME} 
+		RUNTIME DESTINATION bin
+		LIBRARY DESTINATION lib)
+
+#install the ZMQ library in the desired folder, for Windows
+if(WIN32)
+get_filename_component(ZMQ_LIBRARY_NAME_WO_EXT ${cppzmq_LIBRARY} NAME_WE)
+get_filename_component(ZMQ_LIBRARY_PATH ${cppzmq_LIBRARY} DIRECTORY)
+set(ZMQ_DYNAMIC_LIBRARY "${ZMQ_LIBRARY_PATH}/../bin/${ZMQ_LIBRARY_NAME_WO_EXT}.dll")
+install(FILES ${ZMQ_DYNAMIC_LIBRARY} DESTINATION bin)
+endif(WIN32)
+
+message(${ZMQ_DYNAMIC_LIBRARY})
 
 ## TESTS
 
