@@ -6,9 +6,6 @@
 
 namespace simple
 {
-class MSGcreator
-{
-public:
   ///@brief Creates a message of type TRANSFORM
   ///@param header pointer to the header of the message
   ///@param px element e14 of 4x4 transformation matrix
@@ -82,10 +79,22 @@ public:
   ///@return pointer to message of type GENERIC
   void createGENERIC_STR(std::shared_ptr<simple::generic> ptr, simple::header* header,const std::string& data);
 
-  void createHEADER(simple::header* ptr, int versionNum,const std::string& dataTypeName,const std::string& deviceName);
-
+  void createHEADER(simple::header* ptr, int versionNum, const std::string& dataTypeName, const std::string& deviceName);
+  void testAddress();
   // private:
   double getCurrentTime();
-};
+
+  void fillHeader(simple::header* h, const std::string& s1, const std::string& s2);
+
+  void fillHeaderUnique(std::unique_ptr<simple::header>& h, const std::string& s1, const std::string& s2);
+
+  std::unique_ptr<simple::header> makeHeaderUnique(const std::string& s1, const std::string& s2);
+
+  simple::header* makeHeader(const std::string& s1, const std::string& s2);
+
+  std::unique_ptr<simple::generic> makeGenericUnique(const simple::header& h, const std::string& s);
+
+
+  simple::generic* makeGenericRaw(const simple::header& h, const std::string& s);
 
 }  // namespace simple

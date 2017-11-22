@@ -1,6 +1,6 @@
 #include "MSGcreator.h"
 
-void simple::MSGcreator::createTRANSFORM(std::shared_ptr<simple::transform> transform,
+void simple::createTRANSFORM(std::shared_ptr<simple::transform> transform,
     simple::header* header, double px, double py, double pz, double r11,
     double r12, double r13, double r21, double r22, double r23, double r31,
     double r32, double r33) {
@@ -28,7 +28,7 @@ void simple::MSGcreator::createTRANSFORM(std::shared_ptr<simple::transform> tran
   transform->set_allocated_head(header);
 
 }
-void simple::MSGcreator::createPOSITION(std::shared_ptr<simple::position> position,
+void simple::createPOSITION(std::shared_ptr<simple::position> position,
     simple::header* header, double px, double py, double pz, double e1,
     double e2, double e3, double e4) {
   /// Creates a message of type POSITION
@@ -50,7 +50,7 @@ void simple::MSGcreator::createPOSITION(std::shared_ptr<simple::position> positi
   position->set_allocated_head(header);
 
 }
-void simple::MSGcreator::createSTATUS(std::shared_ptr<simple::status> stat,
+void simple::createSTATUS(std::shared_ptr<simple::status> stat,
     simple::header* header, int code, int subcode,const std::string& errorName,
     const std::string& errorMsg) {
   /// Creates a message of type STATUS
@@ -61,7 +61,7 @@ void simple::MSGcreator::createSTATUS(std::shared_ptr<simple::status> stat,
   stat->set_errorname(errorName);
   stat->set_allocated_head(header);
 }
-void simple::MSGcreator::createCAPABILITY(std::shared_ptr<simple::capability> cap,
+void simple::createCAPABILITY(std::shared_ptr<simple::capability> cap,
     simple::header* header,const std::vector<std::string>& msgNames) {
   
 
@@ -71,46 +71,46 @@ void simple::MSGcreator::createCAPABILITY(std::shared_ptr<simple::capability> ca
 
   cap->set_allocated_head(header);
 }
-void simple::MSGcreator::createGENERIC_BOOL(std::shared_ptr<simple::generic> gen,
+void simple::createGENERIC_BOOL(std::shared_ptr<simple::generic> gen,
     simple::header* header, bool data) {
 
   gen->set_basicbool(data);
   gen->set_allocated_head(header);
 }
-void simple::MSGcreator::createGENERIC_INT(std::shared_ptr<simple::generic> gen,
+void simple::createGENERIC_INT(std::shared_ptr<simple::generic> gen,
     simple::header* header, int data) {
 
   gen->set_basicint(data);
   gen->set_allocated_head(header);
 
 }
-void simple::MSGcreator::createGENERIC_FLOAT(std::shared_ptr<simple::generic> gen,
+void simple::createGENERIC_FLOAT(std::shared_ptr<simple::generic> gen,
     simple::header* header, float data) {
 
   gen->set_basicfloat(data);
   gen->set_allocated_head(header);
 
 }
-void simple::MSGcreator::createGENERIC_DOUBLE(std::shared_ptr<simple::generic> gen,
+void simple::createGENERIC_DOUBLE(std::shared_ptr<simple::generic> gen,
     simple::header* header, double data) {
 
   gen->set_basicdouble(data);
   gen->set_allocated_head(header);
 }
 
-//std::shared_ptr<simple::generic> simple::MSGcreator::createGenericDouble(const simple::header* header, const double data);
+//std::shared_ptr<simple::generic> simple::createGenericDouble(const simple::header* header, const double data);
 
 
-void simple::MSGcreator::createGENERIC_STR(std::shared_ptr<simple::generic> gen,
+void simple::createGENERIC_STR(std::shared_ptr<simple::generic> gen,
     simple::header* header,const std::string& data) {
 
   gen->set_basicstring(data);
   gen->set_allocated_head(header);
 }
 
-void simple::MSGcreator::createHEADER(simple::header* ptr, int versionNum,
-                                                 const std::string& dataTypeName,
-                                                 const std::string& deviceName) {
+void simple::createHEADER(simple::header* ptr, int versionNum,
+                                                  const std::string& dataTypeName,
+                                                  const std::string& deviceName) {
   /// Creates the header of the message, including version number, type of the
   /// data, name of the transmiting device and time stamp of the message.
 
@@ -121,11 +121,61 @@ void simple::MSGcreator::createHEADER(simple::header* ptr, int versionNum,
 	ptr->set_versionnumber(versionNum);
 }
 
-double simple::MSGcreator::getCurrentTime() {
+double simple::getCurrentTime() {
   std::chrono::time_point<std::chrono::system_clock> nowTime =
       std::chrono::system_clock::now();
   std::chrono::duration<double, std::ratio<1>> duration =
       std::chrono::duration_cast<std::chrono::seconds>(
           nowTime.time_since_epoch());
   return duration.count();
+}
+void simple::testAddress(){
+	simple::header* header = new simple::header();
+}
+
+void simple::fillHeader(simple::header* h, const std::string& s1, const std::string& s2)
+{
+	h->set_datatypename(s1);
+	h->set_devicename(s2);
+}
+
+void simple::fillHeaderUnique(std::unique_ptr<simple::header>& h, const std::string& s1, const std::string& s2)
+{
+	h->set_datatypename(s1);
+	h->set_devicename(s2);
+}
+
+std::unique_ptr<simple::header> simple::makeHeaderUnique(const std::string& s1, const std::string& s2)
+{
+	auto p = std::make_unique<simple::header>();
+	p->set_datatypename(s1);
+	p->set_devicename(s2);
+	return p;
+}
+
+simple::header* simple::makeHeader(const std::string& s1, const std::string& s2)
+{
+	auto p = new simple::header();
+	p->set_datatypename(s1);
+	p->set_devicename(s2);
+	return p;
+}
+
+std::unique_ptr<simple::generic> simple::makeGenericUnique(const simple::header& h, const std::string& s)
+{
+	auto g = std::make_unique<simple::generic>();
+	simple::header* internal_h = new simple::header();
+	internal_h->CopyFrom(h);
+	g->set_basicstring(s);
+	g->set_allocated_head(internal_h);
+	return g;
+}
+simple::generic* simple::makeGenericRaw(const simple::header& h, const std::string& s)
+{
+	simple::generic* g = new simple::generic();
+	simple::header* internal_h = new simple::header();
+	internal_h->CopyFrom(h);
+	g->set_basicstring(s);
+	g->set_allocated_head(internal_h);
+	return g;
 }

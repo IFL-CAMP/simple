@@ -44,7 +44,8 @@ set(LIB_SRCS
   src/Client.cpp
 	src/Subscriber.cpp
 	src/MSGcreator.cpp
-	src/MSGreader.cpp)
+	src/MSGreader.cpp
+	${PROTO_SRC})
 
 add_library(${PROJECT_NAME} SHARED ${LIB_SRCS})
 target_link_libraries(${PROJECT_NAME} simple_msgs ${cppzmq_LIBRARY})
