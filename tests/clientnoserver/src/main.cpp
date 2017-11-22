@@ -33,9 +33,11 @@ int main(int argc, char* argv[]) {
   //start the message creator
   simple::MSGcreator msgCreator;
 
-  simple::header* header = msgCreator.createHEADER(1, "Status", "PC");
+  simple::header* header = new simple::header();
+  msgCreator.createHEADER(header,1, "Status", "PC");
 
-  std::unique_ptr<simple::status> msg = msgCreator.createSTATUS(header, 1, 1, "", "");
+  std::shared_ptr<simple::status> msg(new simple::status);
+  msgCreator.createSTATUS(msg,header, 1, 1, "", "");
 
   if (clientStat.request(*msg))
   {

@@ -32,9 +32,11 @@ int main(int argc, char* argv[]) {
   //start message creator
   simple::MSGcreator msgCreator;
 
-  simple::header* header = msgCreator.createHEADER(1, "Any", "me");
+  simple::header* header;
+  msgCreator.createHEADER(header,1, "Any", "me");
 
-  std::unique_ptr<simple::generic> msg = msgCreator.createGENERIC_BOOL(header, true);
+  std::shared_ptr<simple::generic> msg(new simple::generic);
+  msgCreator.createGENERIC_BOOL(msg,header, true);
 
     //receive a request but don't reply
     try {

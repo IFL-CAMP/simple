@@ -18,14 +18,14 @@ message status {
 	optional int64 subcode =2;
 	optional string errorName =3;
 	optional string errorMsg =4;
-	required header header=5;
+	required header head=5;
 
 }
 
 message capability {
 
 	repeated string messageName =1;
-	required header header=2;
+	required header head=2;
 
 }
 
@@ -65,7 +65,7 @@ message position {
 
 	optional pos posit =1;
 	optional quaternion orient =2;
-	required header header=3;
+	required header head=3;
 
 }
 
@@ -73,7 +73,7 @@ message transform {
 
 	optional pos posit =1;
 	optional orientation orient =2;
-	required header header=3;
+	required header head=3;
 }
 
 message image {
@@ -127,7 +127,7 @@ message image {
 	optional subvolume subvol= 2;
 	optional bool existSubvolume = 3;
 	optional imageArray imageData =4;
-	required header header=5;
+	required header head=5;
 
 }
 
@@ -143,6 +143,6 @@ message generic {
 		string basicString = 5;
 
 	}
-	required header header=6;
+	required header head=6;
 }
 

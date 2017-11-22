@@ -33,11 +33,12 @@ int main(int argc, char* argv[]) {
   simple::MSGcreator msgCreator;
 
   // create messages for each server to reply in case of request
-  simple::header* headerPos = msgCreator.createHEADER(1, "POSITION", "My PC");
+  simple::header* headerPos;
+  msgCreator.createHEADER(headerPos,1, "POSITION", "My PC");
 
   
-  std::unique_ptr<simple::position> posMSG =
-	  msgCreator.createPOSITION(headerPos, 1.0, 1.1, 1.2, 2.1, 2.2, 2.3, 2.4);
+  std::shared_ptr<simple::position> posMSG(new simple::position);
+  msgCreator.createPOSITION(posMSG,headerPos, 1.0, 1.1, 1.2, 2.1, 2.2, 2.3, 2.4);
 
   s_catch_signals();
   while (!s_interrupted) {

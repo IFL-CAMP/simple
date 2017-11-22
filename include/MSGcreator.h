@@ -4,9 +4,11 @@
 #include <memory>
 #include "simple_msgs/simple.pb.h"
 
-namespace simple {
-class MSGcreator {
- public:
+namespace simple
+{
+class MSGcreator
+{
+public:
   ///@brief Creates a message of type TRANSFORM
   ///@param header pointer to the header of the message
   ///@param px element e14 of 4x4 transformation matrix
@@ -22,10 +24,9 @@ class MSGcreator {
   ///@param r32 element e32 of 4x4 transformation matrix
   ///@param r33 element e33 of 4x4 transformation matrix
   ///@return pointer to message of type TRANSFORM
-  std::unique_ptr<simple::transform> createTRANSFORM(
-      simple::header* header, double px, double py, double pz, double r11,
-      double r12, double r13, double r21, double r22, double r23, double r31,
-      double r32, double r33);
+	void createTRANSFORM(std::shared_ptr<simple::transform> ptr, simple::header* header, double px, double py, double pz,
+                       double r11, double r12, double r13, double r21, double r22, double r23, double r31, double r32,
+                       double r33);
   ///@brief Creates a message of type POSITION
   ///@param header pointer to the header of the message
   ///@param px first element of 3D vector for the position
@@ -36,11 +37,8 @@ class MSGcreator {
   ///@param e3 third quaternion: e3 = k_z*sin(theta/2)
   ///@param e4 fourth quaternion: e4 = cos(theta/2)
   ///@return pointer to message of type POSITION
-  std::unique_ptr<simple::position> createPOSITION(simple::header* header,
-                                                   double px, double py,
-                                                   double pz, double e1,
-                                                   double e2, double e3,
-                                                   double e4);
+  void createPOSITION(std::shared_ptr<simple::position> ptr, simple::header* header, double px, double py, double pz,
+                      double e1, double e2, double e3, double e4);
   ///@brief Creates a message of type STATUS
   ///@param header pointer to the header of the message
   ///@param code device status code - 0 to 19
@@ -48,52 +46,45 @@ class MSGcreator {
   ///@param errorName Name of the error
   ///@param errorMsg Message detailing the error
   ///@return pointer to message of type STATUS
-  std::unique_ptr<simple::status> createSTATUS(simple::header* header, int code,
-                                               int subcode,
-                                               std::string errorName,
-                                               std::string errorMsg);
+  void createSTATUS(std::shared_ptr<simple::status> ptr, simple::header* header, int code, int subcode,
+                    const std::string& errorName,const std::string& errorMsg);
   ///@brief Creates a message of type CAPABILITY
   ///@param header pointer to the header of the message
   ///@param msgNames Vector containing the name of the types of messages
   /// supported by the device
   ///@return pointer to message of type CAPABILITY
-  std::unique_ptr<simple::capability> createCAPABILITY(
-      simple::header* header, std::vector<std::string> msgNames);
+  void createCAPABILITY(std::shared_ptr<simple::capability> ptr, simple::header* header,const 
+                        std::vector<std::string>& msgNames);
   ///@brief Creates a message of type GENERIC containing a BOOL
   ///@param header pointer to the header of the message
   ///@param data bool to be sent in the message
   ///@return pointer to message of type GENERIC
-  std::unique_ptr<simple::generic> createGENERIC_BOOL(simple::header* header,
-                                                      bool data);
+  void createGENERIC_BOOL(std::shared_ptr<simple::generic> ptr, simple::header* header, bool data);
   ///@brief Creates a message of type GENERIC containing a INT
   ///@param header pointer to the header of the message
   ///@param data int to be sent in the message
   ///@return pointer to message of type GENERIC
-  std::unique_ptr<simple::generic> createGENERIC_INT(simple::header* header,
-                                                     int data);
+  void createGENERIC_INT(std::shared_ptr<simple::generic> ptr, simple::header* header, int data);
   ///@brief Creates a message of type GENERIC containing a FLOAT
   ///@param header pointer to the header of the message
   ///@param data float to be sent in the message
   ///@return pointer to message of type GENERIC
-  std::unique_ptr<simple::generic> createGENERIC_FLOAT(simple::header* header,
-                                                       float data);
+  void createGENERIC_FLOAT(std::shared_ptr<simple::generic> ptr, simple::header* header, float data);
   ///@brief Creates a message of type GENERIC containing a DOUBLE
   ///@param header pointer to the header of the message
   ///@param data double to be sent in the message
   ///@return pointer to message of type GENERIC
-  std::unique_ptr<simple::generic> createGENERIC_DOUBLE(simple::header* header,
-                                                        double data);
+  void createGENERIC_DOUBLE(std::shared_ptr<simple::generic> ptr, simple::header* header, double data);
   ///@brief Creates a message of type GENERIC containing a STRING
+  ///@param ptr
   ///@param header pointer to the header of the message
   ///@param data string to be sent in the message
   ///@return pointer to message of type GENERIC
-  std::unique_ptr<simple::generic> createGENERIC_STR(simple::header* header,
-                                                     std::string data);
+  void createGENERIC_STR(std::shared_ptr<simple::generic> ptr, simple::header* header,const std::string& data);
 
-  simple::header* createHEADER(int versionNum, std::string dataTypeName,
-                               std::string deviceName);
+  void createHEADER(simple::header* ptr, int versionNum,const std::string& dataTypeName,const std::string& deviceName);
 
- private:
+  // private:
   double getCurrentTime();
 };
 

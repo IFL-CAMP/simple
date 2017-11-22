@@ -42,8 +42,8 @@ set(LIB_SRCS
   src/Publisher.cpp
   src/Proxy.cpp
   src/Client.cpp
-	src/Subscriber.cpp 
-	src/MSGcreator.cpp 
+	src/Subscriber.cpp
+	src/MSGcreator.cpp
 	src/MSGreader.cpp)
 
 add_library(${PROJECT_NAME} SHARED ${LIB_SRCS})
@@ -62,8 +62,6 @@ get_filename_component(ZMQ_LIBRARY_PATH ${cppzmq_LIBRARY} DIRECTORY)
 set(ZMQ_DYNAMIC_LIBRARY "${ZMQ_LIBRARY_PATH}/../bin/${ZMQ_LIBRARY_NAME_WO_EXT}.dll")
 install(FILES ${ZMQ_DYNAMIC_LIBRARY} DESTINATION bin)
 endif(WIN32)
-
-message(${ZMQ_DYNAMIC_LIBRARY})
 
 ## TESTS
 

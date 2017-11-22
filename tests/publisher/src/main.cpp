@@ -42,37 +42,44 @@ int main(int argc, char* argv[]) {
 
   // put random stuff on each message, for testing
 
-  simple::header* headerCap = msgCreator.createHEADER(1, "CAPABILITY", "My PC");
-  simple::header* headerTrans = msgCreator.createHEADER(1, "TRANSFORM", "My PC");
-  simple::header* headerPos = msgCreator.createHEADER(1, "POSITION", "My PC");
-  simple::header* headerStat = msgCreator.createHEADER(1, "STATUS", "My PC");
-  simple::header* headerGen = msgCreator.createHEADER(1, "GENERIC", "My PC");
+  simple::header* headerCap = new simple::header;
+  simple::header* headerTrans = new simple::header;
+  simple::header* headerPos = new simple::header;
+  simple::header* headerStat = new simple::header;
+  simple::header* headerGen = new simple::header;
+  msgCreator.createHEADER(headerCap,1, "CAPABILITY", "My PC");
+  msgCreator.createHEADER(headerTrans,1, "TRANSFORM", "My PC");
+  msgCreator.createHEADER(headerPos,1, "POSITION", "My PC");
+  msgCreator.createHEADER(headerStat, 1, "STATUS", "My PC");
+  msgCreator.createHEADER(headerGen, 1, "GENERIC", "My PC");
+  
+  std::shared_ptr<simple::transform> transMSG(new simple::transform);
+  msgCreator.createTRANSFORM(transMSG,
+	  headerTrans, 2.1, 2.2, 2.3, 1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 3.1, 3.2, 3.3);
 
-  std::vector<std::string> vec = {"POSITION", "STATUS", "TRANSFORM"};
-  std::unique_ptr<simple::capability> capMSG = msgCreator.createCAPABILITY(headerCap, vec);
+  std::vector<std::string> vec = { "POSITION", "STATUS", "TRANSFORM" };
+  std::shared_ptr<simple::capability> capMSG(new simple::capability);
+  msgCreator.createCAPABILITY(capMSG,headerCap, vec);
 
-  std::unique_ptr<simple::transform> transMSG = msgCreator.createTRANSFORM(
-      headerTrans, 2.1, 2.2, 2.3, 1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 3.1, 3.2, 3.3);
+  std::shared_ptr<simple::position> posMSG(new simple::position);
+  msgCreator.createPOSITION(posMSG,headerPos, 1.0, 1.1, 1.2, 2.1, 2.2, 2.3, 2.4);
 
-  std::unique_ptr<simple::position> posMSG =
-	  msgCreator.createPOSITION(headerPos, 1.0, 1.1, 1.2, 2.1, 2.2, 2.3, 2.4);
+  std::shared_ptr<simple::status> statMSG(new simple::status);
+  msgCreator.createSTATUS(statMSG,headerStat, 1, 2, "Error Name", "Random message");
 
-  std::unique_ptr<simple::status> statMSG =
-	  msgCreator.createSTATUS(headerStat, 1, 2, "Error Name", "Random message");
-
-  std::unique_ptr<simple::generic> genMSG = msgCreator.createGENERIC_BOOL(headerGen, true);
-
+  std::shared_ptr<simple::generic> genMSG(new simple::generic);
+  msgCreator.createGENERIC_BOOL(genMSG, headerGen, true);
+  
+  
   s_catch_signals();
   while (!s_interrupted) {
     try {  // send all messages one after the other
-      pubCap.publish(*capMSG);
-      std::cout << "Capability Message published"
+      
+      pubPos.publish(*posMSG);
+      std::cout << "Position Message published"
                 << "\n";
       pubGen.publish(*genMSG);
       std::cout << "Generic Message published"
-                << "\n";
-      pubPos.publish(*posMSG);
-      std::cout << "Position Message published"
                 << "\n";
       pubStat.publish(*statMSG);
       std::cout << "Status Message published"
@@ -80,6 +87,9 @@ int main(int argc, char* argv[]) {
       pubTrans.publish(*transMSG);
       std::cout << "Transform Message published"
                 << "\n";
+	  pubCap.publish(*capMSG);
+	  std::cout << "Capability Message published"
+		  << "\n";
     } catch (zmq::error_t& e) {
       std::cout << "Something went wrong with the publishing..."
                 << "\n";

@@ -33,9 +33,11 @@ int main(int argc, char* argv[]) {
  //create the generic message to be requested
   simple::MSGcreator msgCreator;
 
-  simple::header* header = msgCreator.createHEADER(1, "generic", "PC");
+  simple::header* header;
+  msgCreator.createHEADER(header,1, "generic", "PC");
 
-  std::unique_ptr<simple::position> positionMsg = msgCreator.createPOSITION(header, 0, 0, 0, 0, 0, 0, 0);
+  std::shared_ptr<simple::position> positionMsg(new simple::position);
+  msgCreator.createPOSITION(positionMsg,header, 0, 0, 0, 0, 0, 0, 0);
 
     try {
 		if (clientGen.request(*positionMsg))

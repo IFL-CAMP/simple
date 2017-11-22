@@ -33,9 +33,11 @@ int main(int argc, char* argv[]) {
   //create transform message for request
   simple::MSGcreator msgCreator;
 
-  simple::header* header = msgCreator.createHEADER(1, "transform", "My PC");
+  simple::header* header;
+  msgCreator.createHEADER(header,1, "transform", "My PC");
 
-  std::unique_ptr<simple::transform> msgTransform = msgCreator.createTRANSFORM(header, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  std::shared_ptr<simple::transform> msgTransform(new simple::transform);
+  msgCreator.createTRANSFORM(msgTransform,header, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
   
 
     try {

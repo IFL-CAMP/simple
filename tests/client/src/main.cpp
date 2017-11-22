@@ -41,19 +41,29 @@ int main(int argc, char* argv[]) {
   simple::MSGcreator msgCreator;
 
   // create the holders for the incoming data
-  simple::header* headerCap = msgCreator.createHEADER(1, "Capability", "PC");
-  simple::header* headerTrans = msgCreator.createHEADER(1, "Transform", "PC");
-  simple::header* headerPos = msgCreator.createHEADER(1, "Position", "PC");
-  simple::header* headerStat = msgCreator.createHEADER(1, "Status", "PC");
-  simple::header* headerGen = msgCreator.createHEADER(1, "Generic", "PC");
+  simple::header* headerCap = new simple::header();
+  msgCreator.createHEADER(headerCap,1, "Capability", "PC");
+  simple::header* headerTrans = new simple::header(); 
+  msgCreator.createHEADER(headerTrans,1, "Transform", "PC");
+  simple::header* headerPos = new simple::header(); 
+  msgCreator.createHEADER(headerPos,1, "Position", "PC");
+  simple::header* headerStat = new simple::header(); 
+  msgCreator.createHEADER(headerStat,1, "Status", "PC");
+  simple::header* headerGen = new simple::header(); 
+  msgCreator.createHEADER(headerGen,1, "Generic", "PC");
 
   std::vector<std::string> vec{ "status", "transform" };
 
-  std::unique_ptr<simple::capability> msgCap = msgCreator.createCAPABILITY(headerCap, vec);
-  std::unique_ptr<simple::transform> msgTrans = msgCreator.createTRANSFORM(headerTrans, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-  std::unique_ptr<simple::position> msgPos = msgCreator.createPOSITION(headerPos, 0, 0, 0, 0, 0, 0, 0);
-  std::unique_ptr<simple::status> msgStat = msgCreator.createSTATUS(headerStat, 1, 1, "", "");
-  std::unique_ptr<simple::generic> msgGen = msgCreator.createGENERIC_BOOL(headerGen, true);
+  std::shared_ptr<simple::capability> msgCap(new simple::capability);
+  msgCreator.createCAPABILITY(msgCap,headerCap, vec);
+  std::shared_ptr<simple::transform> msgTrans(new simple::transform);
+  msgCreator.createTRANSFORM(msgTrans,headerTrans, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  std::shared_ptr<simple::position> msgPos(new simple::position);
+  msgCreator.createPOSITION(msgPos,headerPos, 0, 0, 0, 0, 0, 0, 0);
+  std::shared_ptr<simple::status> msgStat(new simple::status);
+  msgCreator.createSTATUS(msgStat,headerStat, 1, 1, "", "");
+  std::shared_ptr<simple::generic> msgGen(new simple::generic);
+  msgCreator.createGENERIC_BOOL(msgGen,headerGen, true);
 
   s_catch_signals();
   while (!s_interrupted) {
