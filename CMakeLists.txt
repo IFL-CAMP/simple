@@ -6,6 +6,7 @@ project(simple)
 # Here all the compiler options for all projects created are set
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+include(GNUInstallDirs)
 
 # Add extra CMake modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake/Modules)
@@ -70,7 +71,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE SIMPLE_LIBRARY_EXPORT) # TODO
 #install the simple library in the desired folder
 install(TARGETS ${PROJECT_NAME} 
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}) # TODO check if ok
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 #install the ZMQ library in the desired folder, for Windows
 if(WIN32)
