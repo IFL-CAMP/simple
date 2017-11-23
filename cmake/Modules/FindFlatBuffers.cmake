@@ -61,12 +61,7 @@ else ()
 endif ()
 
 if(FLATBUFFERS_FOUND)
-  function(FLATBUFFERS_GENERATE_C_HEADERS Name FBS_DIR OUTPUT_DIR)
-  # Name is the name of the user defined variable that will be created by this function
-  #     Another variable that will be set is ${NAME}_OUTPUTS which will be set to the names
-  #     of all output files that have been generated.
-  # FBS_DIR is the directory in which to look for the .fbs files
-  # OUTPUT_DIR is the directory in which all output files should be placed
+  function(FLATBUFFERS_GENERATE_C_HEADERS NAME FBS_DIR OUTPUT_DIR)
     set(FLATC_OUTPUTS)
     file(GLOB FBS_FILES ${FBS_DIR}/*.fbs)
     foreach(FILE ${FBS_FILES})
@@ -74,11 +69,11 @@ if(FLATBUFFERS_FOUND)
       set(FLATC_OUTPUT "${OUTPUT_DIR}/${FLATC_OUTPUT}_generated.h")
       list(APPEND FLATC_OUTPUTS ${FLATC_OUTPUT})
 
-      add_custom_command(OUTPUT ${FLATC_OUTPUT}
-        COMMAND ${FLATBUFFERS_FLATC_EXECUTABLE}
-        ARGS -c -o ${OUTPUT_DIR} ${FILE}
-        MAIN_DEPENDENCY ${FILE})
+      set(EXECUTE_COMMAND ${FLATBUFFERS_FLATC_EXECUTABLE} -c -o ${OUTPUT_DIR} ${FILE})
+
+      execute_process(COMMAND ${EXECUTE_COMMAND})
+
     endforeach()
-    set(${Name}_OUTPUTS ${FLATC_OUTPUTS} PARENT_SCOPE)
+    set(${NAME}_OUTPUTS ${FLATC_OUTPUTS} PARENT_SCOPE)
   endfunction()
 endif()
