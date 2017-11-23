@@ -4,7 +4,7 @@ include "header.fbs";
 
 namespace simple;
 
-struct Vector3{
+struct Vec3{
 	x:double;
 	y:double;
 	z:double;
@@ -18,10 +18,11 @@ struct quaternion{
 }
 
 table position {
-	position:Vector3;
-	orientation:quaternion;
-	Header:header;
+	vector:ubyte;
+	orientation:ubyte;
+	Header:ubyte;
 }
 
 
 root_type position;
+file_identifier "PSTN";

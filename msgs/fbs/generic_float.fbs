@@ -11,3 +11,4 @@ table generic_float {
 
 
 root_type generic_float;
+file_identifier "FLOT";

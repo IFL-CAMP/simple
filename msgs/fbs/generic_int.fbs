@@ -11,3 +11,4 @@ table generic_int {
 
 
 root_type generic_int;
+file_identifier "INTG";

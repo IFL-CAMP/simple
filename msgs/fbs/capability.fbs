@@ -1,26 +1,14 @@
-// Schema for S.I.M.P.L.E.
+// Schema for S.I.M.P.L.E. Capability
 
-include "position.fbs";
+include "header.fbs";
 
 namespace simple;
 
-struct RotationM{
-	r11:double;
-	r12:double;
-	r13:double;
-	r21:double;
-	r22:double;
-	r23:double;
-	r31:double;
-	r32:double;
-	r33:double;
-}
-
-table transform {
-	position:Vector3;
-	orientation:RotationM;
+table capability {
+	typenames:[string];
 	Header:header;
 }
 
 
-root_type transform;
+root_type capability;
+file_identifier "CPBL";

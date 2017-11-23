@@ -7,7 +7,7 @@
 #include <vector>
 #include <zmq.hpp>
 #include "flatbuffers/flatbuffers.h"
-#include "simple_generated.h"
+
 
 namespace simple
 {

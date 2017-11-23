@@ -11,3 +11,4 @@ table generic_bool {
 
 
 root_type generic_bool;
+file_identifier "BOOL";

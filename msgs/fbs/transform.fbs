@@ -18,10 +18,11 @@ struct RotationM{
 }
 
 table transform {
-	position:Vector3;
-	orientation:RotationM;
-	Header:header;
+	position:ubyte;
+	orientation:ubyte;
+	Header:ubyte;
 }
 
 
 root_type transform;
+file_identifier "TRFM";
