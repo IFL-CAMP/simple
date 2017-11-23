@@ -1,0 +1,14 @@
+// Schema for S.I.M.P.L.E.
+
+namespace simple;
+
+
+table header {
+	devicename:string;
+	datatypename:string;
+	versionnum:int;
+	timestamp:double;
+}
+
+
+root_type header;

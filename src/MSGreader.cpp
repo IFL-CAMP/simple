@@ -1,6 +1,6 @@
 #include "MSGreader.h"
 
-void simple::MSGreader::readTRANSFORM(const simple::transform& msg,
+/*void simple::MSGreader::readTRANSFORM(const simple::transform& msg,
                                       simple::header& header, double& px,
                                       double& py, double& pz, double& r11,
                                       double& r12, double& r13, double& r21,
@@ -103,4 +103,4 @@ void simple::MSGreader::readHEADER(const simple::header& header,
   dataTypeName = header.datatypename();
   deviceName = header.devicename();
   timeStamp = header.timestamp();
-}
+}*/

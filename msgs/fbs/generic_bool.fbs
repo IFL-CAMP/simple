@@ -1,0 +1,13 @@
+// Schema for S.I.M.P.L.E. Boolean
+
+include "header.fbs";
+
+namespace simple;
+
+table generic_bool {
+	data:bool;
+	Header:header;
+}
+
+
+root_type generic_bool;

@@ -7,7 +7,7 @@
 #include <vector>
 #include <zmq.hpp>
 #include "MSGcreator.h"
-#include "simple_msgs/simple.pb.h"
+/*#include "simple_msgs/simple.pb.h"
 
 namespace simple {
 template <typename T>
@@ -97,4 +97,4 @@ bool simple::Server<T>::reply(const T& msg) {
     success = false;
   }
   return success;
-}
+}*/

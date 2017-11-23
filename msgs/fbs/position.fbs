@@ -1,0 +1,27 @@
+// Schema for S.I.M.P.L.E. Position
+
+include "header.fbs";
+
+namespace simple;
+
+struct Vector3{
+	x:double;
+	y:double;
+	z:double;
+}
+
+struct quaternion{
+	e1:double;
+	e2:double;
+	e3:double;
+	e4:double;
+}
+
+table position {
+	position:Vector3;
+	orientation:quaternion;
+	Header:header;
+}
+
+
+root_type position;

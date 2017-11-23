@@ -1,0 +1,13 @@
+// Schema for S.I.M.P.L.E. Float
+
+include "header.fbs";
+
+namespace simple;
+
+table generic_float {
+	data:float;
+	Header:header;
+}
+
+
+root_type generic_float;

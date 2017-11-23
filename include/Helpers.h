@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 #include <zmq.hpp>
-#include "simple_msgs/simple.pb.h"
+/*#include "simple_msgs/simple.pb.h"
 #include <chrono>
 
 namespace simple {
@@ -35,4 +35,4 @@ private:
 };
 
 
-}  // namespace simple
+}  // namespace simple*/

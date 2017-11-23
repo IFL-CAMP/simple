@@ -2,7 +2,25 @@
 
 #include <chrono>
 #include <memory>
-#include "simple_msgs/simple.pb.h"
+#include "simple_generated.h"
+
+namespace simple{
+
+
+
+
+
+	std::unique_ptr<flatbuffers::FlatBufferBuilder> createHeader(std::string datatypename, std::string devicename, int versionnum);
+	double getCurrentTime();
+
+
+
+}
+
+
+
+
+/*#include "simple_msgs/simple.pb.h"
 
 namespace simple
 {
@@ -92,9 +110,9 @@ namespace simple
 
   simple::header* makeHeader(const std::string& s1, const std::string& s2);
 
-  std::unique_ptr<simple::generic> makeGenericUnique(const simple::header& h, const std::string& s);
+  std::unique_ptr<simple::generic> makeGenericUnique(simple::header& h, const std::string& s);
 
 
-  simple::generic* makeGenericRaw(const simple::header& h, const std::string& s);
+  simple::generic* makeGenericRaw(simple::header& h, const std::string& s);
 
-}  // namespace simple
+}  // namespace simple*/

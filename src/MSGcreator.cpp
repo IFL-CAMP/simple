@@ -1,6 +1,31 @@
 #include "MSGcreator.h"
 
-void simple::createTRANSFORM(std::shared_ptr<simple::transform> transform,
+
+std::unique_ptr<flatbuffers::FlatBufferBuilder> simple::createHeader(std::string datatypename, std::string devicename, int versionnum){
+
+	std::unique_ptr<flatbuffers::FlatBufferBuilder> fbb = std::make_unique<flatbuffers::FlatBufferBuilder>();
+	headerBuilder hbuilder(*fbb);
+	flatbuffers::Offset<flatbuffers::String> deviceNamefbb = fbb->CreateString(devicename);
+	flatbuffers::Offset<flatbuffers::String> dataTypefbb = fbb->CreateString(datatypename);
+	hbuilder.add_datatypename(dataTypefbb);
+	hbuilder.add_devicename(deviceNamefbb);
+	hbuilder.add_timestamp(getCurrentTime());
+	hbuilder.add_versionnum(versionnum);
+	flatbuffers::Offset<simple::header> headerfbb = hbuilder.Finish();
+	fbb->Finish(headerfbb);
+
+	return fbb;
+}
+double simple::getCurrentTime() {
+	std::chrono::time_point<std::chrono::system_clock> nowTime =
+		std::chrono::system_clock::now();
+	std::chrono::duration<double, std::ratio<1>> duration =
+		std::chrono::duration_cast<std::chrono::seconds>(
+		nowTime.time_since_epoch());
+	return duration.count();
+}
+
+/*void simple::createTRANSFORM(std::shared_ptr<simple::transform> transform,
     simple::header* header, double px, double py, double pz, double r11,
     double r12, double r13, double r21, double r22, double r23, double r31,
     double r32, double r33) {
@@ -121,14 +146,7 @@ void simple::createHEADER(simple::header* ptr, int versionNum,
 	ptr->set_versionnumber(versionNum);
 }
 
-double simple::getCurrentTime() {
-  std::chrono::time_point<std::chrono::system_clock> nowTime =
-      std::chrono::system_clock::now();
-  std::chrono::duration<double, std::ratio<1>> duration =
-      std::chrono::duration_cast<std::chrono::seconds>(
-          nowTime.time_since_epoch());
-  return duration.count();
-}
+
 void simple::testAddress(){
 	simple::header* header = new simple::header();
 }
@@ -161,21 +179,21 @@ simple::header* simple::makeHeader(const std::string& s1, const std::string& s2)
 	return p;
 }
 
-std::unique_ptr<simple::generic> simple::makeGenericUnique(const simple::header& h, const std::string& s)
+std::unique_ptr<simple::generic> simple::makeGenericUnique(simple::header& h, const std::string& s)
 {
 	auto g = std::make_unique<simple::generic>();
-	simple::header* internal_h = new simple::header();
-	internal_h->CopyFrom(h);
+	//simple::header* internal_h = new simple::header();
+	//internal_h->CopyFrom(h);
 	g->set_basicstring(s);
-	g->set_allocated_head(internal_h);
+	g->set_allocated_head(&h);
 	return g;
 }
-simple::generic* simple::makeGenericRaw(const simple::header& h, const std::string& s)
+simple::generic* simple::makeGenericRaw(simple::header& h, const std::string& s)
 {
 	simple::generic* g = new simple::generic();
-	simple::header* internal_h = new simple::header();
-	internal_h->CopyFrom(h);
+	//simple::header* internal_h = new simple::header();
+	//internal_h->CopyFrom(h);
 	g->set_basicstring(s);
-	g->set_allocated_head(internal_h);
+	g->set_allocated_head(&h);
 	return g;
-}
+}*/

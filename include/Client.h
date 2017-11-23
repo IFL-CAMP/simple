@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "simple_msgs/simple.pb.h"
+/*#include "simple_msgs/simple.pb.h"
 #define ZMQ_STATIC
 #include <memory>
 #include <vector>
@@ -90,4 +90,4 @@ bool simple::Client<T>::request(T& req) {
       strMessage);  // copy data from string to protobuf message
 
   return success;
-}
+}*/

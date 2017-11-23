@@ -28,23 +28,9 @@ int main(int argc, char* argv[]) {
   dyn_h->set_devicename("header device");
   
   const std::string s = "G data";
-
   auto g = makeGenericUnique(*dyn_h,s);
 
   std::cout << "G data: " << g->basicstring() << "   " << g->head().devicename() << std::endl;
-
-
-  simple::header* dyn_h2 = new simple::header();
-  dyn_h2->set_datatypename("header data2");
-  dyn_h2->set_devicename("header device2");
-
-  const std::string s2 = "G data2";
-
-  simple::generic* g2 = makeGenericRaw(*dyn_h2, s2);
-
-  std::cout << "G data2: " << g2->basicstring() <<"   "<<g2->head().devicename()<< std::endl;
-
-  delete g2,dyn_h2,dyn_h;
 
   return 0;
 }

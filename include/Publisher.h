@@ -6,14 +6,16 @@
 #include <string>
 #include <vector>
 #include <zmq.hpp>
-#include "MSGcreator.h"
-#include "simple_msgs/simple.pb.h"
+#include "flatbuffers/flatbuffers.h"
+#include "simple_generated.h"
 
-namespace simple {
+namespace simple
+{
 ///@brief Creates a publisher socket for a specific type of message
 template <typename T>
-class Publisher {
- public:
+class Publisher
+{
+public:
   ///
   ///@brief Class constructor. Creates a ZMQ_PUB socket and binds it to the port
   ///@param port string for the connection port. Ex: "tcp://*:5556"
@@ -26,50 +28,54 @@ class Publisher {
   ///@param msg Protobuf-type message to be published
   void publish(const T& msg);
 
- private:
+private:
   std::unique_ptr<zmq::socket_t> socket;
 };
 
 }  // namespace simple
 
 template <typename T>
-void simple::Publisher<T>::publish(const T& msg) {
+void simple::Publisher<T>::publish(const T& msg)
+{
   /// Sends the message by the open socket of the publisher. Any type of message
   /// is supported
 
-  std::string strMSG;
+  // add message topic to allow subscription filter
+	//TODO
 
-  msg.SerializeToString(&strMSG);  // serialize the protobuf message into a
-  // string
+  int buffersize = msg.GetSize();
 
-  std::string topic =
-      msg.GetTypeName();  // add message topic to allow subscription filter
+  zmq::message_t ZMQmsg(buffersize);
 
-  topic.append(strMSG);
+  memcpy(ZMQmsg.data(), msg.GetBufferPointer(), buffersize);
 
-  zmq::message_t ZMQmsg(topic.size());
-
-  memcpy(ZMQmsg.data(), topic.c_str(), topic.size());
-
-  try {
+  try
+  {
     socket->send(ZMQmsg);
-  } catch (zmq::error_t& e) {
+  }
+  catch (zmq::error_t& e)
+  {
     std::cerr << "Could not send message: " << e.what();
   }
 }
 template <typename T>
-simple::Publisher<T>::Publisher(std::string port, zmq::context_t& context) {
+simple::Publisher<T>::Publisher(std::string port, zmq::context_t& context)
+{
   /// Class constructor: opens a socket of type ZMQ_PUB and binds it to port
 
   socket = std::make_unique<zmq::socket_t>(context, ZMQ_PUB);
-  try {
+  try
+  {
     socket->bind(port);
-  } catch (zmq::error_t& e) {
+  }
+  catch (zmq::error_t& e)
+  {
     std::cerr << "could not bind to socket:" << e.what();
   }
 }
 template <typename T>
-simple::Publisher<T>::~Publisher() {
+simple::Publisher<T>::~Publisher()
+{
   /// Class destructor: Closes the socket
   socket->close();
 }

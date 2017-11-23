@@ -2,7 +2,7 @@
 
 
 
-simple::Proxy::Proxy(std::string backport, std::string frontport, zmq::context_t& context){
+/*simple::Proxy::Proxy(std::string backport, std::string frontport, zmq::context_t& context){
 	///Class constructor: opens two sockets, one of type ROUTER and the other of type DEALER
 	///Binds both ports to the front and back ports
 
@@ -31,4 +31,4 @@ simple::Proxy::~Proxy(){
 	///Class destructor: Closes the sockets
 	frontend->close();
 	backend->close();
-}
+}*/

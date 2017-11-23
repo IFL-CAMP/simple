@@ -1,0 +1,13 @@
+// Schema for S.I.M.P.L.E. String
+
+include "header.fbs";
+
+namespace simple;
+
+table generic_string {
+	data:string;
+	Header:header;
+}
+
+
+root_type generic_string;

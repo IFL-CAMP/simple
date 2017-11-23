@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 #include <zmq.hpp>
-#include "simple_msgs/simple.pb.h"
+/*#include "simple_msgs/simple.pb.h"
 
 namespace simple {
 
@@ -21,4 +21,4 @@ class Proxy {
   std::unique_ptr<zmq::socket_t> backend;
 };
 
-}  // namespace simple
+}  // namespace simple*/

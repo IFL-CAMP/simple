@@ -42,7 +42,7 @@ endif()
 
 ###### FILES AND FOLDERS NEEDED FOR COMPILATION
 
-include_directories(include simple_msgs/include ${cppzmq_INCLUDE_DIR} ${ZeroMQ_INCLUDE_DIR} ${FLATBUFFERS_INCLUDE_DIR})
+include_directories(include msgs/include ${cppzmq_INCLUDE_DIR} ${ZeroMQ_INCLUDE_DIR} ${FLATBUFFERS_INCLUDE_DIR})
 
 file(GLOB_RECURSE Headers "*.h" "*.hpp")
 

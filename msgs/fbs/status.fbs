@@ -1,0 +1,16 @@
+// Schema for S.I.M.P.L.E. Status
+
+include "header.fbs";
+
+namespace simple;
+
+table status {
+	statusCode:int;
+	subCode:int;
+	errorName:string;
+	errorMsg:string;
+	Header:header;
+}
+
+
+root_type status;

@@ -1,0 +1,13 @@
+// Schema for S.I.M.P.L.E. Double
+
+include "header.fbs";
+
+namespace simple;
+
+table generic_double {
+	data:double;
+	Header:header;
+}
+
+
+root_type generic_double;

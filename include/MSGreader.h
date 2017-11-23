@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include "simple_msgs/simple.pb.h"
+/*#include "simple_msgs/simple.pb.h"
 
 namespace simple {
 ///@brief Class for reading Protobuf messages and returning their content
@@ -101,4 +101,4 @@ class MSGreader {
                   double& timeStamp);
 };
 
-}  // namespace simple
+}  // namespace simple*/
