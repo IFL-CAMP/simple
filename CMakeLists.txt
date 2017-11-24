@@ -13,8 +13,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake/Modules)
 
 # TODO can this be omitted if we don't use protobuf anymore?
 if (WIN32)
-  list(APPEND CMAKE_CXX_FLAGS_RELEASE " /MT")
-  list(APPEND CMAKE_CXX_FLAGS_DEBUG " /MTd")
+  list(APPEND CMAKE_CXX_FLAGS_RELEASE " /MD")
+  list(APPEND CMAKE_CXX_FLAGS_DEBUG " /MDd")
 endif(WIN32)
 
 # Allows all symbols generated from the dynamic library to be exported

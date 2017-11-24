@@ -7,12 +7,12 @@
 #include <vector>
 #include <zmq.hpp>
 #include "flatbuffers/flatbuffers.h"
+#include <iostream>
 
 
 namespace simple
 {
 ///@brief Creates a publisher socket for a specific type of message
-template <typename T>
 class Publisher
 {
 public:
@@ -26,7 +26,7 @@ public:
   ~Publisher();
   ///@brief publishes the message through the open socket
   ///@param msg Protobuf-type message to be published
-  void publish(const T& msg);
+  void publish(const flatbuffers::FlatBufferBuilder& msg);
 
 private:
   std::unique_ptr<zmq::socket_t> socket;
@@ -34,48 +34,4 @@ private:
 
 }  // namespace simple
 
-template <typename T>
-void simple::Publisher<T>::publish(const T& msg)
-{
-  /// Sends the message by the open socket of the publisher. Any type of message
-  /// is supported
 
-  // add message topic to allow subscription filter
-	//TODO
-
-  int buffersize = msg.GetSize();
-
-  zmq::message_t ZMQmsg(buffersize);
-
-  memcpy(ZMQmsg.data(), msg.GetBufferPointer(), buffersize);
-
-  try
-  {
-    socket->send(ZMQmsg);
-  }
-  catch (zmq::error_t& e)
-  {
-    std::cerr << "Could not send message: " << e.what();
-  }
-}
-template <typename T>
-simple::Publisher<T>::Publisher(std::string port, zmq::context_t& context)
-{
-  /// Class constructor: opens a socket of type ZMQ_PUB and binds it to port
-
-  socket = std::make_unique<zmq::socket_t>(context, ZMQ_PUB);
-  try
-  {
-    socket->bind(port);
-  }
-  catch (zmq::error_t& e)
-  {
-    std::cerr << "could not bind to socket:" << e.what();
-  }
-}
-template <typename T>
-simple::Publisher<T>::~Publisher()
-{
-  /// Class destructor: Closes the socket
-  socket->close();
-}

@@ -4,7 +4,6 @@
 #include <string>
 #include "Publisher.h"
 #include "myContext.h"
-#include "simple_msgs/simple.pb.h"
 #include "MSGcreator.h"
 
 // handle interruptions
@@ -20,17 +19,29 @@ static void s_catch_signals() {
 }
 
 int main(int argc, char* argv[]) {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-
-  simple::header* dyn_h = new simple::header();
-  dyn_h->set_datatypename("header data");
-  dyn_h->set_devicename("header device");
   
-  const std::string s = "G data";
-  auto g = makeGenericUnique(*dyn_h,s);
+	//create global context
+	simple::myContext globalContext;
 
-  std::cout << "G data: " << g->basicstring() << "   " << g->head().devicename() << std::endl;
+	//create a transform message
+	std::shared_ptr<flatbuffers::FlatBufferBuilder> msgPtr = simple::createTRANSFORM(*simple::createHeader("TRANSFORM", "PC", 1), *simple::createVec3(1.0, 2.0, 3.0), *simple::createQuaternion(2.1, 2.2, 2.3, 2.4));
+
+	//create a publisher
+	simple::Publisher pub("tcp://*:5555", *globalContext.context);
+
+	//s_catch_signals();
+	int num = 3;
+	while (num>0)
+	{
+		try{//send all messages one after the other
+			pub.publish(*msgPtr);
+			std::cout << "Capability Message published" << "\n";
+		}
+		catch (zmq::error_t& e){
+			std::cout << "Something went wrong with the publishing..." << "\n";
+		}
+		num--;
+	}
 
   return 0;
 }
