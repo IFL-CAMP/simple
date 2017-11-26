@@ -1,0 +1,38 @@
+// Schema for S.I.M.P.L.E. Image
+
+namespace simple_msgs;
+
+union data {dataUInt8, dataInt16, dataFloat, dataDouble}
+
+table dataUInt8{
+	img:uint8;
+}
+
+table dataInt16{
+	img:int16;
+}
+
+table dataFloat{
+	img:float;
+}
+
+table dataDouble{
+	img:double;
+}
+
+table image{
+	enconding:string;
+	origin:ubyte;
+	resX:int;
+	resY:int;
+	resZ:int;
+	width:double;
+	height:double;
+	depth:double;
+	imgData:data;
+	Header:ubyte;
+}
+
+
+root_type image;
+file_identifier "IMAG";

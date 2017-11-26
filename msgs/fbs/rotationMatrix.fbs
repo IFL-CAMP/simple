@@ -1,7 +1,6 @@
-// Schema for S.I.M.P.L.E.
+// Schema for S.I.M.P.L.E. Rotation Matrix
 
 include "header.fbs";
-include "position.fbs";
 
 namespace simple_msgs;
 
@@ -18,11 +17,10 @@ struct rotationMatrix{
 }
 
 table rotationMatrix_Stamped {
-	position:ubyte;
-	orientation:ubyte;
+	rotationM:ubyte;
 	Header:ubyte;
 }
 
 
-root_type transform;
+root_type rotationMatrix_Stamped;
 file_identifier "ROTM";

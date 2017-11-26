@@ -11,13 +11,11 @@ struct quaternion{
 	e4:double;
 }
 
-
-
 table quaternion_stamped {
 	quat:ubyte;
 	Header:ubyte;
 }
 
 
-root_type transform;
+root_type quaternion_stamped;
 file_identifier "QATR";

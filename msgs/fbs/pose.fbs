@@ -1,28 +1,19 @@
-// Schema for S.I.M.P.L.E. Position
+// Schema for S.I.M.P.L.E. Pose
 
 include "header.fbs";
 
-namespace simple;
+namespace simple_msgs;
 
-struct Vec3{
-	x:double;
-	y:double;
-	z:double;
+table pose{
+	point:ubyte;
+	quat:ubyte;
 }
 
-struct quaternion{
-	e1:double;
-	e2:double;
-	e3:double;
-	e4:double;
-}
-
-table position {
-	vector:ubyte;
-	orientation:ubyte;
+table pose_stamped {
+	poses:ubyte;
 	Header:ubyte;
 }
 
 
-root_type position;
-file_identifier "PSTN";
+root_type pose_stamped;
+file_identifier "POSE";

@@ -1,4 +1,4 @@
-// Schema for S.I.M.P.L.E. Position
+// Schema for S.I.M.P.L.E. Point
 
 include "header.fbs";
 
@@ -16,5 +16,5 @@ table point_stamped {
 }
 
 
-root_type point;
+root_type point_stamped;
 file_identifier "POIT";
