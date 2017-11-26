@@ -3,9 +3,9 @@
 include "header.fbs";
 include "position.fbs";
 
-namespace simple;
+namespace simple_msgs;
 
-struct RotationM{
+struct rotationMatrix{
 	r11:double;
 	r12:double;
 	r13:double;
@@ -17,7 +17,7 @@ struct RotationM{
 	r33:double;
 }
 
-table transform {
+table rotationMatrix_Stamped {
 	position:ubyte;
 	orientation:ubyte;
 	Header:ubyte;
@@ -25,4 +25,4 @@ table transform {
 
 
 root_type transform;
-file_identifier "TRFM";
+file_identifier "ROTM";

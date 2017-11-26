@@ -4,9 +4,8 @@ namespace simple;
 
 
 table header {
-	devicename:string;
-	datatypename:string;
-	versionnum:int;
+	sequence:int;
+	frame_id:string;
 	timestamp:double;
 }
 

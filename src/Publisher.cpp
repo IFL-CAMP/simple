@@ -11,7 +11,7 @@ void simple::Publisher::publish(const flatbuffers::FlatBufferBuilder& msg)
 	// add message topic to allow subscription filter TODO
 
 	const char* topic = flatbuffers::GetBufferIdentifier(buf);
-
+	
 
 	int buffersize = msg.GetSize();
 
