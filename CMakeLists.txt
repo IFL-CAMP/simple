@@ -42,21 +42,18 @@ endif()
 
 ###### FILES AND FOLDERS NEEDED FOR COMPILATION
 
-include_directories(include msgs/include ${cppzmq_INCLUDE_DIR} ${ZeroMQ_INCLUDE_DIR} ${FLATBUFFERS_INCLUDE_DIR})
+include_directories(include msgs/include msgs/generated_include ${cppzmq_INCLUDE_DIR} ${ZeroMQ_INCLUDE_DIR} ${FLATBUFFERS_INCLUDE_DIR})
 
 file(GLOB_RECURSE Headers "*.h" "*.hpp")
 
 set(LIB_SRCS 
   ${Headers}
-  src/Server.cpp
-  src/Publisher.cpp
-  src/Client.cpp
-	src/Subscriber.cpp)
+  src/Publisher.cpp)
 
 ###### TARGETS
 
 # Generate the Flatbuffers headers - this is defined in FindFlatBuffers.cmake
-flatbuffers_generate_c_headers(simple_msgs ${PROJECT_SOURCE_DIR}/msgs/fbs ${PROJECT_SOURCE_DIR}/msgs/include) #TODO check that the compilation of the the flatbuffer header in Windows happens correctly
+flatbuffers_generate_c_headers(simple_msgs ${PROJECT_SOURCE_DIR}/msgs/fbs ${PROJECT_SOURCE_DIR}/msgs/generated_include) #TODO check that the compilation of the the flatbuffer header in Windows happens correctly
 
 add_library(${PROJECT_NAME} SHARED ${LIB_SRCS})
 target_link_libraries(${PROJECT_NAME} ${cppzmq_LIBRARY})
