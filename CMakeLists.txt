@@ -50,12 +50,8 @@ set(LIB_SRCS
   ${Headers}
   src/Server.cpp
   src/Publisher.cpp
-  src/Proxy.cpp
   src/Client.cpp
-	src/Subscriber.cpp
-	src/MSGcreator.cpp
-	src/MSGreader.cpp
-src/Wrappers.cpp)
+	src/Subscriber.cpp)
 
 ###### TARGETS
 
@@ -84,5 +80,5 @@ endif(WIN32)
 
 ###### TESTS
 
-add_subdirectory(tests)
+# add_subdirectory(tests)
 

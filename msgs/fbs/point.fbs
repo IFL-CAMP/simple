@@ -1,20 +1,12 @@
 // Schema for S.I.M.P.L.E. Point
 
-include "header.fbs";
-
 namespace simple_msgs;
 
-struct point{
+table PointFbs {
 	x:double;
 	y:double;
 	z:double;
 }
 
-table point_stamped {
-	points:ubyte;
-	Header:ubyte;
-}
-
-
-root_type point_stamped;
+root_type PointFbs;
 file_identifier "POIT";

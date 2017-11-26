@@ -1,21 +1,13 @@
 // Schema for S.I.M.P.L.E. Quaternion
 
-include "header.fbs";
-
 namespace simple_msgs;
 
-struct quaternion{
-	e1:double;
-	e2:double;
-	e3:double;
-	e4:double;
+table QuaternionFbs {
+	x:double;
+	y:double;
+	z:double;
+	w:double;
 }
 
-table quaternion_stamped {
-	quat:ubyte;
-	Header:ubyte;
-}
-
-
-root_type quaternion_stamped;
-file_identifier "QATR";
+root_type QuaternionFbs;
+file_identifier "QUAT";

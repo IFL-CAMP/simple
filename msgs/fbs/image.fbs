@@ -20,7 +20,7 @@ table dataDouble{
 	img:double;
 }
 
-table image{
+table ImageFbs{
 	enconding:string;
 	origin:ubyte;
 	resX:int;
@@ -33,6 +33,5 @@ table image{
 	Header:ubyte;
 }
 
-
-root_type image;
+root_type ImageFbs;
 file_identifier "IMAG";
