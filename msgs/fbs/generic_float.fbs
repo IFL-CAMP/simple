@@ -1,12 +1,10 @@
 // Schema for S.I.M.P.L.E. Float
 
-include "header.fbs";
-
-namespace simple;
+namespace simple_msgs;
 
 table generic_float {
 	data:float;
-	Header:header;
+	Header:ubyte;
 }
 
 

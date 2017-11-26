@@ -1,12 +1,10 @@
 // Schema for S.I.M.P.L.E. String
 
-include "header.fbs";
-
-namespace simple;
+namespace simple_msgs;
 
 table generic_string {
 	data:string;
-	Header:header;
+	Header:ubyte;
 }
 
 
