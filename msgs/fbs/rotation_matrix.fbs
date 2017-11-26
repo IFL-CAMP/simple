@@ -1,10 +1,8 @@
 // Schema for S.I.M.P.L.E. Rotation Matrix
 
-include "header.fbs";
-
 namespace simple_msgs;
 
-struct rotationMatrix{
+struct RotationMatrixFbs {
 	r11:double;
 	r12:double;
 	r13:double;
@@ -16,11 +14,5 @@ struct rotationMatrix{
 	r33:double;
 }
 
-table rotationMatrix_Stamped {
-	rotationM:ubyte;
-	Header:ubyte;
-}
-
-
-root_type rotationMatrix_Stamped;
-file_identifier "ROTM";
+root_type RotationMatrixFbs;
+file_identifier "RMAT";

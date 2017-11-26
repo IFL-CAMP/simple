@@ -1,14 +1,10 @@
 // Schema for S.I.M.P.L.E. String
 
-include "header.fbs";
-
 namespace simple;
 
-table generic_string {
+table StringFbs {
 	data:string;
-	Header:header;
 }
 
-
-root_type generic_string;
+root_type StringFbs;
 file_identifier "STRG";

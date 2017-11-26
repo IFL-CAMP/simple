@@ -4,11 +4,10 @@ include "header.fbs";
 
 namespace simple;
 
-table generic_int {
+table IntFbs {
 	data:int;
 	Header:header;
 }
 
-
-root_type generic_int;
-file_identifier "INTG";
+root_type IntFbs;
+file_identifier "INTF";

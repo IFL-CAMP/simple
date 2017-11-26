@@ -1,14 +1,10 @@
 // Schema for S.I.M.P.L.E. Double
 
-include "header.fbs";
-
 namespace simple;
 
-table generic_double {
+table DoubleFbs {
 	data:double;
-	Header:header;
 }
 
-
-root_type generic_double;
+root_type DoubleFbs;
 file_identifier "DOBL";
