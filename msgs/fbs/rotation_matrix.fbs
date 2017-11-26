@@ -2,7 +2,7 @@
 
 namespace simple_msgs;
 
-struct RotationMatrixFbs {
+table RotationMatrixFbs {
 	r11:double;
 	r12:double;
 	r13:double;

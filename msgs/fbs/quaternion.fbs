@@ -2,7 +2,7 @@
 
 namespace simple_msgs;
 
-struct QuaternionFbs {
+table QuaternionFbs {
 	x:double;
 	y:double;
 	z:double;

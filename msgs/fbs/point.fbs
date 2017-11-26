@@ -2,7 +2,7 @@
 
 namespace simple_msgs;
 
-struct PointFbs {
+table PointFbs {
 	x:double;
 	y:double;
 	z:double;

@@ -1,12 +1,9 @@
 // Schema for S.I.M.P.L.E. Int
 
-include "header.fbs";
-
 namespace simple;
 
 table IntFbs {
 	data:int;
-	Header:header;
 }
 
 root_type IntFbs;
