@@ -12,30 +12,24 @@ struct header;
 
 struct header FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
-    VT_DEVICENAME = 4,
-    VT_DATATYPENAME = 6,
-    VT_VERSIONNUM = 8,
-    VT_TIMESTAMP = 10
+    VT_SEQUENCE = 4,
+    VT_FRAME_ID = 6,
+    VT_TIMESTAMP = 8
   };
-  const flatbuffers::String *devicename() const {
-    return GetPointer<const flatbuffers::String *>(VT_DEVICENAME);
+  int32_t sequence() const {
+    return GetField<int32_t>(VT_SEQUENCE, 0);
   }
-  const flatbuffers::String *datatypename() const {
-    return GetPointer<const flatbuffers::String *>(VT_DATATYPENAME);
-  }
-  int32_t versionnum() const {
-    return GetField<int32_t>(VT_VERSIONNUM, 0);
+  const flatbuffers::String *frame_id() const {
+    return GetPointer<const flatbuffers::String *>(VT_FRAME_ID);
   }
   double timestamp() const {
     return GetField<double>(VT_TIMESTAMP, 0.0);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_DEVICENAME) &&
-           verifier.Verify(devicename()) &&
-           VerifyOffset(verifier, VT_DATATYPENAME) &&
-           verifier.Verify(datatypename()) &&
-           VerifyField<int32_t>(verifier, VT_VERSIONNUM) &&
+           VerifyField<int32_t>(verifier, VT_SEQUENCE) &&
+           VerifyOffset(verifier, VT_FRAME_ID) &&
+           verifier.Verify(frame_id()) &&
            VerifyField<double>(verifier, VT_TIMESTAMP) &&
            verifier.EndTable();
   }
@@ -44,14 +38,11 @@ struct header FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
 struct headerBuilder {
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
-  void add_devicename(flatbuffers::Offset<flatbuffers::String> devicename) {
-    fbb_.AddOffset(header::VT_DEVICENAME, devicename);
+  void add_sequence(int32_t sequence) {
+    fbb_.AddElement<int32_t>(header::VT_SEQUENCE, sequence, 0);
   }
-  void add_datatypename(flatbuffers::Offset<flatbuffers::String> datatypename) {
-    fbb_.AddOffset(header::VT_DATATYPENAME, datatypename);
-  }
-  void add_versionnum(int32_t versionnum) {
-    fbb_.AddElement<int32_t>(header::VT_VERSIONNUM, versionnum, 0);
+  void add_frame_id(flatbuffers::Offset<flatbuffers::String> frame_id) {
+    fbb_.AddOffset(header::VT_FRAME_ID, frame_id);
   }
   void add_timestamp(double timestamp) {
     fbb_.AddElement<double>(header::VT_TIMESTAMP, timestamp, 0.0);
@@ -70,29 +61,25 @@ struct headerBuilder {
 
 inline flatbuffers::Offset<header> Createheader(
     flatbuffers::FlatBufferBuilder &_fbb,
-    flatbuffers::Offset<flatbuffers::String> devicename = 0,
-    flatbuffers::Offset<flatbuffers::String> datatypename = 0,
-    int32_t versionnum = 0,
+    int32_t sequence = 0,
+    flatbuffers::Offset<flatbuffers::String> frame_id = 0,
     double timestamp = 0.0) {
   headerBuilder builder_(_fbb);
   builder_.add_timestamp(timestamp);
-  builder_.add_versionnum(versionnum);
-  builder_.add_datatypename(datatypename);
-  builder_.add_devicename(devicename);
+  builder_.add_frame_id(frame_id);
+  builder_.add_sequence(sequence);
   return builder_.Finish();
 }
 
 inline flatbuffers::Offset<header> CreateheaderDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
-    const char *devicename = nullptr,
-    const char *datatypename = nullptr,
-    int32_t versionnum = 0,
+    int32_t sequence = 0,
+    const char *frame_id = nullptr,
     double timestamp = 0.0) {
   return simple::Createheader(
       _fbb,
-      devicename ? _fbb.CreateString(devicename) : 0,
-      datatypename ? _fbb.CreateString(datatypename) : 0,
-      versionnum,
+      sequence,
+      frame_id ? _fbb.CreateString(frame_id) : 0,
       timestamp);
 }
 

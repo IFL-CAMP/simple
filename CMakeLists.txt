@@ -54,7 +54,8 @@ set(LIB_SRCS
   src/Client.cpp
 	src/Subscriber.cpp
 	src/MSGcreator.cpp
-	src/MSGreader.cpp)
+	src/MSGreader.cpp
+src/Wrapers.cpp)
 
 ###### TARGETS
 
