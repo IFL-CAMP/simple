@@ -1,0 +1,13 @@
+// Schema for S.I.M.P.L.E. Quaternion
+
+namespace simple_msgs;
+
+table QuaternionFbs {
+	x:double;
+	y:double;
+	z:double;
+	w:double;
+}
+
+root_type QuaternionFbs;
+file_identifier "QUAT";
