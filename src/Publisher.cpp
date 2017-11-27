@@ -3,9 +3,10 @@
 #include "publisher.h"
 #include "header.h"
 
-simple::Publisher::Publisher(const std::string& port, zmq::context_t& context_)
+auto simple::Publisher::context_ = std::make_unique<zmq::context_t>(1);
+
+simple::Publisher::Publisher(const std::string& port) : socket_(std::make_unique<zmq::socket_t>(*context_, ZMQ_PUB))
 {
-  socket_ = std::make_unique<zmq::socket_t>(context_, ZMQ_PUB);
   try
   {
     socket_->bind(port);
@@ -19,6 +20,7 @@ simple::Publisher::Publisher(const std::string& port, zmq::context_t& context_)
 simple::Publisher::~Publisher()
 {
   socket_->close();
+  context_->close();
 }
 
 void simple::Publisher::publish(const uint8_t* msg, const int size)

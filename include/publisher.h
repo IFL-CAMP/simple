@@ -1,7 +1,5 @@
 #pragma once
 
-//#define ZMQ_STATIC  // TODO: is this necessary now?
-
 #include <memory>
 #include <zmq.hpp>
 #include <string>
@@ -19,7 +17,7 @@ public:
    * @brief Class constructor. Creates a ZMQ_PUB socket and binds it to the port.
    * @param port string for the connection port.
    */
-	Publisher(const std::string& port, zmq::context_t& context_);
+  Publisher(const std::string& port);
 
   ~Publisher();
 
@@ -31,9 +29,8 @@ public:
   void publish(const simple_msgs::GenericMessage& msg);
   void publish(const uint8_t* msg, const int size);
 
-  //static zmq::context_t context_;
-
 private:
+  static std::unique_ptr<zmq::context_t> context_;
   std::unique_ptr<zmq::socket_t> socket_;  //<
 };
 
