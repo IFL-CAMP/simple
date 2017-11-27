@@ -91,8 +91,8 @@ public:
   }
 
   /**
-   * @brief TODO
-   * @param timestamp
+   * @brief Modifies the data for time stamp. Keep in mind creating new messages from scratch can be more efficient than mutating existing ones
+   * @param timestamp Seconds since the epoch, when the data in the message was generated
    */
   void setTimestamp(const double timestamp)
   {
