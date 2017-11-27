@@ -2,9 +2,9 @@
 
 #include "subscriber.h"
 
-simple::Subscriber::Subscriber(const std::string& port, zmq::context_t& context)
+simple::Subscriber::Subscriber(const std::string& port)
 {
-  socket_ = std::make_unique<zmq::socket_t>(context, ZMQ_PUB);
+  socket_ = std::make_unique<zmq::socket_t>(context_, ZMQ_PUB);
   try
   {
     socket_->bind(port);

@@ -1,54 +1,53 @@
+#include <signal.h>
+#include <fstream>
 #include <iostream>
+#include <string>
+#include "subscriber.h"
+#include "generic_message.h"
+#include "header.h"
 
-#include "publisher.h"
+static int s_interrupted = 0;
+static void s_signal_handler(int signal_value) { s_interrupted = 1; }
 
-simple::Publisher::Publisher(const std::string& port, zmq::context_t& context)
-{
-  socket_ = std::make_unique<zmq::socket_t>(context, ZMQ_PUB);
-  try
-  {
-    socket_->bind(port);
-  }
-  catch (zmq::error_t& e)
-  {
-    std::cerr << "Error - Could not bind to the socket:" << e.what();
-  }
+static void s_catch_signals(void) {
+	signal(SIGINT, s_signal_handler);
+	signal(SIGTERM, s_signal_handler);
 }
 
-simple::Publisher::~Publisher()
-{
-  socket_->close();
+int main(int argc, char* argv[]) {
+
+	// create subscriber context
+	simple::Subscriber::context_ = zmq::context_t(1);
+
+	// create the subscriber
+
+	simple::Subscriber sub("tcp://localhost:5555");
+
+	// create the holder for the incoming data
+	simple_msgs::Header h(0, "", 0.0);
+	
+	s_catch_signals();
+	while (!s_interrupted) {
+		try {
+			//receive message and print the content
+			sub.subscribe(h);
+			std::cout << "Received sequence number: " << h.getSequenceNumber() << std::endl;
+			std::cout << "Received frame id: " << h.getFrameID() << std::endl;
+			std::cout << "Received time stamp: " << h.getTimestamp() << std::endl;
+
+		}
+
+		catch (zmq::error_t& e) {
+			std::cout << "Something went wrong with the subscription"
+				<< "\n";
+		}
+	}
+
+	std::cout << "Interruption received"
+		<< "\n";
+	//close the context
+	simple::Subscriber::context_.close();
+
+	return 0;
 }
 
-void simple::Publisher::publish(const uint8_t* msg, const int size)
-{
-  // TODO: add message topic to allow subscription filter
-  const char* topic = flatbuffers::GetBufferIdentifier(msg);
-
-  zmq::message_t ZMQ_message(size);
-  memcpy(ZMQ_message.data(), msg, size);
-
-  try
-  {
-    socket_->send(ZMQ_message);
-  }
-  catch (zmq::error_t& e)
-  {
-    std::cerr << "Error - Could not send the message: " << e.what();
-  }
-}
-
-void simple::Publisher::publish(const simple_msgs::GenericMessage& msg)
-{
-  uint8_t* buffer = msg.getBufferData();
-  int buffer_size = msg.getBufferSize();
-  publish(buffer, buffer_size);
-}
-
-void simple::Publisher::publish(const flatbuffers::FlatBufferBuilder& msg)
-{
-  // Get the data from the message.
-  uint8_t* buffer = msg.GetBufferPointer();
-  int buffer_size = msg.GetSize();
-  publish(buffer, buffer_size);
-}

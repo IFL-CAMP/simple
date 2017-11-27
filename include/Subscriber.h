@@ -20,7 +20,7 @@ public:
    * @param port string for the connection port.
    * @param context reference to the existing context.
    */
-	Subscriber(const std::string& port, zmq::context_t& context);
+	Subscriber(const std::string& port);
 
   ~Subscriber();
 
@@ -29,7 +29,7 @@ public:
    * @return TODO
    */
   void subscribe(simple_msgs::GenericMessage&);
-
+  static zmq::context_t context_;
 private:
 	void filterSubscription();
   std::unique_ptr<zmq::socket_t> socket_;  //<
