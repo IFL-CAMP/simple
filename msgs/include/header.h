@@ -79,6 +79,7 @@ public:
   void setSequenceNumber(const int seq_n)
   {
     seq_n_ = seq_n;
+    field_mofified_ = true;
   }
 
   /**
@@ -88,6 +89,7 @@ public:
   void setFrameID(const std::string& frame_id)
   {
     frame_id_ = frame_id;
+    field_mofified_ = true;
   }
 
   /**
@@ -97,11 +99,13 @@ public:
   void setTimestamp(const double timestamp)
   {
     timestamp_ = timestamp;
+    field_mofified_ = true;
   }
 
 private:
   int seq_n_{ 0 };
   std::string frame_id_{ "" };
   double timestamp_{ 0.0 };
+  bool field_mofified_{ false };
 };
 }
