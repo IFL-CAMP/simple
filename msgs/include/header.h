@@ -25,27 +25,16 @@ public:
   }
 
   /**
-   * @brief TODO
-   * @param data
+   * @brief Constructor from buffer data
+   * @param data acquired from flatbuffer, for example from GetRoot method
    */
-  Header(const uint8_t* data)
-  {
-    auto h = GetHeaderFbs(data);
-    seq_n_ = h->sequence_number();
-    frame_id_ = h->frame_id()->c_str();
-    timestamp_ = h->timestamp();
-  }
+  Header(const uint8_t* data);
 
   /**
    * @brief TODO
    * @return
    */
-  uint8_t* getBufferData() const
-  {
-    auto h = CreateHeaderFbs(*builder_, seq_n_, builder_->CreateString(frame_id_), timestamp_);
-    builder_->Finish(h);
-    return builder_->GetBufferPointer();
-  }
+  uint8_t* getBufferData() const;
 
   /**
    * @brief TODO
