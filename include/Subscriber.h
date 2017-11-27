@@ -83,6 +83,12 @@ const T* simple::Subscriber<T>::subscribe()
   auto seq2 = data->sequence_number();
   auto framr2 = data->frame_id();
   auto time2 = data->timestamp();
+
+  //verify the consistency of the data
+  flatbuffers::Verifier Ver((uint8_t*)(ZMQmessage.data()), ZMQmessage.size());
+
+  auto check = Ver.VerifyTable(data);
+
   return data;
 }
 template <typename T>
