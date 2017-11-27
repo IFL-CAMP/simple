@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "publisher.h"
+#include "header.h"
 
 simple::Publisher::Publisher(const std::string& port, zmq::context_t& context_)
 {
@@ -42,6 +43,11 @@ void simple::Publisher::publish(const simple_msgs::GenericMessage& msg)
 {
   uint8_t* buffer = msg.getBufferData();
   int buffer_size = msg.getBufferSize();
+  //test the bufer is correct
+  auto h = simple_msgs::GetHeaderFbs(buffer);
+  auto TS = h->timestamp();
+  auto id = h->frame_id();
+  auto seq = h->sequence_number();
   publish(buffer, buffer_size);
 }
 

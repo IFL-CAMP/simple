@@ -50,6 +50,8 @@ simple::Subscriber<T>::Subscriber(const std::string& port, zmq::context_t& conte
   {
     std::cerr << "Error - Could not bind to the socket:" << e.what();
   }
+
+  filterSubscription();
 }
 template <typename T>
 simple::Subscriber<T>::~Subscriber()
