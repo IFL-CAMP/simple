@@ -21,7 +21,7 @@ static void s_catch_signals() {
 int main(int argc, char* argv[]) {
 
 	//create the context
-	simple::Publisher::context_ = zmq::context_t(1);
+	zmq::context_t context_(1);
 
 	//create a header message, with wrapper
 	int seq_n = 1;
@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
 	simple_msgs::Header h(seq_n, frame_id, timeStmp);
 
 	//create a publisher
-	simple::Publisher pub("tcp://*:5555");
+	simple::Publisher pub("tcp://*:5555",context_);
 
 	//s_catch_signals();
 	int num = 3;
@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
 		num--;
 	}
 
-	simple::Publisher::context_.close();
+	context_.close();
 
 	return 0;
 }

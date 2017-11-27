@@ -17,11 +17,11 @@ static void s_catch_signals(void) {
 int main(int argc, char* argv[]) {
 
 	// create subscriber context
-	simple::Subscriber<simple_msgs::HeaderFbs>::context_ = zmq::context_t(1);
+	zmq::context_t context_(1);
 
 	// create the subscriber
 
-	simple::Subscriber<simple_msgs::HeaderFbs> sub("tcp://localhost:5555");
+	simple::Subscriber<simple_msgs::HeaderFbs> sub("tcp://localhost:5555",context_);
 
 	// create the holder for the incoming data
 	//simple_msgs::HeaderFbs h(0, "", 0.0);
@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
 	std::cout << "Interruption received"
 		<< "\n";
 	//close the context
-	simple::Subscriber<simple_msgs::HeaderFbs>::context_.close();
+	context_.close();
 
 	return 0;
 }

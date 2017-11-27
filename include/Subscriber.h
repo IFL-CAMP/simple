@@ -1,6 +1,6 @@
 #pragma once
 
-#define ZMQ_STATIC  // TODO: is this necessary now?
+//#define ZMQ_STATIC  // TODO: is this necessary now?
 
 #include <memory>
 #include <zmq.hpp>
@@ -21,7 +21,7 @@ public:
    * @param port string for the connection port.
    * @param context reference to the existing context.
    */
-  Subscriber<T>(const std::string& port);
+	Subscriber<T>(const std::string& port, zmq::context_t& context_);
 
   ~Subscriber<T>();
 
@@ -30,7 +30,7 @@ public:
    * @return TODO
    */
   const T* subscribe();
-  static zmq::context_t context_;
+  //static zmq::context_t context_;
 
 private:
   void filterSubscription();
@@ -39,7 +39,7 @@ private:
 
 }  // namespace simple
 template <typename T>
-simple::Subscriber<T>::Subscriber(const std::string& port)
+simple::Subscriber<T>::Subscriber(const std::string& port, zmq::context_t& context_)
 {
   socket_ = std::make_unique<zmq::socket_t>(context_, ZMQ_PUB);
   try

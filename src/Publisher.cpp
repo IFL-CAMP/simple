@@ -2,7 +2,7 @@
 
 #include "publisher.h"
 
-simple::Publisher::Publisher(const std::string& port)
+simple::Publisher::Publisher(const std::string& port, zmq::context_t& context_)
 {
   socket_ = std::make_unique<zmq::socket_t>(context_, ZMQ_PUB);
   try
