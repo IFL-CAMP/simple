@@ -1,0 +1,10 @@
+// Schema for S.I.M.P.L.E. Double
+
+namespace simple;
+
+table DoubleFbs {
+	data:double;
+}
+
+root_type DoubleFbs;
+file_identifier "DOBL";

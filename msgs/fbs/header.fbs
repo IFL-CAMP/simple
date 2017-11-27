@@ -2,12 +2,11 @@
 
 namespace simple_msgs;
 
-
-table header {
-	sequence:int;
+table HeaderFbs {
+	sequence_number:int;
 	frame_id:string;
 	timestamp:double;
 }
 
-
-root_type header;
+root_type HeaderFbs;
+file_identifier "HEAD";

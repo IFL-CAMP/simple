@@ -1,0 +1,10 @@
+// Schema for S.I.M.P.L.E. Boolean
+
+namespace simple;
+
+table BoolFbs {
+	data:bool;
+}
+
+root_type BoolFbs;
+file_identifier "BOOL";

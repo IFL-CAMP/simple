@@ -1,2 +1,3 @@
 *.user
 build
+msgs/generated_include
