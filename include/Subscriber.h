@@ -41,10 +41,10 @@ private:
 template <typename T>
 simple::Subscriber<T>::Subscriber(const std::string& port, zmq::context_t& context_)
 {
-  socket_ = std::make_unique<zmq::socket_t>(context_, ZMQ_PUB);
+  socket_ = std::make_unique<zmq::socket_t>(context_, ZMQ_SUB);
   try
   {
-    socket_->bind(port);
+    socket_->connect(port);
   }
   catch (zmq::error_t& e)
   {
