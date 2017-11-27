@@ -80,7 +80,9 @@ const T* simple::Subscriber<T>::subscribe()
 
   // return the received data as buffer
   auto data=flatbuffers::GetRoot<T>(ZMQmessage.data());
-
+  auto seq2 = data->sequence_number();
+  auto framr2 = data->frame_id();
+  auto time2 = data->timestamp();
   return data;
 }
 template <typename T>
