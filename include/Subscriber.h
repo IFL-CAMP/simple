@@ -12,7 +12,7 @@ namespace simple
 /**
  * @brief Creates a subscriber socket.
  */
-	template<typename T>
+template <typename T>
 class Subscriber
 {
 public:
@@ -21,7 +21,7 @@ public:
    * @param port string for the connection port.
    * @param context reference to the existing context.
    */
-	Subscriber<T>(const std::string& port);
+  Subscriber<T>(const std::string& port);
 
   ~Subscriber<T>();
 
@@ -29,53 +29,53 @@ public:
    * @brief publishes the message through the open socket.
    * @return TODO
    */
-  void subscribe(T&);
+  const T* subscribe();
   static zmq::context_t context_;
+
 private:
-	void filterSubscription();
+  void filterSubscription();
   std::unique_ptr<zmq::socket_t> socket_;  //<
 };
 
 }  // namespace simple
-template<typename T>
+template <typename T>
 simple::Subscriber<T>::Subscriber(const std::string& port)
 {
-	socket_ = std::make_unique<zmq::socket_t>(context_, ZMQ_PUB);
-	try
-	{
-		socket_->bind(port);
-	}
-	catch (zmq::error_t& e)
-	{
-		std::cerr << "Error - Could not bind to the socket:" << e.what();
-	}
+  socket_ = std::make_unique<zmq::socket_t>(context_, ZMQ_PUB);
+  try
+  {
+    socket_->bind(port);
+  }
+  catch (zmq::error_t& e)
+  {
+    std::cerr << "Error - Could not bind to the socket:" << e.what();
+  }
 }
-template<typename T>
+template <typename T>
 simple::Subscriber<T>::~Subscriber()
 {
-	socket_->close();
+  socket_->close();
 }
-template<typename T>
-void simple::Subscriber<T>::subscribe(T& msgRef)
+template <typename T>
+const T* simple::Subscriber<T>::subscribe()
 {
+  zmq::message_t ZMQmessage;
 
-	zmq::message_t ZMQmessage;
+  try
+  {
+    socket_->recv(&ZMQmessage);  // receive messages that fit the filter of the socket
+  }
+  catch (zmq::error_t& e)
+  {
+    std::cerr << "Could not receive message: " << e.what();
+  }
 
-	try
-	{
-		socket_->recv(&ZMQmessage);  // receive messages that fit the filter of the socket
-	}
-	catch (zmq::error_t& e)
-	{
-		std::cerr << "Could not receive message: " << e.what();
-	}
-
-	// put the received data into the buffer
-	msgRef = *flatbuffers::GetRoot<T>(ZMQmessage.data());
-
+  // return the received data as buffer
+  return flatbuffers::GetRoot<T>(ZMQmessage.data());
 }
-template<typename T>
-void simple::Subscriber<T>::filterSubscription(){
-	//No topic for now
-	socket_->setsockopt(ZMQ_SUBSCRIBE, "", 0);
+template <typename T>
+void simple::Subscriber<T>::filterSubscription()
+{
+  // No topic for now
+  socket_->setsockopt(ZMQ_SUBSCRIBE, "", 0);
 }

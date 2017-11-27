@@ -24,16 +24,16 @@ int main(int argc, char* argv[]) {
 	simple::Subscriber<simple_msgs::HeaderFbs> sub("tcp://localhost:5555");
 
 	// create the holder for the incoming data
-	simple_msgs::Header h(0, "", 0.0);
+	//simple_msgs::HeaderFbs h(0, "", 0.0);
 	
 	s_catch_signals();
 	while (!s_interrupted) {
 		try {
 			//receive message and print the content
-			sub.subscribe(h);
-			std::cout << "Received sequence number: " << h.getSequenceNumber() << std::endl;
-			std::cout << "Received frame id: " << h.getFrameID() << std::endl;
-			std::cout << "Received time stamp: " << h.getTimestamp() << std::endl;
+			auto h = sub.subscribe();
+			std::cout << "Received sequence number: " << h->sequence_number() << std::endl;
+			std::cout << "Received frame id: " << h->frame_id() << std::endl;
+			std::cout << "Received time stamp: " << h->timestamp()<< std::endl;
 
 		}
 
