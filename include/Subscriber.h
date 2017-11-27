@@ -72,8 +72,16 @@ const T* simple::Subscriber<T>::subscribe()
     std::cerr << "Could not receive message: " << e.what();
   }
 
+  //test the received data for correct type
+  auto buf = simple_msgs::GetHeaderFbs(ZMQmessage.data());
+  auto seq = buf->sequence_number();
+  auto framr = buf->frame_id();
+  auto time = buf->timestamp();
+
   // return the received data as buffer
-  return flatbuffers::GetRoot<T>(ZMQmessage.data());
+  auto data=flatbuffers::GetRoot<T>(ZMQmessage.data());
+
+  return data;
 }
 template <typename T>
 void simple::Subscriber<T>::filterSubscription()
