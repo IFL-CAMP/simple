@@ -18,9 +18,8 @@ public:
   /**
    * @brief Class constructor. Creates a ZMQ_PUB socket and binds it to the port.
    * @param port string for the connection port.
-   * @param context reference to the existing context.
    */
-  Publisher(const std::string& port, zmq::context_t& context);
+  Publisher(const std::string& port);
 
   ~Publisher();
 
@@ -31,6 +30,8 @@ public:
   void publish(const flatbuffers::FlatBufferBuilder& msg);
   void publish(const simple_msgs::GenericMessage& msg);
   void publish(const uint8_t* msg, const int size);
+
+  static zmq::context_t context_;
 
 private:
   std::unique_ptr<zmq::socket_t> socket_;  //<

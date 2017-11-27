@@ -72,5 +72,5 @@ endif(WIN32)
 
 ###### TESTS
 
-# add_subdirectory(tests)
+add_subdirectory(tests)
 
