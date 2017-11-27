@@ -46,8 +46,7 @@ file(GLOB SIMPLE_HEADERS "include/*.h" "include/*.hpp")
 
 set(SIMPLE_SRCS
   ${SIMPLE_HEADERS}
-  src/publisher.cpp
-	src/subscriber.cpp)
+  src/publisher.cpp)
 
 ###### TARGETS
 
