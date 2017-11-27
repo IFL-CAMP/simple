@@ -4,6 +4,11 @@ project(simple_msgs)
 # Add extra CMake modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/../cmake/Modules)
 
+# Allows all symbols generated from the dynamic library to be exported
+if (WIN32)
+  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+endif(WIN32)
+
 # Find FlatBuffers
 find_package(FlatBuffers REQUIRED)
 
@@ -21,3 +26,4 @@ flatbuffers_generate_c_headers(simple_msgs ${PROJECT_SOURCE_DIR}/fbs ${PROJECT_S
 
 add_library(${PROJECT_NAME} SHARED ${SIMPLE_MSGS_SRCS})
 
+target_compile_definitions(${PROJECT_NAME} PRIVATE SIMPLE_LIBRARY_EXPORT) # TODO is this necessary?

@@ -22,7 +22,7 @@ static void s_catch_signals()
 
 int main(int argc, char* argv[])
 {
-  using namespace std::chrono_literals;
+  //using namespace std::chrono_literals;
 
   // create a header message, with wrapper
   int seq_n = 1;
@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
     {  // send the message continously
       pub.publish(h);
       std::cout << "Header Message published" << std::endl;
-      std::this_thread::sleep_for(1s);
+	  std::this_thread::sleep_for(std::chrono::seconds(1));
     }
     catch (zmq::error_t& e)
     {

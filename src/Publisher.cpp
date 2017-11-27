@@ -3,7 +3,7 @@
 #include "publisher.h"
 #include "header.h"
 
-auto simple::Publisher::context_ = std::make_unique<zmq::context_t>(1);
+std::unique_ptr<zmq::context_t> simple::Publisher::context_ = std::make_unique<zmq::context_t>(1);
 
 simple::Publisher::Publisher(const std::string& port) : socket_(std::make_unique<zmq::socket_t>(*context_, ZMQ_PUB))
 {

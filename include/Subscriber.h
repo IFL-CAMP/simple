@@ -89,6 +89,6 @@ private:
 };
 
 template <typename T>
-auto Subscriber<T>::context_ = std::make_unique<zmq::context_t>(1);
+std::unique_ptr<zmq::context_t> Subscriber<T>::context_ = std::make_unique<zmq::context_t>(1);
 
 }  // namespace simple
