@@ -3,6 +3,8 @@
 #include <mutex>
 #include "generic_message.h"
 #include "image_generated.h"
+#include "header.h"
+#include "pose.h"
 
 namespace simple_msgs
 {
@@ -63,7 +65,7 @@ public:
    * @brief TODO
    * @return
    */
-
+  std::vector<T> getImgData();
   /**
    * @brief TODO
    * @return
@@ -84,8 +86,10 @@ private:
   double width_{ 0.0 }, height_{ 0.0 }, depth_{ 0.0 };
   std::string encoding_{ "" };
   std::vector<T> data_{ {} };
-  uint8_t *headerBufPtr_{ nullptr }, originBufPtr_{ nullptr };
-  int headerBufSize_{ 0 }, originBufSize_{ 0 };
+  simple_msgs::Header header_;
+  simple_msgs::Pose origin_;
+  //uint8_t *headerBufPtr_{ nullptr }, originBufPtr_{ nullptr };
+  //int headerBufSize_{ 0 }, originBufSize_{ 0 };
   mutable bool field_mofified_{ false };
   mutable std::mutex mutex_;
 };
