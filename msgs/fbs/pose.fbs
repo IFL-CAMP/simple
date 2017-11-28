@@ -3,8 +3,8 @@
 namespace simple_msgs;
 
 table PoseFbs {
-	position:[ubytes];
-	quaternion:[ubytes];
+	position:[ubyte];
+	quaternion:[ubyte];
 }
 
 root_type PoseFbs;

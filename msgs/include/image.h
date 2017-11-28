@@ -24,15 +24,23 @@ public:
    * @param depth Size of the image in the Z direction
    * @param data Linearized vector of the image. Indexes follow the rule resX*resY*Z + resX*Y + X.
    * @param headerBufPtr Pointer to the flatbuffer created for the header of the message.
-   * @param headerBufSize Size of the flatbuffer created for the message
    * @param originBufPtr Pointer to the flatbuffer created for the origin of the image. Origin is of type Pose.
-   * @param originBufSize Size of the flatbuffer created for the origin of the image.
    */
   Image<T>(const std::string& encoding, const int resX, const int resY, const int resZ, const double width,
-        const double height, const double depth, const std::vector<T>& data, uint8_t* headerBufPtr,
-        int headerBufSize, uint8_t* originBufPtr, int originBufSize)
+           const double height, const double depth, const std::vector<T>& data, uint8_t* headerBufPtr,
+           uint8_t* originBufPtr)
+    : encoding_(encoding)
+    , resX_(resX)
+    , resY_(resY)
+    , resZ_(resZ)
+    , width_(width)
+    , height_(height)
+    , depth_(depth)
+    , header_(simple_msgs::Header(headerBufPtr))
+    , origin_(simple_msgs::Pose(originBufPtr))
+	, data_(data)
   {
-    //flatbuffers::FlatBufferBuilder fbb;
+    // flatbuffers::FlatBufferBuilder fbb;
     // auto dataVec = fbb.CreateVector(data);
     // auto offset = simple_msgs::CreatedataFloat(fbb, dataVec);
   }
@@ -40,7 +48,7 @@ public:
    * @brief TODO
    * @param bufferPointer
    */
-  Image(const uint8_t* bufferPointer);
+  Image<T>(const uint8_t* bufferPointer);
   /**
    * @brief TODO
    * @return
@@ -55,32 +63,82 @@ public:
    * @brief TODO
    * @return
    */
-  std::vector<int> getResolution();
+  std::vector<int> getResolution() const;
   /**
    * @brief TODO
    * @return
    */
-  std::vector<double> getDimensions();
+  std::vector<double> getDimensions() const;
   /**
    * @brief TODO
    * @return
    */
-  std::vector<T> getImgData();
+  std::vector<T> getImgData() const;
   /**
    * @brief TODO
    * @return
    */
-
+  simple_msgs::Header getHeader() const;
   /**
    * @brief TODO
    * @return
    */
-
+  simple_msgs::Pose getOrigin() const;
   /**
    * @brief TODO
    * @return
    */
-
+  std::string getEncoding() const;
+  /**
+  * @brief TODO
+  * @param encoding
+  */
+  void setEncoding(std::string encoding);
+  /**
+  * @brief TODO
+  * @param resX
+  */
+  void setResX(int resX);
+  /**
+  * @brief TODO
+  * @param resY
+  */
+  void setResY(int resY);
+  /**
+  * @brief TODO
+  * @param resZ
+  */
+  void setResZ(int resZ);
+  /**
+  * @brief TODO
+  * @param width
+  */
+  void setWidth(double width);
+  /**
+  * @brief TODO
+  * @param height
+  */
+  void setHeight(double height);
+  /**
+  * @brief TODO
+  * @param depth
+  */
+  void setDepth(double depth);
+  /**
+  * @brief TODO
+  * @param headerBufPtr
+  */
+  void setHeader(uint8_t* headerBufPtr);
+  /**
+  * @brief TODO
+  * @param originBufPtr
+  */
+  void setOrigin(uint8_t* originBufPtr);
+  /**
+  * @brief sets the wrapper data to the imgData and changes the field_modified to true, so the flatbuffer builder can build a new ImageFbs table. Only the data type of the Image instance will be set and the others will be set to empty.
+  * @param imgData Vector to the linearized image, whose indexes follow the rule resX*resY*Z + resX*Y + X.
+  */
+  void setData(std::vector<T> imgData);
 private:
   int resX_{ 0 }, resY_{ 0 }, resZ_{ 0 };
   double width_{ 0.0 }, height_{ 0.0 }, depth_{ 0.0 };
@@ -88,9 +146,21 @@ private:
   std::vector<T> data_{ {} };
   simple_msgs::Header header_;
   simple_msgs::Pose origin_;
-  //uint8_t *headerBufPtr_{ nullptr }, originBufPtr_{ nullptr };
-  //int headerBufSize_{ 0 }, originBufSize_{ 0 };
   mutable bool field_mofified_{ false };
   mutable std::mutex mutex_;
 };
+template<typename T>
+Image<T>::Image(const uint8_t* bufferPointer){
+	auto i = GetImageFbs(bufferPointer);
+
+	resX_ = i->resX();
+	resY_ = i->resY();
+	resZ_ = i->resZ();
+	
+	auto type = i->imgData_type();
+
+}
+
+
+
 }  // namespace simple_msgs
