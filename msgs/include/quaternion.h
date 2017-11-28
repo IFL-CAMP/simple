@@ -1,6 +1,7 @@
 #pragma once
 
 #include "generic_message.h"
+#include "quaternion_generated.h"
 
 namespace simple_msgs
 {

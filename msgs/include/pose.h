@@ -1,6 +1,7 @@
 #pragma once
 
 #include "generic_message.h"
+#include "pose_generated.h"
 #include "quaternion.h"
 #include "point.h"
 
@@ -31,6 +32,16 @@ public:
    * @return
    */
   int getBufferSize() const;
+  /**
+  * @brief TODO
+  * @param quaternion
+  */
+  void setQuaternion(uint8_t* quaternion);
+  /**
+  * @brief TODO
+  * @param position
+  */
+  void setPosition(uint8_t* position);
 
 private:
   simple_msgs::Quaternion quaternion_;

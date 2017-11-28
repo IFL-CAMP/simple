@@ -5,7 +5,6 @@
 #include "image_generated.h"
 #include "header.h"
 #include "pose.h"
-#include "flatbuffers\reflection.h"
 
 namespace simple_msgs
 {
@@ -152,6 +151,7 @@ private:
 };
 template<typename T>
 Image<T>::Image(const uint8_t* bufferPointer){
+	std::lock_guard<std::mutex> lock(mutex_);
 	auto i = GetImageFbs(bufferPointer);
 
 	resX_ = i->resX();
@@ -163,6 +163,7 @@ Image<T>::Image(const uint8_t* bufferPointer){
 	depth_ = i->depth();
 
 	encoding_ = i->enconding();
+
 	//get the HeaderFbs from the bytes vector inside the image message and set each field of header to the correct value
 	auto head = i->Header();//get the vector of bytes
 	auto headData = head->data();//get the pointer to the data
@@ -170,6 +171,13 @@ Image<T>::Image(const uint8_t* bufferPointer){
 	header_.setFrameID(h->frame_id());
 	header_.setSequenceNumber(h->sequence_number());
 	header_.setTimestamp(h->timestamp());
+
+	//get the PoseFbs from the bytes vector inside the image message and set each field of Pose to the correct values
+	auto pose = i->origin();
+	auto poseData = pose->data();
+	auto p = simple_msgs::GetPoseFbs(poseData);
+	origin_.setPosition(p->position()->data());
+	origin_.setQuaternion(p->quaternion()->data());
 	
 	auto type = i->imgData_type();
 
@@ -178,12 +186,17 @@ Image<T>::Image(const uint8_t* bufferPointer){
 	case simple_msgs::data_NONE:
 		break;
 	case simple_msgs::data_dataUInt8:
+		//get the data vector
+		auto img = static_cast<const dataUInt8*>(i->imgData());
 		break;
 	case simple_msgs::data_dataInt16:
+		auto img = static_cast<const dataInt16*>(i->imgData());
 		break;
 	case simple_msgs::data_dataFloat:
+		auto img = static_cast<const dataFloat*>(i->imgData());
 		break;
 	case simple_msgs::data_dataDouble:
+		auto img = static_cast<const dataDouble*>(i->imgData());
 		break;
 	case simple_msgs::data_MIN:
 		break;
@@ -192,7 +205,15 @@ Image<T>::Image(const uint8_t* bufferPointer){
 	default:
 		break;
 	}
-
+	auto imgVec = img->img();//vector
+	auto length = imgVec->size();
+	data_.clear();
+	//I can't believe iterating through the vector is the best option, look for a better one
+	for (size_t i = 0; i < length; i++)
+	{
+		data_.push_back(imgVec->Get(i));
+	}
+	field_mofified_ = true;
 }
 
 
