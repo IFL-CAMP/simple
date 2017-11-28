@@ -12,7 +12,7 @@ endif(WIN32)
 # Find FlatBuffers
 find_package(FlatBuffers REQUIRED)
 
-include_directories(include generated_include ${FLATBUFFERS_INCLUDE_DIR})
+include_directories(include/simple_msgs generated_include ${FLATBUFFERS_INCLUDE_DIR})
 
 file(GLOB_RECURSE SIMPLE_MSGS_HEADERS "*.h" "*.hpp")
 
