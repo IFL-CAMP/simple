@@ -125,19 +125,31 @@ public:
    * @brief TODO
    * @param headerBufPtr
    */
-  void setHeader(uint8_t* headerBufPtr);
+  void setHeader(uint8_t* headerBufPtr){
+	  std::lock_guard<std::mutex> lock(mutex_);
+	  header_ = headerBufPtr;
+	  field_mofified_ = true;
+  }
   /**
    * @brief TODO
    * @param originBufPtr
    */
-  void setOrigin(uint8_t* originBufPtr);
+  void setOrigin(uint8_t* originBufPtr){
+	  std::lock_guard<std::mutex> lock(mutex_);
+	  origin_ = originBufPtr;
+	  field_mofified_ = true;
+  }
   /**
    * @brief sets the wrapper data to the imgData and changes the field_modified to true, so the flatbuffer builder can
    * build a new ImageFbs table. Only the data type of the Image instance will be set and the others will be set to
    * empty.
    * @param imgData Vector to the linearized image, whose indexes follow the rule resX*resY*Z + resX*Y + X.
    */
-  void setData(std::vector<T> imgData);
+  void setData(std::vector<T> imgData){
+	  std::lock_guard<std::mutex> lock(mutex_);
+	  data_ = imgData;
+	  field_mofified_ = true;
+  }
 private:
   int resX_{ 0 }, resY_{ 0 }, resZ_{ 0 };
   double width_{ 0.0 }, height_{ 0.0 }, depth_{ 0.0 };
