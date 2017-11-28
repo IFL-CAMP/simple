@@ -1,6 +1,7 @@
 #pragma once
 
 #include "generic_message.h"
+#include "image_generated.h"
 
 namespace simple_msgs
 {
@@ -34,7 +35,11 @@ class Image : public GenericMessage
 	* @param frame_id
 	* @param timestamp
 	*/
-	Image(const std::string& encoding, const int resX, const int resY, const int resZ, const double width, const double height, const double depth, const std::vector<float>& data, const uint8_t* header, const uint8_t* origin);
+	Image(const std::string& encoding, const int resX, const int resY, const int resZ, const double width, const double height, const double depth, const std::vector<float>& data, const uint8_t* header, const uint8_t* origin){
+		flatbuffers::FlatBufferBuilder fbb;
+		auto dataVec = fbb.CreateVector(data);
+		auto offset = simple_msgs::CreatedataFloat(fbb, dataVec);
+	}
 
 
 private:
