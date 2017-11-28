@@ -3,7 +3,7 @@
 #include <memory>
 #include <zmq.hpp>
 #include <string>
-#include "generic_message.h"
+#include "simple_msgs/generic_message.h"
 #include "header_generated.h"
 
 namespace simple

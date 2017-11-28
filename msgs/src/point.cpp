@@ -1,4 +1,4 @@
 
-#include "point.h"
+#include "simple_msgs/point.h"
 
 

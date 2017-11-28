@@ -1,5 +1,5 @@
 
-#include "image.h"
+#include "simple_msgs/image.h"
 
 simple_msgs::data simple_msgs::Image<uint8_t>::getDataUnionType(){
 	return simple_msgs::data_dataUInt8;

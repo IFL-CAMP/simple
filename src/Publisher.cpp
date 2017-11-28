@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "publisher.h"
-#include "header.h"
+#include "simple/publisher.h"
+#include "simple_msgs/header.h"
 
 std::unique_ptr<zmq::context_t> simple::Publisher::context_ = std::make_unique<zmq::context_t>(1);
 

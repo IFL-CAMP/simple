@@ -2,9 +2,9 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include "subscriber.h"
-#include "generic_message.h"
-#include "header.h"
+#include "simple/subscriber.h"
+#include "simple_msgs/generic_message.h"
+#include "simple_msgs/header.h"
 
 static int s_interrupted = 0;
 static void s_signal_handler(int signal_value)

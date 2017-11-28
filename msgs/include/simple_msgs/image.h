@@ -14,7 +14,7 @@ class Image : public GenericMessage
 public:
   using GenericMessage::GenericMessage;
   /**
-   * @brief Wrapper for image data of type uint8.
+   * @brief Wrapper for image data. Instance type has to match the image data type.
    * @param encoding
    * @param resX
    * @param resY
@@ -39,6 +39,7 @@ public:
     , header_(simple_msgs::Header(headerBufPtr))
     , origin_(simple_msgs::Pose(originBufPtr))
     , data_(data)
+	, field_mofified_(true)
   {
   }
   /**
@@ -47,7 +48,7 @@ public:
    */
   Image<T>(const uint8_t* bufferPointer);
   /**
-   * @brief TODO
+   * @brief If there are changes to the data, clears the flatbuffer builder and creates a new ImageFbs table offset. If not, return the pointer to the buffer already existing
    * @return
    */
   uint8_t* getBufferData() const;
@@ -304,10 +305,6 @@ uint8_t* Image<T>::getBufferData() const
     field_mofified_ = false;
   }
   return builder_->GetBufferPointer();
-}
-template<typename T>
-void Image<T>::getDataUnionElem(){
-
 }
 
 }  // namespace simple_msgs

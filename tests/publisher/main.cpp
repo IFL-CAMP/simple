@@ -1,10 +1,10 @@
 // Test how the publisher works
 
 #include <iostream>
-#include "publisher.h"
+#include "simple/publisher.h"
 #include <signal.h>
 #include <string>
-#include "header.h"
+#include "simple_msgs/header.h"
 #include <thread>
 
 // handle interruptions

@@ -40,9 +40,9 @@ endif()
 
 ###### FILES AND FOLDERS NEEDED FOR COMPILATION
 
-include_directories(include/simple msgs/include/simple_msgs ${cppzmq_INCLUDE_DIR} ${ZeroMQ_INCLUDE_DIR} ${FLATBUFFERS_INCLUDE_DIR} msgs/generated_include) #needed to include the FLatbuffer headers here too
+include_directories(include msgs/include msgs/generated_include ${cppzmq_INCLUDE_DIR} ${ZeroMQ_INCLUDE_DIR} ${FLATBUFFERS_INCLUDE_DIR}) #needed to include the FLatbuffer headers here too
 
-file(GLOB SIMPLE_HEADERS "include/*.h" "include/*.hpp")
+file(GLOB SIMPLE_HEADERS "include/simple/*.h" "include/simple/*.hpp")
 
 set(SIMPLE_SRCS
   ${SIMPLE_HEADERS}
