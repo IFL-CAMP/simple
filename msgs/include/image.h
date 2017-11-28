@@ -5,6 +5,7 @@
 #include "image_generated.h"
 #include "header.h"
 #include "pose.h"
+#include "flatbuffers\reflection.h"
 
 namespace simple_msgs
 {
@@ -156,8 +157,41 @@ Image<T>::Image(const uint8_t* bufferPointer){
 	resX_ = i->resX();
 	resY_ = i->resY();
 	resZ_ = i->resZ();
+
+	width_ = i->width();
+	height_ = i->height();
+	depth_ = i->depth();
+
+	encoding_ = i->enconding();
+	//get the HeaderFbs from the bytes vector inside the image message and set each field of header to the correct value
+	auto head = i->Header();//get the vector of bytes
+	auto headData = head->data();//get the pointer to the data
+	auto h = simple_msgs::GetHeaderFbs(headData);//turn the data into a Header table
+	header_.setFrameID(h->frame_id());
+	header_.setSequenceNumber(h->sequence_number());
+	header_.setTimestamp(h->timestamp());
 	
 	auto type = i->imgData_type();
+
+	switch (type)
+	{
+	case simple_msgs::data_NONE:
+		break;
+	case simple_msgs::data_dataUInt8:
+		break;
+	case simple_msgs::data_dataInt16:
+		break;
+	case simple_msgs::data_dataFloat:
+		break;
+	case simple_msgs::data_dataDouble:
+		break;
+	case simple_msgs::data_MIN:
+		break;
+	case simple_msgs::data_MAX:
+		break;
+	default:
+		break;
+	}
 
 }
 
