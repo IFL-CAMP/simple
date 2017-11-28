@@ -29,10 +29,10 @@ int main(int argc, char* argv[])
     try
     {
       // receive message and print the content
-      auto h = sub.subscribe();
-      std::cout << "Received sequence number: " << h->sequence_number() << std::endl;
-      std::cout << "Received frame id: " << h->frame_id()->c_str() << std::endl;
-      std::cout << "Received time stamp: " << h->timestamp() << std::endl;
+		auto h = sub.subscribe();
+      std::cout << "Received sequence number: " << (**h).sequence_number() << std::endl;
+	  std::cout << "Received frame id: " << (**h).frame_id()->c_str() << std::endl;
+	  std::cout << "Received time stamp: " << (**h).timestamp() << std::endl;
     }
 
     catch (zmq::error_t& e)

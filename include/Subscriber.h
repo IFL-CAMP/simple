@@ -8,6 +8,23 @@
 
 namespace simple
 {
+template <typename T>
+class Message
+{
+  template <typename T>
+  friend class Subscriber;
+
+public:
+  const T& operator*()
+  {
+    return *m_data;
+  }
+
+private:
+  std::unique_ptr<zmq::message_t> m_zmqMessage;
+  const T* m_data;
+};
+
 /**
  * @brief Creates a subscriber socket.
  */
@@ -44,13 +61,13 @@ public:
    * @brief publishes the message through the open socket.
    * @return TODO
    */
-  const T* subscribe()
+  const std::shared_ptr<Message<T> > subscribe()
   {
-    zmq::message_t ZMQmessage;
-
+    std::shared_ptr<Message<T> > msg = std::make_shared<Message<T> >();
+    msg->m_zmqMessage = std::make_unique<zmq::message_t>();
     try
     {
-      socket_->recv(&ZMQmessage);  // receive messages that fit the filter of the socket
+      socket_->recv(msg->m_zmqMessage.get());  // receive messages that fit the filter of the socket
     }
     catch (zmq::error_t& e)
     {
@@ -58,23 +75,24 @@ public:
     }
 
     // test the received data for correct type
-    auto buf = simple_msgs::GetHeaderFbs(ZMQmessage.data());
+    auto buf = simple_msgs::GetHeaderFbs(msg->m_zmqMessage->data());
     auto seq = buf->sequence_number();
     auto framr = buf->frame_id();
     auto time = buf->timestamp();
 
     // return the received data as buffer
-    auto data = flatbuffers::GetRoot<T>(ZMQmessage.data());
+    auto data = flatbuffers::GetRoot<T>(msg->m_zmqMessage->data());
+    msg->m_data = data;
     auto seq2 = data->sequence_number();
     auto framr2 = data->frame_id();
     auto time2 = data->timestamp();
 
     // verify the consistency of the data
-    flatbuffers::Verifier Ver((uint8_t*)(ZMQmessage.data()), ZMQmessage.size());
+    flatbuffers::Verifier Ver((uint8_t*)(msg->m_zmqMessage->data()), msg->m_zmqMessage->size());
 
     auto check = Ver.VerifyTable(data);
 
-    return data;
+    return msg;
   }
 
 private:
