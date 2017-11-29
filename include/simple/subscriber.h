@@ -5,6 +5,7 @@
 #include <string>
 #include "simple_msgs/generic_message.h"
 #include "header_generated.h"
+#include <thread>
 
 namespace simple
 {
@@ -47,14 +48,20 @@ public:
     {
       std::cerr << "Error - Could not bind to the socket:" << e.what();
     }
-
+	//set the topic for the messages to be received
     filter();
+
+	//start thread
+	t_(subscribe);
   }
 
   ~Subscriber<T>()
   {
     socket_->close();
     context_->close();
+
+	//join thread
+	t_.join();
   }
 
   /**
@@ -74,23 +81,9 @@ public:
       std::cerr << "Could not receive message: " << e.what();
     }
 
-    // test the received data for correct type
-    auto buf = simple_msgs::GetHeaderFbs(msg->m_zmqMessage->data());
-    auto seq = buf->sequence_number();
-    auto framr = buf->frame_id();
-    auto time = buf->timestamp();
-
     // return the received data as buffer
     auto data = flatbuffers::GetRoot<T>(msg->m_zmqMessage->data());
     msg->m_data = data;
-    auto seq2 = data->sequence_number();
-    auto framr2 = data->frame_id();
-    auto time2 = data->timestamp();
-
-    // verify the consistency of the data
-    flatbuffers::Verifier Ver((uint8_t*)(msg->m_zmqMessage->data()), msg->m_zmqMessage->size());
-
-    auto check = Ver.VerifyTable(data);
 
     return msg;
   }
@@ -101,7 +94,7 @@ private:
     // No topic for now
     socket_->setsockopt(ZMQ_SUBSCRIBE, "", 0);
   }
-
+  std::thread t_;
   static std::unique_ptr<zmq::context_t> context_;
   std::unique_ptr<zmq::socket_t> socket_;  //<
 };

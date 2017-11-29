@@ -39,19 +39,86 @@ public:
     , header_(simple_msgs::Header(headerBufPtr))
     , origin_(simple_msgs::Pose(originBufPtr))
     , data_(data)
-	, field_mofified_(true)
+    , field_mofified_(true)
   {
   }
   /**
    * @brief TODO
    * @param bufferPointer
    */
-  Image<T>(const uint8_t* bufferPointer);
+  Image<T>(const uint8_t* bufferPointer)
+  {
+    std::lock_guard<std::mutex> lock(mutex_);
+    auto i = GetImageFbs(bufferPointer);
+
+    resX_ = i->resX();
+    resY_ = i->resY();
+    resZ_ = i->resZ();
+
+    width_ = i->width();
+    height_ = i->height();
+    depth_ = i->depth();
+
+    encoding_ = i->enconding();
+
+    // get the HeaderFbs from the bytes vector inside the image message and set each field of header to the correct
+    // value
+    auto head = i->Header();                       // get the vector of bytes
+    auto headData = head->data();                  // get the pointer to the data
+    auto h = simple_msgs::GetHeaderFbs(headData);  // turn the data into a Header table
+    header_.setFrameID(h->frame_id());
+    header_.setSequenceNumber(h->sequence_number());
+    header_.setTimestamp(h->timestamp());
+
+    // get the PoseFbs from the bytes vector inside the image message and set each field of Pose to the correct values
+    auto pose = i->origin();
+    auto poseData = pose->data();
+    auto p = simple_msgs::GetPoseFbs(poseData);
+    origin_.setPosition(p->position()->data());
+    origin_.setQuaternion(p->quaternion()->data());
+
+    auto type = i->imgData_type();
+
+    switch (type)
+    {
+      case simple_msgs::data_dataUInt8:
+        // get the data vector
+        data_ = static_cast<const dataUInt8*>(i->imgData())->img()->data();
+        break;
+      case simple_msgs::data_dataInt16:
+        data_ = static_cast<const dataInt16*>(i->imgData())->img()->data();
+        break;
+      case simple_msgs::data_dataFloat:
+        data_ = static_cast<const dataFloat*>(i->imgData())->img()->data();
+        break;
+      case simple_msgs::data_dataDouble:
+        data_ = static_cast<const dataDouble*>(i->imgData())->img()->data();
+        break;
+    }
+    field_mofified_ = true;
+  }
   /**
-   * @brief If there are changes to the data, clears the flatbuffer builder and creates a new ImageFbs table offset. If not, return the pointer to the buffer already existing
+   * @brief If there are changes to the data, clears the flatbuffer builder and creates a new ImageFbs table offset. If
+   * not, return the pointer to the buffer already existing
    * @return
    */
-  uint8_t* getBufferData() const;
+  uint8_t* getBufferData() const
+  {
+    std::lock_guard<std::mutex> lock(mutex_);
+    if (field_mofified_)
+    {
+      builder_->Clear();
+      auto type = getDataUnionType();
+      auto elem = getDataUnionElem();
+      auto i = CreateImageFbs(*builder_, builder_->CreateString(encoding_),
+                              builder_->CreateVector(origin_.getBufferData(), origin_.getBufferSize()), resX_, resY_,
+                              resZ_, width_, height_, depth_, type, elem,
+                              builder_->CreateVector(header_.getBufferData(), header_.getBufferSize()));
+      builder_->Finish(i);
+      field_mofified_ = false;
+    }
+    return builder_->GetBufferPointer();
+  }
   /**
    * @brief TODO
    * @return
@@ -178,6 +245,7 @@ public:
     depth_ = depth;
     field_mofified_ = true;
   }
+
   /**
    * @brief TODO
    * @param headerBufPtr
@@ -188,6 +256,7 @@ public:
     header_ = headerBufPtr;
     field_mofified_ = true;
   }
+
   /**
    * @brief TODO
    * @param originBufPtr
@@ -198,6 +267,7 @@ public:
     origin_ = originBufPtr;
     field_mofified_ = true;
   }
+
   /**
    * @brief sets the wrapper data to the imgData and changes the field_modified to true, so the flatbuffer builder can
    * build a new ImageFbs table. Only the data type of the Image instance will be set and the others will be set to
@@ -215,7 +285,7 @@ private:
   int resX_{ 0 }, resY_{ 0 }, resZ_{ 0 };
   double width_{ 0.0 }, height_{ 0.0 }, depth_{ 0.0 };
   std::string encoding_{ "" };
-  std::vector<T> data_{ {} };
+  T* data_{ {} };
   simple_msgs::Header header_;
   simple_msgs::Pose origin_;
   mutable bool field_mofified_{ false };
@@ -223,90 +293,4 @@ private:
   simple_msgs::data getDataUnionType() const;
   flatbuffers::Offset<void> getDataUnionElem() const;
 };
-template <typename T>
-Image<T>::Image(const uint8_t* bufferPointer)
-{
-  std::lock_guard<std::mutex> lock(mutex_);
-  auto i = GetImageFbs(bufferPointer);
-
-  resX_ = i->resX();
-  resY_ = i->resY();
-  resZ_ = i->resZ();
-
-  width_ = i->width();
-  height_ = i->height();
-  depth_ = i->depth();
-
-  encoding_ = i->enconding();
-
-  // get the HeaderFbs from the bytes vector inside the image message and set each field of header to the correct value
-  auto head = i->Header();                       // get the vector of bytes
-  auto headData = head->data();                  // get the pointer to the data
-  auto h = simple_msgs::GetHeaderFbs(headData);  // turn the data into a Header table
-  header_.setFrameID(h->frame_id());
-  header_.setSequenceNumber(h->sequence_number());
-  header_.setTimestamp(h->timestamp());
-
-  // get the PoseFbs from the bytes vector inside the image message and set each field of Pose to the correct values
-  auto pose = i->origin();
-  auto poseData = pose->data();
-  auto p = simple_msgs::GetPoseFbs(poseData);
-  origin_.setPosition(p->position()->data());
-  origin_.setQuaternion(p->quaternion()->data());
-
-  auto type = i->imgData_type();
-
-  switch (type)
-  {
-    case simple_msgs::data_NONE:
-      break;
-    case simple_msgs::data_dataUInt8:
-      // get the data vector
-      auto img = static_cast<const dataUInt8*>(i->imgData());
-      break;
-    case simple_msgs::data_dataInt16:
-      auto img = static_cast<const dataInt16*>(i->imgData());
-      break;
-    case simple_msgs::data_dataFloat:
-      auto img = static_cast<const dataFloat*>(i->imgData());
-      break;
-    case simple_msgs::data_dataDouble:
-      auto img = static_cast<const dataDouble*>(i->imgData());
-      break;
-    case simple_msgs::data_MIN:
-      break;
-    case simple_msgs::data_MAX:
-      break;
-    default:
-      break;
-  }
-  auto imgVec = img->img();  // vector
-  auto length = imgVec->size();
-  data_.clear();
-  // I can't believe iterating through the vector is the best option, look for a better one
-  for (size_t i = 0; i < length; i++)
-  {
-    data_.push_back(imgVec->Get(i));
-  }
-  field_mofified_ = true;
-}
-template <typename T>
-uint8_t* Image<T>::getBufferData() const
-{
-  std::lock_guard<std::mutex> lock(mutex_);
-  if (field_mofified_)
-  {
-    builder_->Clear();
-	auto type = getDataUnionType();
-	auto elem = getDataUnionElem();
-    auto i =
-        CreateImageFbs(*builder_, builder_->CreateString(encoding_), builder_->CreateVector(origin_.getBufferData(), origin_.getBufferSize()),
-                       resX_, resY_, resZ_, width_, height_, depth_, type, elem,
-                       builder_->CreateVector(header_.getBufferData(), header_.getBufferSize()));
-    builder_->Finish(i);
-    field_mofified_ = false;
-  }
-  return builder_->GetBufferPointer();
-}
-
 }  // namespace simple_msgs
