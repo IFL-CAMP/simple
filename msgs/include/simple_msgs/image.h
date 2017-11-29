@@ -287,7 +287,8 @@ private:
   double width_{ 0.0 }, height_{ 0.0 }, depth_{ 0.0 };
   std::string encoding_{ "" };
   T* data_{ nullptr };
-  int dataLength_ simple_msgs::Header header_;
+  int dataLength_;
+  simple_msgs::Header header_;
   simple_msgs::Pose origin_;
   mutable bool field_mofified_{ false };
   mutable std::mutex mutex_;
