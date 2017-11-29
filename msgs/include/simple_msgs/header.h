@@ -3,6 +3,7 @@
 #include <mutex>
 #include "generic_message.h"
 #include "header_generated.h"
+#include <typeinfo>
 
 namespace simple_msgs
 {
@@ -21,7 +22,7 @@ public:
    * @param timestamp
    */
   Header(const int seq_n, const std::string& frame_id, const double timestamp)
-	  : seq_n_(seq_n), frame_id_(frame_id), timestamp_(timestamp), field_mofified_(true)
+    : seq_n_(seq_n), frame_id_(frame_id), timestamp_(timestamp), field_mofified_(true)
   {
   }
 
@@ -96,7 +97,8 @@ public:
   }
 
   /**
-   * @brief Modifies the data for time stamp. Keep in mind creating new messages from scratch can be more efficient than mutating existing ones
+   * @brief Modifies the data for time stamp. Keep in mind creating new messages from scratch can be more efficient than
+   * mutating existing ones
    * @param timestamp Seconds since the epoch, when the data in the message was generated
    */
   void setTimestamp(const double timestamp)
@@ -113,4 +115,4 @@ private:
   mutable bool field_mofified_{ false };
   mutable std::mutex mutex_;
 };
-}
+}  // namespace simple_msgs

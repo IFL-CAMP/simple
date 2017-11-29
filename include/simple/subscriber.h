@@ -6,6 +6,7 @@
 #include "simple_msgs/generic_message.h"
 #include "header_generated.h"
 #include <thread>
+#include "flatbuffers\reflection.h"
 
 namespace simple
 {
@@ -34,11 +35,11 @@ class Subscriber
 {
 public:
   /**
-   * @brief Class constructor. Creates a ZMQ_SUB socket and connects it to the port.
+   * @brief Class constructor. Creates a ZMQ_SUB socket and connects it to the port. The type of the subscriber should be a wrapper message type
    * @param port string for the connection port.
    * @param context reference to the existing context.
    */
-	Subscriber<T>(const std::string& port, std::function<void(simple_msgs::GenericMessage)> callback)
+  Subscriber<T>(const std::string& port, std::function<void(simple_msgs::GenericMessage)> callback)
     : socket_(std::make_unique<zmq::socket_t>(*context_, ZMQ_SUB))
   {
     try
@@ -86,13 +87,16 @@ public:
       {
         std::cerr << "Could not receive message: " << e.what();
       }
+
+      // TODO
+      // return the received data as buffer
+
+      auto data = flatbuffers::GetAnyRoot(ZMQmsg->data())->GetBufferPointer();  // data is a pointer to the table offset
       // wrap the received data into the correct wrapper type
-	  //TODO
-		// return the received data as buffer
-		auto data = flatbuffers::GetRoot<T>(msg->m_zmqMessage->data());
+	  T wrappedData(data);
 
       // call the callback function with the message wrapper
-		callback(data);
+	  callback(wrappedData);
     }
   }
 
