@@ -220,8 +220,8 @@ private:
   simple_msgs::Pose origin_;
   mutable bool field_mofified_{ false };
   mutable std::mutex mutex_;
-  simple_msgs::data getDataUnionType();
-  flatbuffers::Offset<void> getDataUnionElem();
+  simple_msgs::data getDataUnionType() const;
+  flatbuffers::Offset<void> getDataUnionElem() const;
 };
 template <typename T>
 Image<T>::Image(const uint8_t* bufferPointer)
@@ -297,9 +297,11 @@ uint8_t* Image<T>::getBufferData() const
   if (field_mofified_)
   {
     builder_->Clear();
+	auto type = getDataUnionType();
+	auto elem = getDataUnionElem();
     auto i =
-        CreateImageFbs(*builder_, encoding_, builder_->CreateVector(origin_.getBufferData(), origin_.getBufferSize()),
-                       resX_, resY_, resZ_, width_, height_, depth_, getDataUnionType(), getDataUnionElem(),
+        CreateImageFbs(*builder_, builder_->CreateString(encoding_), builder_->CreateVector(origin_.getBufferData(), origin_.getBufferSize()),
+                       resX_, resY_, resZ_, width_, height_, depth_, type, elem,
                        builder_->CreateVector(header_.getBufferData(), header_.getBufferSize()));
     builder_->Finish(i);
     field_mofified_ = false;
