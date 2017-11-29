@@ -41,14 +41,14 @@ public:
 
   ~Subscriber<T>()
   {
-    socket_->close();
-    context_->close();
-
     // stop the subscription loop
     alive_ = false;
 
     // join thread
     t_.join();
+
+    socket_->close();
+    context_->close();
   }
 
   /**
