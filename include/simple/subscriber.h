@@ -67,6 +67,8 @@ public:
 
     // join thread
     t_.join();
+
+	std::cout << "Subscriber destroyed";
   }
 
   /**

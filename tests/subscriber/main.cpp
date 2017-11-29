@@ -5,41 +5,21 @@
 #include "simple/subscriber.h"
 #include "simple_msgs/generic_message.h"
 #include "simple_msgs/header.h"
+#include <functional>
 
-static int s_interrupted = 0;
-static void s_signal_handler(int signal_value)
-{
-  s_interrupted = 1;
+//define a dummy callback function
+void dummyFun(simple_msgs::Header){
+	std::cout << "Callback!!" << std::endl;
 }
-
-static void s_catch_signals(void)
-{
-  signal(SIGINT, s_signal_handler);
-  signal(SIGTERM, s_signal_handler);
-}
+std::function<void(simple_msgs::Header)> callback = dummyFun;
 
 int main(int argc, char* argv[])
 {
-  // create the subscriber
-  simple::Subscriber<simple_msgs::HeaderFbs> sub("tcp://localhost:5555");
+  // create the subscriber: this should start a new thread that get the messages
+  simple::Subscriber<simple_msgs::HeaderFbs> sub("tcp://localhost:5555",callback);
 
-  s_catch_signals();
-  while (!s_interrupted)
-  {
-    try
-    {
-      // receive message and print the content
-		auto h = sub.subscribe();
-      std::cout << "Received sequence number: " << (**h).sequence_number() << std::endl;
-	  std::cout << "Received frame id: " << (**h).frame_id()->c_str() << std::endl;
-	  std::cout << "Received time stamp: " << (**h).timestamp() << std::endl;
-    }
+  //wait for 15 seconds
+  std::this_thread::sleep_for(std::chrono::seconds(15));
 
-    catch (zmq::error_t& e)
-    {
-      std::cout << "Something went wrong with the subscription" << std::endl;
-    }
-  }
-
-  std::cout << "Interruption received" << std::endl;
+  std::cout << "Leaving main scope" << std::endl;
 }

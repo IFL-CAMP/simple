@@ -27,7 +27,7 @@ public:
    * @param originBufPtr Pointer to the flatbuffer created for the origin of the image. Origin is of type Pose.
    */
   Image<T>(const std::string& encoding, const int resX, const int resY, const int resZ, const double width,
-           const double height, const double depth, const std::vector<T>& data, uint8_t* headerBufPtr,
+           const double height, const double depth, T* data, int dataLength, uint8_t* headerBufPtr,
            uint8_t* originBufPtr)
     : encoding_(encoding)
     , resX_(resX)
@@ -39,6 +39,7 @@ public:
     , header_(simple_msgs::Header(headerBufPtr))
     , origin_(simple_msgs::Pose(originBufPtr))
     , data_(data)
+	, dataLength_(dataLength)
     , field_mofified_(true)
   {
   }
@@ -285,8 +286,8 @@ private:
   int resX_{ 0 }, resY_{ 0 }, resZ_{ 0 };
   double width_{ 0.0 }, height_{ 0.0 }, depth_{ 0.0 };
   std::string encoding_{ "" };
-  T* data_{ {} };
-  simple_msgs::Header header_;
+  T* data_{ nullptr };
+  int dataLength_ simple_msgs::Header header_;
   simple_msgs::Pose origin_;
   mutable bool field_mofified_{ false };
   mutable std::mutex mutex_;

@@ -28,23 +28,23 @@ simple_msgs::data simple_msgs::Image<float>::getDataUnionType() const
 template <>
 flatbuffers::Offset<void> simple_msgs::Image<uint8_t>::getDataUnionElem() const
 {
-  return simple_msgs::CreatedataUInt8(*builder_, builder_->CreateVector(data_)).Union();
+  return simple_msgs::CreatedataUInt8(*builder_, builder_->CreateVector(data_, dataLength_)).Union();
 }
 
 template <>
 flatbuffers::Offset<void> simple_msgs::Image<int16_t>::getDataUnionElem() const
 {
-  return simple_msgs::CreatedataInt16(*builder_, builder_->CreateVector(data_)).Union();
+  return simple_msgs::CreatedataInt16(*builder_, builder_->CreateVector(data_, dataLength_)).Union();
 }
 
 template <>
 flatbuffers::Offset<void> simple_msgs::Image<float>::getDataUnionElem() const
 {
-  return simple_msgs::CreatedataFloat(*builder_, builder_->CreateVector(data_)).Union();
+  return simple_msgs::CreatedataFloat(*builder_, builder_->CreateVector(data_, dataLength_)).Union();
 }
 
 template <>
 flatbuffers::Offset<void> simple_msgs::Image<double>::getDataUnionElem() const
 {
-  return simple_msgs::CreatedataDouble(*builder_, builder_->CreateVector(data_)).Union();
+  return simple_msgs::CreatedataDouble(*builder_, builder_->CreateVector(data_, dataLength_)).Union();
 }
