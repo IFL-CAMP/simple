@@ -38,7 +38,8 @@ public:
    * @param port string for the connection port.
    * @param context reference to the existing context.
    */
-  Subscriber<T>(const std::string& port) : socket_(std::make_unique<zmq::socket_t>(*context_, ZMQ_SUB))
+	Subscriber<T>(const std::string& port, std::function<void(simple_msgs::GenericMessage)> callback)
+    : socket_(std::make_unique<zmq::socket_t>(*context_, ZMQ_SUB))
   {
     try
     {
@@ -48,11 +49,11 @@ public:
     {
       std::cerr << "Error - Could not bind to the socket:" << e.what();
     }
-	//set the topic for the messages to be received
+    // set the topic for the messages to be received
     filter();
 
-	//start thread
-	t_(subscribe);
+    // start thread of subscription
+    t_(subscribe, callback);
   }
 
   ~Subscriber<T>()
@@ -60,32 +61,39 @@ public:
     socket_->close();
     context_->close();
 
-	//join thread
-	t_.join();
+    // stop the subscription loop
+    stop_ = true;
+
+    // join thread
+    t_.join();
   }
 
   /**
    * @brief publishes the message through the open socket.
-   * @return TODO
    */
-  const std::shared_ptr<Message<T> > subscribe()
+  void subscribe(std::function<void(simple_msgs::GenericMessage)> callback)
   {
-    std::shared_ptr<Message<T> > msg = std::make_shared<Message<T> >();
-    msg->m_zmqMessage = std::make_unique<zmq::message_t>();
-    try
+    // while the subscriber is still alive
+    while (!stop_)
     {
-      socket_->recv(msg->m_zmqMessage.get());  // receive messages that fit the filter of the socket
-    }
-    catch (zmq::error_t& e)
-    {
-      std::cerr << "Could not receive message: " << e.what();
-    }
+      // start a ZMQ message to receive the data
+      zmq::message_t ZMQmsg;
+      try
+      {
+        socket_->recv(&ZMQmsg);  // receive messages that fit the filter of the socket
+      }
+      catch (zmq::error_t& e)
+      {
+        std::cerr << "Could not receive message: " << e.what();
+      }
+      // wrap the received data into the correct wrapper type
+	  //TODO
+		// return the received data as buffer
+		auto data = flatbuffers::GetRoot<T>(msg->m_zmqMessage->data());
 
-    // return the received data as buffer
-    auto data = flatbuffers::GetRoot<T>(msg->m_zmqMessage->data());
-    msg->m_data = data;
-
-    return msg;
+      // call the callback function with the message wrapper
+		callback(data);
+    }
   }
 
 private:
@@ -95,6 +103,7 @@ private:
     socket_->setsockopt(ZMQ_SUBSCRIBE, "", 0);
   }
   std::thread t_;
+  bool stop_{ false };
   static std::unique_ptr<zmq::context_t> context_;
   std::unique_ptr<zmq::socket_t> socket_;  //<
 };
