@@ -11,9 +11,9 @@ public:
   using GenericMessage::GenericMessage;
 
   /**
-  * @brief TODO
-  * @param bufferPointer
-  */
+   * @brief TODO
+   * @param bufferPointer
+   */
   Quaternion(const uint8_t* bufferPointer);
   /**
    * @brief TODO

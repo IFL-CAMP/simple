@@ -36,10 +36,10 @@ public:
     , width_(width)
     , height_(height)
     , depth_(depth)
-    , header_(simple_msgs::Header(headerBufPtr))
-    , origin_(simple_msgs::Pose(originBufPtr))
+    , header_(headerBufPtr)
+    , origin_(originBufPtr)
     , data_(data)
-	, dataLength_(dataLength)
+    , dataLength_(dataLength)
     , field_mofified_(true)
   {
   }

@@ -6,14 +6,14 @@
 #include "simple_msgs/generic_message.h"
 #include "header_generated.h"
 #include <thread>
-#include "flatbuffers\reflection.h"
+#include "flatbuffers/reflection.h"
 
 namespace simple
 {
 template <typename T>
 class Message
 {
-  template <typename T>
+  template <typename G>
   friend class Subscriber;
 
 public:
@@ -34,12 +34,21 @@ template <typename T>
 class Subscriber
 {
 public:
+  Subscriber<T>(const std::string& port, const std::function<int(int, int)>& callback)
+    : socket_(std::make_unique<zmq::socket_t>(*context_, ZMQ_SUB))
+  {
+    while (true)
+    {
+      callback(1, 2);
+    }
+  }
   /**
-   * @brief Class constructor. Creates a ZMQ_SUB socket and connects it to the port. The type of the subscriber should be a wrapper message type
+   * @brief Class constructor. Creates a ZMQ_SUB socket and connects it to the port. The type of the subscriber
+   * should be a wrapper message type
    * @param port string for the connection port.
    * @param context reference to the existing context.
    */
-  Subscriber<T>(const std::string& port, std::function<void(simple_msgs::GenericMessage)> callback)
+  Subscriber<T>(const std::string& port, const std::function<void(simple_msgs::GenericMessage)>& callback)
     : socket_(std::make_unique<zmq::socket_t>(*context_, ZMQ_SUB))
   {
     try
@@ -54,7 +63,6 @@ public:
     filter();
 
     // start thread of subscription
-    t_(subscribe, callback);
   }
 
   ~Subscriber<T>()
@@ -68,7 +76,7 @@ public:
     // join thread
     t_.join();
 
-	std::cout << "Subscriber destroyed";
+    std::cout << "Subscriber destroyed";
   }
 
   /**
@@ -93,12 +101,13 @@ public:
       // TODO
       // return the received data as buffer
 
-      auto data = flatbuffers::GetAnyRoot(ZMQmsg->data())->GetBufferPointer();  // data is a pointer to the table offset
+      auto data = flatbuffers::GetAnyRoot(static_cast<uint8_t*>(ZMQmsg.data()));  // data is a pointer to
+                                                                                  // the table offset
       // wrap the received data into the correct wrapper type
-	  T wrappedData(data);
+      T wrappedData(data);
 
       // call the callback function with the message wrapper
-	  callback(wrappedData);
+      callback(wrappedData);
     }
   }
 

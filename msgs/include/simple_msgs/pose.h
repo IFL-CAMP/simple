@@ -16,7 +16,9 @@ public:
    * @param position
    * @param quaternion
    */
-  Pose(uint8_t* position, uint8_t* quaternion):quaternion_(simple_msgs::Quaternion(quaternion)),position_(simple_msgs::Point(position)){  }
+  Pose(uint8_t* position, uint8_t* quaternion) : quaternion_(quaternion), position_(position)
+  {
+  }
   /**
    * @brief TODO
    * @param bufferPointer
@@ -33,14 +35,14 @@ public:
    */
   int getBufferSize() const;
   /**
-  * @brief TODO
-  * @param quaternion
-  */
+   * @brief TODO
+   * @param quaternion
+   */
   void setQuaternion(uint8_t* quaternion);
   /**
-  * @brief TODO
-  * @param position
-  */
+   * @brief TODO
+   * @param position
+   */
   void setPosition(uint8_t* position);
 
 private:
