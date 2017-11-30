@@ -70,8 +70,6 @@ if(WIN32)
   install(FILES ${ZMQ_DYNAMIC_LIBRARY} DESTINATION ${CMAKE_INSTALL_BINDIR}) # TODO: check this variable on windows
 endif(WIN32)
 
-message(${ZMQ_DYNAMIC_LIBRARY})
-
 ###### TESTS
 
 add_subdirectory(tests)

@@ -4,6 +4,7 @@
 #include <zmq.hpp>
 #include <string>
 #include "simple_msgs/generic_message.h"
+#include "simple\contextCloser.h"
 
 namespace simple
 {
@@ -30,7 +31,7 @@ public:
   void publish(const uint8_t* msg, const int size);
 
 private:
-  static std::unique_ptr<zmq::context_t> context_;
+	static std::unique_ptr<zmq::context_t, contextCloser> context_;
   std::unique_ptr<zmq::socket_t> socket_;  //<
 };
 

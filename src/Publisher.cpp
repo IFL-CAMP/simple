@@ -3,7 +3,7 @@
 #include "simple/publisher.h"
 #include "simple_msgs/header.h"
 
-std::unique_ptr<zmq::context_t> simple::Publisher::context_ = std::make_unique<zmq::context_t>(1);
+std::unique_ptr<zmq::context_t, contextCloser> simple::Publisher::context_(new zmq::context_t(1));
 
 simple::Publisher::Publisher(const std::string& port) : socket_(std::make_unique<zmq::socket_t>(*context_, ZMQ_PUB))
 {
@@ -20,7 +20,6 @@ simple::Publisher::Publisher(const std::string& port) : socket_(std::make_unique
 simple::Publisher::~Publisher()
 {
   socket_->close();
-  context_->close();
 }
 
 void simple::Publisher::publish(const uint8_t* msg, const int size)
@@ -29,6 +28,8 @@ void simple::Publisher::publish(const uint8_t* msg, const int size)
   const char* topic = flatbuffers::GetBufferIdentifier(msg);
 
   zmq::message_t ZMQ_message(size);
+
+
   memcpy(ZMQ_message.data(), msg, size);
 
   try

@@ -5,6 +5,7 @@
 #include <zmq.hpp>
 #include <string>
 #include <thread>
+#include "simple\contextCloser.h"
 
 namespace simple
 {
@@ -48,7 +49,6 @@ public:
     t_.join();
 
     socket_->close();
-    context_->close();
   }
 
   /**
@@ -87,12 +87,12 @@ private:
 
   std::thread t_;
   bool alive_{ true };
-  static std::unique_ptr<zmq::context_t> context_;
+  static std::unique_ptr<zmq::context_t, contextCloser> context_;
   std::unique_ptr<zmq::socket_t> socket_;  //<
   std::function<void(const T&)> callback_;
 };
 
 template <typename T>
-std::unique_ptr<zmq::context_t> Subscriber<T>::context_ = std::make_unique<zmq::context_t>(1);
+std::unique_ptr<zmq::context_t, contextCloser> Subscriber<T>::context_(new zmq::context_t(1));
 
 }  // namespace simple
