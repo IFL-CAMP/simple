@@ -6,6 +6,8 @@
 #include <string>
 #include "simple_msgs/header.h"
 #include <thread>
+#include "simple_msgs\image.h"
+#include "simple_msgs\pose.h"
 
 // handle interruptions
 static int s_interrupted = 0;
@@ -24,11 +26,8 @@ int main(int argc, char* argv[])
 {
   //using namespace std::chrono_literals;
 
-  // create a header message, with wrapper
-  int seq_n = 1;
-  std::string frame_id = "ID";
-  double timeStmp = 0.1234;
-  simple_msgs::Header h(seq_n, frame_id, timeStmp);
+  // create a message, with wrapper
+	simple_msgs::Point p(1.0, 2.0, 3.0);
 
   // create a publisher
   simple::Publisher pub("tcp://*:5555");
@@ -39,7 +38,7 @@ int main(int argc, char* argv[])
   {
     try
     {  // send the message continously
-      pub.publish(h);
+      pub.publish(p);
       std::cout << "Header Message published" << std::endl;
 	  std::this_thread::sleep_for(std::chrono::seconds(1));
     }
@@ -48,6 +47,6 @@ int main(int argc, char* argv[])
       std::cout << "Something went wrong with the publishing..." << std::endl;
     }
   }
-
+  std::cout << "interruption received"<<std::endl;
   return 0;
 }

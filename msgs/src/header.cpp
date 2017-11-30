@@ -14,8 +14,14 @@ uint8_t* simple_msgs::Header::getBufferData() const
   if (field_mofified_)
   {
     builder_->Clear();
-    auto h = CreateHeaderFbs(*builder_, seq_n_, builder_->CreateString(frame_id_), timestamp_);
-    builder_->Finish(h);
+	//all flatbuffer string must be created before the creation of the table builder!
+	auto frameIdStr = builder_->CreateString(frame_id_);
+	simple_msgs::HeaderFbsBuilder hBuilder(*builder_);
+	hBuilder.add_frame_id(frameIdStr);
+	hBuilder.add_sequence_number(seq_n_);
+	hBuilder.add_timestamp(timestamp_);
+	auto h = hBuilder.Finish();
+	simple_msgs::FinishHeaderFbsBuffer(*builder_, h);//we have to explicitly call this method if we want the file_identifier to be set
     field_mofified_ = false;
   }
   return builder_->GetBufferPointer();
