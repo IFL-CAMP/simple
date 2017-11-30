@@ -1,5 +1,6 @@
 #pragma once
 
+#include <mutex>
 #include "generic_message.h"
 #include "pose_generated.h"
 #include "quaternion.h"
@@ -48,5 +49,7 @@ public:
 private:
   simple_msgs::Quaternion quaternion_;
   simple_msgs::Point position_;
+  mutable bool field_mofified_{ false };
+  mutable std::mutex mutex_;
 };
 }  // namespace simple_msgs

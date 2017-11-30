@@ -109,13 +109,26 @@ public:
     if (field_mofified_)
     {
       builder_->Clear();
+	  //flatbuffer strings and vectors must be created before the start of the table builder
+	  auto encodingStr = builder_->CreateString(encoding_);
+	  auto headerVec = builder_->CreateVector(header_.getBufferData(), header_.getBufferSize());
+	  auto originVec = builder_->CreateVector(origin_.getBufferData(), origin_.getBufferSize());
       auto type = getDataUnionType();
       auto elem = getDataUnionElem();
-      auto i = CreateImageFbs(*builder_, builder_->CreateString(encoding_),
-                              builder_->CreateVector(origin_.getBufferData(), origin_.getBufferSize()), resX_, resY_,
-                              resZ_, width_, height_, depth_, type, elem,
-                              builder_->CreateVector(header_.getBufferData(), header_.getBufferSize()));
-      builder_->Finish(i);
+	  simple_msgs::ImageFbsBuilder iBuilder(*builder_);
+	  iBuilder.add_depth(depth_);
+	  iBuilder.add_enconding(encodingStr);
+	  iBuilder.add_Header(headerVec);
+	  iBuilder.add_height(height_);
+	  iBuilder.add_imgData(elem);
+	  iBuilder.add_imgData_type(type);
+	  iBuilder.add_origin(originVec);
+	  iBuilder.add_resX(resX_);
+	  iBuilder.add_resY(resY_);
+	  iBuilder.add_resZ(resZ_);
+	  iBuilder.add_width(width_);
+	  auto i = iBuilder.Finish();
+	  simple_msgs::FinishImageFbsBuffer(*builder_, i);//we have to explicitly call this method if we want the file_identifier to be set
       field_mofified_ = false;
     }
     return builder_->GetBufferPointer();
