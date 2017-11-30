@@ -19,6 +19,7 @@ public:
    */
   Point(const double x, const double y, const double z) : x_(x), y_(y), z_(z), field_mofified_(true)
   {
+	  topic_ = simple_msgs::PointFbsIdentifier();
   }
 
   /**
@@ -39,12 +40,9 @@ public:
    */
   int getBufferSize() const{ return builder_->GetSize(); }
 
-  static const char* topic_;
-
 private:
 	double x_, y_, z_;
 	mutable bool field_mofified_{ false };
 	mutable std::mutex mutex_;
 };
-const char* Point::topic_ = simple_msgs::PointFbsIdentifier();
 }  // namespace simple_msgs

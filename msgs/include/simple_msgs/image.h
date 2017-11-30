@@ -42,6 +42,7 @@ public:
     , dataLength_(dataLength)
     , field_mofified_(true)
   {
+	  topic_ = simple_msgs::ImageFbsIdentifier();
   }
   /**
    * @brief TODO
@@ -97,6 +98,7 @@ public:
         break;
     }
     field_mofified_ = true;
+	topic_ = simple_msgs::ImageFbsIdentifier();
   }
   /**
    * @brief If there are changes to the data, clears the flatbuffer builder and creates a new ImageFbs table offset. If
@@ -295,8 +297,6 @@ public:
     field_mofified_ = true;
   }
 
-  static const char* topic_;
-
 private:
   int resX_{ 0 }, resY_{ 0 }, resZ_{ 0 };
   double width_{ 0.0 }, height_{ 0.0 }, depth_{ 0.0 };
@@ -310,5 +310,4 @@ private:
   simple_msgs::data getDataUnionType() const;
   flatbuffers::Offset<void> getDataUnionElem() const;
 };
-const char* Image::topic_ = simple_msgs::ImageFbsIdentifier();
 }  // namespace simple_msgs

@@ -19,6 +19,7 @@ public:
    */
   Pose(uint8_t* position, uint8_t* quaternion) : quaternion_(quaternion), position_(position)
   {
+	  topic_ = simple_msgs::PoseFbsIdentifier();
   }
   /**
    * @brief TODO
@@ -46,8 +47,6 @@ public:
    */
   void setPosition(uint8_t* position);
 
-  static const char* topic_;
-
 private:
   simple_msgs::Quaternion quaternion_;
   simple_msgs::Point position_;
@@ -55,6 +54,4 @@ private:
   mutable std::mutex mutex_;
 
 };
-
-const char* Pose::topic_ = simple_msgs::PoseFbsIdentifier();
 }  // namespace simple_msgs

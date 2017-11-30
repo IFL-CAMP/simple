@@ -72,10 +72,11 @@ public:
 	  //get the buffer data ignoring the first few bytes (the topic prefix)
 	  const char* topic = T::topic_;
 	  uint8_t* croppedMsg;
-	  memcpy(croppedMsg, ZMQmsg.data() + sizeof(topic), sizeof(ZMQmsg.data()) - sizeof(topic));
-
-      //auto bah = static_cast<uint8_t*>(ZMQmsg.data());
-
+	  
+	  auto convertMsg = static_cast<uint8_t*>(ZMQmsg.data());
+	  
+	  memcpy(croppedMsg, convertMsg + sizeof(topic), sizeof(convertMsg)-sizeof(topic));
+	  
 	  T wrappedData(croppedMsg);
 
       callback_(wrappedData);

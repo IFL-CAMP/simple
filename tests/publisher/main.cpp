@@ -28,6 +28,7 @@ int main(int argc, char* argv[])
 
   // create a message, with wrapper
 	simple_msgs::Point p(1.0, 2.0, 3.0);
+	simple_msgs::Header(1, "ID", 1.2);
 
   // create a publisher
   simple::Publisher pub("tcp://*:5555");
@@ -39,7 +40,7 @@ int main(int argc, char* argv[])
     try
     {  // send the message continously
       pub.publish(p);
-      std::cout << "Header Message published" << std::endl;
+      std::cout << "Point Message published" << std::endl;
 	  std::this_thread::sleep_for(std::chrono::seconds(1));
     }
     catch (zmq::error_t& e)

@@ -24,6 +24,7 @@ public:
   Header(const int seq_n, const std::string& frame_id, const double timestamp)
     : seq_n_(seq_n), frame_id_(frame_id), timestamp_(timestamp), field_mofified_(true)
   {
+	  topic_ = simple_msgs::HeaderFbsIdentifier();
   }
 
   /**
@@ -108,8 +109,6 @@ public:
     field_mofified_ = true;
   }
 
-  static const char* topic_;
-
 private:
   int seq_n_{ 0 };
   std::string frame_id_{ "" };
@@ -118,7 +117,5 @@ private:
   mutable std::mutex mutex_;
   
 };
-
-const char* Header::topic_ = simple_msgs::HeaderFbsIdentifier();
 
 }  // namespace simple_msgs
