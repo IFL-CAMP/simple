@@ -24,13 +24,19 @@ simple::Publisher::~Publisher()
 
 void simple::Publisher::publish(const uint8_t* msg, const int size)
 {
-  // TODO: add message topic to allow subscription filter
+  // get message topic to allow subscription filter
   const char* topic = flatbuffers::GetBufferIdentifier(msg);
-
-  zmq::message_t ZMQ_message(size);
-
-
-  memcpy(ZMQ_message.data(), msg, size);
+  //get the topic size
+  int s = strlen(topic);
+  //create new array
+  uint8_t* prefixedMsg;
+  //copy the topic and the buffer into the new array
+  memcpy(prefixedMsg, topic, s);
+  memcpy(prefixedMsg + s, msg, size);
+  //create ZMQ message of size (buffer + prefixed topic)
+  zmq::message_t ZMQ_message(size+s);
+	//put the data into the ZMQ message
+  memcpy(ZMQ_message.data(), prefixedMsg, size+s);
 
   try
   {
