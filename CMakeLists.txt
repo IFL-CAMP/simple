@@ -60,6 +60,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE SIMPLE_LIBRARY_EXPORT) # TODO
 install(TARGETS ${PROJECT_NAME} 
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+	
 
 #install the ZMQ library in the desired folder, for Windows
 if(WIN32)
@@ -68,6 +69,8 @@ if(WIN32)
   set(ZMQ_DYNAMIC_LIBRARY "${ZMQ_LIBRARY_PATH}/../bin/${ZMQ_LIBRARY_NAME_WO_EXT}.dll")
   install(FILES ${ZMQ_DYNAMIC_LIBRARY} DESTINATION ${CMAKE_INSTALL_BINDIR}) # TODO: check this variable on windows
 endif(WIN32)
+
+message(${ZMQ_DYNAMIC_LIBRARY})
 
 ###### TESTS
 

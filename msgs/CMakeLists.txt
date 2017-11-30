@@ -31,3 +31,10 @@ flatbuffers_generate_c_headers(simple_msgs ${PROJECT_SOURCE_DIR}/fbs ${PROJECT_S
 add_library(${PROJECT_NAME} SHARED ${SIMPLE_MSGS_SRCS})
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE SIMPLE_LIBRARY_EXPORT) # TODO is this necessary?
+
+###### INSTALATION
+
+#install the simple_msgs library in the desired folder
+install(TARGETS ${PROJECT_NAME} 
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
