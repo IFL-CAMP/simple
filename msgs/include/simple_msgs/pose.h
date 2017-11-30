@@ -46,10 +46,15 @@ public:
    */
   void setPosition(uint8_t* position);
 
+  static const char* topic_;
+
 private:
   simple_msgs::Quaternion quaternion_;
   simple_msgs::Point position_;
   mutable bool field_mofified_{ false };
   mutable std::mutex mutex_;
+
 };
+
+const char* Pose::topic_ = simple_msgs::PoseFbsIdentifier();
 }  // namespace simple_msgs

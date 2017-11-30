@@ -16,6 +16,8 @@ public:
   virtual ~GenericMessage() = default;
   virtual uint8_t* getBufferData() const = 0;
   virtual int getBufferSize() const = 0;
+  virtual const char* getMsgTopic() const = 0;
+  static const char* topic_;
 
 protected:
   std::unique_ptr<flatbuffers::FlatBufferBuilder> builder_;

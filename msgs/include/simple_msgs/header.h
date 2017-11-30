@@ -108,11 +108,17 @@ public:
     field_mofified_ = true;
   }
 
+  static const char* topic_;
+
 private:
   int seq_n_{ 0 };
   std::string frame_id_{ "" };
   double timestamp_{ 0.0 };
   mutable bool field_mofified_{ false };
   mutable std::mutex mutex_;
+  
 };
+
+const char* Header::topic_ = simple_msgs::HeaderFbsIdentifier();
+
 }  // namespace simple_msgs
