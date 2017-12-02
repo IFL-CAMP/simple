@@ -47,6 +47,10 @@ public:
    */
   void setPosition(uint8_t* position);
 
+  simple_msgs::Point getPosition();
+
+  simple_msgs::Quaternion getQuaternion();
+
 private:
   simple_msgs::Quaternion quaternion_;
   simple_msgs::Point position_;

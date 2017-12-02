@@ -2,6 +2,7 @@
 
 #include "generic_message.h"
 #include "quaternion_generated.h"
+#include <mutex>
 
 namespace simple_msgs
 {
@@ -9,6 +10,12 @@ class Quaternion : public GenericMessage
 {
 public:
   using GenericMessage::GenericMessage;
+
+  /**
+  * @brief TODO
+  * @param bufferPointer
+  */
+  Quaternion(double x, double y, double z, double w);
 
   /**
    * @brief TODO
@@ -25,5 +32,9 @@ public:
    * @return
    */
   int getBufferSize() const;
+private:
+	double x_, y_, z_, w_;
+	mutable bool field_mofified_{ false };
+	mutable std::mutex mutex_;
 };
 }  // namespace simple_msgs

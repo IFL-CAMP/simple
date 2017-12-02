@@ -40,6 +40,18 @@ public:
    */
   int getBufferSize() const{ return builder_->GetSize(); }
 
+  /**
+  * @brief TODO
+  * @return
+  */
+  std::vector<double> getPoint();
+
+  /**
+  * @brief TODO
+  * @param pt
+  */
+  void setPoint(std::vector<double> pt);
+
 private:
 	double x_, y_, z_;
 	mutable bool field_mofified_{ false };
