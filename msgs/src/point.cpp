@@ -7,7 +7,7 @@ simple_msgs::Point::Point(const uint8_t* data)
 	x_ = p->x();
 	y_ = p->y();
 	z_ = p->z();
-	topic_ = simple_msgs::PointFbsIdentifier();
+	//topic_ = simple_msgs::PointFbsIdentifier();
 }
 uint8_t* simple_msgs::Point::getBufferData() const
 {

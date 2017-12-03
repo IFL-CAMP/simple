@@ -19,7 +19,7 @@ public:
    */
   Pose(uint8_t* position, uint8_t* quaternion) : quaternion_(quaternion), position_(position)
   {
-	  topic_ = simple_msgs::PoseFbsIdentifier();
+	  //topic_ = simple_msgs::PoseFbsIdentifier();
   }
   /**
    * @brief TODO

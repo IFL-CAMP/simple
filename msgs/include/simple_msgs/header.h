@@ -24,7 +24,7 @@ public:
   Header(const int seq_n, const std::string& frame_id, const double timestamp)
     : seq_n_(seq_n), frame_id_(frame_id), timestamp_(timestamp), field_mofified_(true)
   {
-	  topic_ = simple_msgs::HeaderFbsIdentifier();
+	  //topic_ = simple_msgs::HeaderFbsIdentifier();
   }
 
   /**

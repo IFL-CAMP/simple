@@ -42,7 +42,7 @@ public:
     , dataLength_(dataLength)
     , field_mofified_(true)
   {
-	  topic_ = simple_msgs::ImageFbsIdentifier();
+	  //topic_ = simple_msgs::ImageFbsIdentifier();
   }
   /**
    * @brief TODO

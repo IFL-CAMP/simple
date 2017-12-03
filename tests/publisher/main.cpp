@@ -24,30 +24,31 @@ static void s_catch_signals()
 
 int main(int argc, char* argv[])
 {
-  //using namespace std::chrono_literals;
+  // using namespace std::chrono_literals;
 
   // create a message, with wrapper
-	simple_msgs::Point p(1.0, 2.0, 3.0);
-	simple_msgs::Header(1, "ID", 1.2);
+  simple_msgs::Point p(1.0, 2.0, 3.0);
+  simple_msgs::Header(1, "ID", 1.2);
 
   // create a publisher
   simple::Publisher pub("tcp://*:5555");
-
-  s_catch_signals();
-
-  while (!s_interrupted)
+  std::cout << "Publish these cordinates: x=1.0, y=2.0, z=3.0" << std::endl;
+  // s_catch_signals();
+  int num = 20;
+  while (num > 0)
   {
     try
     {  // send the message continously
       pub.publish(p);
-      std::cout << "Point Message published" << std::endl;
-	  std::this_thread::sleep_for(std::chrono::seconds(1));
+      std::cout << "Point Message published: " << num << std::endl;
+      std::this_thread::sleep_for(std::chrono::seconds(1));
     }
     catch (zmq::error_t& e)
     {
       std::cout << "Something went wrong with the publishing..." << std::endl;
     }
+    num--;
   }
-  std::cout << "interruption received"<<std::endl;
+  std::cout << "Publishing ended" << std::endl;
   return 0;
 }

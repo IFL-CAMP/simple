@@ -7,7 +7,7 @@ simple_msgs::Header::Header(const uint8_t* data)
   seq_n_ = h->sequence_number();
   frame_id_ = h->frame_id()->c_str();
   timestamp_ = h->timestamp();
-  topic_ = simple_msgs::HeaderFbsIdentifier();
+  //topic_ = simple_msgs::HeaderFbsIdentifier();
 }
 uint8_t* simple_msgs::Header::getBufferData() const
 {

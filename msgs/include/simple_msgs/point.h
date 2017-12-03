@@ -19,7 +19,7 @@ public:
    */
   Point(const double x, const double y, const double z) : x_(x), y_(y), z_(z), field_mofified_(true)
   {
-	  topic_ = simple_msgs::PointFbsIdentifier();
+	  //topic_ = simple_msgs::PointFbsIdentifier();
   }
 
   /**
@@ -44,7 +44,7 @@ public:
   * @brief TODO
   * @return
   */
-  std::vector<double> getPoint();
+  std::vector<double> getPoint() const{ return std::vector<double>{x_, y_, z_}; }
 
   /**
   * @brief TODO
