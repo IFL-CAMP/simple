@@ -32,6 +32,10 @@ public:
    * @return
    */
   int getBufferSize() const;
+
+  std::vector<double> getQuaternion();
+
+  void setQuaternion(std::vector<double> quat);
 private:
 	double x_, y_, z_, w_;
 	mutable bool field_mofified_{ false };

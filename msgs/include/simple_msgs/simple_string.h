@@ -6,7 +6,7 @@
 
 namespace simple_msgs
 {
-class String : GenericMessage
+class String : public GenericMessage
 {
 public:
 	using GenericMessage::GenericMessage;
