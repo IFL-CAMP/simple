@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
   simple::Publisher pub("tcp://*:5555");
   std::cout << "Publish these cordinates: x=1.0, y=2.0, z=3.0" << std::endl;
   // s_catch_signals();
-  int num = 20;
+  int num = 10;
   while (num > 0)
   {
     try

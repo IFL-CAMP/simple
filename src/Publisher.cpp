@@ -20,6 +20,7 @@ simple::Publisher::Publisher(const std::string& port) : socket_(std::make_unique
 simple::Publisher::~Publisher()
 {
   socket_->close();
+  context_->close();
 }
 
 void simple::Publisher::publish(const uint8_t* msg, const int size)
