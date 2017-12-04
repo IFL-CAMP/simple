@@ -295,7 +295,7 @@ public:
     data_ = imgData;
     field_mofified_ = true;
   }
-  static const char* derivedTopic_;
+  static const char* derivedTopic(){ return ImageFbsIdentifier(); }
 
 private:
   int resX_{ 0 }, resY_{ 0 }, resZ_{ 0 };
@@ -312,6 +312,4 @@ private:
   
   
 };
-template <typename T>
-const char* Image<T>::derivedTopic_ = ImageFbsIdentifier();
 }  // namespace simple_msgs

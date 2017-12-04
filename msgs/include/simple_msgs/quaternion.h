@@ -36,7 +36,7 @@ public:
   std::vector<double> getQuaternion();
 
   void setQuaternion(std::vector<double> quat);
-  static const char* derivedTopic_;
+  static const char* derivedTopic(){ return QuaternionFbsIdentifier(); }
 private:
 	double x_, y_, z_, w_;
 	mutable bool field_mofified_{ false };

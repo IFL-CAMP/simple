@@ -36,11 +36,10 @@ public:
 	void setBool(bool data);
 
 	bool getBool();
-	static const char* derivedTopic_;
+	static const char* derivedTopic(){ return BoolFbsIdentifier(); }
 private:
 	bool data_;
 	mutable bool field_mofified_{ false };
 	mutable std::mutex mutex_;
 };
-const char* Bool::derivedTopic_ = BoolFbsIdentifier();
 }

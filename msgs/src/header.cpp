@@ -1,7 +1,6 @@
 
 #include "simple_msgs/header.h"
 
-const char* simple_msgs::Header::derivedTopic_ = HeaderFbsIdentifier();
 simple_msgs::Header::Header(const uint8_t* data)
 {
   auto h = GetHeaderFbs(data);

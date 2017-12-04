@@ -36,11 +36,10 @@ public:
 	double getDouble();
 
 	void setDouble(double data);
-	static const char* derivedTopic_;
+	static const char* derivedTopic(){ return DoubleFbsIdentifier(); }
 private:
 	double data_;
 	mutable bool field_mofified_{ false };
 	mutable std::mutex mutex_;
 };
-const char* Double::derivedTopic_ = DoubleFbsIdentifier();
 }

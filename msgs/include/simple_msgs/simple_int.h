@@ -36,11 +36,11 @@ public:
 	void setInt(int data){ data_ = data; }
 
 	int getInt(){ return data_; }
-	static const char* derivedTopic_;
+
+	static const char* derivedTopic(){ return IntFbsIdentifier(); }
 private:
 	int data_;
 	mutable bool field_mofified_{ false };
 	mutable std::mutex mutex_;
 };
-const char* Int::derivedTopic_ = IntFbsIdentifier();
 }

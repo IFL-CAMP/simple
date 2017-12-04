@@ -37,11 +37,10 @@ public:
 
 	std::vector<double> getMatrixCoefs();
 
-	static const char* derivedTopic_;
+	static const char* derivedTopic(){ return RotationMatrixFbsIdentifier(); }
 private:
 	double r11_, r12_, r13_, r21_, r22_, r23_, r31_, r32_, r33_;
 	mutable bool field_mofified_{ false };
 	mutable std::mutex mutex_;
 };
-const char* RotationMatrix::derivedTopic_ = RotationMatrixFbsIdentifier();
 }

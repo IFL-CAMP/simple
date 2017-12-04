@@ -50,7 +50,7 @@ public:
 
   simple_msgs::Quaternion getQuaternion();
 
-  static const char* derivedTopic_;
+  static const char* derivedTopic(){ return PoseFbsIdentifier(); }
 private:
   simple_msgs::Quaternion quaternion_;
   simple_msgs::Point position_;

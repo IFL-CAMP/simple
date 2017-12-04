@@ -36,11 +36,11 @@ public:
 	std::string getString(){ return data_; }
 
 	void setString(std::string data){ data_ = data; }
-	static const char* derivedTopic_;
+
+	static const char* derivedTopic(){ return StringFbsIdentifier(); }
 private:
 	std::string data_;
 	mutable bool field_mofified_{ false };
 	mutable std::mutex mutex_;
 };
-const char* String::derivedTopic_ = StringFbsIdentifier();
 }

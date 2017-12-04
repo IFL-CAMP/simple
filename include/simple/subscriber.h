@@ -71,13 +71,17 @@ public:
       }
       // get the buffer data ignoring the first few bytes (the topic prefix)
       const char* topic = T::topic_;
-      uint8_t* croppedMsg;
-
+      //uint8_t* croppedMsg = new uint8_t[ZMQmsg.size()-sizeof(topic)];
+	  int s = strlen(topic);
+	  //int z = ZMQmsg.size();
       auto convertMsg = static_cast<uint8_t*>(ZMQmsg.data());
+	  //int c = sizeof(convertMsg);
+      //memcpy(croppedMsg, convertMsg + s, z - s);
 
-      memcpy(croppedMsg, convertMsg + sizeof(topic), sizeof(convertMsg) - sizeof(topic));
+	  T wrappedData(convertMsg+s);
 
-      T wrappedData(croppedMsg);
+	  //delete the allocated buffer
+	  //delete croppedMsg;
 
       callback_(wrappedData);
     }
@@ -88,7 +92,8 @@ private:
   {
     // get topic from the wrapper
     const char* topic = T::topic_;
-    socket_->setsockopt(ZMQ_SUBSCRIBE, topic, sizeof(topic));
+    //socket_->setsockopt(ZMQ_SUBSCRIBE, topic, sizeof(topic));
+	socket_->setsockopt(ZMQ_SUBSCRIBE, "", 0);
   }
 
   std::thread t_;

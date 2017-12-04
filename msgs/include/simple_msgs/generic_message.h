@@ -26,5 +26,5 @@ class GenericMessage : public GenericMessageBase
   static const char* topic_;
 };
 template <class Derived>
-const char* GenericMessage<Derived>::topic_ = Derived::derivedTopic_;
+const char* GenericMessage<Derived>::topic_ = Derived::derivedTopic();
 }  // namespace simple_msgs

@@ -27,14 +27,14 @@ int main(int argc, char* argv[])
   // using namespace std::chrono_literals;
 
   // create a message, with wrapper
-  simple_msgs::Point p(1.0, 2.0, 3.0);
+  simple_msgs::Point p(5.0, 6.0, 7.0);
   simple_msgs::Header(1, "ID", 1.2);
 
   // create a publisher
   simple::Publisher<simple_msgs::Point> pub("tcp://*:5555");
-  std::cout << "Publish these cordinates: x=1.0, y=2.0, z=3.0" << std::endl;
+  std::cout << "Publish these cordinates: x=5.0, y=6.0, z=7.0" << std::endl;
   // s_catch_signals();
-  int num = 10;
+  int num = 150;
   while (num > 0)
   {
     try

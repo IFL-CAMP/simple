@@ -107,7 +107,7 @@ public:
     timestamp_ = timestamp;
     field_mofified_ = true;
   }
-  static const char* derivedTopic_;
+  static const char* derivedTopic(){ return HeaderFbsIdentifier(); }
 
 private:
   int seq_n_{ 0 };

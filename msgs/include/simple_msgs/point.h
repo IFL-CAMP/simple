@@ -51,7 +51,7 @@ public:
   */
   void setPoint(std::vector<double> pt);
 
-  static const char* derivedTopic_;
+  static const char* derivedTopic(){ return PointFbsIdentifier(); }
 private:
 	double x_, y_, z_;
 	mutable bool field_mofified_{ false };

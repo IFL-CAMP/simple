@@ -36,11 +36,11 @@ public:
 	void setFloat(float data){ data_ = data; }
 
 	float getFloat(){ return data_; }
-	static const char* derivedTopic_;
+
+	static const char* derivedTopic(){ return FloatFbsIdentifier(); }
 private:
 	float data_;
 	mutable bool field_mofified_{ false };
 	mutable std::mutex mutex_;
 };
-const char* Float::derivedTopic_ = FloatFbsIdentifier();
 }

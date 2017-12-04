@@ -60,15 +60,14 @@ public:
     const char* topic = flatbuffers::GetBufferIdentifier(msg);
     // get the topic size
     int s = strlen(topic);
-    // create new array
-    uint8_t* prefixedMsg;
-    // copy the topic and the buffer into the new array
-    memcpy(prefixedMsg, topic, s);
-    memcpy(prefixedMsg + s, msg, size);
+    
     // create ZMQ message of size (buffer + prefixed topic)
-    zmq::message_t ZMQ_message(size + s);
+	int totalSize = size + s;
+    zmq::message_t ZMQ_message(totalSize);
     // put the data into the ZMQ message
-    memcpy(ZMQ_message.data(), prefixedMsg, size + s);
+	memcpy(ZMQ_message.data(), topic, s);
+	memcpy(static_cast<uint8_t*>(ZMQ_message.data()) + s, msg, size);
+    //memcpy(ZMQ_message.data(), reinterpret_cast<char*>(prefixedMsg), size + s);
 
     try
     {

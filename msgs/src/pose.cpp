@@ -1,7 +1,6 @@
 
 #include "simple_msgs/pose.h"
 
-const char* simple_msgs::Pose::derivedTopic_ = PoseFbsIdentifier();
 uint8_t* simple_msgs::Pose::getBufferData() const
 {
 	std::lock_guard<std::mutex> lock(mutex_);
