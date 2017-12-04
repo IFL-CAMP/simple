@@ -48,7 +48,7 @@ public:
     int buffer_size = msg.GetSize();
     publish(buffer, buffer_size);
   }
-  void publish(const simple_msgs::GenericMessage<T>& msg)
+  void publish(const simple_msgs::GenericMessage<T>& msg)//I'm not seeing the point of a base class anymore...
   {
     uint8_t* buffer = msg.getBufferData();
     int buffer_size = msg.getBufferSize();
