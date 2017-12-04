@@ -6,7 +6,7 @@
 
 namespace simple_msgs
 {
-class Point : public GenericMessage
+class Point : public GenericMessage<Point>
 {
 public:
   using GenericMessage::GenericMessage;
@@ -19,7 +19,6 @@ public:
    */
   Point(const double x, const double y, const double z) : x_(x), y_(y), z_(z), field_mofified_(true)
   {
-	  //topic_ = simple_msgs::PointFbsIdentifier();
   }
 
   /**
@@ -52,6 +51,7 @@ public:
   */
   void setPoint(std::vector<double> pt);
 
+  static const char* derivedTopic_;
 private:
 	double x_, y_, z_;
 	mutable bool field_mofified_{ false };

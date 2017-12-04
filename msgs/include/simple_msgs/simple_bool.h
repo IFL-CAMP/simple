@@ -6,7 +6,7 @@
 
 namespace simple_msgs
 {
-class Bool : public GenericMessage
+class Bool : public GenericMessage<Bool>
 {
 public:
 	using GenericMessage::GenericMessage;
@@ -36,9 +36,11 @@ public:
 	void setBool(bool data);
 
 	bool getBool();
+	static const char* derivedTopic_;
 private:
 	bool data_;
 	mutable bool field_mofified_{ false };
 	mutable std::mutex mutex_;
 };
+const char* Bool::derivedTopic_ = BoolFbsIdentifier();
 }

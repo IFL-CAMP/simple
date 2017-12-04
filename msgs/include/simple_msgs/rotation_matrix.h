@@ -6,7 +6,7 @@
 
 namespace simple_msgs
 {
-class RotationMatrix : public GenericMessage
+class RotationMatrix : public GenericMessage<RotationMatrix>
 {
 public:
 	using GenericMessage::GenericMessage;
@@ -36,9 +36,12 @@ public:
 	void setMatrixCoefs(std::vector<double> coefs);
 
 	std::vector<double> getMatrixCoefs();
+
+	static const char* derivedTopic_;
 private:
 	double r11_, r12_, r13_, r21_, r22_, r23_, r31_, r32_, r33_;
 	mutable bool field_mofified_{ false };
 	mutable std::mutex mutex_;
 };
+const char* RotationMatrix::derivedTopic_ = RotationMatrixFbsIdentifier();
 }

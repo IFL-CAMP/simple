@@ -9,7 +9,7 @@
 namespace simple_msgs
 {
 template <typename T>
-class Image : public GenericMessage
+class Image : public GenericMessage<Image<T>>
 {
 public:
   using GenericMessage::GenericMessage;
@@ -42,7 +42,6 @@ public:
     , dataLength_(dataLength)
     , field_mofified_(true)
   {
-	  //topic_ = simple_msgs::ImageFbsIdentifier();
   }
   /**
    * @brief TODO
@@ -296,6 +295,7 @@ public:
     data_ = imgData;
     field_mofified_ = true;
   }
+  static const char* derivedTopic_;
 
 private:
   int resX_{ 0 }, resY_{ 0 }, resZ_{ 0 };
@@ -309,5 +309,9 @@ private:
   mutable std::mutex mutex_;
   simple_msgs::data getDataUnionType() const;
   flatbuffers::Offset<void> getDataUnionElem() const;
+  
+  
 };
+template <typename T>
+const char* Image<T>::derivedTopic_ = ImageFbsIdentifier();
 }  // namespace simple_msgs

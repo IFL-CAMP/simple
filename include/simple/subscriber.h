@@ -69,22 +69,17 @@ public:
       {
         std::cerr << "Could not receive message: " << e.what();
       }
-	  //get the buffer data ignoring the first few bytes (the topic prefix)
-	  /*const char* topic = T::topic_;
-	  uint8_t* croppedMsg;
-	  
-	  auto convertMsg = static_cast<uint8_t*>(ZMQmsg.data());
-	  
-	  memcpy(croppedMsg, convertMsg + sizeof(topic), sizeof(convertMsg)-sizeof(topic));
-	  
-	  T wrappedData(croppedMsg);
+      // get the buffer data ignoring the first few bytes (the topic prefix)
+      const char* topic = T::topic_;
+      uint8_t* croppedMsg;
 
-      callback_(wrappedData);*/
+      auto convertMsg = static_cast<uint8_t*>(ZMQmsg.data());
 
-	  //temporary subscription without topic, for demo
-	  auto convertMsg = static_cast<uint8_t*>(ZMQmsg.data());
-	  T wrappedData(convertMsg);
-	  callback_(wrappedData);
+      memcpy(croppedMsg, convertMsg + sizeof(topic), sizeof(convertMsg) - sizeof(topic));
+
+      T wrappedData(croppedMsg);
+
+      callback_(wrappedData);
     }
   }
 
@@ -92,10 +87,8 @@ private:
   void filter()
   {
     // get topic from the wrapper
-    /*const char* topic = T::topic_;
-    socket_->setsockopt(ZMQ_SUBSCRIBE, topic, sizeof(topic));*/
-	  //temporarily subscribe to all message types
-	  socket_->setsockopt(ZMQ_SUBSCRIBE, "", 0);
+    const char* topic = T::topic_;
+    socket_->setsockopt(ZMQ_SUBSCRIBE, topic, sizeof(topic));
   }
 
   std::thread t_;

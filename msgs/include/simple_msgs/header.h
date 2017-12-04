@@ -10,7 +10,7 @@ namespace simple_msgs
 /**
  * @brief TODO
  */
-class Header : public GenericMessage
+class Header : public GenericMessage<Header>
 {
 public:
   using GenericMessage::GenericMessage;
@@ -24,7 +24,6 @@ public:
   Header(const int seq_n, const std::string& frame_id, const double timestamp)
     : seq_n_(seq_n), frame_id_(frame_id), timestamp_(timestamp), field_mofified_(true)
   {
-	  //topic_ = simple_msgs::HeaderFbsIdentifier();
   }
 
   /**
@@ -108,6 +107,7 @@ public:
     timestamp_ = timestamp;
     field_mofified_ = true;
   }
+  static const char* derivedTopic_;
 
 private:
   int seq_n_{ 0 };
@@ -115,7 +115,5 @@ private:
   double timestamp_{ 0.0 };
   mutable bool field_mofified_{ false };
   mutable std::mutex mutex_;
-  
 };
-
 }  // namespace simple_msgs

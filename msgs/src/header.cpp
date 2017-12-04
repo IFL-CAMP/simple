@@ -1,13 +1,13 @@
 
 #include "simple_msgs/header.h"
 
+const char* simple_msgs::Header::derivedTopic_ = HeaderFbsIdentifier();
 simple_msgs::Header::Header(const uint8_t* data)
 {
   auto h = GetHeaderFbs(data);
   seq_n_ = h->sequence_number();
   frame_id_ = h->frame_id()->c_str();
   timestamp_ = h->timestamp();
-  //topic_ = simple_msgs::HeaderFbsIdentifier();
 }
 uint8_t* simple_msgs::Header::getBufferData() const
 {

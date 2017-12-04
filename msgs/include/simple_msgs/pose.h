@@ -8,7 +8,7 @@
 
 namespace simple_msgs
 {
-class Pose : public GenericMessage
+class Pose : public GenericMessage<Pose>
 {
 public:
   using GenericMessage::GenericMessage;
@@ -19,7 +19,6 @@ public:
    */
   Pose(uint8_t* position, uint8_t* quaternion) : quaternion_(quaternion), position_(position)
   {
-	  //topic_ = simple_msgs::PoseFbsIdentifier();
   }
   /**
    * @brief TODO
@@ -51,11 +50,11 @@ public:
 
   simple_msgs::Quaternion getQuaternion();
 
+  static const char* derivedTopic_;
 private:
   simple_msgs::Quaternion quaternion_;
   simple_msgs::Point position_;
   mutable bool field_mofified_{ false };
   mutable std::mutex mutex_;
-
 };
 }  // namespace simple_msgs

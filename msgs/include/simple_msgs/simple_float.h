@@ -6,7 +6,7 @@
 
 namespace simple_msgs
 {
-class Float : public GenericMessage
+class Float : public GenericMessage<Float>
 {
 public:
 	using GenericMessage::GenericMessage;
@@ -36,9 +36,11 @@ public:
 	void setFloat(float data){ data_ = data; }
 
 	float getFloat(){ return data_; }
+	static const char* derivedTopic_;
 private:
 	float data_;
 	mutable bool field_mofified_{ false };
 	mutable std::mutex mutex_;
 };
+const char* Float::derivedTopic_ = FloatFbsIdentifier();
 }

@@ -6,7 +6,7 @@
 
 namespace simple_msgs
 {
-class Double : public GenericMessage
+class Double : public GenericMessage<Double>
 {
 public:
 	using GenericMessage::GenericMessage;
@@ -36,9 +36,11 @@ public:
 	double getDouble();
 
 	void setDouble(double data);
+	static const char* derivedTopic_;
 private:
 	double data_;
 	mutable bool field_mofified_{ false };
 	mutable std::mutex mutex_;
 };
+const char* Double::derivedTopic_ = DoubleFbsIdentifier();
 }

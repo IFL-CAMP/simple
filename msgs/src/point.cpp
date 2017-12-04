@@ -1,13 +1,13 @@
 
 #include "simple_msgs/point.h"
 
+const char* simple_msgs::Point::derivedTopic_ = PointFbsIdentifier();
 simple_msgs::Point::Point(const uint8_t* data)
 {
 	auto p = GetPointFbs(data);
 	x_ = p->x();
 	y_ = p->y();
 	z_ = p->z();
-	//topic_ = simple_msgs::PointFbsIdentifier();
 }
 uint8_t* simple_msgs::Point::getBufferData() const
 {

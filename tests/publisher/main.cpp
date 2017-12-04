@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
   simple_msgs::Header(1, "ID", 1.2);
 
   // create a publisher
-  simple::Publisher pub("tcp://*:5555");
+  simple::Publisher<simple_msgs::Point> pub("tcp://*:5555");
   std::cout << "Publish these cordinates: x=1.0, y=2.0, z=3.0" << std::endl;
   // s_catch_signals();
   int num = 10;

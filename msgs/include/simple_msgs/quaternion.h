@@ -6,7 +6,7 @@
 
 namespace simple_msgs
 {
-class Quaternion : public GenericMessage
+class Quaternion : public GenericMessage<Quaternion>
 {
 public:
   using GenericMessage::GenericMessage;
@@ -36,6 +36,7 @@ public:
   std::vector<double> getQuaternion();
 
   void setQuaternion(std::vector<double> quat);
+  static const char* derivedTopic_;
 private:
 	double x_, y_, z_, w_;
 	mutable bool field_mofified_{ false };
