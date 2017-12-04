@@ -12,6 +12,7 @@ namespace simple
 /**
  * @brief Creates a subscriber socket.
  */
+template <typename T>
 class Server
 {
 public:

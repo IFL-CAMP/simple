@@ -20,7 +20,7 @@ public:
    * @brief Class constructor. Creates a ZMQ_SUB socket and connects it to the port. The type of the subscriber
    * should be a wrapper message type
    * @param port string for the connection port.
-   * @param context reference to the existing context.
+   * @param callback user defined callback function to be called for every data received through the socket.
    */
   Subscriber<T>(const std::string& port, const std::function<void(const T&)>& callback)
     : socket_(std::make_unique<zmq::socket_t>(*context_, ZMQ_SUB)), callback_(callback)
@@ -52,7 +52,9 @@ public:
   }
 
   /**
-   * @brief publishes the message through the open socket.
+   * @brief Continuously waits for a message to be published in the connected port, while the subscriber is alive.
+   * Creates an instance of a wrapper with the received data matching the instance type and calls the callback function
+   * supplied by the user in the creation of the subscriber with the received data as parameter.
    */
   void subscribe()
   {
@@ -71,29 +73,26 @@ public:
       }
       // get the buffer data ignoring the first few bytes (the topic prefix)
       const char* topic = T::topic_;
-      //uint8_t* croppedMsg = new uint8_t[ZMQmsg.size()-sizeof(topic)];
-	  int s = strlen(topic);
-	  //int z = ZMQmsg.size();
+      int s = strlen(topic);
+
       auto convertMsg = static_cast<uint8_t*>(ZMQmsg.data());
-	  //int c = sizeof(convertMsg);
-      //memcpy(croppedMsg, convertMsg + s, z - s);
 
-	  T wrappedData(convertMsg+s);
-
-	  //delete the allocated buffer
-	  //delete croppedMsg;
+      T wrappedData(convertMsg + s);
 
       callback_(wrappedData);
     }
   }
 
 private:
+  /**
+   * @brief Set the socket option to match the identifier of the data type. Only messages prefixed with this identifier
+   * will be received.
+   */
   void filter()
   {
     // get topic from the wrapper
     const char* topic = T::topic_;
-    //socket_->setsockopt(ZMQ_SUBSCRIBE, topic, sizeof(topic));
-	socket_->setsockopt(ZMQ_SUBSCRIBE, "", 0);
+    socket_->setsockopt(ZMQ_SUBSCRIBE, "", 0);
   }
 
   std::thread t_;
