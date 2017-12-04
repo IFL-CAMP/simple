@@ -18,7 +18,7 @@ class Subscriber
 public:
   /**
    * @brief Class constructor. Creates a ZMQ_SUB socket and connects it to the port. The type of the subscriber
-   * should be a wrapper message type
+   * should be a wrapper message type. Opens a dedicated thread for receiving messages.
    * @param port string for the connection port.
    * @param callback user defined callback function to be called for every data received through the socket.
    */
