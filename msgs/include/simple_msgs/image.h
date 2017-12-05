@@ -99,6 +99,8 @@ public:
       case simple_msgs::data_dataDouble:
         data_ = static_cast<const dataDouble*>(i->imgData())->img()->data();
         break;
+      default:
+        break;
     }
     field_mofified_ = true;
   }
