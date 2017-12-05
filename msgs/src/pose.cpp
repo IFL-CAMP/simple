@@ -29,3 +29,17 @@ simple_msgs::Pose::Pose(const uint8_t* bufferPointer)
   position_ = simple_msgs::Point(p->position()->data());
   field_mofified_ = true;
 }
+
+void simple_msgs::Pose::setQuaternion(uint8_t* quaternion)
+{
+  std::lock_guard<std::mutex> lock(mutex_);
+  quaternion_ = simple_msgs::Quaternion(quaternion);
+  field_mofified_ = true;
+}
+
+void simple_msgs::Pose::setPosition(uint8_t* position)
+{
+  std::lock_guard<std::mutex> lock(mutex_);
+  position_ = simple_msgs::Point(position);
+  field_mofified_ = true;
+}

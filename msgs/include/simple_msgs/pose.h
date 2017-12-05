@@ -38,7 +38,10 @@ public:
    * @brief TODO
    * @return
    */
-  int getBufferSize() const;
+  int getBufferSize() const
+  {
+    return builder_->GetSize();
+  }
 
   /**
    * @brief TODO
@@ -53,21 +56,21 @@ public:
   void setPosition(uint8_t* position);
 
   /**
-  * @brief TODO
-  * @return
-  */
-  simple_msgs::Point getPosition() const
+   * @brief TODO
+   * @return
+   */
+  const simple_msgs::Point* getPosition() const
   {
-    return position_;
+    return &position_;
   }
 
   /**
-  * @brief TODO
-  * @return
-  */
-  simple_msgs::Quaternion getQuaternion() const
+   * @brief TODO
+   * @return
+   */
+  const simple_msgs::Quaternion* getQuaternion() const
   {
-    return quaternion_;
+    return &quaternion_;
   }
 
   static const char* derivedTopic()
