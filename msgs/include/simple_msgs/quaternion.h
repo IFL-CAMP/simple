@@ -12,9 +12,9 @@ public:
   using GenericMessage::GenericMessage;
 
   /**
-  * @brief TODO
-  * @param bufferPointer
-  */
+   * @brief TODO
+   * @param bufferPointer
+   */
   Quaternion(double x, double y, double z, double w);
 
   /**
@@ -26,7 +26,10 @@ public:
    * @brief TODO
    * @return
    */
-  uint8_t* getBufferData() const;
+  uint8_t* getBufferData() const
+  {
+    return 0;
+  }
   /**
    * @brief TODO
    * @return
@@ -36,10 +39,14 @@ public:
   std::vector<double> getQuaternion();
 
   void setQuaternion(std::vector<double> quat);
-  static const char* derivedTopic(){ return QuaternionFbsIdentifier(); }
+  static const char* derivedTopic()
+  {
+    return QuaternionFbsIdentifier();
+  }
+
 private:
-	double x_, y_, z_, w_;
-	mutable bool field_mofified_{ false };
-	mutable std::mutex mutex_;
+  double x_, y_, z_, w_;
+  mutable bool field_mofified_{ false };
+  mutable std::mutex mutex_;
 };
 }  // namespace simple_msgs

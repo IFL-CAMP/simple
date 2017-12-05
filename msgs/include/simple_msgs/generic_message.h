@@ -20,11 +20,16 @@ public:
 protected:
   std::unique_ptr<flatbuffers::FlatBufferBuilder> builder_;
 };
+
 template <class Derived>
 class GenericMessage : public GenericMessageBase
-{public:
+{
+  using GenericMessageBase::GenericMessageBase;
+
+public:
   static const char* topic_;
 };
+
 template <class Derived>
 const char* GenericMessage<Derived>::topic_ = Derived::derivedTopic();
 }  // namespace simple_msgs
