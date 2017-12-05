@@ -25,7 +25,7 @@ void dummy(simple_msgs::Point& p)//get the point and add (1,1,1) to it
 int main(int argc, char* argv[])
 {
 	std::cout << "Creating server for Point" << std::endl;
-  simple::Server<simple_msgs::Point> sub("tcp://localhost:5555", dummy);
+  simple::Server<simple_msgs::Point> server("tcp://localhost:5555", dummy);
   //simple::Subscriber<simple_msgs::Header> sub2("tcp://localhost:5555", dummy2);
 
   // wait for 25 seconds

@@ -118,7 +118,7 @@ public:
       auto type = getDataUnionType();
       auto elem = getDataUnionElem();
       simple_msgs::ImageFbsBuilder iBuilder(*builder_);
-	  //add the information
+      // add the information
       iBuilder.add_depth(depth_);
       iBuilder.add_enconding(encodingStr);
       iBuilder.add_Header(headerVec);
@@ -173,12 +173,12 @@ public:
   }
 
   /**
-  * @brief getter for the image data size
-  * @return size of the image array
-  */
+   * @brief getter for the image data size
+   * @return size of the image array
+   */
   int getImgBufferSize() const
   {
-	  return dataLength_;
+    return dataLength_;
   }
 
   /**
@@ -191,9 +191,9 @@ public:
   }
 
   /**
-  * @brief getter for the origin of the image
-  * @return pointer to the wrapper for the pose of the image
-  */
+   * @brief getter for the origin of the image
+   * @return pointer to the wrapper for the pose of the image
+   */
   simple_msgs::Pose* getOrigin() const
   {
     return &origin_;
@@ -231,9 +231,9 @@ public:
   }
 
   /**
-  * @brief setter for the resolution of the image in the y direction
-  * @param resY number of voxels in the y direction of the image
-  */
+   * @brief setter for the resolution of the image in the y direction
+   * @param resY number of voxels in the y direction of the image
+   */
   void setResY(int resY)
   {
     std::lock_guard<std::mutex> lock(mutex_);
@@ -242,9 +242,9 @@ public:
   }
 
   /**
-  * @brief setter for the resolution of the image in the z direction
-  * @param resZ number of voxels in the z direction of the image
-  */
+   * @brief setter for the resolution of the image in the z direction
+   * @param resZ number of voxels in the z direction of the image
+   */
   void setResZ(int resZ)
   {
     std::lock_guard<std::mutex> lock(mutex_);
@@ -264,9 +264,9 @@ public:
   }
 
   /**
-  * @brief setter for the height of the image
-  * @param width size of the image in the Y direction
-  */
+   * @brief setter for the height of the image
+   * @param width size of the image in the Y direction
+   */
   void setHeight(double height)
   {
     std::lock_guard<std::mutex> lock(mutex_);
@@ -275,9 +275,9 @@ public:
   }
 
   /**
-  * @brief setter for the depth of the image
-  * @param width size of the image in the Z direction
-  */
+   * @brief setter for the depth of the image
+   * @param width size of the image in the Z direction
+   */
   void setDepth(double depth)
   {
     std::lock_guard<std::mutex> lock(mutex_);

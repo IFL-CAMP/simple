@@ -27,7 +27,7 @@ public:
   {
 	  try
 	  {
-		  socket->connect(port);
+		  socket_->connect(port);
 	  }
 	  catch (zmq::error_t& e)
 	  {
@@ -51,7 +51,7 @@ public:
 	  request(buffer, buffer_size);
   }
 
-  void request(const simple_msgs::GenericMessage& msg){
+  void request(const simple_msgs::GenericMessage<T>& msg){
 	  uint8_t* buffer = msg.getBufferData();
 	  int buffer_size = msg.getBufferSize();
 	  request(buffer, buffer_size);
@@ -75,7 +75,7 @@ public:
 
 	  try
 	  {
-		  socket->recv(&MSGreply);
+		  socket_->recv(&MSGreply);
 	  }
 	  catch (zmq::error_t& e)
 	  {

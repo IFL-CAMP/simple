@@ -1,7 +1,7 @@
 #pragma once
 
 #include "generic_message.h"
-#include "double_generated"
+#include "double_generated.h"
 #include <mutex>
 
 namespace simple_msgs

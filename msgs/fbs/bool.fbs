@@ -1,6 +1,6 @@
 // Schema for S.I.M.P.L.E. Boolean
 
-namespace simple;
+namespace simple_msgs;
 
 table BoolFbs {
 	data:bool;

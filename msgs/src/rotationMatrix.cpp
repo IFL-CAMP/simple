@@ -1,4 +1,4 @@
 
-#include "simple_msgs/rotationMatrix.h"
+#include "simple_msgs/rotation_matrix.h"
 
 

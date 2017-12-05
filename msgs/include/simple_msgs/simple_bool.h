@@ -2,7 +2,7 @@
 
 #include "generic_message.h"
 #include <mutex>
-#include "bool_generated"
+#include "bool_generated.h"
 
 namespace simple_msgs
 {

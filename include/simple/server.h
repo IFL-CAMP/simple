@@ -20,7 +20,7 @@ public:
    * @brief Creates a reply socket. Opens a socket of type REP and connects it to the port. The user defined callback
    * function is responsible for taking the received request and filling it with the reply data
    */
-  Server(const std::string& port, const std::function<void(const T&)>& callback)
+  Server(const std::string& port, const std::function<void(T&)>& callback)
     : socket_(std::make_unique<zmq::socket_t>(*context_, ZMQ_REP)), callback_(callback)
   {
     try
@@ -33,7 +33,7 @@ public:
     }
 
     // start thread of the server: wait for requests on a dedicated thread
-    t_ = std::thread(&Server::reply, this);
+	t_ = std::thread(&Server::awaitRequest, this);
   }
 
   ~Server()
@@ -47,7 +47,7 @@ public:
     socket_->close();
   }
 
-  void reply()
+  void awaitRequest()
   {
     while (alive_)
     {
@@ -56,7 +56,7 @@ public:
 
       try
       {
-        socket->recv(&recvREQ);
+        socket_->recv(&recvREQ);
       }
       catch (zmq::error_t& e)
       {
@@ -104,7 +104,7 @@ private:
   bool alive_{ true };
   static std::unique_ptr<zmq::context_t, contextCloser> context_;
   std::unique_ptr<zmq::socket_t> socket_;  
-  std::function<void(const T&)> callback_;
+  std::function<void(T&)> callback_;
 };
 template <typename T>
 std::unique_ptr<zmq::context_t, contextCloser> Server<T>::context_(new zmq::context_t(1));
