@@ -23,6 +23,10 @@ public:
   Server(const std::string& port, const std::function<void(T&)>& callback)
     : socket_(std::make_unique<zmq::socket_t>(*context_, ZMQ_REP)), callback_(callback)
   {
+    // set socket timeout
+    int timeOut = 5000;  // miliseconds
+    socket_->setsockopt(ZMQ_RCVTIMEO, &timeOut, sizeof(timeOut));
+
     try
     {
       socket_->bind(port);
@@ -33,7 +37,7 @@ public:
     }
 
     // start thread of the server: wait for requests on a dedicated thread
-	t_ = std::thread(&Server::awaitRequest, this);
+    t_ = std::thread(&Server::awaitRequest, this);
   }
 
   ~Server()
@@ -53,57 +57,59 @@ public:
     {
       // wait for next request.
       zmq::message_t recvREQ;
-
+      bool success = false;
       try
       {
-        socket_->recv(&recvREQ);
+        success = socket_->recv(&recvREQ);
       }
       catch (zmq::error_t& e)
       {
         std::cout << "Could not receive message: " << e.what();
       }
+      // if receive was successful
+      if (success)
+      {
+        // put the received message into the wrapper
+        auto convertMsg = static_cast<uint8_t*>(recvREQ.data());
+        T wrappedReq(convertMsg);  // TODO error safe in case of wrong type
 
-      // put the received message into the wrapper
-	  auto convertMsg = static_cast<uint8_t*>(recvREQ.data());
-      T wrappedReq(convertMsg);//TODO error safe in case of wrong type
+        // use the callback to fetch the requested data
+        callback_(wrappedReq);
 
-      // use the callback to fetch the requested data
-	  callback_(wrappedReq);
-
-	  //reply with the message
-	  reply(wrappedReq);
-	  //get the buffer from the wrapper
-	  // put the data into the ZMQ message
-	  
+        // reply with the message
+        reply(wrappedReq);
+      }
     }
   }
 
-  void reply(const T& msg){
-		  uint8_t* buffer = msg.getBufferData();
-	  int buffer_size = msg.getBufferSize();
-	  reply(buffer, buffer_size);
+  void reply(const T& msg)
+  {
+    uint8_t* buffer = msg.getBufferData();
+    int buffer_size = msg.getBufferSize();
+    reply(buffer, buffer_size);
   }
 
-  void reply(const uint8_t* msg, const int size){
-	  zmq::message_t rep(size);
+  void reply(const uint8_t* msg, const int size)
+  {
+    zmq::message_t rep(size);
 
-	  memcpy(rep.data(), msg, size);
+    memcpy(rep.data(), msg, size);
 
-	  try
-	  {
-		  socket_->send(rep);
-	  }
-	  catch (zmq::error_t& e)
-	  {
-		  std::cerr << "Error - Could not send the message: " << e.what();
-	  }
+    try
+    {
+      socket_->send(rep);
+    }
+    catch (zmq::error_t& e)
+    {
+      std::cerr << "Error - Could not send the message: " << e.what();
+    }
   }
 
 private:
   std::thread t_;
   bool alive_{ true };
   static std::unique_ptr<zmq::context_t, contextCloser> context_;
-  std::unique_ptr<zmq::socket_t> socket_;  
+  std::unique_ptr<zmq::socket_t> socket_;
   std::function<void(T&)> callback_;
 };
 template <typename T>

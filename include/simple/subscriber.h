@@ -25,6 +25,9 @@ public:
   Subscriber<T>(const std::string& port, const std::function<void(const T&)>& callback)
     : socket_(std::make_unique<zmq::socket_t>(*context_, ZMQ_SUB)), callback_(callback)
   {
+    // set socket timeout
+    int timeOut = 5000;  // miliseconds
+    socket_->setsockopt(ZMQ_RCVTIMEO, &timeOut, sizeof(timeOut));
     try
     {
       socket_->connect(port);
@@ -63,23 +66,28 @@ public:
     {
       // start a ZMQ message to receive the data
       zmq::message_t ZMQmsg;
+      bool success = false;
       try
       {
-        socket_->recv(&ZMQmsg);  // receive messages that fit the filter of the socket
+        success = socket_->recv(&ZMQmsg);  // receive messages that fit the filter of the socket
       }
       catch (zmq::error_t& e)
       {
         std::cerr << "Could not receive message: " << e.what();
       }
-      // get the buffer data ignoring the first few bytes (the topic prefix)
-      const char* topic = T::topic_;
-      int s = strlen(topic);
+      // if receive was successful
+      if (success)
+      {
+        // get the buffer data ignoring the first few bytes (the topic prefix)
+        const char* topic = T::topic_;
+        int s = strlen(topic);
 
-      auto convertMsg = static_cast<uint8_t*>(ZMQmsg.data());
+        auto convertMsg = static_cast<uint8_t*>(ZMQmsg.data());
 
-      T wrappedData(convertMsg + s);
+        T wrappedData(convertMsg + s);
 
-      callback_(wrappedData);
+        callback_(wrappedData);
+      }
     }
   }
 
