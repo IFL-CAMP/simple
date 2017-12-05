@@ -19,7 +19,8 @@ public:
    * @brief Class constructor. Creates a ZMQ_PUB socket and binds it to the port.
    * @param port string for the connection port.
    */
-  Publisher<T>(const std::string& port) : socket_(std::make_unique<zmq::socket_t>(*context_, ZMQ_PUB))
+  Publisher<T>(const std::string& port)
+    : socket_(std::make_unique<zmq::socket_t>(*context_, ZMQ_PUB))
   {
     try
     {
@@ -48,7 +49,8 @@ public:
     int buffer_size = msg.GetSize();
     publish(buffer, buffer_size);
   }
-  void publish(const simple_msgs::GenericMessage<T>& msg)  // I'm not seeing the point of a base class anymore...
+
+  void publish(const simple_msgs::GenericMessage& msg)  // I'm not seeing the point of a base class anymore...
   {
     uint8_t* buffer = msg.getBufferData();
     int buffer_size = msg.getBufferSize();

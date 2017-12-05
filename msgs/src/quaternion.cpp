@@ -9,13 +9,13 @@ simple_msgs::Quaternion::Quaternion(const uint8_t* bufferPointer)
   y_ = q->y();
   z_ = q->z();
   w_ = q->w();
-  field_mofified_ = true;
+  mofified_ = true;
 }
 
 uint8_t* simple_msgs::Quaternion::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (field_mofified_)
+  if (mofified_)
   {
     builder_->Clear();
     simple_msgs::QuaternionFbsBuilder qBuilder(*builder_);
@@ -26,7 +26,7 @@ uint8_t* simple_msgs::Quaternion::getBufferData() const
     auto q = qBuilder.Finish();
     simple_msgs::FinishQuaternionFbsBuffer(
         *builder_, q);  // we have to explicitly call this method if we want the file_identifier to be set
-    field_mofified_ = false;
+    mofified_ = false;
   }
   return builder_->GetBufferPointer();
 }
@@ -38,5 +38,5 @@ void simple_msgs::Quaternion::setQuaternion(std::vector<double> quat)
   y_ = quat.at(1);
   z_ = quat.at(2);
   w_ = quat.at(3);
-  field_mofified_ = false;
+  mofified_ = false;
 }

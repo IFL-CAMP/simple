@@ -6,17 +6,24 @@
 
 namespace simple_msgs
 {
-class Quaternion : public GenericMessage<Quaternion>
+class Quaternion : public GenericMessage
 {
 public:
-
-	Quaternion() : GenericMessage<Quaternion>() {}
+  Quaternion()
+    : GenericMessage()
+  {
+  }
 
   /**
    * @brief TODO
    * @param bufferPointer
    */
-  Quaternion(double x, double y, double z, double w) : x_(x), y_(y), z_(z), w_(w), field_mofified_(true)
+  Quaternion(double x, double y, double z, double w)
+    : x_(x)
+    , y_(y)
+    , z_(z)
+    , w_(w)
+    , mofified_(true)
   {
   }
 
@@ -26,7 +33,8 @@ public:
    */
   Quaternion(const uint8_t* bufferPointer);
 
-  Quaternion(const Quaternion& q) : Quaternion(q.x_, q.y_, q.z_, q.w_)
+  Quaternion(const Quaternion& q)
+    : Quaternion(q.x_, q.y_, q.z_, q.w_)
   {
   }
 
@@ -38,7 +46,7 @@ public:
       y_ = q.y_;
       z_ = q.z_;
       w_ = q.w_;
-      field_mofified_ = true;
+      mofified_ = true;
     }
     return *this;
   }
@@ -53,19 +61,13 @@ public:
    * @brief TODO
    * @return
    */
-  int getBufferSize() const
-  {
-    return builder_->GetSize();
-  }
+  int getBufferSize() const { return builder_->GetSize(); }
 
   /**
    * @brief TODO
    * @return
    */
-  std::vector<double> getQuaternion() const
-  {
-    return std::vector<double>{ x_, y_, z_, w_ };
-  }
+  std::vector<double> getQuaternion() const { return std::vector<double>{x_, y_, z_, w_}; }
 
   /**
    * @brief TODO
@@ -77,14 +79,11 @@ public:
    * @brief TODO
    * @return
    */
-  static const char* derivedTopic()
-  {
-    return QuaternionFbsIdentifier();
-  }
+  static const char* getTopic() { return QuaternionFbsIdentifier(); }
 
 private:
   double x_, y_, z_, w_;
-  mutable bool field_mofified_{ false };
+  mutable bool mofified_{false};
   mutable std::mutex mutex_;
 };
 }  // namespace simple_msgs

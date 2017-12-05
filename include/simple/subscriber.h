@@ -23,7 +23,8 @@ public:
    * @param callback user defined callback function to be called for every data received through the socket.
    */
   Subscriber<T>(const std::string& port, const std::function<void(const T&)>& callback)
-    : socket_(std::make_unique<zmq::socket_t>(*context_, ZMQ_SUB)), callback_(callback)
+    : socket_(std::make_unique<zmq::socket_t>(*context_, ZMQ_SUB))
+    , callback_(callback)
   {
     // set socket timeout
     int timeOut = 5000;  // miliseconds
@@ -79,7 +80,7 @@ public:
       if (success)
       {
         // get the buffer data ignoring the first few bytes (the topic prefix)
-        const char* topic = T::topic_;
+        const char* topic = T::getTopic();
         int s = strlen(topic);
 
         auto convertMsg = static_cast<uint8_t*>(ZMQmsg.data());
@@ -99,12 +100,12 @@ private:
   void filter()
   {
     // get topic from the wrapper
-    const char* topic = T::topic_;
+    const char* topic = T::getTopic();
     socket_->setsockopt(ZMQ_SUBSCRIBE, "", 0);
   }
 
   std::thread t_;
-  bool alive_{ true };
+  bool alive_{true};
   static std::unique_ptr<zmq::context_t, contextCloser> context_;
   std::unique_ptr<zmq::socket_t> socket_;  //<
   std::function<void(const T&)> callback_;

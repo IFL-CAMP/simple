@@ -6,10 +6,13 @@
 
 namespace simple_msgs
 {
-class Point : public GenericMessage<Point>
+class Point : public GenericMessage
 {
 public:
-	Point() : GenericMessage<Point>() {}
+  Point()
+    : GenericMessage()
+  {
+  }
 
   /**
    * @brief TODO
@@ -17,7 +20,11 @@ public:
    * @param y Y coordinate
    * @param z Z coordinate
    */
-  Point(const double x, const double y, const double z) : x_(x), y_(y), z_(z), field_mofified_(true)
+  Point(const double x, const double y, const double z)
+    : x_(x)
+    , y_(y)
+    , z_(z)
+    , mofified_(true)
   {
   }
 
@@ -27,7 +34,8 @@ public:
    */
   Point(const uint8_t* bufferPointer);
 
-  Point(const Point& p) : Point(p.x_, p.y_, p.z_)
+  Point(const Point& p)
+    : Point(p.x_, p.y_, p.z_)
   {
   }
 
@@ -52,19 +60,13 @@ public:
    * @brief TODO
    * @return
    */
-  int getBufferSize() const
-  {
-    return builder_->GetSize();
-  }
+  int getBufferSize() const { return builder_->GetSize(); }
 
   /**
    * @brief TODO
    * @return
    */
-  std::vector<double> getPoint() const
-  {
-    return std::vector<double>{ x_, y_, z_ };
-  }
+  std::vector<double> getPoint() const { return std::vector<double>{x_, y_, z_}; }
 
   /**
    * @brief TODO
@@ -72,14 +74,11 @@ public:
    */
   void setPoint(std::vector<double> pt);
 
-  static const char* derivedTopic()
-  {
-    return PointFbsIdentifier();
-  }
+  static const char* getTopic() { return PointFbsIdentifier(); }
 
 private:
   double x_, y_, z_;
-  mutable bool field_mofified_{ false };
+  mutable bool mofified_{false};
   mutable std::mutex mutex_;
 };
 }  // namespace simple_msgs

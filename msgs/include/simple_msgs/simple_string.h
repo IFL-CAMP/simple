@@ -6,7 +6,7 @@
 
 namespace simple_msgs
 {
-class String : public GenericMessage<String>
+class String : public GenericMessage
 {
 public:
   using GenericMessage::GenericMessage;
@@ -15,7 +15,9 @@ public:
    * @brief TODO
    * @param bufferPointer
    */
-  String(std::string data) : data_(data), field_mofified_(true)
+  String(std::string data)
+    : data_(data)
+    , mofified_(true)
   {
   }
 
@@ -33,30 +35,21 @@ public:
    * @brief TODO
    * @return
    */
-  int getBufferSize() const
-  {
-    return builder_->GetSize();
-  }
+  int getBufferSize() const { return builder_->GetSize(); }
 
-  std::string getString() const
-  {
-    return data_;
-  }
+  std::string getString() const { return data_; }
 
   void setString(std::string data)
   {
     data_ = data;
-    field_mofified_ = true;
+    mofified_ = true;
   }
 
-  static const char* derivedTopic()
-  {
-    return StringFbsIdentifier();
-  }
+  static const char* getTopic() { return StringFbsIdentifier(); }
 
 private:
   std::string data_;
-  mutable bool field_mofified_{ false };
+  mutable bool mofified_{false};
   mutable std::mutex mutex_;
 };
 }  // namespace simple_msgs

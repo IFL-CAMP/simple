@@ -9,10 +9,11 @@
 namespace simple_msgs
 {
 template <typename T>
-class Image : public GenericMessage<Image<T>>
+class Image : public GenericMessage
 {
 public:
-  Image() : GenericMessage<Image<T>>()
+  Image()
+    : GenericMessage()
   {
   }
   /**
@@ -43,7 +44,6 @@ public:
     , origin_(originBufPtr)
     , data_(data)
     , dataLength_(dataLength)
-    , field_mofified_(true)
   {
   }
 
@@ -102,7 +102,7 @@ public:
       default:
         break;
     }
-    field_mofified_ = true;
+    mofified_ = true;
   }
 
   /**
@@ -113,7 +113,7 @@ public:
   uint8_t* getBufferData() const
   {
     std::lock_guard<std::mutex> lock(mutex_);
-    if (field_mofified_)
+    if (mofified_)
     {
       Image::builder_->Clear();
       // flatbuffer strings and vectors must be created before the start of the table builder
@@ -138,7 +138,7 @@ public:
       auto i = iBuilder.Finish();
       simple_msgs::FinishImageFbsBuffer(
           *Image::builder_, i);  // we have to explicitly call this method if we want the file_identifier to be set
-      field_mofified_ = false;
+      mofified_ = false;
     }
     return Image::builder_->GetBufferPointer();
   }
@@ -147,73 +147,49 @@ public:
    * @brief gets the size of the flatbuffer built
    * @return size of the buffer
    */
-  int getBufferSize() const
-  {
-    return Image::builder_->GetSize();
-  }
+  int getBufferSize() const { return Image::builder_->GetSize(); }
 
   /**
    * @brief Gets the resolution of the image in the directions X, Y and Z.
    * @return Order of the vector: resX, resY, resZ.
    */
-  std::vector<int> getResolution() const
-  {
-    return std::vector<int>{ resX_, resY_, resZ_ };
-  }
+  std::vector<int> getResolution() const { return std::vector<int>{resX_, resY_, resZ_}; }
 
   /**
    * @brief Gets the dimensions of the image containing the width, height and depth
    * @return Order of the vector: width, height, depth.
    */
-  std::vector<double> getDimensions() const
-  {
-    return std::vector<double>{ width_, height_, depth_ };
-  }
+  std::vector<double> getDimensions() const { return std::vector<double>{width_, height_, depth_}; }
 
   /**
    * @brief getter for the image data
    * @return pointer to the begining of the image array
    */
-  T* getImgData() const
-  {
-    return data_;
-  }
+  T* getImgData() const { return data_; }
 
   /**
    * @brief getter for the image data size
    * @return size of the image array
    */
-  int getImgBufferSize() const
-  {
-    return dataLength_;
-  }
+  int getImgBufferSize() const { return dataLength_; }
 
   /**
    * @brief getter for the header of the image
    * @return pointer to the wrapper for the header of the image
    */
-  simple_msgs::Header* getHeader() const
-  {
-    return &header_;
-  }
+  simple_msgs::Header* getHeader() const { return &header_; }
 
   /**
    * @brief getter for the origin of the image
    * @return pointer to the wrapper for the pose of the image
    */
-  simple_msgs::Pose* getOrigin() const
-  {
-    return &origin_;
-  }
+  simple_msgs::Pose* getOrigin() const { return &origin_; }
 
   /**
    * @brief getter for the encoding type of the image
    * @return string with the type of encoding
    */
-  std::string getEncoding() const
-  {
-    return encoding_;
-  }
+  std::string getEncoding() const { return encoding_; }
 
   /**
    * @brief setter for the encoding of the image
@@ -223,7 +199,7 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     encoding_ = encoding;
-    field_mofified_ = true;
+    mofified_ = true;
   }
 
   /**
@@ -234,7 +210,7 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     resX_ = resX;
-    field_mofified_ = true;
+    mofified_ = true;
   }
 
   /**
@@ -245,7 +221,7 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     resY_ = resY;
-    field_mofified_ = true;
+    mofified_ = true;
   }
 
   /**
@@ -256,7 +232,7 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     resZ_ = resZ;
-    field_mofified_ = true;
+    mofified_ = true;
   }
 
   /**
@@ -267,7 +243,7 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     width_ = width;
-    field_mofified_ = true;
+    mofified_ = true;
   }
 
   /**
@@ -278,7 +254,7 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     height_ = height;
-    field_mofified_ = true;
+    mofified_ = true;
   }
 
   /**
@@ -289,7 +265,7 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     depth_ = depth;
-    field_mofified_ = true;
+    mofified_ = true;
   }
 
   /**
@@ -300,7 +276,7 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     header_ = headerBufPtr;
-    field_mofified_ = true;
+    mofified_ = true;
   }
 
   /**
@@ -311,7 +287,7 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     origin_ = originBufPtr;
-    field_mofified_ = true;
+    mofified_ = true;
   }
 
   /**
@@ -324,27 +300,24 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = imgData;
-    field_mofified_ = true;
+    mofified_ = true;
   }
 
   /**
    * @brief TODO
    * @return
    */
-  static const char* derivedTopic()
-  {
-    return ImageFbsIdentifier();
-  }
+  static const char* getTopic() { return ImageFbsIdentifier(); }
 
 private:
-  int resX_{ 0 }, resY_{ 0 }, resZ_{ 0 };
-  double width_{ 0.0 }, height_{ 0.0 }, depth_{ 0.0 };
-  std::string encoding_{ "" };
-  T* data_{ nullptr };
+  int resX_{0}, resY_{0}, resZ_{0};
+  double width_{0.0}, height_{0.0}, depth_{0.0};
+  std::string encoding_{""};
+  T* data_{nullptr};
   int dataLength_;
   simple_msgs::Header header_;
   simple_msgs::Pose origin_;
-  mutable bool field_mofified_{ false };
+  mutable bool mofified_{false};
   mutable std::mutex mutex_;
   simple_msgs::data getDataUnionType() const;
   flatbuffers::Offset<void> getDataUnionElem() const;

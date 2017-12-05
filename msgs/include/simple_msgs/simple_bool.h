@@ -6,7 +6,7 @@
 
 namespace simple_msgs
 {
-class Bool : public GenericMessage<Bool>
+class Bool : public GenericMessage
 {
 public:
   using GenericMessage::GenericMessage;
@@ -15,7 +15,9 @@ public:
    * @brief TODO
    * @param bufferPointer
    */
-  Bool(bool data) : data_(data), field_mofified_(true)
+  Bool(bool data)
+    : data_(data)
+    , mofified_(true)
   {
   }
 
@@ -33,29 +35,20 @@ public:
    * @brief TODO
    * @return
    */
-  int getBufferSize() const
-  {
-    return builder_->GetSize();
-  }
+  int getBufferSize() const { return builder_->GetSize(); }
 
   void setBool(bool data)
   {
     data_ = data;
-    field_mofified_ = true;
+    mofified_ = true;
   }
 
-  bool getBool() const
-  {
-    return data_;
-  }
-  static const char* derivedTopic()
-  {
-    return BoolFbsIdentifier();
-  }
+  bool getBool() const { return data_; }
+  static const char* getTopic() { return BoolFbsIdentifier(); }
 
 private:
   bool data_;
-  mutable bool field_mofified_{ false };
+  mutable bool mofified_{false};
   mutable std::mutex mutex_;
 };
 }  // namespace simple_msgs

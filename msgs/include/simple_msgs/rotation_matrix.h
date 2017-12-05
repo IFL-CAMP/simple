@@ -6,7 +6,7 @@
 
 namespace simple_msgs
 {
-class RotationMatrix : public GenericMessage<RotationMatrix>
+class RotationMatrix : public GenericMessage
 {
 public:
   using GenericMessage::GenericMessage;
@@ -26,7 +26,7 @@ public:
     , r31_(r31)
     , r32_(r32)
     , r33_(r33)
-    , field_mofified_(true)
+    , mofified_(true)
   {
   }
 
@@ -46,10 +46,7 @@ public:
    * @brief TODO
    * @return
    */
-  int getBufferSize() const
-  {
-    return builder_->GetSize();
-  }
+  int getBufferSize() const { return builder_->GetSize(); }
 
   /**
    * @brief Sets the rotation matrix coeficients to the desired values
@@ -65,17 +62,14 @@ public:
    */
   std::vector<double> getMatrixCoefs() const
   {
-    return std::vector<double>{ r11_, r12_, r13_, r21_, r22_, r23_, r31_, r32_, r33_ };
+    return std::vector<double>{r11_, r12_, r13_, r21_, r22_, r23_, r31_, r32_, r33_};
   }
 
-  static const char* derivedTopic()
-  {
-    return RotationMatrixFbsIdentifier();
-  }
+  static const char* getTopic() { return RotationMatrixFbsIdentifier(); }
 
 private:
   double r11_, r12_, r13_, r21_, r22_, r23_, r31_, r32_, r33_;
-  mutable bool field_mofified_{ false };
+  mutable bool mofified_{false};
   mutable std::mutex mutex_;
 };
 }  // namespace simple_msgs

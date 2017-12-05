@@ -8,7 +8,7 @@
 
 namespace simple_msgs
 {
-class Pose : public GenericMessage<Pose>
+class Pose : public GenericMessage
 {
 public:
   using GenericMessage::GenericMessage;
@@ -18,7 +18,10 @@ public:
    * @param position
    * @param quaternion
    */
-  Pose(uint8_t* position, uint8_t* quaternion) : quaternion_(quaternion), position_(position), field_mofified_(true)
+  Pose(uint8_t* position, uint8_t* quaternion)
+    : quaternion_(quaternion)
+    , position_(position)
+    , mofified_(true)
   {
   }
 
@@ -38,10 +41,7 @@ public:
    * @brief TODO
    * @return
    */
-  int getBufferSize() const
-  {
-    return builder_->GetSize();
-  }
+  int getBufferSize() const { return builder_->GetSize(); }
 
   /**
    * @brief TODO
@@ -59,29 +59,20 @@ public:
    * @brief TODO
    * @return
    */
-  const simple_msgs::Point* getPosition() const
-  {
-    return &position_;
-  }
+  const simple_msgs::Point* getPosition() const { return &position_; }
 
   /**
    * @brief TODO
    * @return
    */
-  const simple_msgs::Quaternion* getQuaternion() const
-  {
-    return &quaternion_;
-  }
+  const simple_msgs::Quaternion* getQuaternion() const { return &quaternion_; }
 
-  static const char* derivedTopic()
-  {
-    return PoseFbsIdentifier();
-  }
+  static const char* getTopic() { return PoseFbsIdentifier(); }
 
 private:
   simple_msgs::Quaternion quaternion_;
   simple_msgs::Point position_;
-  mutable bool field_mofified_{ false };
+  mutable bool mofified_{false};
   mutable std::mutex mutex_;
 };
 }  // namespace simple_msgs

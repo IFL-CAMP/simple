@@ -23,7 +23,8 @@ public:
    * @param callback user defined callback function to be called for every reply received to a request.
    */
   Client<T>(const std::string& port, const std::function<void(const T&)>& callback)
-    : socket_(std::make_unique<zmq::socket_t>(*context_, ZMQ_REQ)), callback_(callback)
+    : socket_(std::make_unique<zmq::socket_t>(*context_, ZMQ_REQ))
+    , callback_(callback)
   {
     try
     {
@@ -35,10 +36,7 @@ public:
     }
   }
 
-  ~Client<T>()
-  {
-    socket_->close();
-  }
+  ~Client<T>() { socket_->close(); }
 
   /**
    * @brief TODO
@@ -52,7 +50,7 @@ public:
     request(buffer, buffer_size);
   }
 
-  void request(const simple_msgs::GenericMessage<T>& msg)
+  void request(const simple_msgs::GenericMessage& msg)
   {
     uint8_t* buffer = msg.getBufferData();
     int buffer_size = msg.getBufferSize();
