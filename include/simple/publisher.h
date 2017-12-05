@@ -34,7 +34,7 @@ public:
   ~Publisher<T>()
   {
     socket_->close();
-    context_->close();
+    // context_->close();
   }
 
   /**
