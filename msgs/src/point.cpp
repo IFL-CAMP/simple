@@ -9,6 +9,7 @@ simple_msgs::Point::Point(const uint8_t* data)
 	y_ = p->y();
 	z_ = p->z();
 }
+
 uint8_t* simple_msgs::Point::getBufferData() const
 {
 	std::lock_guard<std::mutex> lock(mutex_);
@@ -24,4 +25,10 @@ uint8_t* simple_msgs::Point::getBufferData() const
 		field_mofified_ = false;
 	}
 	return builder_->GetBufferPointer();
+}
+
+void simple_msgs::Point::setPoint(std::vector<double> pt){
+	x_ = pt.at(0);
+	y_ = pt.at(1);
+	z_ = pt.at(2);
 }

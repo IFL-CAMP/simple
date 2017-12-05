@@ -46,9 +46,9 @@ public:
    */
   void setPosition(uint8_t* position);
 
-  simple_msgs::Point getPosition();
+  simple_msgs::Point getPosition() const;
 
-  simple_msgs::Quaternion getQuaternion();
+  simple_msgs::Quaternion getQuaternion() const;
 
   static const char* derivedTopic(){ return PoseFbsIdentifier(); }
 private:
