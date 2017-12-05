@@ -37,24 +37,34 @@ public:
    * @brief TODO
    * @return
    */
-  int getBufferSize() const{ return builder_->GetSize(); }
+  int getBufferSize() const
+  {
+    return builder_->GetSize();
+  }
 
   /**
-  * @brief TODO
-  * @return
-  */
-  std::vector<double> getPoint() const{ return std::vector<double>{x_, y_, z_}; }
+   * @brief TODO
+   * @return
+   */
+  std::vector<double> getPoint() const
+  {
+    return std::vector<double>{ x_, y_, z_ };
+  }
 
   /**
-  * @brief TODO
-  * @param pt
-  */
+   * @brief TODO
+   * @param pt
+   */
   void setPoint(std::vector<double> pt);
 
-  static const char* derivedTopic(){ return PointFbsIdentifier(); }
+  static const char* derivedTopic()
+  {
+    return PointFbsIdentifier();
+  }
+
 private:
-	double x_, y_, z_;
-	mutable bool field_mofified_{ false };
-	mutable std::mutex mutex_;
+  double x_, y_, z_;
+  mutable bool field_mofified_{ false };
+  mutable std::mutex mutex_;
 };
 }  // namespace simple_msgs

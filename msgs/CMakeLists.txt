@@ -20,15 +20,15 @@ set(SIMPLE_MSGS_SRCS
   ${SIMPLE_MSGS_HEADERS}
   src/header.cpp
   src/image.cpp
-  src/point.cpp
   src/pose.cpp
   src/quaternion.cpp
-  src/rotationMatrix.cpp
+  src/point.cpp
+  src/rotation_matrix.cpp
   src/simple_bool.cpp
-  src/simple_double.cpp
   src/simple_float.cpp
-  src/simple_int.cpp
+  src/simple_double.cpp
   src/simple_string.cpp
+  src/simple_int.cpp
   )
 
 # Generate the Flatbuffers headers - this is defined in FindFlatBuffers.cmake

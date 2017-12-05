@@ -9,38 +9,54 @@ namespace simple_msgs
 class String : public GenericMessage<String>
 {
 public:
-	using GenericMessage::GenericMessage;
+  using GenericMessage::GenericMessage;
 
-	/**
-	* @brief TODO
-	* @param bufferPointer
-	*/
-	String(std::string data);
+  /**
+   * @brief TODO
+   * @param bufferPointer
+   */
+  String(std::string data) : data_(data), field_mofified_(true)
+  {
+  }
 
-	/**
-	* @brief TODO
-	* @param bufferPointer
-	*/
-	String(const uint8_t* bufferPointer);
-	/**
-	* @brief TODO
-	* @return
-	*/
-	uint8_t* getBufferData() const;
-	/**
-	* @brief TODO
-	* @return
-	*/
-	int getBufferSize() const;
+  /**
+   * @brief TODO
+   * @param bufferPointer
+   */
+  String(const uint8_t* bufferPointer);
+  /**
+   * @brief TODO
+   * @return
+   */
+  uint8_t* getBufferData() const;
+  /**
+   * @brief TODO
+   * @return
+   */
+  int getBufferSize() const
+  {
+    return builder_->GetSize();
+  }
 
-	std::string getString(){ return data_; }
+  std::string getString() const
+  {
+    return data_;
+  }
 
-	void setString(std::string data){ data_ = data; }
+  void setString(std::string data)
+  {
+    data_ = data;
+    field_mofified_ = true;
+  }
 
-	static const char* derivedTopic(){ return StringFbsIdentifier(); }
+  static const char* derivedTopic()
+  {
+    return StringFbsIdentifier();
+  }
+
 private:
-	std::string data_;
-	mutable bool field_mofified_{ false };
-	mutable std::mutex mutex_;
+  std::string data_;
+  mutable bool field_mofified_{ false };
+  mutable std::mutex mutex_;
 };
-}
+}  // namespace simple_msgs

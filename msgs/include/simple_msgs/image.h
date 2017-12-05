@@ -11,13 +11,8 @@ namespace simple_msgs
 template <typename T>
 class Image : public GenericMessage<Image<T>>
 {
-  using value_type = Image<T>;
-  using Base = GenericMessage<Image<T>>;
-
 public:
-  Image() : Base()
-  {
-  }
+  using GenericMessage::GenericMessage;
   /**
    * @brief Wrapper for image data. Instance type has to match the image data type.
    * @param encoding
@@ -49,6 +44,7 @@ public:
     , field_mofified_(true)
   {
   }
+
   /**
    * @brief Construct Image wrapper from a buffer of type ImageFbs
    * @param bufferPointer pointer to the start of the buffer of type ImageFbs
@@ -101,11 +97,10 @@ public:
       case simple_msgs::data_dataDouble:
         data_ = static_cast<const dataDouble*>(i->imgData())->img()->data();
         break;
-      default:
-        break;
     }
     field_mofified_ = true;
   }
+
   /**
    * @brief If there are changes to the data, clears the flatbuffer builder and creates a new ImageFbs table offset. If
    * not, return the pointer to the buffer already existing
@@ -116,14 +111,14 @@ public:
     std::lock_guard<std::mutex> lock(mutex_);
     if (field_mofified_)
     {
-      Image::builder_->Clear();
+      builder_->Clear();
       // flatbuffer strings and vectors must be created before the start of the table builder
-      auto encodingStr = Image::builder_->CreateString(encoding_);
-      auto headerVec = Image::builder_->CreateVector(header_.getBufferData(), header_.getBufferSize());
-      auto originVec = Image::builder_->CreateVector(origin_.getBufferData(), origin_.getBufferSize());
+      auto encodingStr = builder_->CreateString(encoding_);
+      auto headerVec = builder_->CreateVector(header_.getBufferData(), header_.getBufferSize());
+      auto originVec = builder_->CreateVector(origin_.getBufferData(), origin_.getBufferSize());
       auto type = getDataUnionType();
       auto elem = getDataUnionElem();
-      simple_msgs::ImageFbsBuilder iBuilder(*Image::builder_);
+      simple_msgs::ImageFbsBuilder iBuilder(*builder_);
       // add the information
       iBuilder.add_depth(depth_);
       iBuilder.add_enconding(encodingStr);
@@ -138,19 +133,21 @@ public:
       iBuilder.add_width(width_);
       auto i = iBuilder.Finish();
       simple_msgs::FinishImageFbsBuffer(
-          *Image::builder_, i);  // we have to explicitly call this method if we want the file_identifier to be set
+          *builder_, i);  // we have to explicitly call this method if we want the file_identifier to be set
       field_mofified_ = false;
     }
-    return Image::builder_->GetBufferPointer();
+    return builder_->GetBufferPointer();
   }
+
   /**
    * @brief gets the size of the flatbuffer built
    * @return size of the buffer
    */
   int getBufferSize() const
   {
-    return Image::builder_->GetSize();
+    return builder_->GetSize();
   }
+
   /**
    * @brief Gets the resolution of the image in the directions X, Y and Z.
    * @return Order of the vector: resX, resY, resZ.
@@ -325,6 +322,11 @@ public:
     data_ = imgData;
     field_mofified_ = true;
   }
+
+  /**
+   * @brief TODO
+   * @return
+   */
   static const char* derivedTopic()
   {
     return ImageFbsIdentifier();

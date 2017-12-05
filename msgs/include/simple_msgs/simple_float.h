@@ -15,30 +15,38 @@ public:
    * @brief TODO
    * @param bufferPointer
    */
-  Float(float data);
+  Float(float data) : data_(data), field_mofified_(true)
+  {
+  }
 
   /**
    * @brief TODO
    * @param bufferPointer
    */
   Float(const uint8_t* bufferPointer);
+
   /**
    * @brief TODO
    * @return
    */
   uint8_t* getBufferData() const;
+
   /**
    * @brief TODO
    * @return
    */
-  int getBufferSize() const;
+  int getBufferSize() const
+  {
+    return builder_->GetSize();
+  }
 
   void setFloat(float data)
   {
     data_ = data;
+	field_mofified_ = true;
   }
 
-  float getFloat()
+  float getFloat() const
   {
     return data_;
   }

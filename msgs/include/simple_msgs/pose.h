@@ -12,45 +12,72 @@ class Pose : public GenericMessage<Pose>
 {
 public:
   using GenericMessage::GenericMessage;
+
   /**
    * @brief TODO
    * @param position
    * @param quaternion
    */
-  Pose(uint8_t* position, uint8_t* quaternion) : quaternion_(quaternion), position_(position)
+  Pose(uint8_t* position, uint8_t* quaternion) : quaternion_(quaternion), position_(position), field_mofified_(true)
   {
   }
+
   /**
    * @brief TODO
    * @param bufferPointer
    */
   Pose(const uint8_t* bufferPointer);
+
   /**
    * @brief TODO
    * @return
    */
   uint8_t* getBufferData() const;
+
   /**
    * @brief TODO
    * @return
    */
-  int getBufferSize() const;
+  int getBufferSize() const
+  {
+    return builder_->GetSize();
+  }
+
   /**
    * @brief TODO
    * @param quaternion
    */
   void setQuaternion(uint8_t* quaternion);
+
   /**
    * @brief TODO
    * @param position
    */
   void setPosition(uint8_t* position);
 
-  simple_msgs::Point getPosition() const;
+  /**
+   * @brief TODO
+   * @return
+   */
+  const simple_msgs::Point* getPosition() const
+  {
+    return &position_;
+  }
 
-  simple_msgs::Quaternion getQuaternion() const;
+  /**
+   * @brief TODO
+   * @return
+   */
+  const simple_msgs::Quaternion* getQuaternion() const
+  {
+    return &quaternion_;
+  }
 
-  static const char* derivedTopic(){ return PoseFbsIdentifier(); }
+  static const char* derivedTopic()
+  {
+    return PoseFbsIdentifier();
+  }
+
 private:
   simple_msgs::Quaternion quaternion_;
   simple_msgs::Point position_;
