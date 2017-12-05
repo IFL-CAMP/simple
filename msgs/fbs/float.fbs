@@ -1,6 +1,6 @@
 // Schema for S.I.M.P.L.E. Float
 
-namespace simple;
+namespace simple_msgs;
 
 table FloatFbs {
 	data:float;

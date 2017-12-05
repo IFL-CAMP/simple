@@ -8,9 +8,6 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include(GNUInstallDirs)
 
-# Add extra CMake modules
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake/Modules)
-
 # TODO can this be omitted if we don't use protobuf anymore?
 if (WIN32)
   list(APPEND CMAKE_CXX_FLAGS_RELEASE " /MD")
@@ -22,10 +19,11 @@ if (WIN32)
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 endif(WIN32)
 
-###### FIND LIBRARIES
+######
 
-# Find FlatBuffers
-find_package(FlatBuffers REQUIRED)
+add_subdirectory(msgs)
+
+###### FIND LIBRARIES
 
 # Find ZMQ
 if (WIN32)
@@ -42,26 +40,19 @@ endif()
 
 ###### FILES AND FOLDERS NEEDED FOR COMPILATION
 
-include_directories(include msgs/include ${cppzmq_INCLUDE_DIR} ${ZeroMQ_INCLUDE_DIR} ${FLATBUFFERS_INCLUDE_DIR})
+include_directories(include msgs/include msgs/generated_include ${cppzmq_INCLUDE_DIR} ${ZeroMQ_INCLUDE_DIR} ${FLATBUFFERS_INCLUDE_DIR}) #needed to include the FLatbuffer headers here too
 
-file(GLOB_RECURSE Headers "*.h" "*.hpp")
+file(GLOB SIMPLE_HEADERS "include/simple/*.h" "include/simple/*.hpp")
 
-set(LIB_SRCS 
-  ${Headers}
-  src/Server.cpp
-  src/Publisher.cpp
-  src/Client.cpp
-	src/Subscriber.cpp)
+set(SIMPLE_SRCS
+  ${SIMPLE_HEADERS}
+  src/publisher.cpp)
 
 ###### TARGETS
 
-# Generate the Flatbuffers headers - this is defined in FindFlatBuffers.cmake
-flatbuffers_generate_c_headers(simple_msgs ${PROJECT_SOURCE_DIR}/msgs/fbs ${PROJECT_SOURCE_DIR}/msgs/include) #TODO check that the compilation of the the flatbuffer header in Windows happens correctly
-
-add_library(${PROJECT_NAME} SHARED ${LIB_SRCS})
-target_link_libraries(${PROJECT_NAME} ${cppzmq_LIBRARY})
+add_library(${PROJECT_NAME} SHARED ${SIMPLE_SRCS})
+target_link_libraries(${PROJECT_NAME} ${cppzmq_LIBRARY} simple_msgs)
 target_compile_definitions(${PROJECT_NAME} PRIVATE SIMPLE_LIBRARY_EXPORT) # TODO is this necessary?
-
 
 ###### INSTALLATION
 
@@ -69,6 +60,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE SIMPLE_LIBRARY_EXPORT) # TODO
 install(TARGETS ${PROJECT_NAME} 
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+	
 
 #install the ZMQ library in the desired folder, for Windows
 if(WIN32)
@@ -80,5 +72,5 @@ endif(WIN32)
 
 ###### TESTS
 
-# add_subdirectory(tests)
+add_subdirectory(tests)
 
