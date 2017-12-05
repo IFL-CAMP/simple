@@ -14,7 +14,11 @@ class GenericMessage
 public:
   virtual ~GenericMessage() = default;
   virtual uint8_t* getBufferData() const = 0;
-  virtual int getBufferSize() const = 0;
+  int getBufferSize() const
+  {
+    getBufferData();
+    return builder_->GetSize();
+  }
 
 protected:
   GenericMessage()
@@ -22,28 +26,7 @@ protected:
   {
   }
   std::unique_ptr<flatbuffers::FlatBufferBuilder> builder_;
-  mutable bool mofified_{true};
+  mutable bool modified_{true};
   mutable std::mutex mutex_;
 };
-
-/**
-template <class Derived>
-*/
-
-/**
- * @brief GenericMessage: base class for SIMPLE wrappers around flatbuffers messages.
- * It contains a generic identifier that depends on the underlying message type and its implementation.
- */
-
-/**
-class GenericMessage : public GenericMessageBase
-{
-protected:
-  using GenericMessageBase::GenericMessageBase;  //< Using the default constructor of GenericMessageBase
-  static const char* topic_;
-};
-
-template <class Derived>
-const char* GenericMessage<Derived>::topic_ = Derived::getTopic();
-*/
 }  // namespace simple_msgs
