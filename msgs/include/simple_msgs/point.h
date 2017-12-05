@@ -42,6 +42,14 @@ public:
     return *this;
   }
 
+  bool operator==(const Point& p) const{
+	  return(x_ == p.x_ && y_ == p.y_ && z_ == p.z_);
+  }
+
+  bool operator!=(const Point& p) const{
+	  return !(*this == p);
+  }
+
   /**
    * @brief TODO
    * @return

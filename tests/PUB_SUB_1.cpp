@@ -11,8 +11,16 @@
 
 //TEST FOR THE PUBLISHING AND SUBSCRIPTION OF A POINT
 
-//start a publisher
-simple::Publisher<simple_msgs::Point > pub("tcp://localhost:5555");
+//create static point for comparing with data sent
+static simple_msgs::Point recvP(0.0, 0.0, 0.0);
+
+//define callback function
+void callbackFun(const simple_msgs::Point& pt){
+	recvP = pt;
+}
+
+//start a subscriber
+simple::Subscriber<simple_msgs::Point > sub("tcp://*:5555",callbackFun);
 
 //randomly generate the data to be sent
 srand(time(NULL));//start random seed
@@ -23,10 +31,10 @@ simple_msgs::Point p(x, y, z);
 
 SCENARIO("PUB SUB POINT") {
 	GIVEN("An instance of a subscriber") {
-		WHEN("A negative number is given") {
-			int negative_number = -10;
-			THEN("The sign is -1") {
-				REQUIRE(sign(negative_number) == -1);
+		WHEN("A publisher publishes data") {
+			simple::Publisher<simple_msgs::Point> pub("tcp://localhost:5555");
+			THEN("The data received is the same as the one sent") {
+				REQUIRE(p==recvP);
 			}
 		}
 		WHEN("A positive number is given") {
