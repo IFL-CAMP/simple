@@ -1,4 +1,4 @@
-// Test how the publisher works
+// Test how the client works
 
 #include <iostream>
 #include "simple/client.h"
@@ -40,8 +40,8 @@ int main(int argc, char* argv[])
   simple_msgs::Header(1, "ID", 1.2);
 
   // create a client
-  simple::Client<simple_msgs::Point> client("tcp://*:5555",dummy);
-  std::cout << "Publish these cordinates: x=5.0, y=6.0, z=7.0" << std::endl;
+  simple::Client<simple_msgs::Point> client("tcp://localhost:5555",dummy);
+  std::cout << "Request these cordinates: x=5.0, y=6.0, z=7.0" << std::endl;
   // s_catch_signals();
   int num = 10;
   while (num > 0)

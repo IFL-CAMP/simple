@@ -31,4 +31,5 @@ void simple_msgs::Point::setPoint(std::vector<double> pt){
 	x_ = pt.at(0);
 	y_ = pt.at(1);
 	z_ = pt.at(2);
+	field_mofified_ = true;
 }

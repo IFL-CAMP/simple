@@ -79,13 +79,13 @@ public:
   }
 
   void reply(const T& msg){
-	  uint8_t* buffer = msg.getBufferData();
+		  uint8_t* buffer = msg.getBufferData();
 	  int buffer_size = msg.getBufferSize();
 	  reply(buffer, buffer_size);
   }
 
   void reply(const uint8_t* msg, const int size){
-	  zmq::message_t rep;
+	  zmq::message_t rep(size);
 
 	  memcpy(rep.data(), msg, size);
 
