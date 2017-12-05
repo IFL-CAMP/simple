@@ -9,7 +9,8 @@ namespace simple_msgs
 class Quaternion : public GenericMessage<Quaternion>
 {
 public:
-  using GenericMessage::GenericMessage;
+
+	Quaternion() : GenericMessage<Quaternion>() {}
 
   /**
    * @brief TODO

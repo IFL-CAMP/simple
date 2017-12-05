@@ -9,7 +9,7 @@ namespace simple_msgs
 class Point : public GenericMessage<Point>
 {
 public:
-  using GenericMessage::GenericMessage;
+	Point() : GenericMessage<Point>() {}
 
   /**
    * @brief TODO
