@@ -44,6 +44,7 @@ public:
     , field_mofified_(true)
   {
   }
+
   /**
    * @brief Construct Image wrapper from a buffer of type ImageFbs
    * @param bufferPointer pointer to the start of the buffer of type ImageFbs
@@ -98,8 +99,8 @@ public:
         break;
     }
     field_mofified_ = true;
-    topic_ = simple_msgs::ImageFbsIdentifier();
   }
+
   /**
    * @brief If there are changes to the data, clears the flatbuffer builder and creates a new ImageFbs table offset. If
    * not, return the pointer to the buffer already existing
@@ -118,7 +119,7 @@ public:
       auto type = getDataUnionType();
       auto elem = getDataUnionElem();
       simple_msgs::ImageFbsBuilder iBuilder(*builder_);
-	  //add the information
+      // add the information
       iBuilder.add_depth(depth_);
       iBuilder.add_enconding(encodingStr);
       iBuilder.add_Header(headerVec);
@@ -137,6 +138,7 @@ public:
     }
     return builder_->GetBufferPointer();
   }
+
   /**
    * @brief gets the size of the flatbuffer built
    * @return size of the buffer
@@ -145,6 +147,7 @@ public:
   {
     return builder_->GetSize();
   }
+
   /**
    * @brief Gets the resolution of the image in the directions X, Y and Z.
    * @return Order of the vector: resX, resY, resZ.
@@ -173,12 +176,12 @@ public:
   }
 
   /**
-  * @brief getter for the image data size
-  * @return size of the image array
-  */
+   * @brief getter for the image data size
+   * @return size of the image array
+   */
   int getImgBufferSize() const
   {
-	  return dataLength_;
+    return dataLength_;
   }
 
   /**
@@ -191,9 +194,9 @@ public:
   }
 
   /**
-  * @brief getter for the origin of the image
-  * @return pointer to the wrapper for the pose of the image
-  */
+   * @brief getter for the origin of the image
+   * @return pointer to the wrapper for the pose of the image
+   */
   simple_msgs::Pose* getOrigin() const
   {
     return &origin_;
@@ -231,9 +234,9 @@ public:
   }
 
   /**
-  * @brief setter for the resolution of the image in the y direction
-  * @param resY number of voxels in the y direction of the image
-  */
+   * @brief setter for the resolution of the image in the y direction
+   * @param resY number of voxels in the y direction of the image
+   */
   void setResY(int resY)
   {
     std::lock_guard<std::mutex> lock(mutex_);
@@ -242,9 +245,9 @@ public:
   }
 
   /**
-  * @brief setter for the resolution of the image in the z direction
-  * @param resZ number of voxels in the z direction of the image
-  */
+   * @brief setter for the resolution of the image in the z direction
+   * @param resZ number of voxels in the z direction of the image
+   */
   void setResZ(int resZ)
   {
     std::lock_guard<std::mutex> lock(mutex_);
@@ -264,9 +267,9 @@ public:
   }
 
   /**
-  * @brief setter for the height of the image
-  * @param width size of the image in the Y direction
-  */
+   * @brief setter for the height of the image
+   * @param width size of the image in the Y direction
+   */
   void setHeight(double height)
   {
     std::lock_guard<std::mutex> lock(mutex_);
@@ -275,9 +278,9 @@ public:
   }
 
   /**
-  * @brief setter for the depth of the image
-  * @param width size of the image in the Z direction
-  */
+   * @brief setter for the depth of the image
+   * @param width size of the image in the Z direction
+   */
   void setDepth(double depth)
   {
     std::lock_guard<std::mutex> lock(mutex_);
@@ -319,6 +322,11 @@ public:
     data_ = imgData;
     field_mofified_ = true;
   }
+
+  /**
+   * @brief TODO
+   * @return
+   */
   static const char* derivedTopic()
   {
     return ImageFbsIdentifier();

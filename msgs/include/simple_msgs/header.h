@@ -16,7 +16,7 @@ public:
   using GenericMessage::GenericMessage;
 
   /**
-   * @brief TODO
+   * @brief Constructor from the individual data
    * @param seq_n
    * @param frame_id
    * @param timestamp
@@ -78,36 +78,25 @@ public:
    * @brief TODO
    * @param seq_n
    */
-  void setSequenceNumber(const int seq_n)
-  {
-    std::lock_guard<std::mutex> lock(mutex_);
-    seq_n_ = seq_n;
-    field_mofified_ = true;
-  }
+  void setSequenceNumber(const int seq_n);
 
   /**
    * @brief TODO
    * @param frame_id
    */
-  void setFrameID(const std::string& frame_id)
-  {
-    std::lock_guard<std::mutex> lock(mutex_);
-    frame_id_ = frame_id;
-    field_mofified_ = true;
-  }
+  void setFrameID(const std::string& frame_id);
 
   /**
    * @brief Modifies the data for time stamp. Keep in mind creating new messages from scratch can be more efficient than
    * mutating existing ones
    * @param timestamp Seconds since the epoch, when the data in the message was generated
    */
-  void setTimestamp(const double timestamp)
+  void setTimestamp(const double timestamp);
+
+  static const char* derivedTopic()
   {
-    std::lock_guard<std::mutex> lock(mutex_);
-    timestamp_ = timestamp;
-    field_mofified_ = true;
+    return HeaderFbsIdentifier();
   }
-  static const char* derivedTopic(){ return HeaderFbsIdentifier(); }
 
 private:
   int seq_n_{ 0 };

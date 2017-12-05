@@ -1,6 +1,6 @@
 // Schema for S.I.M.P.L.E. String
 
-namespace simple;
+namespace simple_msgs;
 
 table StringFbs {
 	data:string;

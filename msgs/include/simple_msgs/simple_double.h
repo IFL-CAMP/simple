@@ -1,7 +1,7 @@
 #pragma once
 
 #include "generic_message.h"
-#include "double_generated"
+#include "double_generated.h"
 #include <mutex>
 
 namespace simple_msgs
@@ -15,7 +15,7 @@ public:
 	* @brief TODO
 	* @param bufferPointer
 	*/
-	Double(double data);
+	Double(double data) :data_(data), field_mofified_(true){}
 
 	/**
 	* @brief TODO
@@ -31,11 +31,19 @@ public:
 	* @brief TODO
 	* @return
 	*/
-	int getBufferSize() const;
+	int getBufferSize() const{
+		return builder_->GetSize();
+	}
 
-	double getDouble();
+	double getDouble() const{
+		return data_;
+	}
 
-	void setDouble(double data);
+	void setDouble(double data){
+		data_ = data;
+		field_mofified_ = true;
+	}
+
 	static const char* derivedTopic(){ return DoubleFbsIdentifier(); }
 private:
 	double data_;
