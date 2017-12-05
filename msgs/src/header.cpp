@@ -42,17 +42,17 @@ uint8_t* Header::getBufferData() const
   {
     builder_->Clear();
     auto frame_id_string = builder_->CreateString(frame_id_);
-    HeaderFbsBuilder hBuilder(*builder_);
-    hBuilder.add_frame_id(frame_id_string);
-    hBuilder.add_sequence_number(seq_n_);
-    hBuilder.add_timestamp(timestamp_);
-    FinishHeaderFbsBuffer(*builder_, hBuilder.Finish());
+    HeaderFbsBuilder tmp_builder(*builder_);
+    tmp_builder.add_frame_id(frame_id_string);
+    tmp_builder.add_sequence_number(seq_n_);
+    tmp_builder.add_timestamp(timestamp_);
+    FinishHeaderFbsBuffer(*builder_, tmp_builder.Finish());
     modified_ = false;
   }
   return builder_->GetBufferPointer();
 }
 
-void Header::setSequenceNumber(const int seq_n)
+void Header::setSequenceNumber(int seq_n)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   seq_n_ = seq_n;
@@ -66,7 +66,7 @@ void Header::setFrameID(const std::string& frame_id)
   modified_ = true;
 }
 
-void Header::setTimestamp(const double timestamp)
+void Header::setTimestamp(double timestamp)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   timestamp_ = timestamp;

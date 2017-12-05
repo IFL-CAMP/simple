@@ -41,39 +41,39 @@ uint8_t* Point::getBufferData() const
   if (modified_)
   {
     builder_->Clear();
-    PointFbsBuilder ptBuilder(*builder_);
-    ptBuilder.add_x(x_);
-    ptBuilder.add_y(y_);
-    ptBuilder.add_z(z_);
-    FinishPointFbsBuffer(*builder_, ptBuilder.Finish());
+    PointFbsBuilder tmp_builder(*builder_);
+    tmp_builder.add_x(x_);
+    tmp_builder.add_y(y_);
+    tmp_builder.add_z(z_);
+    FinishPointFbsBuffer(*builder_, tmp_builder.Finish());
     modified_ = false;
   }
   return builder_->GetBufferPointer();
 }
 
-void Point::setPoint(const std::array<double, 3>& pt)
+void Point::fromVector(const std::array<double, 3>& p)
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  x_ = pt[0];
-  y_ = pt[1];
-  z_ = pt[2];
+  x_ = p[0];
+  y_ = p[1];
+  z_ = p[2];
   modified_ = true;
 }
 
-void Point::setX(const double x)
+void Point::setX(double x)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   x_ = x;
   modified_ = true;
 }
 
-void Point::setY(const double y)
+void Point::setY(double y)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   y_ = y;
   modified_ = true;
 }
-void Point::setZ(const double z)
+void Point::setZ(double z)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   z_ = z;
