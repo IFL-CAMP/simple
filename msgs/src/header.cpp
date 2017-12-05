@@ -1,51 +1,75 @@
 
 #include "simple_msgs/header.h"
 
-simple_msgs::Header::Header(const uint8_t* data)
+namespace simple_msgs
 {
+Header::Header(const uint8_t* data)
+{
+  std::lock_guard<std::mutex> lock(mutex_);
   auto h = GetHeaderFbs(data);
   seq_n_ = h->sequence_number();
   frame_id_ = h->frame_id()->c_str();
   timestamp_ = h->timestamp();
-  mofified_ = true;
+  modified_ = true;
 }
-uint8_t* simple_msgs::Header::getBufferData() const
+
+Header& Header::operator=(const Header& h)
+{
+  if (this != std::addressof(h))
+  {
+    seq_n_ = h.seq_n_;
+    frame_id_ = h.frame_id_;
+    timestamp_ = h.timestamp_;
+    modified_ = true;
+  }
+  return *this;
+}
+
+bool Header::operator==(const Header& h) const
+{
+  return (seq_n_ == h.seq_n_ && frame_id_ == h.frame_id_ && timestamp_ == h.timestamp_);
+}
+
+bool Header::operator!=(const Header& h) const
+{
+  return !(*this == h);
+}
+
+uint8_t* Header::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (mofified_)
+  if (modified_)
   {
     builder_->Clear();
-    // all flatbuffer string must be created before the creation of the table builder!
-    auto frameIdStr = builder_->CreateString(frame_id_);
-    simple_msgs::HeaderFbsBuilder hBuilder(*builder_);
-    hBuilder.add_frame_id(frameIdStr);
+    auto frame_id_string = builder_->CreateString(frame_id_);
+    HeaderFbsBuilder hBuilder(*builder_);
+    hBuilder.add_frame_id(frame_id_string);
     hBuilder.add_sequence_number(seq_n_);
     hBuilder.add_timestamp(timestamp_);
-    auto h = hBuilder.Finish();
-    simple_msgs::FinishHeaderFbsBuffer(
-        *builder_, h);  // we have to explicitly call this method if we want the file_identifier to be set
-    mofified_ = false;
+    FinishHeaderFbsBuffer(*builder_, hBuilder.Finish());
+    modified_ = false;
   }
   return builder_->GetBufferPointer();
 }
 
-void simple_msgs::Header::setSequenceNumber(const int seq_n)
+void Header::setSequenceNumber(const int seq_n)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   seq_n_ = seq_n;
-  mofified_ = true;
+  modified_ = true;
 }
 
-void simple_msgs::Header::setFrameID(const std::string& frame_id)
+void Header::setFrameID(const std::string& frame_id)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   frame_id_ = frame_id;
-  mofified_ = true;
+  modified_ = true;
 }
 
-void simple_msgs::Header::setTimestamp(const double timestamp)
+void Header::setTimestamp(const double timestamp)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   timestamp_ = timestamp;
-  mofified_ = true;
+  modified_ = true;
+}
 }
