@@ -4,7 +4,7 @@
 #include <zmq.hpp>
 #include <string>
 #include "simple_msgs/generic_message.h"
-#include "simple\contextCloser.h"
+#include "simple/contextCloser.h"
 
 namespace simple
 {
@@ -48,7 +48,7 @@ public:
     int buffer_size = msg.GetSize();
     publish(buffer, buffer_size);
   }
-  void publish(const simple_msgs::GenericMessage<T>& msg)//I'm not seeing the point of a base class anymore...
+  void publish(const simple_msgs::GenericMessage<T>& msg)  // I'm not seeing the point of a base class anymore...
   {
     uint8_t* buffer = msg.getBufferData();
     int buffer_size = msg.getBufferSize();
@@ -60,14 +60,14 @@ public:
     const char* topic = flatbuffers::GetBufferIdentifier(msg);
     // get the topic size
     int s = strlen(topic);
-    
+
     // create ZMQ message of size (buffer + prefixed topic)
-	int totalSize = size + s;
+    int totalSize = size + s;
     zmq::message_t ZMQ_message(totalSize);
     // put the data into the ZMQ message
-	memcpy(ZMQ_message.data(), topic, s);
-	memcpy(static_cast<uint8_t*>(ZMQ_message.data()) + s, msg, size);
-    //memcpy(ZMQ_message.data(), reinterpret_cast<char*>(prefixedMsg), size + s);
+    memcpy(ZMQ_message.data(), topic, s);
+    memcpy(static_cast<uint8_t*>(ZMQ_message.data()) + s, msg, size);
+    // memcpy(ZMQ_message.data(), reinterpret_cast<char*>(prefixedMsg), size + s);
 
     try
     {
@@ -83,9 +83,6 @@ private:
   static std::unique_ptr<zmq::context_t, contextCloser> context_;
   std::unique_ptr<zmq::socket_t> socket_;  //<
 };
-template<typename T>
+template <typename T>
 std::unique_ptr<zmq::context_t, contextCloser> Publisher<T>::context_(new zmq::context_t(1));
 }  // namespace simple
-
-
-

@@ -27,6 +27,21 @@ public:
    */
   Point(const uint8_t* bufferPointer);
 
+  Point(const Point& p) : Point(p.x_, p.y_, p.z_)
+  {
+  }
+
+  Point& operator=(const Point& p)
+  {
+    if (this != std::addressof(p))
+    {
+      x_ = p.x_;
+      y_ = p.y_;
+      z_ = p.z_;
+    }
+    return *this;
+  }
+
   /**
    * @brief TODO
    * @return

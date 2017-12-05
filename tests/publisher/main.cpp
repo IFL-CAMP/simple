@@ -6,8 +6,8 @@
 #include <string>
 #include "simple_msgs/header.h"
 #include <thread>
-#include "simple_msgs\image.h"
-#include "simple_msgs\pose.h"
+#include "simple_msgs/image.h"
+#include "simple_msgs/pose.h"
 
 // handle interruptions
 static int s_interrupted = 0;

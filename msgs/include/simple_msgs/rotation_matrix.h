@@ -46,7 +46,10 @@ public:
    * @brief TODO
    * @return
    */
-  int getBufferSize() const{ return builder_->GetSize(); }
+  int getBufferSize() const
+  {
+    return builder_->GetSize();
+  }
 
   /**
    * @brief Sets the rotation matrix coeficients to the desired values
@@ -56,12 +59,13 @@ public:
   void setMatrixCoefs(std::vector<double> coefs);
 
   /**
-  * @brief Gets the rotation matrix coeficients
-  * @return Vector containing the matrix coeficients in this order: row1-col1, row1-col2, row1-col3, row2-col1,
-  * row2-col2, row2-col3, row3-col1, row3-col2, row3-col3
-  */
-  std::vector<double> simple_msgs::RotationMatrix::getMatrixCoefs() const{
-	  return std::vector<double>{ r11_, r12_, r13_, r21_, r22_, r23_, r31_, r32_, r33_ };
+   * @brief Gets the rotation matrix coeficients
+   * @return Vector containing the matrix coeficients in this order: row1-col1, row1-col2, row1-col3, row2-col1,
+   * row2-col2, row2-col3, row3-col1, row3-col2, row3-col3
+   */
+  std::vector<double> getMatrixCoefs() const
+  {
+    return std::vector<double>{ r11_, r12_, r13_, r21_, r22_, r23_, r31_, r32_, r33_ };
   }
 
   static const char* derivedTopic()

@@ -12,7 +12,9 @@ template <typename T>
 class Image : public GenericMessage<Image<T>>
 {
 public:
-  using GenericMessage::GenericMessage;
+  Image() : GenericMessage<Image<T>>()
+  {
+  }
   /**
    * @brief Wrapper for image data. Instance type has to match the image data type.
    * @param encoding
@@ -111,14 +113,14 @@ public:
     std::lock_guard<std::mutex> lock(mutex_);
     if (field_mofified_)
     {
-      builder_->Clear();
+      Image::builder_->Clear();
       // flatbuffer strings and vectors must be created before the start of the table builder
-      auto encodingStr = builder_->CreateString(encoding_);
-      auto headerVec = builder_->CreateVector(header_.getBufferData(), header_.getBufferSize());
-      auto originVec = builder_->CreateVector(origin_.getBufferData(), origin_.getBufferSize());
+      auto encodingStr = Image::builder_->CreateString(encoding_);
+      auto headerVec = Image::builder_->CreateVector(header_.getBufferData(), header_.getBufferSize());
+      auto originVec = Image::builder_->CreateVector(origin_.getBufferData(), origin_.getBufferSize());
       auto type = getDataUnionType();
       auto elem = getDataUnionElem();
-      simple_msgs::ImageFbsBuilder iBuilder(*builder_);
+      simple_msgs::ImageFbsBuilder iBuilder(*Image::builder_);
       // add the information
       iBuilder.add_depth(depth_);
       iBuilder.add_enconding(encodingStr);
@@ -133,10 +135,10 @@ public:
       iBuilder.add_width(width_);
       auto i = iBuilder.Finish();
       simple_msgs::FinishImageFbsBuffer(
-          *builder_, i);  // we have to explicitly call this method if we want the file_identifier to be set
+          *Image::builder_, i);  // we have to explicitly call this method if we want the file_identifier to be set
       field_mofified_ = false;
     }
-    return builder_->GetBufferPointer();
+    return Image::builder_->GetBufferPointer();
   }
 
   /**
@@ -145,7 +147,7 @@ public:
    */
   int getBufferSize() const
   {
-    return builder_->GetSize();
+    return Image::builder_->GetSize();
   }
 
   /**

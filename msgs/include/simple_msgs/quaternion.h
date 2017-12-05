@@ -25,6 +25,23 @@ public:
    */
   Quaternion(const uint8_t* bufferPointer);
 
+  Quaternion(const Quaternion& q) : Quaternion(q.x_, q.y_, q.z_, q.w_)
+  {
+  }
+
+  Quaternion& operator=(const Quaternion& q)
+  {
+    if (this != std::addressof(q))
+    {
+      x_ = q.x_;
+      y_ = q.y_;
+      z_ = q.z_;
+      w_ = q.w_;
+      field_mofified_ = true;
+    }
+    return *this;
+  }
+
   /**
    * @brief TODO
    * @return
@@ -44,8 +61,9 @@ public:
    * @brief TODO
    * @return
    */
-  std::vector<double> getQuaternion() const{
-	  return std::vector<double>{x_, y_, z_, w_};
+  std::vector<double> getQuaternion() const
+  {
+    return std::vector<double>{ x_, y_, z_, w_ };
   }
 
   /**

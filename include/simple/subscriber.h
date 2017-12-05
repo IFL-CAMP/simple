@@ -5,7 +5,7 @@
 #include <zmq.hpp>
 #include <string>
 #include <thread>
-#include "simple\contextCloser.h"
+#include "simple/contextCloser.h"
 
 namespace simple
 {

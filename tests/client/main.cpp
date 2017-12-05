@@ -6,8 +6,8 @@
 #include <string>
 #include "simple_msgs/header.h"
 #include <thread>
-#include "simple_msgs\image.h"
-#include "simple_msgs\pose.h"
+#include "simple_msgs/image.h"
+#include "simple_msgs/pose.h"
 
 // handle interruptions
 static int s_interrupted = 0;
@@ -22,25 +22,23 @@ static void s_catch_signals()
   signal(SIGTERM, s_signal_handler);
 }
 
-void dummy(const simple_msgs::Point& p)//get the point and read the values inside
+void dummy(const simple_msgs::Point& p)  // get the point and read the values inside
 {
-	std::cout << "Received point: " << std::endl;
-	std::vector<double> vec = p.getPoint();
-	std::cout << "new X: " << vec.at(0) << std::endl;
-	std::cout << "new Y: " << vec.at(1) << std::endl;
-	std::cout << "new Z: " << vec.at(2) << std::endl;
+  std::cout << "Received point: " << std::endl;
+  std::vector<double> vec = p.getPoint();
+  std::cout << "new X: " << vec.at(0) << std::endl;
+  std::cout << "new Y: " << vec.at(1) << std::endl;
+  std::cout << "new Z: " << vec.at(2) << std::endl;
 }
 
 int main(int argc, char* argv[])
 {
-  
-
   // create a message, with wrapper
   simple_msgs::Point p(5.0, 6.0, 7.0);
   simple_msgs::Header(1, "ID", 1.2);
 
   // create a client
-  simple::Client<simple_msgs::Point> client("tcp://localhost:5555",dummy);
+  simple::Client<simple_msgs::Point> client("tcp://localhost:5555", dummy);
   std::cout << "Request these cordinates: x=5.0, y=6.0, z=7.0" << std::endl;
   // s_catch_signals();
   int num = 10;
