@@ -94,11 +94,11 @@ void Quaternion::setW(double w)
 
 std::ofstream& operator<<(std::ostream& out, const Quaternion& q)
 {
-  out << "Quaternion" << std::endl
-      << "x: " << q.x_ << std::endl
-      << "y: " << q.y_ << std::endl
-      << "z: " << q.z_ << std::endl
-      << "w: " << q.w_ << std::endl;
+  out << "Quaternion \n \t"
+      << "x: " << q.x_ << "\n"
+      << "y: " << q.y_ << "\n"
+      << "z: " << q.z_ << "\n"
+      << "w: " << q.w_ << "\n";
 
   return out;
 }

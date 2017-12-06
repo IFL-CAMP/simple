@@ -82,7 +82,10 @@ void Point::setZ(double z)
 
 std::ofstream& operator<<(std::ostream& out, const Point& p)
 {
-  out << "Point" << std::endl << "x: " << p.x_ << std::endl << "y: " << p.y_ << std::endl << "z: " << p.z_ << std::endl;
+  out << "Point \n \t"
+      << "x: " << p.x_ << "\n"
+      << "y: " << p.y_ << "\n"
+      << "z: " << p.z_ << "\n";
 
   return out;
 }
