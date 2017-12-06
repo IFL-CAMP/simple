@@ -33,9 +33,9 @@ void callbackFun(const simple_msgs::Point& pt){
 SCENARIO("PUB SUB POINT") {
 	GIVEN("An instance of a subscriber") {
 		//start a subscriber
-		simple::Subscriber<simple_msgs::Point > sub("tcp://*:5555", callbackFun);
+		simple::Subscriber<simple_msgs::Point > sub("tcp://localhost:5555", callbackFun);
 		WHEN("A publisher publishes data") {
-			simple::Publisher<simple_msgs::Point> pub("tcp://localhost:5555");
+			simple::Publisher<simple_msgs::Point> pub("tcp://*:5555");
 			//randomly generate the data to be sent
 			srand(time(NULL));//start random seed
 			double x = (double)rand() / RAND_MAX;
