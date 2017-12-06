@@ -80,7 +80,7 @@ void Point::setZ(double z)
   modified_ = true;
 }
 
-std::ofstream& operator<<(std::ostream& out, const Point& p)
+std::ostream& operator<<(std::ostream& out, const Point& p)
 {
   out << "Point \n \t"
       << "x: " << p.x_ << "\n"

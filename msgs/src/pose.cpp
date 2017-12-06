@@ -64,7 +64,7 @@ void Pose::setPosition(const Point& position)
   modified_ = true;
 }
 
-std::ofstream& operator<<(std::ostream& out, const Pose& p)
+std::ostream& operator<<(std::ostream& out, const Pose& p)
 {
   out << "Pose \n \t" << p.position_ << p.quaternion_;
 

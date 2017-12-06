@@ -92,7 +92,7 @@ void Quaternion::setW(double w)
   modified_ = true;
 }
 
-std::ofstream& operator<<(std::ostream& out, const Quaternion& q)
+std::ostream& operator<<(std::ostream& out, const Quaternion& q)
 {
   out << "Quaternion \n \t"
       << "x: " << q.x_ << "\n"

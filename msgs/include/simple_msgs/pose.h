@@ -4,6 +4,7 @@
 #include "pose_generated.h"
 #include "quaternion.h"
 #include "point.h"
+#include <iostream>
 
 namespace simple_msgs
 {
@@ -46,12 +47,12 @@ public:
   /**
    * @brief operator==
    */
-  bool operator==(const Pose& h) const;
+  bool operator==(const Pose& p) const;
 
   /**
    * @brief operator!=
    */
-  bool operator!=(const Pose& h) const;
+  bool operator!=(const Pose& p) const;
 
   /**
    * @brief Builds and returns the buffer accordingly to the values currently stored.
@@ -83,10 +84,10 @@ public:
 
   static const char* getTopic() { return PoseFbsIdentifier(); }
 
-  friend std::ofstream& operator<<(std::ostream& out, const Pose& q);
+  friend std::ostream& operator<<(std::ostream& out, const Pose& q);
 
 private:
   Quaternion quaternion_;
   Point position_;
 };
-}  // namespace simple_msgs
+}  // Namespace simple_msgs.

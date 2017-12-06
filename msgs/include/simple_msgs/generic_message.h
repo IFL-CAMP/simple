@@ -29,4 +29,4 @@ protected:
   mutable bool modified_{true};
   mutable std::mutex mutex_;
 };
-}  // namespace simple_msgs
+}  // Namespace simple_msgs.

@@ -322,4 +322,4 @@ private:
   simple_msgs::data getDataUnionType() const;
   flatbuffers::Offset<void> getDataUnionElem() const;
 };
-}  // namespace simple_msgs
+}  // Namespace simple_msgs.

@@ -3,6 +3,7 @@
 #include <array>
 #include "generic_message.h"
 #include "quaternion_generated.h"
+#include <iostream>
 
 namespace simple_msgs
 {
@@ -137,9 +138,9 @@ public:
    */
   static const char* getTopic() { return QuaternionFbsIdentifier(); }
 
-  friend std::ofstream& operator<<(std::ostream& out, const Quaternion& q);
+  friend std::ostream& operator<<(std::ostream& out, const Quaternion& q);
 
 private:
   double x_, y_, z_, w_;
 };
-}  // namespace simple_msgs
+}  // Namespace simple_msgs.

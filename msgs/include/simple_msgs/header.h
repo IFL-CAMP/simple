@@ -2,6 +2,7 @@
 
 #include "generic_message.h"
 #include "header_generated.h"
+#include <iostream>
 
 namespace simple_msgs
 {
@@ -99,11 +100,11 @@ public:
    */
   static const char* getTopic() { return HeaderFbsIdentifier(); }
 
-  friend std::ofstream& operator<<(std::ostream& out, const Header& h);
+  friend std::ostream& operator<<(std::ostream& out, const Header& h);
 
 private:
   int seq_n_{0};
   std::string frame_id_{""};
   double timestamp_{0.0};
 };
-}  // namespace simple_msgs
+}  // Namespace simple_msgs.

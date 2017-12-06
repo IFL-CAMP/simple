@@ -3,6 +3,7 @@
 #include <array>
 #include "generic_message.h"
 #include "point_generated.h"
+#include <iostream>
 
 namespace simple_msgs
 {
@@ -62,12 +63,12 @@ public:
   /**
    * @brief operator==
    */
-  bool operator==(const Point& h) const;
+  bool operator==(const Point& p) const;
 
   /**
    * @brief operator!=
    */
-  bool operator!=(const Point& h) const;
+  bool operator!=(const Point& p) const;
 
   /**
    * @brief Builds and returns the buffer accordingly to the values currently stored.
@@ -120,9 +121,9 @@ public:
    */
   static const char* getTopic() { return PointFbsIdentifier(); }
 
-  friend std::ofstream& operator<<(std::ostream& out, const Point& q);
+  friend std::ostream& operator<<(std::ostream& out, const Point& q);
 
 private:
   double x_{0}, y_{0}, z_{0};
 };
-}  // namespace simple_msgs
+}  // Namespace simple_msgs.
