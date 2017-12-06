@@ -11,17 +11,19 @@ namespace simple_msgs
 class Pose : public GenericMessage
 {
 public:
-  using GenericMessage::GenericMessage;
+  Pose()
+    : GenericMessage()
+  {
+  }
 
   /**
    * @brief TODO
    * @param position
    * @param quaternion
    */
-  Pose(uint8_t* position, uint8_t* quaternion)
+  Pose(const Point& position, const Quaternion& quaternion)
     : quaternion_(quaternion)
     , position_(position)
-    , mofified_(true)
   {
   }
 
@@ -29,13 +31,13 @@ public:
    * @brief TODO
    * @param bufferPointer
    */
-  Pose(const uint8_t* bufferPointer);
+  Pose(const uint8_t* data);
 
   /**
    * @brief TODO
    * @return
    */
-  uint8_t* getBufferData() const;
+  uint8_t* getBufferData() const override;
 
   /**
    * @brief TODO
@@ -59,20 +61,18 @@ public:
    * @brief TODO
    * @return
    */
-  const simple_msgs::Point* getPosition() const { return &position_; }
+  const Point* getPosition() const { return &position_; }
 
   /**
    * @brief TODO
    * @return
    */
-  const simple_msgs::Quaternion* getQuaternion() const { return &quaternion_; }
+  const Quaternion* getQuaternion() const { return &quaternion_; }
 
   static const char* getTopic() { return PoseFbsIdentifier(); }
 
 private:
-  simple_msgs::Quaternion quaternion_;
-  simple_msgs::Point position_;
-  mutable bool mofified_{false};
-  mutable std::mutex mutex_;
+  Quaternion quaternion_;
+  Point position_;
 };
 }  // namespace simple_msgs
