@@ -79,4 +79,11 @@ void Point::setZ(double z)
   z_ = z;
   modified_ = true;
 }
+
+std::ofstream& operator<<(std::ostream& out, const Point& p)
+{
+  out << "Point" << std::endl << "x: " << p.x_ << std::endl << "y: " << p.y_ << std::endl << "z: " << p.z_ << std::endl;
+
+  return out;
+}
 }

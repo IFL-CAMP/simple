@@ -91,4 +91,15 @@ void Quaternion::setW(double w)
   w_ = w;
   modified_ = true;
 }
+
+std::ofstream& operator<<(std::ostream& out, const Quaternion& q)
+{
+  out << "Quaternion" << std::endl
+      << "x: " << q.x_ << std::endl
+      << "y: " << q.y_ << std::endl
+      << "z: " << q.z_ << std::endl
+      << "w: " << q.w_ << std::endl;
+
+  return out;
+}
 }

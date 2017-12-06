@@ -72,4 +72,14 @@ void Header::setTimestamp(double timestamp)
   timestamp_ = timestamp;
   modified_ = true;
 }
+
+std::ofstream& operator<<(std::ostream& out, const Header& h)
+{
+  out << "Header" << std::endl
+      << "seq_n: " << h.seq_n_ << std::endl
+      << "frame_id: " << h.frame_id_ << std::endl
+      << "timestamp: " << h.timestamp << std::endl;
+
+  return out;
+}
 }

@@ -126,6 +126,8 @@ public:
    */
   static const char* getTopic() { return QuaternionFbsIdentifier(); }
 
+  friend std::ofstream& operator<<(std::ostream& out, const Quaternion& q);
+
 private:
   double x_, y_, z_, w_;
 };

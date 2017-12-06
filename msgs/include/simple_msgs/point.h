@@ -110,6 +110,8 @@ public:
    */
   static const char* getTopic() { return PointFbsIdentifier(); }
 
+  friend std::ofstream& operator<<(std::ostream& out, const Point& q);
+
 private:
   double x_{0}, y_{0}, z_{0};
 };
