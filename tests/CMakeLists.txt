@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 project(simple-tests) 
 
 include_directories(include)
-add_executable(pub_sub_test pub_sub.cpp)
+add_executable(pub_sub_test single_pub_sub.cpp)
 target_link_libraries(pub_sub_test simple)
  
 if(NOT EXISTS ${PROJECT_SOURCE_DIR}/include/catch.hpp)
