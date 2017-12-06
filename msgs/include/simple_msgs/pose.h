@@ -1,6 +1,5 @@
 #pragma once
 
-#include <mutex>
 #include "generic_message.h"
 #include "pose_generated.h"
 #include "quaternion.h"
@@ -17,9 +16,7 @@ public:
   }
 
   /**
-   * @brief TODO
-   * @param position
-   * @param quaternion
+   * @brief Contructor from a Point and a Quaternion.
    */
   Pose(const Point& position, const Quaternion& quaternion)
     : quaternion_(quaternion)
@@ -28,48 +25,65 @@ public:
   }
 
   /**
-   * @brief TODO
-   * @param bufferPointer
+   * @brief Constructor from the buffer data.
+   * @param data acquired from flatbuffer.
    */
   Pose(const uint8_t* data);
 
   /**
-   * @brief TODO
-   * @return
+   * @brief Copy Constructor.
+   */
+  Pose(const Pose& p)
+    : Pose(p.position_, p.quaternion_)
+  {
+  }
+
+  /**
+   * @brief Copy assignment.
+   */
+  Pose& operator=(const Pose& p);
+
+  /**
+   * @brief operator==
+   */
+  bool operator==(const Pose& h) const;
+
+  /**
+   * @brief operator!=
+   */
+  bool operator!=(const Pose& h) const;
+
+  /**
+   * @brief Builds and returns the buffer accordingly to the values currently stored.
+   * @return the buffer data.
    */
   uint8_t* getBufferData() const override;
 
   /**
-   * @brief TODO
+   * @brief Returns the translational part of the Pose as a Point message.
    * @return
    */
-  int getBufferSize() const { return builder_->GetSize(); }
+  Point getPosition() const { return position_; }
 
   /**
-   * @brief TODO
-   * @param quaternion
-   */
-  void setQuaternion(uint8_t* quaternion);
-
-  /**
-   * @brief TODO
-   * @param position
-   */
-  void setPosition(uint8_t* position);
-
-  /**
-   * @brief TODO
+   * @brief Returns the rotational part of the Pose as a Quaternion message.
    * @return
    */
-  const Point* getPosition() const { return &position_; }
+  Quaternion getQuaternion() const { return quaternion_; }
 
   /**
-   * @brief TODO
-   * @return
+   * @brief Modifies the rotational part of the Pose.
    */
-  const Quaternion* getQuaternion() const { return &quaternion_; }
+  void setPosition(const Point& position);
+
+  /**
+   * @brief Modifies the translational part of the Pose.
+   */
+  void setQuaternion(const Quaternion& quaternion);
 
   static const char* getTopic() { return PoseFbsIdentifier(); }
+
+  friend std::ofstream& operator<<(std::ostream& out, const Pose& q);
 
 private:
   Quaternion quaternion_;

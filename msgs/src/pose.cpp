@@ -3,26 +3,6 @@
 
 namespace simple_msgs
 {
-uint8_t* Pose::getBufferData() const
-{
-  std::lock_guard<std::mutex> lock(mutex_);
-  if (modified_)
-  {
-    builder_->Clear();
-    // all flatbuffer strings and vectors must be created before the creation of the table builder!
-    auto positionVec = builder_->CreateVector(position_.getBufferData(), position_.getBufferSize());
-    auto quaternionVec = builder_->CreateVector(quaternion_.getBufferData(), quaternion_.getBufferSize());
-    PoseFbsBuilder pBuilder(*builder_);
-    pBuilder.add_position(positionVec);
-    pBuilder.add_quaternion(quaternionVec);
-    auto p = pBuilder.Finish();
-    FinishPoseFbsBuffer(*builder_,
-                        p);  // we have to explicitly call this method if we want the file_identifier to be set
-    modified_ = false;
-  }
-  return builder_->GetBufferPointer();
-}
-
 Pose::Pose(const uint8_t* data)
 {
   std::lock_guard<std::mutex> lock(mutex_);
@@ -32,17 +12,62 @@ Pose::Pose(const uint8_t* data)
   modified_ = true;
 }
 
-void Pose::setQuaternion(uint8_t* quaternion)
+Pose& Pose::operator=(const Pose& p)
+{
+  if (this != std::addressof(p))
+  {
+    position_ = p.position_;
+    quaternion_ = p.quaternion_;
+    modified_ = true;
+  }
+  return *this;
+}
+
+bool Pose::operator==(const Pose& p) const
+{
+  return (position_ == p.position_ && quaternion_ == p.quaternion_);
+}
+
+bool Pose::operator!=(const Pose& p) const
+{
+  return !(*this == p);
+}
+
+uint8_t* Pose::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  quaternion_ = Quaternion(quaternion);
+  if (modified_)
+  {
+    builder_->Clear();
+    auto positionVec = builder_->CreateVector(position_.getBufferData(), position_.getBufferSize());
+    auto quaternionVec = builder_->CreateVector(quaternion_.getBufferData(), quaternion_.getBufferSize());
+    PoseFbsBuilder tmp_builder(*builder_);
+    tmp_builder.add_position(positionVec);
+    tmp_builder.add_quaternion(quaternionVec);
+    FinishPoseFbsBuffer(*builder_, tmp_builder.Finish());
+    modified_ = false;
+  }
+  return builder_->GetBufferPointer();
+}
+
+void Pose::setQuaternion(const Quaternion& quaternion)
+{
+  std::lock_guard<std::mutex> lock(mutex_);
+  quaternion_ = quaternion;
   modified_ = true;
 }
 
-void Pose::setPosition(uint8_t* position)
+void Pose::setPosition(const Point& position)
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  position_ = Point(position);
+  position_ = position;
   modified_ = true;
+}
+
+std::ofstream& operator<<(std::ostream& out, const Pose& p)
+{
+  out << "Pose \n \t" << p.position_ << p.quaternion_;
+
+  return out;
 }
 }
