@@ -11,12 +11,25 @@
 // TEST FOR THE PUBLISHING AND SUBSCRIPTION OF A POINT
 
 // create static point for comparing with data sent
-static simple_msgs::Point received_point(0.0, 0.0, 0.0);
+simple_msgs::Point received_point(0.0, 0.0, 0.0);
+bool running = false;
+
+simple_msgs::Point createRandomPoint()
+{
+  double x = static_cast<double>(rand()) / RAND_MAX;
+  double y = static_cast<double>(rand()) / RAND_MAX;
+  double z = static_cast<double>(rand()) / RAND_MAX;
+  return simple_msgs::Point(x, y, z);
+}
 
 // define callback function
 void callbackFunction(const simple_msgs::Point& p)
 {
   received_point = p;
+  if (!running)
+  {
+    running = true;
+  }
 }
 
 SCENARIO("Publish and subscribe to a Point message.")
@@ -28,20 +41,20 @@ SCENARIO("Publish and subscribe to a Point message.")
     WHEN("A publisher publishes data")
     {
       simple::Publisher<simple_msgs::Point> pub("tcp://*:5555");
-      // randomly generate the data to be sent
-      srand(time(NULL));  // start random seed
-      double x = rand() / RAND_MAX;
-      double y = rand() / RAND_MAX;
-      double z = rand() / RAND_MAX;
-      simple_msgs::Point p(x, y, z);
+      std::this_thread::sleep_for(std::chrono::seconds(2));
 
       for (int i = 0; i < 10; ++i)
       {
+        auto p = createRandomPoint();
         pub.publish(p);
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-        THEN("The data received is the same as the one sent")
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+        if (running)
         {
-          REQUIRE(p == received_point);
+          THEN("The data received is the same as the one sent")
+          {
+            REQUIRE(p == received_point);
+          }
         }
       }
     }
