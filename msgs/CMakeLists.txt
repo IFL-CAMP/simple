@@ -24,11 +24,11 @@ set(SIMPLE_MSGS_SRCS
   src/quaternion.cpp
   src/point.cpp
   src/rotation_matrix.cpp
-  src/simple_bool.cpp
-  src/simple_float.cpp
-  src/simple_double.cpp
-  src/simple_string.cpp
-  src/simple_int.cpp
+  src/bool.cpp
+  src/float.cpp
+  src/double.cpp
+  src/string.cpp
+  src/int.cpp
   )
 
 # Generate the Flatbuffers headers - this is defined in FindFlatBuffers.cmake
@@ -38,7 +38,7 @@ add_library(${PROJECT_NAME} SHARED ${SIMPLE_MSGS_SRCS})
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE SIMPLE_LIBRARY_EXPORT) # TODO is this necessary?
 
-###### INSTALATION
+###### INSTALLATION
 
 #install the simple_msgs library in the desired folder
 install(TARGETS ${PROJECT_NAME} 
