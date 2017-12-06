@@ -12,13 +12,13 @@ void simple_msgs::RotationMatrix::setMatrixCoefs(std::vector<double> coefs)
   r31_ = coefs.at(6);
   r32_ = coefs.at(7);
   r33_ = coefs.at(8);
-  mofified_ = true;
+  modified_ = true;
 }
 
 uint8_t* simple_msgs::RotationMatrix::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (mofified_)
+  if (modified_)
   {
     builder_->Clear();
     simple_msgs::RotationMatrixFbsBuilder rBuilder(*builder_);
@@ -34,7 +34,7 @@ uint8_t* simple_msgs::RotationMatrix::getBufferData() const
     auto r = rBuilder.Finish();
     simple_msgs::FinishRotationMatrixFbsBuffer(
         *builder_, r);  // we have to explicitly call this method if we want the file_identifier to be set
-    mofified_ = false;
+    modified_ = false;
   }
   return builder_->GetBufferPointer();
 }
@@ -51,5 +51,5 @@ simple_msgs::RotationMatrix::RotationMatrix(const uint8_t* bufferPointer)
   r31_ = r->r31();
   r32_ = r->r32();
   r33_ = r->r33();
-  mofified_ = true;
+  modified_ = true;
 }

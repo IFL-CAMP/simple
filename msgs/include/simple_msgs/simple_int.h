@@ -17,7 +17,7 @@ public:
    */
   Int(int data)
     : data_(data)
-    , mofified_(true)
+    , modified_(true)
   {
   }
 
@@ -40,7 +40,7 @@ public:
   void setInt(int data)
   {
     data_ = data;
-    mofified_ = true;
+    modified_ = true;
   }
 
   int getInt() const { return data_; }
@@ -49,7 +49,7 @@ public:
 
 private:
   int data_;
-  mutable bool mofified_{false};
+  mutable bool modified_{false};
   mutable std::mutex mutex_;
 };
 }  // namespace simple_msgs

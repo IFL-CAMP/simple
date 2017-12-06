@@ -5,13 +5,13 @@ simple_msgs::Bool::Bool(const uint8_t* bufferPointer)
 {
   auto b = GetBoolFbs(bufferPointer);
   data_ = b->data();
-  mofified_ = true;
+  modified_ = true;
 }
 
 uint8_t* simple_msgs::Bool::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (mofified_)
+  if (modified_)
   {
     builder_->Clear();
     simple_msgs::BoolFbsBuilder bBuilder(*builder_);
@@ -19,7 +19,7 @@ uint8_t* simple_msgs::Bool::getBufferData() const
     auto b = bBuilder.Finish();
     simple_msgs::FinishBoolFbsBuffer(
         *builder_, b);  // we have to explicitly call this method if we want the file_identifier to be set
-    mofified_ = false;
+    modified_ = false;
   }
   return builder_->GetBufferPointer();
 }

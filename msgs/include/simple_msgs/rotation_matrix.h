@@ -26,7 +26,7 @@ public:
     , r31_(r31)
     , r32_(r32)
     , r33_(r33)
-    , mofified_(true)
+    , modified_(true)
   {
   }
 
@@ -40,7 +40,7 @@ public:
    * @brief TODO
    * @return
    */
-  uint8_t* getBufferData() const;
+  uint8_t* getBufferData() const override;
 
   /**
    * @brief TODO
@@ -69,7 +69,7 @@ public:
 
 private:
   double r11_, r12_, r13_, r21_, r22_, r23_, r31_, r32_, r33_;
-  mutable bool mofified_{false};
+  mutable bool modified_{false};
   mutable std::mutex mutex_;
 };
 }  // namespace simple_msgs

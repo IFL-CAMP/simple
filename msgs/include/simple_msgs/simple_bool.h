@@ -17,7 +17,7 @@ public:
    */
   Bool(bool data)
     : data_(data)
-    , mofified_(true)
+    , modified_(true)
   {
   }
 
@@ -40,7 +40,7 @@ public:
   void setBool(bool data)
   {
     data_ = data;
-    mofified_ = true;
+    modified_ = true;
   }
 
   bool getBool() const { return data_; }
@@ -48,7 +48,7 @@ public:
 
 private:
   bool data_;
-  mutable bool mofified_{false};
+  mutable bool modified_{false};
   mutable std::mutex mutex_;
 };
 }  // namespace simple_msgs

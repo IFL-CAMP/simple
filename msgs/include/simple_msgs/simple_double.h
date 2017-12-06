@@ -17,7 +17,7 @@ public:
    */
   Double(double data)
     : data_(data)
-    , mofified_(true)
+    , modified_(true)
   {
   }
 
@@ -42,14 +42,14 @@ public:
   void setDouble(double data)
   {
     data_ = data;
-    mofified_ = true;
+    modified_ = true;
   }
 
   static const char* getTopic() { return DoubleFbsIdentifier(); }
 
 private:
   double data_;
-  mutable bool mofified_{false};
+  mutable bool modified_{false};
   mutable std::mutex mutex_;
 };
 }

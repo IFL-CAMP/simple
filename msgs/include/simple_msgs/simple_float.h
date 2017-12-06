@@ -17,7 +17,7 @@ public:
    */
   Float(float data)
     : data_(data)
-    , mofified_(true)
+    , modified_(true)
   {
   }
 
@@ -42,7 +42,7 @@ public:
   void setFloat(float data)
   {
     data_ = data;
-    mofified_ = true;
+    modified_ = true;
   }
 
   float getFloat() const { return data_; }
@@ -51,7 +51,7 @@ public:
 
 private:
   float data_;
-  mutable bool mofified_{false};
+  mutable bool modified_{false};
   mutable std::mutex mutex_;
 };
 }  // namespace simple_msgs

@@ -17,7 +17,7 @@ public:
    */
   String(std::string data)
     : data_(data)
-    , mofified_(true)
+    , modified_(true)
   {
   }
 
@@ -42,14 +42,14 @@ public:
   void setString(std::string data)
   {
     data_ = data;
-    mofified_ = true;
+    modified_ = true;
   }
 
   static const char* getTopic() { return StringFbsIdentifier(); }
 
 private:
   std::string data_;
-  mutable bool mofified_{false};
+  mutable bool modified_{false};
   mutable std::mutex mutex_;
 };
 }  // namespace simple_msgs

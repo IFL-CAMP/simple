@@ -102,7 +102,7 @@ public:
       default:
         break;
     }
-    mofified_ = true;
+    modified_ = true;
   }
 
   /**
@@ -113,7 +113,7 @@ public:
   uint8_t* getBufferData() const
   {
     std::lock_guard<std::mutex> lock(mutex_);
-    if (mofified_)
+    if (modified_)
     {
       Image::builder_->Clear();
       // flatbuffer strings and vectors must be created before the start of the table builder
@@ -138,7 +138,7 @@ public:
       auto i = iBuilder.Finish();
       simple_msgs::FinishImageFbsBuffer(
           *Image::builder_, i);  // we have to explicitly call this method if we want the file_identifier to be set
-      mofified_ = false;
+      modified_ = false;
     }
     return Image::builder_->GetBufferPointer();
   }
@@ -199,7 +199,7 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     encoding_ = encoding;
-    mofified_ = true;
+    modified_ = true;
   }
 
   /**
@@ -210,7 +210,7 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     resX_ = resX;
-    mofified_ = true;
+    modified_ = true;
   }
 
   /**
@@ -221,7 +221,7 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     resY_ = resY;
-    mofified_ = true;
+    modified_ = true;
   }
 
   /**
@@ -232,7 +232,7 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     resZ_ = resZ;
-    mofified_ = true;
+    modified_ = true;
   }
 
   /**
@@ -243,7 +243,7 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     width_ = width;
-    mofified_ = true;
+    modified_ = true;
   }
 
   /**
@@ -254,7 +254,7 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     height_ = height;
-    mofified_ = true;
+    modified_ = true;
   }
 
   /**
@@ -265,7 +265,7 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     depth_ = depth;
-    mofified_ = true;
+    modified_ = true;
   }
 
   /**
@@ -276,7 +276,7 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     header_ = headerBufPtr;
-    mofified_ = true;
+    modified_ = true;
   }
 
   /**
@@ -287,7 +287,7 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     origin_ = originBufPtr;
-    mofified_ = true;
+    modified_ = true;
   }
 
   /**
@@ -300,7 +300,7 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = imgData;
-    mofified_ = true;
+    modified_ = true;
   }
 
   /**
@@ -317,7 +317,7 @@ private:
   int dataLength_;
   simple_msgs::Header header_;
   simple_msgs::Pose origin_;
-  mutable bool mofified_{false};
+  mutable bool modified_{false};
   mutable std::mutex mutex_;
   simple_msgs::data getDataUnionType() const;
   flatbuffers::Offset<void> getDataUnionElem() const;
