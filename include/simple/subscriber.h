@@ -5,12 +5,13 @@
 #include <zmq.hpp>
 #include <string>
 #include <thread>
-#include "simple/contextCloser.h"
+
+#include "simple/context_deleter.h"
 
 namespace simple
 {
 /**
- * @brief Creates a subscriber socket.
+ * @brief Creates a subscriber socket for a specific type of message.
  */
 template <typename T>
 class Subscriber
@@ -26,9 +27,8 @@ public:
     : socket_(std::make_unique<zmq::socket_t>(*context_, ZMQ_SUB))
     , callback_(callback)
   {
-    // set socket timeout
-    int timeOut = 5000;  // miliseconds
-    socket_->setsockopt(ZMQ_RCVTIMEO, &timeOut, sizeof(timeOut));
+    int timeout = 100;  //< Socket timeout in miliseconds.
+    socket_->setsockopt(ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
     try
     {
       socket_->connect(port);
@@ -37,24 +37,20 @@ public:
     {
       std::cerr << "Error - Could not bind to the socket:" << e.what();
     }
-    // set the topic for the messages to be received
-    filter();
+    filter();  //< Filter the messages to be received accordingly to their identification tag.
 
-    // start thread of subscription
-    t_ = std::thread(&Subscriber::subscribe, this);
+    // Start the thread for the subscription.
+    subscriber_thread_ = std::thread(&Subscriber::subscribe, this);
   }
 
   ~Subscriber<T>()
   {
-    // stop the subscription loop
-    alive_ = false;
-
-    // join thread
-    t_.join();
-
+    alive_ = false;  //< Stop the subscription loop.
+    subscriber_thread_.join();
     socket_->close();
   }
 
+private:
   /**
    * @brief Continuously waits for a message to be published in the connected port, while the subscriber is alive.
    * Creates an instance of a wrapper with the received data matching the instance type and calls the callback function
@@ -62,56 +58,48 @@ public:
    */
   void subscribe()
   {
-    // while the subscriber is still alive
     while (alive_)
     {
-      // start a ZMQ message to receive the data
-      zmq::message_t ZMQmsg;
+      zmq::message_t message;
       bool success = false;
       try
       {
-        success = socket_->recv(&ZMQmsg);  // receive messages that fit the filter of the socket
+        success = socket_->recv(&message);
       }
       catch (zmq::error_t& e)
       {
-        std::cerr << "Could not receive message: " << e.what();
+        std::cerr << "Error: Could not receive the message: " << e.what();
       }
-      // if receive was successful
-      if (success)
+      if (success)  //< If a message was successfully received.
       {
         // get the buffer data ignoring the first few bytes (the topic prefix)
         const char* topic = T::getTopic();
         int s = strlen(topic);
-
-        auto convertMsg = static_cast<uint8_t*>(ZMQmsg.data());
-
-        T wrappedData(convertMsg + s);
-
-        callback_(wrappedData);
+        auto message_data = static_cast<uint8_t*>(message.data());
+        T wrapped_data(message_data + s);  //< TODO: ??
+        callback_(wrapped_data);
       }
     }
   }
 
-private:
   /**
    * @brief Set the socket option to match the identifier of the data type. Only messages prefixed with this identifier
    * will be received.
    */
   void filter()
   {
-    // get topic from the wrapper
-    const char* topic = T::getTopic();
-    socket_->setsockopt(ZMQ_SUBSCRIBE, "", 0);
+    const char* topic = T::getTopic();          //< Get the message identificator.
+    socket_->setsockopt(ZMQ_SUBSCRIBE, "", 0);  //< TODO? topic is not used?
   }
 
-  std::thread t_;
+  std::thread subscriber_thread_;
   bool alive_{true};
-  static std::unique_ptr<zmq::context_t, contextCloser> context_;
+  static std::unique_ptr<zmq::context_t, contextDeleter> context_;
   std::unique_ptr<zmq::socket_t> socket_;  //<
   std::function<void(const T&)> callback_;
 };
 
 template <typename T>
-std::unique_ptr<zmq::context_t, contextCloser> Subscriber<T>::context_(new zmq::context_t(1));
+std::unique_ptr<zmq::context_t, contextDeleter> Subscriber<T>::context_(new zmq::context_t(1));
 
-}  // namespace simple
+}  // Namespace simple.

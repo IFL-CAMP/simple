@@ -5,12 +5,13 @@
 #include <zmq.hpp>
 #include <string>
 #include <thread>
-#include "simple/contextCloser.h"
+
+#include "simple/context_deleter.h"
 
 namespace simple
 {
 /**
- * @brief Creates a reply socket.
+ * @brief Creates a reply socket for a specific type of message.
  */
 template <typename T>
 class Server
@@ -21,67 +22,63 @@ public:
    * function is responsible for taking the received request and filling it with the reply data
    */
   Server(const std::string& port, const std::function<void(T&)>& callback)
-    : socket_(std::make_unique<zmq::socket_t>(*context_, ZMQ_REP)), callback_(callback)
+    : socket_(std::make_unique<zmq::socket_t>(*context_, ZMQ_REP))
+    , callback_(callback)
   {
-    // set socket timeout
-    int timeOut = 5000;  // miliseconds
-    socket_->setsockopt(ZMQ_RCVTIMEO, &timeOut, sizeof(timeOut));
-
+    int timeout = 100;  //< Socket timeout in miliseconds.
+    socket_->setsockopt(ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
     try
     {
       socket_->bind(port);
     }
     catch (zmq::error_t& e)
     {
-      std::cout << "could not bind socket:" << e.what();
+      std::cerr << "Error - Could not bind to the socket:" << e.what();
     }
 
-    // start thread of the server: wait for requests on a dedicated thread
-    t_ = std::thread(&Server::awaitRequest, this);
+    // Start the thread of the server: wait for requests on the dedicated thread.
+    server_thread_ = std::thread(&Server::awaitRequest, this);
   }
 
   ~Server()
   {
-    // stop the reply loop
-    alive_ = false;
-
-    // join thread
-    t_.join();
-
+    alive_ = false;  //< Stop the request/reply loop.
+    server_thread_.join();
     socket_->close();
   }
 
+private:
+  /**
+   * @brief TODO
+   */
   void awaitRequest()
   {
     while (alive_)
     {
-      // wait for next request.
-      zmq::message_t recvREQ;
-      bool success = false;
+      zmq::message_t request;
+      bool success{false};
       try
       {
-        success = socket_->recv(&recvREQ);
+        success = socket_->recv(&request);  //< Wait for the next request.
       }
       catch (zmq::error_t& e)
       {
-        std::cout << "Could not receive message: " << e.what();
+        std::cerr << "Error: Could not receive the request: " << e.what();
       }
-      // if receive was successful
-      if (success)
+      if (success)  //< If a request was successfully received.
       {
-        // put the received message into the wrapper
-        auto convertMsg = static_cast<uint8_t*>(recvREQ.data());
-        T wrappedReq(convertMsg);  // TODO error safe in case of wrong type
-
-        // use the callback to fetch the requested data
-        callback_(wrappedReq);
-
-        // reply with the message
-        reply(wrappedReq);
+        // TODO: What if the wrong type of request arrives?
+        T request_data(static_cast<uint8_t*>(request.data()));  //< The request is wrappen in a T object.
+        callback_(request_data);                                //< Send the requested data to the callback.
+        reply(request_data);                                    //< Reply to the request.
       }
     }
   }
 
+  /**
+   * @brief TODO
+   * @param msg
+   */
   void reply(const T& msg)
   {
     uint8_t* buffer = msg.getBufferData();
@@ -89,30 +86,33 @@ public:
     reply(buffer, buffer_size);
   }
 
+  /**
+   * @brief TODO
+   * @param msg
+   * @param size
+   */
   void reply(const uint8_t* msg, const int size)
   {
-    zmq::message_t rep(size);
-
-    memcpy(rep.data(), msg, size);
+    zmq::message_t reply(size);
+    memcpy(reply.data(), msg, size);
 
     try
     {
-      socket_->send(rep);
+      socket_->send(reply);
     }
     catch (zmq::error_t& e)
     {
-      std::cerr << "Error - Could not send the message: " << e.what();
+      std::cerr << "Error - Could not send the reply to the client: " << e.what();
     }
   }
 
-private:
-  std::thread t_;
-  bool alive_{ true };
-  static std::unique_ptr<zmq::context_t, contextCloser> context_;
+  std::thread server_thread_;
+  bool alive_{true};
+  static std::unique_ptr<zmq::context_t, contextDeleter> context_;
   std::unique_ptr<zmq::socket_t> socket_;
   std::function<void(T&)> callback_;
 };
-template <typename T>
-std::unique_ptr<zmq::context_t, contextCloser> Server<T>::context_(new zmq::context_t(1));
 
-}  // namespace simple
+template <typename T>
+std::unique_ptr<zmq::context_t, contextDeleter> Server<T>::context_(new zmq::context_t(1));
+}  // Namespace simple.

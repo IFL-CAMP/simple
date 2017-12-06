@@ -3,8 +3,9 @@
 #include <memory>
 #include <zmq.hpp>
 #include <string>
+
 #include "simple_msgs/generic_message.h"
-#include "simple/contextCloser.h"
+#include "simple/context_deleter.h"
 
 namespace simple
 {
@@ -32,32 +33,38 @@ public:
     }
   }
 
-  ~Publisher<T>()
-  {
-    socket_->close();
-    // context_->close();
-  }
+  ~Publisher<T>() { socket_->close(); }
 
   /**
-   * @brief publishes the message through the open socket.
-   * @param msg Protobuf-type message to be published.
+   * @brief Publishes the message through the open socket.
+   * @param msg: Flatbuffer-type message to be published.
    */
   void publish(const flatbuffers::FlatBufferBuilder& msg)
   {
-    // Get the data from the message.
-    uint8_t* buffer = msg.GetBufferPointer();
+    uint8_t* buffer = msg.GetBufferPointer();  //< Get the data from the message.
     int buffer_size = msg.GetSize();
     publish(buffer, buffer_size);
   }
 
-  void publish(const simple_msgs::GenericMessage& msg)  // I'm not seeing the point of a base class anymore...
+  /**
+   * @brief Publishes the message through the open socket.
+   * @param msg: SIMPLE class wrapper for Flatbuffer messages.
+   */
+  void publish(const simple_msgs::GenericMessage& msg)
   {
     uint8_t* buffer = msg.getBufferData();
     int buffer_size = msg.getBufferSize();
     publish(buffer, buffer_size);
   }
+
+  /**
+   * @brief Publishes the message through the open socket.
+   * @param msg: buffer containing the data to be published.
+   * @param size: size of the buffer to be publish.
+   */
   void publish(const uint8_t* msg, const int size)
   {
+    // TODO
     // get message topic to allow subscription filter
     const char* topic = flatbuffers::GetBufferIdentifier(msg);
     // get the topic size
@@ -69,7 +76,6 @@ public:
     // put the data into the ZMQ message
     memcpy(ZMQ_message.data(), topic, s);
     memcpy(static_cast<uint8_t*>(ZMQ_message.data()) + s, msg, size);
-    // memcpy(ZMQ_message.data(), reinterpret_cast<char*>(prefixedMsg), size + s);
 
     try
     {
@@ -82,9 +88,10 @@ public:
   }
 
 private:
-  static std::unique_ptr<zmq::context_t, contextCloser> context_;
-  std::unique_ptr<zmq::socket_t> socket_;  //<
+  static std::unique_ptr<zmq::context_t, contextDeleter> context_;
+  std::unique_ptr<zmq::socket_t> socket_;
 };
+
 template <typename T>
-std::unique_ptr<zmq::context_t, contextCloser> Publisher<T>::context_(new zmq::context_t(1));
-}  // namespace simple
+std::unique_ptr<zmq::context_t, contextDeleter> Publisher<T>::context_(new zmq::context_t(1));
+}  // Namespace simple.
