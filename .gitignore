@@ -2,3 +2,4 @@
 build
 msgs/generated_include
 *.autosave
+tests/include

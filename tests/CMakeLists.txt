@@ -10,7 +10,6 @@ if(NOT EXISTS ${PROJECT_SOURCE_DIR}/include/catch.hpp)
 		file(DOWNLOAD
 			"https://github.com/philsquared/Catch/releases/download/v2.0.1/catch.hpp"
 			"${PROJECT_SOURCE_DIR}/include/catch.hpp"
-			SHOW_PROGRESS
 		)
 endif()
 
