@@ -1,5 +1,5 @@
 
-#include "simple_msgs/simple_string.h"
+#include "simple_msgs/string.h"
 
 simple_msgs::String::String(const uint8_t* bufferPointer)
 {

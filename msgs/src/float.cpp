@@ -1,5 +1,5 @@
 
-#include "simple_msgs/simple_float.h"
+#include "simple_msgs/float.h"
 
 simple_msgs::Float::Float(const uint8_t* bufferPointer)
 {

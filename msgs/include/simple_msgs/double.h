@@ -9,15 +9,16 @@ namespace simple_msgs
 class Double : public GenericMessage
 {
 public:
-  using GenericMessage::GenericMessage;
-
+  Double()
+    : GenericMessage()
+  {
+  }
   /**
    * @brief TODO
    * @param bufferPointer
    */
   Double(double data)
     : data_(data)
-    , modified_(true)
   {
   }
 
@@ -26,20 +27,16 @@ public:
    * @param bufferPointer
    */
   Double(const uint8_t* bufferPointer);
+
   /**
    * @brief TODO
    * @return
    */
   uint8_t* getBufferData() const;
-  /**
-   * @brief TODO
-   * @return
-   */
-  int getBufferSize() const { return builder_->GetSize(); }
 
-  double getDouble() const { return data_; }
+  double get() const { return data_; }
 
-  void setDouble(double data)
+  void set(double data)
   {
     data_ = data;
     modified_ = true;
@@ -48,8 +45,6 @@ public:
   static const char* getTopic() { return DoubleFbsIdentifier(); }
 
 private:
-  double data_;
-  mutable bool modified_{false};
-  mutable std::mutex mutex_;
+  double data_{0.0};
 };
-}
+}  // Namespace simple_msgs.

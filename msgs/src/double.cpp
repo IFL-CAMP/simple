@@ -1,5 +1,5 @@
 
-#include "simple_msgs/simple_double.h"
+#include "simple_msgs/double.h"
 
 simple_msgs::Double::Double(const uint8_t* bufferPointer)
 {

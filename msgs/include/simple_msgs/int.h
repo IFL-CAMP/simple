@@ -9,15 +9,16 @@ namespace simple_msgs
 class Int : public GenericMessage
 {
 public:
-  using GenericMessage::GenericMessage;
-
+  Int()
+    : GenericMessage()
+  {
+  }
   /**
    * @brief TODO
    * @param bufferPointer
    */
   Int(int data)
     : data_(data)
-    , modified_(true)
   {
   }
 
@@ -26,30 +27,24 @@ public:
    * @param bufferPointer
    */
   Int(const uint8_t* bufferPointer);
+
   /**
    * @brief TODO
    * @return
    */
   uint8_t* getBufferData() const;
-  /**
-   * @brief TODO
-   * @return
-   */
-  int getBufferSize() const { return builder_->GetSize(); }
 
-  void setInt(int data)
+  void set(int data)
   {
     data_ = data;
     modified_ = true;
   }
 
-  int getInt() const { return data_; }
+  int get() const { return data_; }
 
   static const char* getTopic() { return IntFbsIdentifier(); }
 
 private:
-  int data_;
-  mutable bool modified_{false};
-  mutable std::mutex mutex_;
+  int data_{0};
 };
-}  // namespace simple_msgs
+}  // Namespace simple_msgs.

@@ -1,5 +1,5 @@
 
-#include "simple_msgs/simple_int.h"
+#include "simple_msgs/int.h"
 
 simple_msgs::Int::Int(const uint8_t* bufferPointer)
 {

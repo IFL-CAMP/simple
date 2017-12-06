@@ -9,15 +9,16 @@ namespace simple_msgs
 class Float : public GenericMessage
 {
 public:
-  using GenericMessage::GenericMessage;
-
+  Float()
+    : GenericMessage()
+  {
+  }
   /**
    * @brief TODO
    * @param bufferPointer
    */
   Float(float data)
     : data_(data)
-    , modified_(true)
   {
   }
 
@@ -33,25 +34,17 @@ public:
    */
   uint8_t* getBufferData() const;
 
-  /**
-   * @brief TODO
-   * @return
-   */
-  int getBufferSize() const { return builder_->GetSize(); }
-
-  void setFloat(float data)
+  void set(float data)
   {
     data_ = data;
     modified_ = true;
   }
 
-  float getFloat() const { return data_; }
+  float get() const { return data_; }
 
   static const char* getTopic() { return FloatFbsIdentifier(); }
 
 private:
-  float data_;
-  mutable bool modified_{false};
-  mutable std::mutex mutex_;
+  float data_{0.0};
 };
-}  // namespace simple_msgs
+}  // Namespace simple_msgs.

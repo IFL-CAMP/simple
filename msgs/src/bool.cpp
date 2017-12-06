@@ -1,5 +1,5 @@
 
-#include "simple_msgs/simple_bool.h"
+#include "simple_msgs/bool.h"
 
 simple_msgs::Bool::Bool(const uint8_t* bufferPointer)
 {

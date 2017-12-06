@@ -1,7 +1,6 @@
 #pragma once
 
 #include "generic_message.h"
-#include <mutex>
 #include "bool_generated.h"
 
 namespace simple_msgs
@@ -9,7 +8,10 @@ namespace simple_msgs
 class Bool : public GenericMessage
 {
 public:
-  using GenericMessage::GenericMessage;
+  Bool()
+    : GenericMessage()
+  {
+  }
 
   /**
    * @brief TODO
@@ -17,7 +19,6 @@ public:
    */
   Bool(bool data)
     : data_(data)
-    , modified_(true)
   {
   }
 
@@ -26,29 +27,23 @@ public:
    * @param bufferPointer
    */
   Bool(const uint8_t* bufferPointer);
+
   /**
    * @brief TODO
    * @return
    */
   uint8_t* getBufferData() const;
-  /**
-   * @brief TODO
-   * @return
-   */
-  int getBufferSize() const { return builder_->GetSize(); }
 
-  void setBool(bool data)
+  void set(bool data)
   {
     data_ = data;
     modified_ = true;
   }
 
-  bool getBool() const { return data_; }
+  bool get() const { return data_; }
   static const char* getTopic() { return BoolFbsIdentifier(); }
 
 private:
-  bool data_;
-  mutable bool modified_{false};
-  mutable std::mutex mutex_;
+  bool data_{false};
 };
-}  // namespace simple_msgs
+}  // Namespace simple_msgs.
