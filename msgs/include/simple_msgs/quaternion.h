@@ -51,6 +51,17 @@ public:
   }
 
   /**
+   * @brief Constructor from a 4 elements array.
+   */
+  Quaternion(const std::array<double, 4> v)
+    : x_(v[0])
+    , y_(v[1])
+    , z_(v[2])
+    , w_(v[3])
+  {
+  }
+
+  /**
    * @brief Copy assignment.
    */
   Quaternion& operator=(const Quaternion& q);

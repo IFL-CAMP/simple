@@ -31,6 +31,16 @@ public:
   }
 
   /**
+   * @brief Constructor from a 3 elements array.
+   */
+  Point(const std::array<double, 3> v)
+    : x_(v[0])
+    , y_(v[1])
+    , z_(v[2])
+  {
+  }
+
+  /**
    * @brief Constructor from the buffer data.
    * @param data acquired from flatbuffer.
    */
