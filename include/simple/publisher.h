@@ -68,7 +68,7 @@ public:
     memcpy(ZMQ_message.data(), topic, s);
     memcpy(static_cast<uint8_t*>(ZMQ_message.data()) + s, msg, size);
     // memcpy(ZMQ_message.data(), reinterpret_cast<char*>(prefixedMsg), size + s);
-
+	
     try
     {
       socket_->send(ZMQ_message);

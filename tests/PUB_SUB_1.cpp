@@ -42,10 +42,41 @@ SCENARIO("PUB SUB POINT") {
 			double y = (double)rand() / RAND_MAX;
 			double z = (double)rand() / RAND_MAX;
 			simple_msgs::Point p(x, y, z);
-			pub.publish(p);
+			//send it a couple of times
+			int times = 5;
+			while (times>0)
+			{
+				pub.publish(p);
+				std::this_thread::sleep_for(std::chrono::seconds(1));
+				times--;
+			}
 			THEN("The data received is the same as the one sent") {
 				REQUIRE(p==recvP);
 			}
 		}
 	}
 }
+/*int main() {
+	//start a subscriber
+	simple::Subscriber<simple_msgs::Point > sub("tcp://localhost:5555", callbackFun);
+
+	simple::Publisher<simple_msgs::Point> pub("tcp://*:5555");
+	//randomly generate the data to be sent
+	srand(time(NULL));//start random seed
+	double x = (double)rand() / RAND_MAX;
+	double y = (double)rand() / RAND_MAX;
+	double z = (double)rand() / RAND_MAX;
+	simple_msgs::Point p(x, y, z);
+	//publish a few times
+	int times = 5;
+	while (times>0)
+	{
+		pub.publish(p);
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+		times--;
+	}
+	
+
+	std::cout << "Compare points: " << (p == recvP) << std::endl;
+	return 0;
+}*/
