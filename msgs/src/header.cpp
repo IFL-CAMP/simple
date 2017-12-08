@@ -3,36 +3,73 @@
 
 namespace simple_msgs
 {
-Header::Header(const uint8_t* data)
+Header::Header()
+  : GenericMessage()
 {
-  auto h = GetHeaderFbs(data);
-  seq_n_ = h->sequence_number();
-  frame_id_ = h->frame_id()->c_str();
-  timestamp_ = h->timestamp();
-  modified_ = true;
 }
 
-Header& Header::operator=(const Header& h)
+Header::Header(int seq_n, const std::string& frame_id, double timestamp)
+  : GenericMessage()
+  , seq_n_(seq_n)
+  , frame_id_(frame_id)
+  , timestamp_(timestamp)
 {
-  if (this != std::addressof(h))
+}
+
+Header::Header(const uint8_t* data)
+  : GenericMessage()
+  , seq_n_(GetHeaderFbs(data)->sequence_number())
+  , frame_id_(GetHeaderFbs(data)->frame_id()->c_str())
+  , timestamp_(GetHeaderFbs(data)->timestamp())
+{
+}
+
+Header::Header(const Header& h)
+  : Header(h.seq_n_, h.frame_id_, h.timestamp_)
+{
+}
+
+Header::Header(Header&& other)
+  : GenericMessage()
+  , seq_n_(std::move(other.seq_n_))
+  , frame_id_(std::move(other.frame_id_))
+  , timestamp_(std::move(other.timestamp_))
+{
+}
+
+Header& Header::operator=(const Header& other)
+{
+  if (this != std::addressof(other))
   {
     std::lock_guard<std::mutex> lock(mutex_);
-    seq_n_ = h.seq_n_;
-    frame_id_ = h.frame_id_;
-    timestamp_ = h.timestamp_;
+    seq_n_ = other.seq_n_;
+    frame_id_ = other.frame_id_;
+    timestamp_ = other.timestamp_;
     modified_ = true;
   }
   return *this;
 }
 
-bool Header::operator==(const Header& h) const
+Header& Header::operator=(Header&& other) noexcept
 {
-  return (seq_n_ == h.seq_n_ && frame_id_ == h.frame_id_ && timestamp_ == h.timestamp_);
+  if (this != std::addressof(other))
+  {
+    seq_n_ = std::move(other.seq_n_);
+    frame_id_ = std::move(other.frame_id_);
+    timestamp_ = std::move(other.timestamp_);
+    modified_ = true;
+  }
+  return *this;
 }
 
-bool Header::operator!=(const Header& h) const
+bool Header::operator==(const Header& rhs) const
 {
-  return !(*this == h);
+  return (seq_n_ == rhs.seq_n_ && frame_id_ == rhs.frame_id_ && timestamp_ == rhs.timestamp_);
+}
+
+bool Header::operator!=(const Header& rhs) const
+{
+  return !(*this == rhs);
 }
 
 uint8_t* Header::getBufferData() const
