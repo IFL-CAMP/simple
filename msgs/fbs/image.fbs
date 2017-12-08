@@ -23,12 +23,12 @@ table dataDouble{
 table ImageFbs{
 	enconding:string;
 	origin:[ubyte];
-	resX:int;
-	resY:int;
-	resZ:int;
-	width:double;
-	height:double;
-	depth:double;
+	resX:double;
+	resY:double;
+	resZ:double;
+	width:int;
+	height:int;
+	depth:int;
 	imgData:data;
 	Header:[ubyte];
 }
