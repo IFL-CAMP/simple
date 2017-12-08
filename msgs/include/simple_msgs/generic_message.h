@@ -12,7 +12,12 @@ namespace simple_msgs
 class GenericMessage
 {
 public:
+  GenericMessage()
+    : builder_(std::make_unique<flatbuffers::FlatBufferBuilder>(1024))
+  {
+  }
   virtual ~GenericMessage() = default;
+
   virtual uint8_t* getBufferData() const = 0;
   int getBufferSize() const
   {
@@ -21,10 +26,6 @@ public:
   }
 
 protected:
-  GenericMessage()
-    : builder_(std::make_unique<flatbuffers::FlatBufferBuilder>(1024))
-  {
-  }
   std::unique_ptr<flatbuffers::FlatBufferBuilder> builder_;
   mutable bool modified_{true};
   mutable std::mutex mutex_;

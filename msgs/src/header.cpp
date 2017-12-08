@@ -5,7 +5,6 @@ namespace simple_msgs
 {
 Header::Header(const uint8_t* data)
 {
-  std::lock_guard<std::mutex> lock(mutex_);
   auto h = GetHeaderFbs(data);
   seq_n_ = h->sequence_number();
   frame_id_ = h->frame_id()->c_str();
@@ -17,6 +16,7 @@ Header& Header::operator=(const Header& h)
 {
   if (this != std::addressof(h))
   {
+    std::lock_guard<std::mutex> lock(mutex_);
     seq_n_ = h.seq_n_;
     frame_id_ = h.frame_id_;
     timestamp_ = h.timestamp_;

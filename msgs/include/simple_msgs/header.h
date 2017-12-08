@@ -1,8 +1,9 @@
 #pragma once
 
+#include <iostream>
+
 #include "generic_message.h"
 #include "header_generated.h"
-#include <iostream>
 
 namespace simple_msgs
 {
