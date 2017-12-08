@@ -9,9 +9,9 @@ using Double = NumericType<double>;
 
 template <>
 NumericType<double>::NumericType(const uint8_t* data)
+  : GenericMessage()
+  , data_(GetDoubleFbs(data)->data())
 {
-  data_ = GetDoubleFbs(data)->data();
-  modified_ = true;
 }
 
 template <>
