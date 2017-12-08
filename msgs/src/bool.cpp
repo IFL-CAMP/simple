@@ -3,19 +3,63 @@
 
 namespace simple_msgs
 {
-Bool::Bool(const uint8_t* data)
+Bool::Bool()
+  : GenericMessage()
 {
-  data_ = GetBoolFbs(data)->data();
-  modified_ = true;
 }
 
-Bool& Bool::operator=(const Bool& b)
+Bool::Bool(bool data)
+  : GenericMessage()
+  , data_(data)
 {
-  if (this != std::addressof(b))
+}
+
+Bool::Bool(const uint8_t* data)
+  : GenericMessage()
+  , data_(GetBoolFbs(data)->data())
+{
+}
+
+Bool::Bool(const Bool& other)
+  : Bool(other.data_)
+{
+}
+
+Bool::Bool(Bool&& other)
+  : GenericMessage()
+  , data_(std::move(other.data_))
+{
+}
+
+Bool& Bool::operator=(const Bool& other)
+{
+  if (this != std::addressof(other))
   {
-    data_ = b.data_;
+    std::lock_guard<std::mutex> lock(mutex_);
+    data_ = other.data_;
+    modified_ = true;
   }
   return *this;
+}
+
+Bool& Bool::operator=(Bool&& other) noexcept
+{
+  if (this != std::addressof(other))
+  {
+    data_ = std::move(other.data_);
+    modified_ = true;
+  }
+  return *this;
+}
+
+bool Bool::operator==(const Bool& rhs) const
+{
+  return (data_ == rhs.data_);
+}
+
+bool Bool::operator!=(const Bool& rhs) const
+{
+  return !(*this == rhs);
 }
 
 uint8_t* Bool::getBufferData() const
