@@ -1,50 +1,37 @@
 #pragma once
 
-#include "generic_message.h"
+#include "numeric_type.hpp"
 #include "double_generated.h"
-#include <mutex>
 
 namespace simple_msgs
 {
-class Double : public GenericMessage
+using Double = NumericType<double>;
+
+template <>
+NumericType<double>::NumericType(const uint8_t* data)
 {
-public:
-  Double()
-    : GenericMessage()
+  data_ = GetDoubleFbs(data)->data();
+  modified_ = true;
+}
+
+template <>
+uint8_t* NumericType<double>::getBufferData() const
+{
+  std::lock_guard<std::mutex> lock(mutex_);
+  if (modified_)
   {
+    builder_->Clear();
+    DoubleFbsBuilder tmp_builder(*builder_);
+    tmp_builder.add_data(data_);
+    FinishDoubleFbsBuffer(*builder_, tmp_builder.Finish());
+    modified_ = false;
   }
-  /**
-   * @brief TODO
-   * @param bufferPointer
-   */
-  Double(double data)
-    : data_(data)
-  {
-  }
+  return builder_->GetBufferPointer();
+}
 
-  /**
-   * @brief TODO
-   * @param bufferPointer
-   */
-  Double(const uint8_t* bufferPointer);
-
-  /**
-   * @brief TODO
-   * @return
-   */
-  uint8_t* getBufferData() const;
-
-  double get() const { return data_; }
-
-  void set(double data)
-  {
-    data_ = data;
-    modified_ = true;
-  }
-
-  static const char* getTopic() { return DoubleFbsIdentifier(); }
-
-private:
-  double data_{0.0};
-};
-}  // Namespace simple_msgs.
+template <>
+inline const char* NumericType<double>::getTopic()
+{
+  return DoubleFbsIdentifier();
+}
+}

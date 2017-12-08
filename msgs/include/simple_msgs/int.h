@@ -1,50 +1,37 @@
 #pragma once
 
-#include "generic_message.h"
+#include "numeric_type.hpp"
 #include "int_generated.h"
-#include <mutex>
 
 namespace simple_msgs
 {
-class Int : public GenericMessage
+using Int = NumericType<int>;
+
+template <>
+NumericType<int>::NumericType(const uint8_t* data)
 {
-public:
-  Int()
-    : GenericMessage()
+  data_ = GetIntFbs(data)->data();
+  modified_ = true;
+}
+
+template <>
+uint8_t* NumericType<int>::getBufferData() const
+{
+  std::lock_guard<std::mutex> lock(mutex_);
+  if (modified_)
   {
+    builder_->Clear();
+    IntFbsBuilder tmp_builder(*builder_);
+    tmp_builder.add_data(data_);
+    FinishIntFbsBuffer(*builder_, tmp_builder.Finish());
+    modified_ = false;
   }
-  /**
-   * @brief TODO
-   * @param bufferPointer
-   */
-  Int(int data)
-    : data_(data)
-  {
-  }
+  return builder_->GetBufferPointer();
+}
 
-  /**
-   * @brief TODO
-   * @param bufferPointer
-   */
-  Int(const uint8_t* bufferPointer);
-
-  /**
-   * @brief TODO
-   * @return
-   */
-  uint8_t* getBufferData() const;
-
-  void set(int data)
-  {
-    data_ = data;
-    modified_ = true;
-  }
-
-  int get() const { return data_; }
-
-  static const char* getTopic() { return IntFbsIdentifier(); }
-
-private:
-  int data_{0};
-};
-}  // Namespace simple_msgs.
+template <>
+inline const char* NumericType<int>::getTopic()
+{
+  return IntFbsIdentifier();
+}
+}
