@@ -1,10 +1,11 @@
 #pragma once
 
+#include <iostream>
+
 #include "generic_message.h"
 #include "pose_generated.h"
 #include "quaternion.h"
 #include "point.h"
-#include <iostream>
 
 namespace simple_msgs
 {
