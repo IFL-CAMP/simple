@@ -310,8 +310,8 @@ public:
   static const char* getTopic() { return ImageFbsIdentifier(); }
 
 private:
-  int resX_{0}, resY_{0}, resZ_{0};
-  double width_{0.0}, height_{0.0}, depth_{0.0};
+  double resX_{0.0}, resY_{0.0}, resZ_{0.0};
+  int width_{0}, height_{0}, depth_{0};
   std::string encoding_{""};
   T* data_{nullptr};
   int dataLength_;
