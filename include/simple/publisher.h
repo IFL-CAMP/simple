@@ -62,20 +62,19 @@ public:
    * @param msg: buffer containing the data to be published.
    * @param size: size of the buffer to be publish.
    */
-  void publish(const uint8_t* msg, const int size)
+  void publish(const uint8_t* msg, const int msg_size)
   {
-    // TODO
-    // get message topic to allow subscription filter
-    const char* topic = flatbuffers::GetBufferIdentifier(msg);
-    // get the topic size
-    int s = strlen(topic);
+    const char* topic = flatbuffers::GetBufferIdentifier(msg);  //< Get the message identifier.
+    auto topic_size = strlen(topic);                            //< Length of the topic - it should be 4 everytime.
 
-    // create ZMQ message of size (buffer + prefixed topic)
-    int totalSize = size + s;
-    zmq::message_t ZMQ_message(totalSize);
-    // put the data into the ZMQ message
-    memcpy(ZMQ_message.data(), topic, s);
-    memcpy(static_cast<uint8_t*>(ZMQ_message.data()) + s, msg, size);
+    // Create ZMQ message of size (buffer + topic).
+    auto total_size = msg_size + topic_size;
+    zmq::message_t ZMQ_message(total_size);
+
+    // Insert the identifier at the beginning of the buffer.
+    memcpy(ZMQ_message.data(), topic, topic_size);
+    // Insert the full message in the buffer, after the identifier.
+    memcpy(static_cast<uint8_t*>(ZMQ_message.data()) + topic_size, msg, msg_size);
 
     try
     {

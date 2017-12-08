@@ -45,9 +45,9 @@ public:
 
   ~Subscriber<T>()
   {
-    alive_ = false;  //< Stop the subscription loop.
-    subscriber_thread_.join();
-    socket_->close();
+    alive_ = false;             //< Stop the subscription loop.
+    subscriber_thread_.join();  //< Wait for the subscriber thead.
+    socket_->close();           //< Close the socker.
   }
 
 private:
@@ -72,11 +72,11 @@ private:
       }
       if (success)  //< If a message was successfully received.
       {
-        // get the buffer data ignoring the first few bytes (the topic prefix)
-        const char* topic = T::getTopic();
-        int s = strlen(topic);
+        const char* topic = T::getTopic();  //< Get the message identificator.
         auto message_data = static_cast<uint8_t*>(message.data());
-        T wrapped_data(message_data + s);  //< TODO: ??
+
+        // Build an object T from a data starting after the message identificator.
+        T wrapped_data(message_data + strlen(topic));
         callback_(wrapped_data);
       }
     }
@@ -88,8 +88,10 @@ private:
    */
   void filter()
   {
-    const char* topic = T::getTopic();          //< Get the message identificator.
-    socket_->setsockopt(ZMQ_SUBSCRIBE, "", 0);  //< TODO? topic is not used?
+    // Get the message identificator.
+    const char* topic = T::getTopic();
+    // Subscribe only to messages with the right identificator.
+    socket_->setsockopt(ZMQ_SUBSCRIBE, topic, sizeof(topic));
   }
 
   std::thread subscriber_thread_;
