@@ -27,7 +27,8 @@ public:
     auto success = zmq_connect(socket_, port.c_str());
     if (success != 0)
     {
-      throw std::runtime_error("SIMPLE Client: cannot bind to the given address/port. ZMQ Error: " + zmq_errno());
+      throw std::runtime_error("SIMPLE Client: cannot bind to the given address/port. ZMQ Error: " +
+                               std::to_string(zmq_errno()));
     }
     const char* topic = T::getTopic();
     zmq_setsockopt(socket_, ZMQ_SUBSCRIBE, topic, strlen(topic));
@@ -84,7 +85,8 @@ public:
 
     if (topic_sent == -1 || request_sent == -1)
     {
-      throw std::runtime_error("The client could not send the request to the server. ZMQ Error: " + zmq_errno());
+      throw std::runtime_error("The client could not send the request to the server. ZMQ Error: " +
+                               std::to_string(zmq_errno()));
     }
 
     zmq_msg_close(&topic);
@@ -105,7 +107,8 @@ public:
 
     if (reply_received == -1)
     {
-      throw std::runtime_error("The client could not receive the reply from the server ZMQ Error: " + zmq_errno());
+      throw std::runtime_error("The client could not receive the reply from the server ZMQ Error: " +
+                               std::to_string(zmq_errno()));
     }
 
     T reply_data(static_cast<uint8_t*>(zmq_msg_data(&reply)));  //< Build a T object from the server reply.

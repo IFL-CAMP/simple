@@ -26,7 +26,8 @@ public:
     auto success = zmq_bind(socket_, port.c_str());
     if (success != 0)
     {
-      throw std::runtime_error("SIMPLE Publisher: cannot bind to the given address/port. ZMQ Error: " + zmq_errno());
+      throw std::runtime_error("SIMPLE Publisher: cannot bind to the given address/port. ZMQ Error: " +
+                               std::to_string(zmq_errno()));
     }
   }
 
@@ -85,7 +86,7 @@ public:
 
     if (topic_sent == -1 || message_sent == -1)
     {
-      throw std::runtime_error("The publisher could not send the message. ZMQ Error: " + zmq_errno());
+      throw std::runtime_error("The publisher could not send the message. ZMQ Error: " + std::to_string(zmq_errno()));
     }
   }
 

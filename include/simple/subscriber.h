@@ -33,7 +33,8 @@ public:
     auto success = zmq_connect(socket_, address.c_str());
     if (success != 0)
     {
-      throw std::runtime_error("SIMPLE Subscriber: cannot bind to the given address/port. ZMQ Error: " + zmq_errno());
+      throw std::runtime_error("SIMPLE Subscriber: cannot bind to the given address/port. ZMQ Error: " +
+                               std::to_string(zmq_errno()));
     }
 
     filter();  //< Filter the messages to be received accordingly to their identification tag.

@@ -29,7 +29,8 @@ public:
     auto success = zmq_bind(socket_, port.c_str());
     if (success != 0)
     {
-      throw std::runtime_error("SIMPLE Server: cannot bind to the given address/port. ZMQ Error: " + zmq_errno());
+      throw std::runtime_error("SIMPLE Server: cannot bind to the given address/port. ZMQ Error: " +
+                               std::to_string(zmq_errno()));
     }
 
     // Start the thread of the server: wait for requests on the dedicated thread.
@@ -108,7 +109,8 @@ private:
 
     if (topic_sent == -1 || reply_sent == -1)
     {
-      throw std::runtime_error("The server could not send the reply to the server. ZMQ Error: " + zmq_errno());
+      throw std::runtime_error("The server could not send the reply to the server. ZMQ Error: " +
+                               std::to_string(zmq_errno()));
     }
     zmq_msg_close(&topic);
     zmq_msg_close(&reply);
