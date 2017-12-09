@@ -26,7 +26,7 @@ public:
     auto success = zmq_bind(socket_, port.c_str());
     if (success != 0)
     {
-      throw std::runtime_error("Cannot bind to the given address/port. ZMQ Error: " + zmq_errno());
+      throw std::runtime_error("SIMPLE Publisher: cannot bind to the given address/port. ZMQ Error: " + zmq_errno());
     }
   }
 
