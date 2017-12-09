@@ -2,8 +2,9 @@
 
 #include <array>
 #include <iostream>
+
 #include "generic_message.h"
-#include "rotation_matrix_generated.h"
+#include "generated/rotation_matrix_generated.h"
 
 namespace simple_msgs
 {

@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "generic_message.h"
-#include "header_generated.h"
+#include "generated/header_generated.h"
 
 namespace simple_msgs
 {

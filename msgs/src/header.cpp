@@ -3,12 +3,12 @@
 
 namespace simple_msgs
 {
-Header::Header()
+Header::Header() noexcept
   : GenericMessage()
 {
 }
 
-Header::Header(int seq_n, const std::string& frame_id, double timestamp)
+Header::Header(int seq_n, const std::string& frame_id, double timestamp) noexcept
   : GenericMessage()
   , seq_n_(seq_n)
   , frame_id_(frame_id)

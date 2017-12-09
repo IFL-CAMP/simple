@@ -1,7 +1,7 @@
 #pragma once
 
 #include "generic_message.h"
-#include "bool_generated.h"
+#include "generated/bool_generated.h"
 
 namespace simple_msgs
 {

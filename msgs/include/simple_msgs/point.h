@@ -1,9 +1,10 @@
 #pragma once
 
 #include <array>
-#include "generic_message.h"
-#include "point_generated.h"
 #include <iostream>
+
+#include "generic_message.h"
+#include "generated/point_generated.h"
 
 namespace simple_msgs
 {

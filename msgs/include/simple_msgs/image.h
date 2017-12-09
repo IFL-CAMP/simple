@@ -1,8 +1,9 @@
 #pragma once
 
 #include <mutex>
+
 #include "generic_message.h"
-#include "image_generated.h"
+#include "generated/image_generated.h"
 #include "header.h"
 #include "pose.h"
 
@@ -71,7 +72,7 @@ public:
     auto head = i->Header();                       // get the vector of bytes
     auto headData = head->data();                  // get the pointer to the data
     auto h = simple_msgs::GetHeaderFbs(headData);  // turn the data into a Header table
-    header_.setFrameID(h->frame_id());
+    header_.setFrameID(h->frame_id()->c_str());
     header_.setSequenceNumber(h->sequence_number());
     header_.setTimestamp(h->timestamp());
 

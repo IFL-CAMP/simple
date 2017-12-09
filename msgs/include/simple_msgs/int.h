@@ -1,7 +1,7 @@
 #pragma once
 
 #include "numeric_type.hpp"
-#include "int_generated.h"
+#include "generated/int_generated.h"
 
 namespace simple_msgs
 {

@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "generic_message.h"
-#include "pose_generated.h"
+#include "generated/pose_generated.h"
 #include "quaternion.h"
 #include "point.h"
 

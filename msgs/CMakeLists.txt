@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.5)
 project(simple_msgs)
 
 # Add extra CMake modules
@@ -29,10 +29,9 @@ set(SIMPLE_MSGS_SRCS
   )
 
 # Generate the Flatbuffers headers - this is defined in FindFlatBuffers.cmake
-flatbuffers_generate_c_headers(simple_msgs ${PROJECT_SOURCE_DIR}/fbs ${PROJECT_SOURCE_DIR}/generated_include)
+flatbuffers_generate_c_headers(simple_msgs ${PROJECT_SOURCE_DIR}/fbs ${PROJECT_SOURCE_DIR}/include/simple_msgs/generated)
 
 add_library(${PROJECT_NAME} SHARED ${SIMPLE_MSGS_SRCS})
-
 target_compile_definitions(${PROJECT_NAME} PRIVATE SIMPLE_LIBRARY_EXPORT) # TODO is this necessary?
 
 ###### INSTALLATION
@@ -41,3 +40,4 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE SIMPLE_LIBRARY_EXPORT) # TODO
 install(TARGETS ${PROJECT_NAME} 
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
