@@ -1,12 +1,11 @@
 #pragma once
 
 #include <memory>
-#include <zmq.hpp>
+#include <zmq.h>
 #include <string>
 #include <thread>
 
 #include "simple_msgs/generic_message.h"
-#include "simple/context_deleter.h"
 
 namespace simple
 {
@@ -21,23 +20,24 @@ public:
    * @brief Class constructor. Creates a ZMQ_REQ socket and connects it to the port. The user defined callback function
    * is responsible for using the received reply the way it wants
    * @param port string for the connection port.
-   * @param callback user defined callback function to be called for every reply received to a request.
    */
-  Client<T>(const std::string& port, const std::function<void(const T&)>& callback)
-    : socket_(std::make_unique<zmq::socket_t>(*context_, ZMQ_REQ))
+  Client<T>(const std::string& port)
+    : socket_(zmq_socket(context_, ZMQ_REQ))
   {
-    try
+    auto success = zmq_connect(socket_, port.c_str());
+    if (success != 0)
     {
-      socket_->connect(port);
+      throw std::runtime_error("SIMPLE Client: cannot bind to the given address/port. ZMQ Error: " + zmq_errno());
     }
-    catch (zmq::error_t& e)
-    {
-      std::cerr << "Error - Could not bind to the socket:" << e.what();
-    }
+    const char* topic = T::getTopic();
+    zmq_setsockopt(socket_, ZMQ_SUBSCRIBE, topic, strlen(topic));
   }
 
-  ~Client<T>() { socket_->close(); }
-
+  ~Client<T>()
+  {
+    zmq_close(socket_);
+    zmq_ctx_term(context_);
+  }
   /**
    * @brief Sends the request to a server and waits for an answer.
    * @param msg: Flatbuffer-type message to be sent as request.
@@ -65,39 +65,59 @@ public:
    * @param msg: buffer containing the data to be published.
    * @param size: size of the buffer to be published.
    */
-  T request(const uint8_t* msg, int size)
+  T request(const uint8_t* msg, const int msg_size)
   {
-    zmq::message_t ZMQ_message(size);
-    memcpy(ZMQ_message.data(), msg, size);  //< Data into the ZMQ message.
+    const char* identifier = flatbuffers::GetBufferIdentifier(msg);  //< Get the message identifier.
+    auto identifier_size = strlen(identifier);                       //< Size of the message identifier.
 
-    try
-    {
-      socket_->send(ZMQ_message);
-    }
-    catch (zmq::error_t& e)
-    {
-      std::cerr << "Error - Could not send the request to the server: " << e.what();
-    }
-    zmq::message_t reply;  //< Wait for a reply.
+    zmq_msg_t topic;
+    zmq_msg_init_size(&topic, identifier_size);
+    memcpy(zmq_msg_data(&topic), identifier, identifier_size);
 
-    try
+    zmq_msg_t request;
+    zmq_msg_init_size(&request, msg_size);
+    memcpy(zmq_msg_data(&request), msg, msg_size);
+
+    // Send the topic first and add the rest of the message after it.
+    auto topic_sent = zmq_sendmsg(socket_, &topic, ZMQ_SNDMORE);
+    auto request_sent = zmq_sendmsg(socket_, &request, 0);
+
+    if (topic_sent == -1 || request_sent == -1)
     {
-      socket_->recv(&reply);
-    }
-    catch (zmq::error_t& e)
-    {
-      std::cerr << "Error - Could not receive a response from the server: " << e.what();
+      throw std::runtime_error("The client could not send the request to the server. ZMQ Error: " + zmq_errno());
     }
 
-    T reply_data(static_cast<uint8_t*>(reply.data()));  //< Build a T object from the server reply.
+    zmq_msg_close(&topic);
+    zmq_msg_close(&request);
+
+    int data_past_topic;
+    auto data_past_topic_size = sizeof(data_past_topic);
+
+    zmq_msg_t reply;
+    zmq_msg_init(&reply);
+
+    int reply_received = zmq_msg_recv(&reply, socket_, 0);
+    zmq_getsockopt(socket_, ZMQ_RCVMORE, &data_past_topic, &data_past_topic_size);
+    if (data_past_topic)
+    {
+      reply_received = zmq_msg_recv(&reply, socket_, 0);
+    }
+
+    if (reply_received == -1)
+    {
+      throw std::runtime_error("The client could not receive the reply from the server ZMQ Error: " + zmq_errno());
+    }
+
+    T reply_data(static_cast<uint8_t*>(zmq_msg_data(&reply)));  //< Build a T object from the server reply.
+    zmq_msg_close(&reply);
     return reply_data;
   }
 
 private:
-  static std::unique_ptr<zmq::context_t, contextDeleter> context_;
-  std::unique_ptr<zmq::socket_t> socket_;
+  static void* context_;
+  void* socket_;
 };
 
 template <typename T>
-std::unique_ptr<zmq::context_t, contextDeleter> Client<T>::context_(new zmq::context_t(1));
+void* Client<T>::context_(zmq_ctx_new());
 }  // Namespace simple.
