@@ -12,24 +12,24 @@ int main(int argc, char* argv[])
   // create a message, with wrapper
   simple_msgs::Point p(5.0, 6.0, 7.0);
 
-  // create a publisher
+  //  // create a publisher
   simple::Publisher<simple_msgs::Point> pub("tcp://*:5555");
   std::cout << "Publish these cordinates: x=5.0, y=6.0, z=7.0" << std::endl;
-  int num = 10;
-  while (num > 0)
+
+  for (auto i = 0; i < 10; ++i)
   {
     try
-    {  // send the message continously
+    {
       pub.publish(p);
-      std::cout << "Point Message published: " << num << std::endl;
-      std::this_thread::sleep_for(std::chrono::seconds(1));
+      std::cout << "A Point message #" << i << " has been published. " << std::endl;
+      std::this_thread::sleep_for(std::chrono::seconds(2));
     }
     catch (zmq::error_t& e)
     {
-      std::cout << "Something went wrong with the publishing..." << std::endl;
+      std::cout << "Something went wrong with the publisher: " << e.what() << std::endl;
     }
-    num--;
   }
-  std::cout << "Publishing ended" << std::endl;
+
+  std::cout << "Publishing ended." << std::endl;
   return 0;
 }

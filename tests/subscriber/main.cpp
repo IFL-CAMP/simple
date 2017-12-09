@@ -7,9 +7,7 @@
 #include "simple_msgs/header.h"
 #include "simple_msgs/point.h"
 
-// std::function<int(simple_msgs::Header)> callback = dummyFun;
-
-void dummy(const simple_msgs::Point& p)
+void dummy_callback(const simple_msgs::Point& p)
 {
   std::cout << "Received point: " << std::endl;
   auto vec = p.toVector();
@@ -20,11 +18,11 @@ void dummy(const simple_msgs::Point& p)
 
 int main(int argc, char* argv[])
 {
-  std::cout << "Creating subscriber for Point" << std::endl;
-  simple::Subscriber<simple_msgs::Point> sub("tcp://localhost:5555", dummy);
+  std::cout << "Creating a subscriber for Point messages." << std::endl;
+  simple::Subscriber<simple_msgs::Point> sub("tcp://localhost:5555", dummy_callback);
 
   // wait for 5 seconds
-  std::this_thread::sleep_for(std::chrono::seconds(5));
+  std::this_thread::sleep_for(std::chrono::seconds(10));
 
   std::cout << "Leaving main scope" << std::endl;
 }
