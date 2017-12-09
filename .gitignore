@@ -3,3 +3,5 @@ build
 msgs/generated_include
 *.autosave
 tests/include
+
+msgs/include/simple_msgs/generated/
