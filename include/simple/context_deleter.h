@@ -6,10 +6,10 @@ namespace simple
 {
 struct contextDeleter
 {
-  void operator()(zmq::context_t* ctx)
+  void operator()(void* ctx)
   {
-    ctx->close();
-    delete ctx;
+    zmq_ctx_term(ctx);
+    zmq_close(ctx);
   }
 };
 }  // Namespace simple.

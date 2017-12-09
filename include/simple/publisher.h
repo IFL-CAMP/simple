@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <zmq.hpp>
+#include <zmq.h>
 #include <string>
 
 #include "simple_msgs/generic_message.h"
@@ -21,20 +21,20 @@ public:
    * @param port string for the connection port.
    */
   Publisher<T>(const std::string& port)
-    : socket_(std::make_unique<zmq::socket_t>(*context_, ZMQ_PUB))
+    : socket_(zmq_socket(context_, ZMQ_PUB))
   {
-    try
+    auto success = zmq_bind(socket_, port.c_str());
+    if (success != 0)
     {
-      socket_->bind(port);
-    }
-    catch (zmq::error_t& e)
-    {
-      std::cerr << "Error - Could not bind to the socket:" << e.what();
+      throw std::runtime_error("Cannot bind to the given address/port. ZMQ Error: " + zmq_errno());
     }
   }
 
-  ~Publisher<T>() { socket_->close(); }
-
+  ~Publisher<T>()
+  {
+    zmq_close(socket_);
+    zmq_ctx_term(context_);
+  }
   /**
    * @brief Publishes the message through the open socket.
    * @param msg: Flatbuffer-type message to be published.
@@ -64,33 +64,36 @@ public:
    */
   void publish(const uint8_t* msg, const int msg_size)
   {
-    const char* topic = flatbuffers::GetBufferIdentifier(msg);  //< Get the message identifier.
-    auto topic_size = strlen(topic);                            //< Length of the topic - it should be 4 everytime.
+    const char* identifier = flatbuffers::GetBufferIdentifier(msg);  //< Get the message identifier.
+    auto identifier_size = strlen(identifier);                       //< Size of the message identifier.
 
-    // Create ZMQ message of size (buffer + topic).
-    auto total_size = msg_size + topic_size;
-    zmq::message_t ZMQ_message(total_size);
+    // Create a two part message,
 
-    // Insert the identifier at the beginning of the buffer.
-    memcpy(ZMQ_message.data(), topic, topic_size);
-    // Insert the full message in the buffer, after the identifier.
-    memcpy(static_cast<uint8_t*>(ZMQ_message.data()) + topic_size, msg, msg_size);
+    // The first part contains the message 'topic' which is the Flatbuffer identifier.
+    zmq_msg_t topic;
+    zmq_msg_init_size(&topic, identifier_size);
+    memcpy(zmq_msg_data(&topic), identifier, identifier_size);
 
-    try
+    // The second part contains the message itself.
+    zmq_msg_t message;
+    zmq_msg_init_size(&message, msg_size);
+    memcpy(zmq_msg_data(&message), msg, msg_size);
+
+    // Send the topic first and add the rest of the message after it.
+    auto topic_sent = zmq_sendmsg(socket_, &topic, ZMQ_SNDMORE);
+    auto message_sent = zmq_sendmsg(socket_, &message, 0);
+
+    if (topic_sent == -1 || message_sent == -1)
     {
-      socket_->send(ZMQ_message);
-    }
-    catch (zmq::error_t& e)
-    {
-      std::cerr << "Error - Could not send the message: " << e.what();
+      throw std::runtime_error("The publisher could not send the message. ZMQ Error: " + zmq_errno());
     }
   }
 
 private:
-  static std::unique_ptr<zmq::context_t, contextDeleter> context_;
-  std::unique_ptr<zmq::socket_t> socket_;
+  static void* context_;
+  void* socket_;
 };
 
 template <typename T>
-std::unique_ptr<zmq::context_t, contextDeleter> Publisher<T>::context_(new zmq::context_t(1));
+void* Publisher<T>::context_(zmq_ctx_new());
 }  // Namespace simple.
