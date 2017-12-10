@@ -1,54 +1,73 @@
 // Test how the publisher works
 
 #include <iostream>
-#include "simple/publisher.h"
+#include <fstream>
+#include <istream>
+#include "simple/publisher.hpp"
 #include <signal.h>
 #include <string>
-#include "simple_msgs/header.h"
 #include <thread>
-#include "simple_msgs/image.h"
 #include "simple_msgs/pose.h"
+#include "simple_msgs/image.h"
+#include "simple_msgs/header.h"
 
-// handle interruptions
-static int s_interrupted = 0;
-static void s_signal_handler(int signal_value)
+std::pair<char*, int> readImage()
 {
-  s_interrupted = 1;
-}
+  std::ifstream image;
+  image.open("/home/jack/Downloads/lena.bmp", std::ios_base::binary);
 
-static void s_catch_signals()
-{
-  signal(SIGINT, s_signal_handler);
-  signal(SIGTERM, s_signal_handler);
+  image.seekg(0, std::ios::end);
+  int n = image.tellg();
+  image.seekg(0, std::ios::beg);
+
+  char* res = new char[n];
+  for (int i = 0; i < n; i++) res[i] = '5';
+
+  bool bit = image.eof();
+
+  image.read(res, n);
+  return std::make_pair(res, n);
 }
 
 int main(int argc, char* argv[])
 {
-  // using namespace std::chrono_literals;
+  auto image = readImage();
+  std::cout << "N is " << std::to_string(image.second) << std::endl;
+  uint8_t* temp = reinterpret_cast<uint8_t*>(image.first);
 
-  // create a message, with wrapper
-  simple_msgs::Point p(5.0, 6.0, 7.0);
-  simple_msgs::Header(1, "ID", 1.2);
+  simple_msgs::Header h(1, "Image", 100);
+  simple_msgs::Pose p;
+  simple_msgs::Image<uint8_t> img;
+  img.setHeader(h);
+  img.setOrigin(p);
+  img.setImageData(temp, image.second);
 
-  // create a publisher
-  simple::Publisher<simple_msgs::Point> pub("tcp://*:5555");
-  std::cout << "Publish these cordinates: x=5.0, y=6.0, z=7.0" << std::endl;
-  // s_catch_signals();
-  int num = 10;
-  while (num > 0)
+  auto check_h = img.getHeader();
+  std::cout << check_h.getFrameID() << std::endl;
+
+  simple::Publisher<simple_msgs::Image<uint8_t>> pub("tcp://*:5555");
+
+  for (int i = 0; i < 2000; i++)
   {
-    try
-    {  // send the message continously
-      pub.publish(p);
-      std::cout << "Point Message published: " << num << std::endl;
-      std::this_thread::sleep_for(std::chrono::seconds(1));
-    }
-    catch (zmq::error_t& e)
-    {
-      std::cout << "Something went wrong with the publishing..." << std::endl;
-    }
-    num--;
+    pub.publish(img);
+    std::cout << "Message #" << i << " has been published. " << std::endl;
+    std::this_thread::sleep_for(std::chrono::seconds(2));
   }
-  std::cout << "Publishing ended" << std::endl;
+
+  //  // create a message, with wrapper
+  //  simple_msgs::Point p(5.0, 6.0, 7.0);
+
+  //  //  // create a publisher
+  //  simple::Publisher<simple_msgs::Point> pub("tcp://*:5555");
+  //  std::cout << "Publish these cordinates: x=5.0, y=6.0, z=7.0" << std::endl;
+
+  //  for (auto i = 0; i < 10; ++i)
+  //  {
+  //    pub.publish(p);
+  //    std::cout << "A Point message #" << i << " has been published. " << std::endl;
+  //    std::this_thread::sleep_for(std::chrono::seconds(2));
+  //  }
+
+  std::cout << "Publishing ended." << std::endl;
   return 0;
 }
