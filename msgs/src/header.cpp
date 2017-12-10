@@ -3,12 +3,12 @@
 
 namespace simple_msgs
 {
-Header::Header() noexcept
+Header::Header()
   : GenericMessage()
 {
 }
 
-Header::Header(int seq_n, const std::string& frame_id, double timestamp) noexcept
+Header::Header(int seq_n, const std::string& frame_id, double timestamp)
   : GenericMessage()
   , seq_n_(seq_n)
   , frame_id_(frame_id)
@@ -50,7 +50,7 @@ Header& Header::operator=(const Header& other)
   return *this;
 }
 
-Header& Header::operator=(Header&& other) noexcept
+Header& Header::operator=(Header&& other)
 {
   if (this != std::addressof(other))
   {
@@ -59,6 +59,17 @@ Header& Header::operator=(Header&& other) noexcept
     timestamp_ = std::move(other.timestamp_);
     modified_ = true;
   }
+  return *this;
+}
+
+Header& Header::operator=(const uint8_t* data)
+{
+  std::lock_guard<std::mutex> lock(mutex_);
+  seq_n_ = GetHeaderFbs(data)->sequence_number();
+  frame_id_ = GetHeaderFbs(data)->frame_id()->c_str();
+  timestamp_ = GetHeaderFbs(data)->timestamp();
+  modified_ = true;
+
   return *this;
 }
 
@@ -112,8 +123,8 @@ void Header::setTimestamp(double timestamp)
 
 std::ostream& operator<<(std::ostream& out, const Header& h)
 {
-  out << "Header \n \t seq_n: " << h.seq_n_ << "\n"
-      << "frame_id: " << h.frame_id_ << "\n"
+  out << "Header \n \t seq_n: " << h.seq_n_ << "\n \t"
+      << "frame_id: " << h.frame_id_ << "\n \t"
       << "timestamp: " << h.timestamp_ << "\n";
 
   return out;

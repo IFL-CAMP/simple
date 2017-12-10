@@ -83,6 +83,7 @@ String& String::operator+=(const String& rhs)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   data_ += rhs.data_;
+  modified_ = true;
   return *this;
 }
 
