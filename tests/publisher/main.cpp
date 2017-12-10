@@ -1,7 +1,7 @@
 // Test how the publisher works
 
 #include <iostream>
-#include "simple/publisher.h"
+#include "simple/publisher.hpp"
 #include <signal.h>
 #include <string>
 #include <thread>
@@ -18,16 +18,9 @@ int main(int argc, char* argv[])
 
   for (auto i = 0; i < 10; ++i)
   {
-    try
-    {
-      pub.publish(p);
-      std::cout << "A Point message #" << i << " has been published. " << std::endl;
-      std::this_thread::sleep_for(std::chrono::seconds(2));
-    }
-    catch (zmq::error_t& e)
-    {
-      std::cout << "Something went wrong with the publisher: " << e.what() << std::endl;
-    }
+    pub.publish(p);
+    std::cout << "A Point message #" << i << " has been published. " << std::endl;
+    std::this_thread::sleep_for(std::chrono::seconds(2));
   }
 
   std::cout << "Publishing ended." << std::endl;

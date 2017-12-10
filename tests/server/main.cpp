@@ -1,9 +1,6 @@
-#include <signal.h>
-#include <fstream>
 #include <iostream>
 #include <string>
-#include "simple/server.h"
-#include "simple_msgs/generic_message.h"
+#include "simple/server.hpp"
 #include "simple_msgs/header.h"
 #include "simple_msgs/point.h"
 
@@ -19,7 +16,7 @@ int main(int argc, char* argv[])
   simple::Server<simple_msgs::Point> server("tcp://*:5555", dummy);
 
   // wait for 25 seconds
-  std::this_thread::sleep_for(std::chrono::seconds(25));
+  std::this_thread::sleep_for(std::chrono::seconds(250));
 
   std::cout << "Leaving main scope" << std::endl;
 }

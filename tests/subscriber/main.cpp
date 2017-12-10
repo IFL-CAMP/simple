@@ -1,19 +1,12 @@
-#include <signal.h>
-#include <fstream>
 #include <iostream>
 #include <string>
-#include "simple/subscriber.h"
-#include "simple_msgs/generic_message.h"
+#include "simple/subscriber.hpp"
 #include "simple_msgs/header.h"
 #include "simple_msgs/point.h"
 
 void dummy_callback(const simple_msgs::Point& p)
 {
-  std::cout << "Received point: " << std::endl;
-  auto vec = p.toVector();
-  std::cout << "X: " << vec.at(0) << std::endl;
-  std::cout << "Y: " << vec.at(1) << std::endl;
-  std::cout << "Z: " << vec.at(2) << std::endl;
+  std::cout << p << std::endl;
 }
 
 int main(int argc, char* argv[])
@@ -22,7 +15,8 @@ int main(int argc, char* argv[])
   simple::Subscriber<simple_msgs::Point> sub("tcp://localhost:5555", dummy_callback);
 
   // wait for 5 seconds
-  std::this_thread::sleep_for(std::chrono::seconds(10));
+  std::this_thread::sleep_for(std::chrono::seconds(20));
 
-  std::cout << "Leaving main scope" << std::endl;
+  std::cout << "Subscribing ended." << std::endl;
+  return 0;
 }
