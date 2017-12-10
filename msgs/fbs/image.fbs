@@ -1,0 +1,38 @@
+// Schema for S.I.M.P.L.E. Image
+
+namespace simple_msgs;
+
+union data {uint8_type, int16_type, float_type, double_type}
+
+table uint8_type{
+	raw:[uint8];
+}
+
+table int16_type{
+	raw:[short];
+}
+
+table float_type{
+	raw:[float];
+}
+
+table double_type{
+	raw:[double];
+}
+
+table ImageFbs{
+
+	header:[ubyte];
+	origin:[ubyte];
+	enconding:string;
+	resX:double;
+	resY:double;
+	resZ:double;
+	width:int;
+	height:int;
+	depth:int;
+	image:data;
+}
+
+root_type ImageFbs;
+file_identifier "IMAG";

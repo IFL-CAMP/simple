@@ -1,0 +1,10 @@
+// Schema for S.I.M.P.L.E. String
+
+namespace simple_msgs;
+
+table StringFbs {
+	data:string;
+}
+
+root_type StringFbs;
+file_identifier "STRG";

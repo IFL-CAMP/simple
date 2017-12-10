@@ -1,0 +1,12 @@
+// Schema for S.I.M.P.L.E. Header
+
+namespace simple_msgs;
+
+table HeaderFbs {
+	sequence_number:int;
+	frame_id:string;
+	timestamp:double;
+}
+
+root_type HeaderFbs;
+file_identifier "HEAD";

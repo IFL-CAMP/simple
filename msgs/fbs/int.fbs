@@ -1,0 +1,10 @@
+// Schema for S.I.M.P.L.E. Int
+
+namespace simple_msgs;
+
+table IntFbs {
+	data:int;
+}
+
+root_type IntFbs;
+file_identifier "INTF";

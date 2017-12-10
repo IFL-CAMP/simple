@@ -1,0 +1,11 @@
+// Schema for S.I.M.P.L.E. Pose
+
+namespace simple_msgs;
+
+table PoseFbs {
+	position:[ubyte];
+	quaternion:[ubyte];
+}
+
+root_type PoseFbs;
+file_identifier "POSE";
