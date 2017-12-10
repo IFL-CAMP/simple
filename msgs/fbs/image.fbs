@@ -2,35 +2,36 @@
 
 namespace simple_msgs;
 
-union data {dataUInt8, dataInt16, dataFloat, dataDouble}
+union data {uint8_type, int16_type, float_type, double_type}
 
-table dataUInt8{
-	img:[uint8];
+table uint8_type{
+	raw:[uint8];
 }
 
-table dataInt16{
-	img:[short];
+table int16_type{
+	raw:[short];
 }
 
-table dataFloat{
-	img:[float];
+table float_type{
+	raw:[float];
 }
 
-table dataDouble{
-	img:[double];
+table double_type{
+	raw:[double];
 }
 
 table ImageFbs{
-	enconding:string;
+
+	header:[ubyte];
 	origin:[ubyte];
+	enconding:string;
 	resX:double;
 	resY:double;
 	resZ:double;
 	width:int;
 	height:int;
 	depth:int;
-	imgData:data;
-	Header:[ubyte];
+	image:data;
 }
 
 root_type ImageFbs;
