@@ -3,21 +3,55 @@
 
 namespace simple_msgs
 {
-Pose::Pose(const uint8_t* data)
+Pose::Pose()
+  : GenericMessage()
 {
-  std::lock_guard<std::mutex> lock(mutex_);
+}
+
+Pose::Pose(const Point& position, const Quaternion& quaternion)
+  : GenericMessage()
+  , quaternion_(quaternion)
+  , position_(position)
+{
+}
+
+Pose::Pose(const uint8_t* data)
+  : GenericMessage()
+{
   auto p = GetPoseFbs(data);
   quaternion_ = Quaternion(p->quaternion()->data());
   position_ = Point(p->position()->data());
-  modified_ = true;
+}
+
+Pose::Pose(const Pose& other)
+  : Pose(other.position_, other.quaternion_)
+{
+}
+
+Pose::Pose(Pose&& other)
+  : Pose(std::move(other.position_), std::move(other.quaternion_))
+{
 }
 
 Pose& Pose::operator=(const Pose& p)
 {
   if (this != std::addressof(p))
   {
+    std::lock_guard<std::mutex> lock(mutex_);
     position_ = p.position_;
     quaternion_ = p.quaternion_;
+    modified_ = true;
+  }
+  return *this;
+}
+
+Pose& Pose::operator=(Pose&& p)
+{
+  if (this != std::addressof(p))
+  {
+    std::lock_guard<std::mutex> lock(mutex_);
+    position_ = std::move(p.position_);
+    quaternion_ = std::move(p.quaternion_);
     modified_ = true;
   }
   return *this;
@@ -67,7 +101,6 @@ void Pose::setPosition(const Point& position)
 std::ostream& operator<<(std::ostream& out, const Pose& p)
 {
   out << "Pose \n \t" << p.position_ << p.quaternion_;
-
   return out;
 }
 }
