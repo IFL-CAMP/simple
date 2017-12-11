@@ -1,50 +1,53 @@
 
 #include "simple_msgs/image.h"
 
-template <>
-simple_msgs::data simple_msgs::Image<uint8_t>::getDataUnionType() const
+namespace simple_msgs
 {
-  return simple_msgs::data_dataUInt8;
+template <>
+data Image<uint8_t>::getDataUnionType() const
+{
+  return data_uint8_type;
 }
 
 template <>
-simple_msgs::data simple_msgs::Image<int16_t>::getDataUnionType() const
+data Image<int16_t>::getDataUnionType() const
 {
-  return simple_msgs::data_dataInt16;
+  return data_int16_type;
 }
 
 template <>
-simple_msgs::data simple_msgs::Image<double>::getDataUnionType() const
+data Image<float>::getDataUnionType() const
 {
-  return simple_msgs::data_dataDouble;
+  return data_float_type;
 }
 
 template <>
-simple_msgs::data simple_msgs::Image<float>::getDataUnionType() const
+data Image<double>::getDataUnionType() const
 {
-  return simple_msgs::data_dataFloat;
+  return data_double_type;
 }
 
 template <>
-flatbuffers::Offset<void> simple_msgs::Image<uint8_t>::getDataUnionElem() const
+flatbuffers::Offset<void> Image<uint8_t>::getDataUnionElem() const
 {
-  return simple_msgs::CreatedataUInt8(*builder_, builder_->CreateVector(data_, dataLength_)).Union();
+  return Createuint8_type(*builder_, builder_->CreateVector(data_, data_size_)).Union();
 }
 
 template <>
-flatbuffers::Offset<void> simple_msgs::Image<int16_t>::getDataUnionElem() const
+flatbuffers::Offset<void> Image<int16_t>::getDataUnionElem() const
 {
-  return simple_msgs::CreatedataInt16(*builder_, builder_->CreateVector(data_, dataLength_)).Union();
+  return Createint16_type(*builder_, builder_->CreateVector(data_, data_size_)).Union();
 }
 
 template <>
-flatbuffers::Offset<void> simple_msgs::Image<float>::getDataUnionElem() const
+flatbuffers::Offset<void> Image<float>::getDataUnionElem() const
 {
-  return simple_msgs::CreatedataFloat(*builder_, builder_->CreateVector(data_, dataLength_)).Union();
+  return Createfloat_type(*builder_, builder_->CreateVector(data_, data_size_)).Union();
 }
 
 template <>
-flatbuffers::Offset<void> simple_msgs::Image<double>::getDataUnionElem() const
+flatbuffers::Offset<void> Image<double>::getDataUnionElem() const
 {
-  return simple_msgs::CreatedataDouble(*builder_, builder_->CreateVector(data_, dataLength_)).Union();
+  return Createdouble_type(*builder_, builder_->CreateVector(data_, data_size_)).Union();
+}
 }

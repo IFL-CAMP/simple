@@ -1,35 +1,33 @@
 #pragma once
 
-#include <stdint.h>
+#include <mutex>
 #include <memory>
 #include <flatbuffers/flatbuffers.h>
 
 namespace simple_msgs
 {
-class GenericMessageBase
+/**
+ * @brief GenericMessageBase: base class for SIMPLE wrappers around flatbuffers messages.
+ */
+class GenericMessage
 {
 public:
-  GenericMessageBase() : builder_(std::make_unique<flatbuffers::FlatBufferBuilder>(1024))
+  GenericMessage()
+    : builder_(std::make_unique<flatbuffers::FlatBufferBuilder>(1024))
   {
   }
+  virtual ~GenericMessage() = default;
 
-  virtual ~GenericMessageBase() = default;
   virtual uint8_t* getBufferData() const = 0;
-  virtual int getBufferSize() const = 0;
+  int getBufferSize() const
+  {
+    getBufferData();
+    return builder_->GetSize();
+  }
 
 protected:
   std::unique_ptr<flatbuffers::FlatBufferBuilder> builder_;
+  mutable bool modified_{true};
+  mutable std::mutex mutex_;
 };
-
-template <class Derived>
-class GenericMessage : public GenericMessageBase
-{
-  using GenericMessageBase::GenericMessageBase;
-
-public:
-  static const char* topic_;
-};
-
-template <class Derived>
-const char* GenericMessage<Derived>::topic_ = Derived::derivedTopic();
-}  // namespace simple_msgs
+}  // Namespace simple_msgs.

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.5)
 project(simple_msgs)
 
 # Add extra CMake modules
@@ -24,23 +24,20 @@ set(SIMPLE_MSGS_SRCS
   src/quaternion.cpp
   src/point.cpp
   src/rotation_matrix.cpp
-  src/simple_bool.cpp
-  src/simple_float.cpp
-  src/simple_double.cpp
-  src/simple_string.cpp
-  src/simple_int.cpp
+  src/bool.cpp
+  src/string.cpp
   )
 
 # Generate the Flatbuffers headers - this is defined in FindFlatBuffers.cmake
-flatbuffers_generate_c_headers(simple_msgs ${PROJECT_SOURCE_DIR}/fbs ${PROJECT_SOURCE_DIR}/generated_include)
+flatbuffers_generate_c_headers(simple_msgs ${PROJECT_SOURCE_DIR}/fbs ${PROJECT_SOURCE_DIR}/include/simple_msgs/generated)
 
 add_library(${PROJECT_NAME} SHARED ${SIMPLE_MSGS_SRCS})
-
 target_compile_definitions(${PROJECT_NAME} PRIVATE SIMPLE_LIBRARY_EXPORT) # TODO is this necessary?
 
-###### INSTALATION
+###### INSTALLATION
 
 #install the simple_msgs library in the desired folder
 install(TARGETS ${PROJECT_NAME} 
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
