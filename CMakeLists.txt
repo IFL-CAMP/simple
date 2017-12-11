@@ -60,8 +60,12 @@ add_library(zmq STATIC IMPORTED)
 set_target_properties(zmq PROPERTIES IMPORTED_LOCATION ${ZeroMQ_LIBRARY})
 
 add_library(${PROJECT_NAME} INTERFACE)
-target_sources(${PROJECT_NAME} INTERFACE ${SIMPLE_HEADERS})
-target_include_directories(${PROJECT_NAME} INTERFACE include/)
+
+target_include_directories(${PROJECT_NAME} INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
+
 target_link_libraries(${PROJECT_NAME} INTERFACE zmq ${ZeroMQ_LIBRARY} ${CMAKE_THREAD_LIBS_INIT} simple_msgs)
 target_compile_definitions(${PROJECT_NAME} INTERFACE SIMPLE_LIBRARY_EXPORT)
 
@@ -69,6 +73,7 @@ target_compile_definitions(${PROJECT_NAME} INTERFACE SIMPLE_LIBRARY_EXPORT)
 
 # Install SIMPLE in the desired folder
 install(TARGETS ${PROJECT_NAME}
+  EXPORT "${PROJECT_NAME}Targets"
   ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
@@ -80,6 +85,8 @@ if(WIN32)
   set(ZMQ_DYNAMIC_LIBRARY "${ZMQ_LIBRARY_PATH}/${ZMQ_LIBRARY_NAME_WO_EXT}.dll")
   install(FILES ${ZMQ_DYNAMIC_LIBRARY} DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif(WIN32)
+
+include(simpleInstall.cmake.in)
 
 ###### EXAMPLES
 

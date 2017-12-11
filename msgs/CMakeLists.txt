@@ -38,6 +38,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE SIMPLE_LIBRARY_EXPORT) # TODO
 
 #install the simple_msgs library in the desired folder
 install(TARGETS ${PROJECT_NAME} 
+    EXPORT "simpleTargets"
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
