@@ -6,8 +6,8 @@
 
 int main()
 {
-  constexpr int N_RUN = 25;
-  constexpr int SLEEP_TIME = 2000;  //<  Milliseconds.
+  const int N_RUN = 25;
+  const int SLEEP_TIME = 2000;  //<  Milliseconds.
 
   simple_msgs::Point my_point(1.0, 2.0, 3.0);
   simple_msgs::Quaternion my_quaternion;  //< Identity quaternion.
