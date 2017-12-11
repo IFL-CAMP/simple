@@ -42,7 +42,7 @@ Bool& Bool::operator=(const Bool& other)
   return *this;
 }
 
-Bool& Bool::operator=(Bool&& other) noexcept
+Bool& Bool::operator=(Bool&& other)
 {
   if (this != std::addressof(other))
   {
