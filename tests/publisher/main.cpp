@@ -14,7 +14,7 @@
 std::pair<char*, int> readImage()
 {
   std::ifstream image;
-  image.open("/home/jack/Downloads/lena.bmp", std::ios_base::binary);
+  image.open("C:/Users/ferna/Documents/IFL/SIMPLE/lena.gif", std::ios_base::binary);
 
   image.seekg(0, std::ios::end);
   int n = image.tellg();
@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
 
   simple::Publisher<simple_msgs::Image<uint8_t>> pub("tcp://*:5555");
 
-  for (int i = 0; i < 2000; i++)
+  for (int i = 0; i < 100; i++)
   {
     pub.publish(img);
     std::cout << "Message #" << i << " has been published. " << std::endl;
