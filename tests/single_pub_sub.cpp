@@ -2,9 +2,9 @@
 #include "catch.hpp"
 
 #include <iostream>
-#include "simple/publisher.h"
+#include "simple/publisher.hpp"
 #include "simple_msgs/point.h"
-#include "simple/subscriber.h"
+#include "simple/subscriber.hpp"
 #include <time.h>
 #include <stdlib.h>
 

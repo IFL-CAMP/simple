@@ -43,15 +43,7 @@ public:
   friend Point operator*(Point, const Point&);
   Point& operator/=(const Point&);
   friend Point operator/(Point, const Point&);
-
-  bool operator==(const Point& p) const{
-	  return(x_ == p.x_ && y_ == p.y_ && z_ == p.z_);
-  }
-
-  bool operator!=(const Point& p) const{
-	  return !(*this == p);
-  }
-
+  
   /**
    * @brief Builds and returns the buffer accordingly to the values currently stored.
    * @return the buffer data.
