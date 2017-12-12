@@ -1,0 +1,11 @@
+// Schema for S.I.M.P.L.E. Quaternion Stamped
+
+namespace simple_msgs;
+
+table QuaternionStampedFbs {
+	quaternion:[ubyte];
+	header:[ubyte];
+}
+
+root_type QuaternionStampedFbs;
+file_identifier "QTST";

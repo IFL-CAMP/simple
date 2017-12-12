@@ -1,0 +1,11 @@
+// Schema for S.I.M.P.L.E. Int Stamped
+
+namespace simple_msgs;
+
+table IntStampedFbs {
+	data:[ubyte];
+	header:[ubyte];
+}
+
+root_type IntStampedFbs;
+file_identifier "ITST";

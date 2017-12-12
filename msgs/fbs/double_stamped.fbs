@@ -1,0 +1,11 @@
+// Schema for S.I.M.P.L.E. Double Stamped
+
+namespace simple_msgs;
+
+table DoubleStampedFbs {
+	data:[ubyte];
+	header:[ubyte];
+}
+
+root_type DoubleStampedFbs;
+file_identifier "DBST";

@@ -1,0 +1,11 @@
+// Schema for S.I.M.P.L.E. Boolean Stamped
+
+namespace simple_msgs;
+
+table BoolStampedFbs {
+	data:[ubyte];
+	header:[ubyte];
+}
+
+root_type BoolStampedFbs;
+file_identifier "BOST";
