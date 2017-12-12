@@ -25,6 +25,7 @@ set(SIMPLE_MSGS_SRCS
   src/point.cpp
   src/rotation_matrix.cpp
   src/bool.cpp
+  src/numeric_type.cpp
   src/string.cpp
   )
 

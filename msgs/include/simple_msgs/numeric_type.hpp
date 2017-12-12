@@ -2,7 +2,9 @@
 
 #include <algorithm>
 #include <ostream>
-
+#include "simple_msgs\generated\int_generated.h"
+#include "simple_msgs\generated\double_generated.h"
+#include "simple_msgs\generated\float_generated.h"
 #include "generic_message.h"
 
 namespace simple_msgs
@@ -39,7 +41,7 @@ public:
   NumericType& operator=(const NumericType& rhs)
   {
     std::lock_guard<std::mutex> lock(mutex_);
-    std::swap(data_, rhs.data_);
+    data_= rhs.data_;
     modified_ = true;
     return *this;
   }
@@ -60,12 +62,12 @@ public:
   }
 
   // Relational operators.
-  inline bool operator==(const NumericType& rhs) { return data_ == rhs.data_; }
-  inline bool operator!=(const NumericType& rhs) { return !(*this == rhs); }
-  inline bool operator<(const NumericType& rhs) { return data_ < rhs.data_; }
-  inline bool operator>(const NumericType& rhs) { return rhs < *this; }
-  inline bool operator<=(const NumericType& rhs) { return !(*this > rhs); }
-  inline bool operator>=(const NumericType& rhs) { return !(*this < rhs); }
+  inline bool operator==(const NumericType& rhs) const { return data_ == rhs.data_; }
+  inline bool operator!=(const NumericType& rhs) const { return !(*this == rhs); }
+  inline bool operator<(const NumericType& rhs) const { return data_ < rhs.data_; }
+  inline bool operator>(const NumericType& rhs) const { return rhs < *this; }
+  inline bool operator<=(const NumericType& rhs) const { return !(*this > rhs); }
+  inline bool operator>=(const NumericType& rhs) const { return !(*this < rhs); }
   // Increment and decrement operators.
 
   NumericType& operator--()
