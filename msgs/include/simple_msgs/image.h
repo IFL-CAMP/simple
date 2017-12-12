@@ -131,7 +131,7 @@ public:
       tmp_builder.add_origin(origin_data);
       tmp_builder.add_image(elem);
       tmp_builder.add_image_type(type);
-	  tmp_builder.add_image_size(data_size_);
+      tmp_builder.add_image_size(data_size_);
       tmp_builder.add_resX(resX_);
       tmp_builder.add_resY(resY_);
       tmp_builder.add_resZ(resZ_);
@@ -146,7 +146,7 @@ public:
 
   std::array<int, 3> getResolution() const { return std::array<int, 3>{resX_, resY_, resZ_}; }
   std::array<double, 3> getImageDimensions() const { return std::array<double, 3>{width_, height_, depth_}; }
-  const T* getImageData() const { return data_; }
+  const T* getImageData() const { return *data_; }
   int getImageSize() const { return data_size_; }
   Header getHeader() const { return header_; }
   Pose getImageOrigin() const { return origin_; }
@@ -193,7 +193,7 @@ public:
   void setImageData(const T* data, int data_size)
   {
     std::lock_guard<std::mutex> lock(mutex_);
-    data_ = data;
+    data_ = std::make_shared<const T*>(data);
     data_size_ = data_size;
     modified_ = true;
   }
@@ -220,7 +220,7 @@ private:
     depth_ = imageData->depth();
     // Set Encoding.
     encoding_ = imageData->enconding()->c_str();
-	data_size_ = imageData->image_size();
+    data_size_ = imageData->image_size();
     modified_ = true;
   }
 
@@ -234,7 +234,8 @@ private:
   double resX_{0.0}, resY_{0.0}, resZ_{0.0};
   int width_{0}, height_{0}, depth_{0};
 
-  const T* data_{nullptr};
+  std::shared_ptr<const T*> data_{nullptr};
+  // const T* data_{nullptr};
   int data_size_{0};
 };
 

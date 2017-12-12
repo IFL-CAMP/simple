@@ -14,39 +14,41 @@
 
 std::pair<uint8_t*, int> readImage()
 {
-	std::ifstream infile("C:/Users/ferna/Documents/IFL/SIMPLE/lena.ascii.pgm");
-	std::stringstream ss;
-	std::string inputLine = "";
+  std::ifstream infile("/Users/jack/Downloads/lena.ascii.pgm");
+  std::stringstream ss;
+  std::string inputLine = "";
 
-	// First line : version
-	getline(infile, inputLine);
-	if (inputLine.compare("P2") != 0) {
-		std::cerr << "Version error" << std::endl;
-	}
-	else {
-		std::cout << "Version : " << inputLine << std::endl;
-	}
-	// Second line : comment
-	getline(infile, inputLine);
-	std::cout << "Comment : " << inputLine << std::endl;
+  // First line : version
+  getline(infile, inputLine);
+  if (inputLine.compare("P2") != 0)
+  {
+    std::cerr << "Version error" << std::endl;
+  }
+  else
+  {
+    std::cout << "Version : " << inputLine << std::endl;
+  }
+  // Second line : comment
+  getline(infile, inputLine);
+  std::cout << "Comment : " << inputLine << std::endl;
 
-	// Continue with a stringstream
-	ss << infile.rdbuf();
-	int numcols=0, numrows=0;
-	// Third line : size
-	ss >> numcols >> numrows;
-	std::cout << numcols << " columns and " << numrows << " rows" << std::endl;
+  // Continue with a stringstream
+  ss << infile.rdbuf();
+  int numcols = 0, numrows = 0;
+  // Third line : size
+  ss >> numcols >> numrows;
+  std::cout << numcols << " columns and " << numrows << " rows" << std::endl;
 
-	const int size = numrows * numcols;
-	uint8_t* buffer = (uint8_t*)std::malloc(size);
+  const int size = numrows * numcols;
+  uint8_t* buffer = (uint8_t*)std::malloc(size);
 
-	// Following lines : data
-	for (int row = 0; row < numrows; ++row)
-		for (int col = 0; col < numcols; ++col) ss >> buffer[row*numrows+col];
+  // Following lines : data
+  for (int row = 0; row < numrows; ++row)
+    for (int col = 0; col < numcols; ++col) ss >> buffer[row * numrows + col];
 
-	infile.close();
+  infile.close();
 
-	return std::make_pair(buffer, size);
+  return std::make_pair(buffer, size);
 }
 
 int main(int argc, char* argv[])
@@ -61,14 +63,13 @@ int main(int argc, char* argv[])
   img.setHeader(h);
   img.setOrigin(p);
   img.setImageData(temp, image.second);
-  
 
   auto check_h = img.getHeader();
   std::cout << check_h.getFrameID() << std::endl;
 
   simple::Publisher<simple_msgs::Image<uint8_t>> pub("tcp://*:5555");
-  //start second publisher
-  //simple::Publisher<simple_msgs::Header> pub2("tcp://*:5556");
+  // start second publisher
+  // simple::Publisher<simple_msgs::Header> pub2("tcp://*:5556");
 
   for (int i = 0; i < 100; i++)
   {
