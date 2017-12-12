@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
   // start second publisher
   // simple::Publisher<simple_msgs::Header> pub2("tcp://*:5556");
 
-  for (int i = 0; i < 100; i++)
+  for (int i = 0; i < 10; i++)
   {
     pub.publish(img);
     std::cout << "Message #" << i << " has been published. " << std::endl;
