@@ -59,12 +59,12 @@ Pose& Pose::operator=(Pose&& p)
 
 Pose& Pose::operator=(const uint8_t* data)
 {
-  std::lock_guard<std::mutex> lock(mutex_);
-  auto p = GetPoseFbs(data);
-  quaternion_ = Quaternion(p->quaternion()->data());
-  position_ = Point(p->position()->data());
-  modified_ = true;
-  return *this;
+	std::lock_guard<std::mutex> lock(mutex_);
+	position_ = GetPoseFbs(data)->position()->data();
+	quaternion_ = GetPoseFbs(data)->quaternion()->data();
+	modified_ = true;
+
+	return *this;
 }
 
 bool Pose::operator==(const Pose& p) const

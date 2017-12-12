@@ -32,6 +32,7 @@ table ImageFbs{
 	height:int;
 	depth:int;
 	image:data;
+	image_size:int;
 }
 
 root_type ImageFbs;
