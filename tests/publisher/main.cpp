@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <istream>
+#include <sstream>
 #include "simple/publisher.hpp"
 #include <signal.h>
 #include <string>
@@ -11,29 +12,48 @@
 #include "simple_msgs/image.h"
 #include "simple_msgs/header.h"
 
-std::pair<char*, int> readImage()
+std::pair<uint8_t*, int> readImage()
 {
-  std::ifstream image;
-  image.open("C:/Users/ferna/Documents/IFL/SIMPLE/lena.bmp", std::ios_base::binary);
+	std::ifstream infile("C:/Users/ferna/Documents/IFL/SIMPLE/lena.ascii.pgm");
+	std::stringstream ss;
+	std::string inputLine = "";
 
-  image.seekg(0, std::ios::end);
-  int n = image.tellg();
-  image.seekg(0, std::ios::beg);
+	// First line : version
+	getline(infile, inputLine);
+	if (inputLine.compare("P2") != 0) {
+		std::cerr << "Version error" << std::endl;
+	}
+	else {
+		std::cout << "Version : " << inputLine << std::endl;
+	}
+	// Second line : comment
+	getline(infile, inputLine);
+	std::cout << "Comment : " << inputLine << std::endl;
 
-  char* res = new char[n];
-  for (int i = 0; i < n; i++) res[i] = '5';
+	// Continue with a stringstream
+	ss << infile.rdbuf();
+	int numcols=0, numrows=0;
+	// Third line : size
+	ss >> numcols >> numrows;
+	std::cout << numcols << " columns and " << numrows << " rows" << std::endl;
 
-  bool bit = image.eof();
+	const int size = numrows * numcols;
+	uint8_t* buffer = (uint8_t*)std::malloc(size);
 
-  image.read(res, n);
-  return std::make_pair(res, n);
+	// Following lines : data
+	for (int row = 0; row < numrows; ++row)
+		for (int col = 0; col < numcols; ++col) ss >> buffer[row*numrows+col];
+
+	infile.close();
+
+	return std::make_pair(buffer, size);
 }
 
 int main(int argc, char* argv[])
 {
   auto image = readImage();
   std::cout << "N is " << std::to_string(image.second) << std::endl;
-  uint8_t* temp = reinterpret_cast<uint8_t*>(image.first);
+  uint8_t* temp = (image.first);
 
   simple_msgs::Header h(1, "Image", 100);
   simple_msgs::Pose p;
@@ -41,6 +61,7 @@ int main(int argc, char* argv[])
   img.setHeader(h);
   img.setOrigin(p);
   img.setImageData(temp, image.second);
+  
 
   auto check_h = img.getHeader();
   std::cout << check_h.getFrameID() << std::endl;

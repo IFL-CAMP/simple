@@ -131,6 +131,7 @@ public:
       tmp_builder.add_origin(origin_data);
       tmp_builder.add_image(elem);
       tmp_builder.add_image_type(type);
+	  tmp_builder.add_image_size(data_size_);
       tmp_builder.add_resX(resX_);
       tmp_builder.add_resY(resY_);
       tmp_builder.add_resZ(resZ_);
@@ -202,6 +203,7 @@ public:
    */
   static const char* getTopic() { return ImageFbsIdentifier(); }
 
+private:
   void fillPartialImage(const simple_msgs::ImageFbs* imageData)
   {
     // Set Header.
@@ -218,11 +220,10 @@ public:
     depth_ = imageData->depth();
     // Set Encoding.
     encoding_ = imageData->enconding()->c_str();
-
+	data_size_ = imageData->image_size();
     modified_ = true;
   }
 
-private:
   simple_msgs::data getDataUnionType() const;
   flatbuffers::Offset<void> getDataUnionElem() const;
 

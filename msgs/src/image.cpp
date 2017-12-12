@@ -62,6 +62,7 @@ Image<uint8_t>& Image<uint8_t>::operator=(const uint8_t* data)
 	Image<uint8_t>::fillPartialImage(image_data);
 
 	// Set the Image data according to the right date type.
+	//PROBLEM IS HERE
 	data_ = (static_cast<const uint8_type*>(image_data->image()))->raw()->data();
 
 	return *this;
