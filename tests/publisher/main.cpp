@@ -31,25 +31,27 @@ std::pair<char*, int> readImage()
 
 int main(int argc, char* argv[])
 {
-  auto image = readImage();
-  std::cout << "N is " << std::to_string(image.second) << std::endl;
-  uint8_t* temp = reinterpret_cast<uint8_t*>(image.first);
+  //auto image = readImage();
+  //std::cout << "N is " << std::to_string(image.second) << std::endl;
+  //uint8_t* temp = reinterpret_cast<uint8_t*>(image.first);
 
   simple_msgs::Header h(1, "Image", 100);
   simple_msgs::Pose p;
-  simple_msgs::Image<uint8_t> img;
-  img.setHeader(h);
-  img.setOrigin(p);
-  img.setImageData(temp, image.second);
+  //simple_msgs::Image<uint8_t> img;
+  //img.setHeader(h);
+  //img.setOrigin(p);
+  //img.setImageData(temp, image.second);
 
-  auto check_h = img.getHeader();
-  std::cout << check_h.getFrameID() << std::endl;
+  //auto check_h = img.getHeader();
+  //std::cout << check_h.getFrameID() << std::endl;
 
-  simple::Publisher<simple_msgs::Image<uint8_t>> pub("tcp://*:5555");
+  simple::Publisher<simple_msgs::Header> pub("tcp://*:5555");
+  //start second publisher
+  simple::Publisher<simple_msgs::Header> pub2("tcp://*:5556");
 
-  for (int i = 0; i < 2000; i++)
+  for (int i = 0; i < 10; i++)
   {
-    pub.publish(img);
+    pub.publish(h);
     std::cout << "Message #" << i << " has been published. " << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(2));
   }

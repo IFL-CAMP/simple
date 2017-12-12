@@ -2,7 +2,8 @@
 
 #include <zmq.h>
 #include <string>
-
+#include <memory>
+#include "contextCloser.hpp"
 #include "simple/generic_socket.hpp"
 
 namespace simple
@@ -15,12 +16,12 @@ class Client : public GenericSocket<T>
 {
 public:
   Client(const std::string& address)
-    : GenericSocket<T>(zmq_socket(context_, ZMQ_REQ))
+    : GenericSocket<T>(zmq_socket(context_.get(), ZMQ_REQ))
   {
     GenericSocket<T>::connect(address);
   }
 
-  ~Client() { zmq_ctx_term(context_); }
+  ~Client() { }
   /**
    * @brief Sends the request to a server and waits for an answer.
    * @param msg: SIMPLE class wrapper for Flatbuffer messages.
@@ -46,9 +47,9 @@ private:
     }
     return success;
   }
-  static void* context_;
+  static std::shared_ptr<void> context_;
 };
 
 template <typename T>
-void* Client<T>::context_(zmq_ctx_new());
+std::shared_ptr<void> Client<T>::context_(zmq_ctx_new(), contextDeleter);
 }  // Namespace simple.

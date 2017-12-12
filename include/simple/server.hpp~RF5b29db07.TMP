@@ -70,9 +70,9 @@ private:
   std::thread server_thread_;
   bool alive_{true};
   std::function<void(T&)> callback_;
-  static std::shared_ptr<void> context_;
+  static std::unique_ptr<void,contextCloser> context_;
 };
 
 template <typename T>
-std::shared_ptr<void> Server<T>::context_(zmq_ctx_new(), contextDeleter);
+std::unique_ptr<void, contextCloser> Server<T>::context_(zmq_ctx_new());
 }  // Namespace simple.
