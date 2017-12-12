@@ -8,18 +8,17 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include(GNUInstallDirs)
 
-# TODO can this be omitted if we don't use protobuf anymore?
-if (WIN32)
-  list(APPEND CMAKE_CXX_FLAGS_RELEASE " /MD")
-  list(APPEND CMAKE_CXX_FLAGS_DEBUG " /MDd")
-endif(WIN32)
-
 # Allows all symbols generated from the dynamic library to be exported
 if (WIN32)
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 endif(WIN32)
 
-######
+###### OPTIONS
+
+option(BUILD_EXAMPLES "Build SIMPLE Examples" FALSE)
+option(BUILD_TEST "Build SIMPLE Test" FALSE)
+
+###### BUILD SIMPLE MSGS
 
 add_subdirectory(msgs)
 
@@ -52,7 +51,7 @@ endif()
 
 ###### FILES AND FOLDERS NEEDED FOR COMPILATION
 
-include_directories(/opt/X11/include include msgs/include msgs/generated_include ${ZeroMQ_INCLUDE_DIR} ${FLATBUFFERS_INCLUDE_DIR})
+include_directories(include msgs/include ${ZeroMQ_INCLUDE_DIR} ${FLATBUFFERS_INCLUDE_DIR})
 
 file(GLOB SIMPLE_HEADERS "include/simple/*.h" "include/simple/*.hpp")
 
@@ -69,15 +68,13 @@ target_compile_definitions(${PROJECT_NAME} INTERFACE SIMPLE_LIBRARY_EXPORT)
 
 ###### INSTALLATION
 
-#install the simple library in the desired folder
+# Install SIMPLE in the desired folder
 install(TARGETS ${PROJECT_NAME}
   ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 	
-
-#install the ZMQ library in the desired folder, for Windows
 if(WIN32)
   get_filename_component(ZMQ_LIBRARY_NAME_WO_EXT ${ZeroMQ_LIBRARY} NAME_WE)
   get_filename_component(ZMQ_LIBRARY_PATH ${ZeroMQ_LIBRARY} DIRECTORY)
@@ -85,7 +82,14 @@ if(WIN32)
   install(FILES ${ZMQ_DYNAMIC_LIBRARY} DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif(WIN32)
 
+###### EXAMPLES
+
+if (${BUILD_EXAMPLES})
+  add_subdirectory(examples)
+endif()
+
 ###### TESTS
 
-add_subdirectory(tests)
-
+if (${BUILD_TEST})
+  add_subdirectory(tests)
+endif()
