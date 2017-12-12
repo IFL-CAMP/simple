@@ -8,12 +8,6 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include(GNUInstallDirs)
 
-# TODO can this be omitted if we don't use protobuf anymore?
-if (MSVC)
-  list(APPEND CMAKE_CXX_FLAGS_RELEASE " /MD")
-  list(APPEND CMAKE_CXX_FLAGS_DEBUG " /MDd")
-endif(MSVC)
-
 # Allows all symbols generated from the dynamic library to be exported
 if (WIN32)
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
@@ -50,7 +44,7 @@ endif()
 
 ###### FILES AND FOLDERS NEEDED FOR COMPILATION
 
-include_directories(include msgs/include msgs/generated_include ${ZeroMQ_INCLUDE_DIR} ${FLATBUFFERS_INCLUDE_DIR})
+include_directories(include msgs/include ${ZeroMQ_INCLUDE_DIR} ${FLATBUFFERS_INCLUDE_DIR})
 
 file(GLOB SIMPLE_HEADERS "include/simple/*.h" "include/simple/*.hpp")
 
@@ -89,6 +83,6 @@ endif()
 
 ###### TESTS
 
-if (${BUILD_TESTS})
+if (${BUILD_TEST})
   add_subdirectory(tests)
 endif()
