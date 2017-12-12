@@ -83,6 +83,6 @@ endif()
 
 ###### TESTS
 
-if (${BUILD_TESTS})
+if (${BUILD_TEST})
   add_subdirectory(tests)
 endif()
