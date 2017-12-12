@@ -144,8 +144,8 @@ public:
     return Image::builder_->GetBufferPointer();
   }
 
-  std::array<int, 3> getResolution() const { return std::array<int, 3>{resX_, resY_, resZ_}; }
-  std::array<double, 3> getImageDimensions() const { return std::array<double, 3>{width_, height_, depth_}; }
+  std::array<double, 3> getResolution() const { return std::array<double, 3>{resX_, resY_, resZ_}; }
+  std::array<int, 3> getImageDimensions() const { return std::array<int, 3>{{width_, height_, depth_}}; }
   const T* getImageData() const { return *data_; }
   int getImageSize() const { return data_size_; }
   Header getHeader() const { return header_; }

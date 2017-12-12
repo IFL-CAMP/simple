@@ -24,6 +24,13 @@ endif(WIN32)
 add_subdirectory(msgs)
 
 ###### FIND LIBRARIES
+FIND_PACKAGE(X11)
+
+if(X11_FOUND)
+  link_directories(${X11_LIB_DIRS})
+  include_directories(${X11_INCLUDE_DIR})
+  SET( SYSTEM_LIBS ${SYSTEM_LIBS} ${X11_LIBRARIES} )
+endif()
 
 #Find Threads
 find_package(Threads)
@@ -45,7 +52,7 @@ endif()
 
 ###### FILES AND FOLDERS NEEDED FOR COMPILATION
 
-include_directories(include msgs/include msgs/generated_include ${ZeroMQ_INCLUDE_DIR} ${FLATBUFFERS_INCLUDE_DIR})
+include_directories(/opt/X11/include include msgs/include msgs/generated_include ${ZeroMQ_INCLUDE_DIR} ${FLATBUFFERS_INCLUDE_DIR})
 
 file(GLOB SIMPLE_HEADERS "include/simple/*.h" "include/simple/*.hpp")
 
