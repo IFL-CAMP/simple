@@ -13,6 +13,7 @@
 // create static point for comparing with data sent
 simple_msgs::Point received_point(0.0, 0.0, 0.0);
 bool running = false;
+int numReceives = 0;
 
 simple_msgs::Point createRandomPoint()
 {
@@ -26,6 +27,7 @@ simple_msgs::Point createRandomPoint()
 void callbackFunction(const simple_msgs::Point& p)
 {
   received_point = p;
+  numReceives++;
   if (!running)
   {
     running = true;
@@ -37,26 +39,26 @@ SCENARIO("Publish and subscribe to a Point message.")
   GIVEN("An instance of a subscriber.")
   {
     // start a subscriber
+    simple::Publisher<simple_msgs::Point> pub("tcp://*:5555");
+    auto p = createRandomPoint();
+    pub.publish(p);
     simple::Subscriber<simple_msgs::Point> sub("tcp://localhost:5555", callbackFunction);
+
+    std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data")
     {
-      simple::Publisher<simple_msgs::Point> pub("tcp://*:5555");
-      std::this_thread::sleep_for(std::chrono::seconds(2));
-
       for (int i = 0; i < 10; ++i)
       {
         auto p = createRandomPoint();
         pub.publish(p);
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(std::chrono::seconds(1));
 
         if (running)
         {
-          THEN("The data received is the same as the one sent")
-          {
-            REQUIRE(p == received_point);
-          }
+          THEN("The data received is the same as the one sent") { REQUIRE(p == received_point); }
         }
       }
     }
+    REQUIRE(numReceives == 10);
   }
 }
