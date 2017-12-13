@@ -52,6 +52,17 @@ Bool& Bool::operator=(Bool&& other)
   return *this;
 }
 
+
+Bool& Bool::operator=(const uint8_t* data)
+{
+	std::lock_guard<std::mutex> lock(mutex_);
+	auto b = GetBoolFbs(data);
+	data_ = b->data();
+	modified_ = true;
+
+	return *this;
+}
+
 bool Bool::operator==(const Bool& rhs) const
 {
   return (data_ == rhs.data_);

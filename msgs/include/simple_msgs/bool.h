@@ -17,6 +17,7 @@ public:
 
   Bool& operator=(const Bool&);
   Bool& operator=(Bool&&);
+  Bool& operator=(const uint8_t*);
 
   inline bool operator==(const Bool&) const;
   inline bool operator!=(const Bool&) const;

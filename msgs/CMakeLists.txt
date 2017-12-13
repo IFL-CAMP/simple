@@ -26,6 +26,12 @@ set(SIMPLE_MSGS_SRCS
   src/rotation_matrix.cpp
   src/bool.cpp
   src/string.cpp
+  src/pose_stamped.cpp
+  src/quaternion_stamped.cpp
+  src/point_stamped.cpp
+  src/rotation_matrix_stamped.cpp
+  src/bool_stamped.cpp
+  src/string_stamped.cpp
   )
 
 # Generate the Flatbuffers headers - this is defined in FindFlatBuffers.cmake
