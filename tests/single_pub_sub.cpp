@@ -12,6 +12,9 @@
 #include "simple_msgs/rotation_matrix.h"
 #include "simple_msgs/header.h"
 #include "simple/subscriber.hpp"
+#include "simple_msgs\double.h"
+#include "simple_msgs\float.h"
+#include "simple_msgs\int.h"
 #include <time.h>
 #include <stdlib.h>
 

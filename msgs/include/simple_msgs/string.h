@@ -22,8 +22,8 @@ public:
   String& operator=(String&&) noexcept;
 
   // Relational operators.
-  inline bool operator==(const String&) const;
-  inline bool operator!=(const String&) const;
+  bool operator==(const String&) const;
+  bool operator!=(const String&) const;
 
   // Binary arithmetic operators
   String& operator+=(const String&);

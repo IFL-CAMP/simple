@@ -23,8 +23,8 @@ public:
   Header& operator=(Header&&);
   Header& operator=(const uint8_t*);  // TODO
 
-  inline bool operator==(const Header&) const;
-  inline bool operator!=(const Header&) const;
+  bool operator==(const Header&) const;
+  bool operator!=(const Header&) const;
 
   friend std::ostream& operator<<(std::ostream& out, const Header& h);
 

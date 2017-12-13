@@ -18,8 +18,8 @@ public:
   Bool& operator=(const Bool&);
   Bool& operator=(Bool&&);
 
-  inline bool operator==(const Bool&) const;
-  inline bool operator!=(const Bool&) const;
+  bool operator==(const Bool&) const;
+  bool operator!=(const Bool&) const;
 
   friend std::ostream& operator<<(std::ostream& out, const Bool& b);
 

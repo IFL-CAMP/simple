@@ -3,7 +3,10 @@ project(simple-tests)
 
 include_directories(include)
 add_executable(pub_sub_test single_pub_sub.cpp)
+add_executable(wrappers_test wrapper_point_test.cpp)
 target_link_libraries(pub_sub_test simple)
+target_link_libraries(wrappers_test simple)
+
  
 if(NOT EXISTS ${PROJECT_SOURCE_DIR}/include/catch.hpp)
 		message(STATUS "Downloading catch.hpp. This may take a while.")
@@ -13,4 +16,4 @@ if(NOT EXISTS ${PROJECT_SOURCE_DIR}/include/catch.hpp)
 		)
 endif()
 
-install(TARGETS pub_sub_test DESTINATION bin)
+install(TARGETS pub_sub_test wrappers_test DESTINATION bin)
