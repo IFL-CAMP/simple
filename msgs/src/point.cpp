@@ -102,16 +102,6 @@ Point& Point::operator=(const uint8_t* data)
   return *this;
 }
 
-bool Point::operator==(const Point& rhs) const
-{
-  return data_ == rhs.data_;
-}
-
-bool Point::operator!=(const Point& rhs) const
-{
-  return !(*this == rhs);
-}
-
 Point& Point::operator+=(const Point& rhs)
 {
   std::lock_guard<std::mutex> lock(mutex_);

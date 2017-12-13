@@ -21,8 +21,8 @@ public:
   PoseStamped& operator=(PoseStamped&&);
   PoseStamped& operator=(const uint8_t*);
 
-  bool operator==(const PoseStamped&) const;
-  bool operator!=(const PoseStamped&) const;
+  inline bool operator==(const PoseStamped& rhs) const{ return (pose_ == rhs.pose_ && header_ == rhs.header_); }
+  inline bool operator!=(const PoseStamped& rhs) const{ return !(*this == rhs); }
 
   friend std::ostream& operator<<(std::ostream&, const PoseStamped&);
 
@@ -30,16 +30,16 @@ public:
    * @brief Builds and returns the buffer accordingly to the values currently stored.
    * @return the buffer data.
    */
-  uint8_t* getBufferData() const;
+  uint8_t* getBufferData() const override;
 
   /**
    * @brief Returns the translational part of the Pose as a Point message.
    */
-  Pose getPose() const { return pose_; }
+  inline Pose getPose() const { return pose_; }
   /**
    * @brief Returns the rotational part of the Pose as a Quaternion message.
    */
-  Header getHeader() const { return header_; }
+  inline Header getHeader() const { return header_; }
   /**
    * @brief Modifies the rotational part of the Pose.
    */

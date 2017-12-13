@@ -65,16 +65,6 @@ PointStamped& PointStamped::operator=(const uint8_t* data)
   return *this;
 }
 
-bool PointStamped::operator==(const PointStamped& rhs) const
-{
-  return (point_ == rhs.point_ && header_ == rhs.header_);
-}
-
-bool PointStamped::operator!=(const PointStamped& rhs) const
-{
-  return !(*this == rhs);
-}
-
 uint8_t* PointStamped::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);

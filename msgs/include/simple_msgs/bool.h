@@ -19,8 +19,8 @@ public:
   Bool& operator=(Bool&&);
   Bool& operator=(const uint8_t*);
 
-  inline bool operator==(const Bool&) const;
-  inline bool operator!=(const Bool&) const;
+  inline bool operator==(const Bool& rhs) const{ return (data_ == rhs.data_); }
+  inline bool operator!=(const Bool& rhs) const{ return !(*this == rhs); }
 
   friend std::ostream& operator<<(std::ostream& out, const Bool& b);
 
@@ -28,12 +28,12 @@ public:
    * @brief Builds and returns the buffer accordingly to the values currently stored.
    * @return the buffer data.
    */
-  uint8_t* getBufferData() const;
+  uint8_t* getBufferData() const override;
 
   /**
    * @brief Set the boolean value.
    */
-  inline void set(bool data);
+  void set(bool data);
 
   /**
    * @brief Get the boolean value.

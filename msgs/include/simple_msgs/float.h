@@ -14,6 +14,15 @@ NumericType<float>::NumericType(const uint8_t* data)
 {
 }
 
+template<>
+NumericType<float>& NumericType<float>::operator=(const uint8_t* data) {
+	std::lock_guard<std::mutex> lock(mutex_);
+	data_ = GetFloatFbs(data)->data();
+	modified_ = true;
+
+	return *this;
+}
+
 template <>
 uint8_t* NumericType<float>::getBufferData() const
 {

@@ -25,8 +25,8 @@ public:
   PointStamped& operator=(PointStamped&&);
   PointStamped& operator=(const uint8_t*);
 
-  bool operator==(const PointStamped&) const;
-  bool operator!=(const PointStamped&) const;
+  inline bool operator==(const PointStamped& rhs) const{ return (point_ == rhs.point_ && header_ == rhs.header_); }
+  inline bool operator!=(const PointStamped& rhs) const{ return !(*this == rhs); }
 
   friend std::ostream& operator<<(std::ostream&, const PointStamped&);
 
@@ -34,16 +34,16 @@ public:
    * @brief Builds and returns the buffer accordingly to the values currently stored.
    * @return the buffer data.
    */
-  uint8_t* getBufferData() const;
+  uint8_t* getBufferData() const override;
 
   /**
    * @brief Returns the point as an array of 3 elements.
    */
-  Point getPoint() const { return point_; }
+  inline Point getPoint() const { return point_; }
   /**
    * @brief Returns the point as an array of 3 elements.
    */
-  Header getHeader() const { return header_; }
+  inline Header getHeader() const { return header_; }
   
   /**
    * @brief Set the header

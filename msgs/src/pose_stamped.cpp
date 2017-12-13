@@ -64,16 +64,6 @@ PoseStamped& PoseStamped::operator=(const uint8_t* data)
   return *this;
 }
 
-bool PoseStamped::operator==(const PoseStamped& p) const
-{
-  return (pose_ == p.pose_ && header_ == p.header_);
-}
-
-bool PoseStamped::operator!=(const PoseStamped& p) const
-{
-  return !(*this == p);
-}
-
 uint8_t* PoseStamped::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);

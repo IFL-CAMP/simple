@@ -63,16 +63,6 @@ Bool& Bool::operator=(const uint8_t* data)
 	return *this;
 }
 
-bool Bool::operator==(const Bool& rhs) const
-{
-  return (data_ == rhs.data_);
-}
-
-bool Bool::operator!=(const Bool& rhs) const
-{
-  return !(*this == rhs);
-}
-
 uint8_t* Bool::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
