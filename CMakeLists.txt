@@ -57,8 +57,10 @@ file(GLOB SIMPLE_HEADERS "include/simple/*.h" "include/simple/*.hpp")
 ###### TARGETS
 
 add_library(zmq STATIC IMPORTED)
-set_target_properties(zmq PROPERTIES IMPORTED_LOCATION ${ZeroMQ_STATIC_LIBRARY})
-
+set_target_properties(zmq PROPERTIES
+  IMPORTED_LOCATION ${ZeroMQ_LIBRARY}
+  INCLUDE_DIRECTORIES ${ZeroMQ_INCLUDE_DIR}
+  )
 add_library(${PROJECT_NAME} INTERFACE)
 
 target_include_directories(${PROJECT_NAME} INTERFACE
@@ -66,7 +68,7 @@ target_include_directories(${PROJECT_NAME} INTERFACE
     $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(${PROJECT_NAME} INTERFACE zmq ${ZeroMQ_STATIC_LIBRARY} ${CMAKE_THREAD_LIBS_INIT} simple_msgs)
+target_link_libraries(${PROJECT_NAME} INTERFACE zmq ${CMAKE_THREAD_LIBS_INIT} simple_msgs)
 target_compile_definitions(${PROJECT_NAME} INTERFACE SIMPLE_LIBRARY_EXPORT)
 
 ###### INSTALLATION
