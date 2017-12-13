@@ -1,0 +1,8 @@
+C:/Users/Jack/Repo/simple/build2017/msgs/simple_msgs.dir/Debug/header.obj
+C:/Users/Jack/Repo/simple/build2017/msgs/simple_msgs.dir/Debug/image.obj
+C:/Users/Jack/Repo/simple/build2017/msgs/simple_msgs.dir/Debug/pose.obj
+C:/Users/Jack/Repo/simple/build2017/msgs/simple_msgs.dir/Debug/quaternion.obj
+C:/Users/Jack/Repo/simple/build2017/msgs/simple_msgs.dir/Debug/point.obj
+C:/Users/Jack/Repo/simple/build2017/msgs/simple_msgs.dir/Debug/rotation_matrix.obj
+C:/Users/Jack/Repo/simple/build2017/msgs/simple_msgs.dir/Debug/bool.obj
+C:/Users/Jack/Repo/simple/build2017/msgs/simple_msgs.dir/Debug/string.obj

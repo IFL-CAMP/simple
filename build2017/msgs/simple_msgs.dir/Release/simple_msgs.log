@@ -1,0 +1,13 @@
+﻿  Building Custom Rule C:/Users/Jack/Repo/simple/msgs/CMakeLists.txt
+  CMake does not need to re-run because C:/Users/Jack/Repo/simple/build2017/msgs/CMakeFiles/generate.stamp is up-to-date.
+  header.cpp
+  image.cpp
+  pose.cpp
+  quaternion.cpp
+  point.cpp
+  rotation_matrix.cpp
+  bool.cpp
+  string.cpp
+  Generating Code...
+     Creating library C:/Users/Jack/Repo/simple/build2017/msgs/Release/simple_msgs.lib and object C:/Users/Jack/Repo/simple/build2017/msgs/Release/simple_msgs.exp
+  simple_msgs.vcxproj -> C:\Users\Jack\Repo\simple\build2017\msgs\Release\simple_msgs.dll
