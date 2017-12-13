@@ -25,13 +25,19 @@
 #  FLATBUFFERS_FOUND - whether flatbuffers has been found
 
 
-find_path( FLATBUFFERS_INCLUDE_DIR NAMES flatbuffers/flatbuffers.h )
-find_library( FLATBUFFERS_LIBS NAMES flatbuffers )
+find_path( FLATBUFFERS_INCLUDE_DIR 
+NAMES flatbuffers/flatbuffers.h 
+HINTS "$ENV{PROGRAMFILES}/FlatBuffers/include")
+
+find_library( FLATBUFFERS_LIBS 
+NAMES flatbuffers 
+HINTS "$ENV{PROGRAMFILES}/FlatBuffers/lib")
 
 find_program(FLATBUFFERS_FLATC_EXECUTABLE flatc
   /usr/local/bin
   /usr/bin
-  NO_DEFAULT_PATH)
+  "$ENV{PROGRAMFILES}/FlatBuffers/bin"
+NO_DEFAULT_PATH)
 
 if (FLATBUFFERS_INCLUDE_DIR AND FLATBUFFERS_LIBS AND FLATBUFFERS_FLATC_EXECUTABLE)
   set(FLATBUFFERS_FOUND TRUE)
