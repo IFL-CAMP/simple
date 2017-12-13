@@ -13,7 +13,7 @@ add_executable(${sub_example} subscriber.cpp)
 add_executable(${client_example} client.cpp)
 add_executable(${server_example} server.cpp)
 
-target_link_libraries(${pub_example} simple)
+target_link_libraries(${pub_example} STATIC simple)
 target_link_libraries(${sub_example} simple)
 target_link_libraries(${client_example} simple)
 target_link_libraries(${server_example} simple)
