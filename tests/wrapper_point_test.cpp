@@ -241,5 +241,37 @@ SCENARIO("Using a Point Message")
 			  REQUIRE(p1.getZ() == d1 - d2);
 		  }
 	  }
+	  WHEN("I multiply them") {
+		  simple_msgs::Point p3 = p1 * p2;
+		  THEN("The result is correct") {
+			  REQUIRE(p3.getX() == p1.getX()*p2.getX());
+			  REQUIRE(p3.getY() == p1.getY()*p2.getY());
+			  REQUIRE(p3.getZ() == p1.getZ()*p2.getZ());
+		  }
+	  }
+	  WHEN("I multiply them into the first") {
+		  p1 *= p2;
+		  THEN("The result is correct") {
+			  REQUIRE(p1.getX() == d1*d2);
+			  REQUIRE(p1.getY() == d1*d2);
+			  REQUIRE(p1.getZ() == d1*d2);
+		  }
+	  }
+	  WHEN("I divide them") {
+		  simple_msgs::Point p3 = p1 / p2;
+		  THEN("The result is correct") {
+			  REQUIRE(p3.getX() == p1.getX()/p2.getX());
+			  REQUIRE(p3.getY() == p1.getY()/p2.getY());
+			  REQUIRE(p3.getZ() == p1.getZ()/p2.getZ());
+		  }
+	  }
+	  WHEN("I divide them into the first") {
+		  p1 /= p2;
+		  THEN("The result is correct") {
+			  REQUIRE(p1.getX() == d1 / d2);
+			  REQUIRE(p1.getY() == d1 / d2);
+			  REQUIRE(p1.getZ() == d1 / d2);
+		  }
+	  }
   }
 }
