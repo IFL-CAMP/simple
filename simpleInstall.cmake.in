@@ -11,7 +11,7 @@ set(INSTALL_INCLUDE_DIR include CACHE PATH
 if(WIN32 AND NOT CYGWIN)
   set(DEF_INSTALL_CMAKE_DIR CMake)
 else()
-  set(DEF_INSTALL_CMAKE_DIR lib/CMake/simple)
+  set(DEF_INSTALL_CMAKE_DIR share/cmake/simple)
 endif()
 set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH
   "Installation directory for CMake files")
@@ -47,7 +47,6 @@ configure_file(simpleConfig.cmake.in
 configure_file(simpleConfigVersion.cmake.in
   "${PROJECT_BINARY_DIR}/simpleConfigVersion.cmake" @ONLY)
 
- 
 # Install the simpleConfig.cmake and simpleConfigVersion.cmake
 install(FILES
   "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/simpleConfig.cmake"
