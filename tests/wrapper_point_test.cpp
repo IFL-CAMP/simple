@@ -274,4 +274,25 @@ SCENARIO("Using a Point Message")
 		  }
 	  }
   }
+  GIVEN("A point") {
+	  double x = static_cast<double>(rand()) / RAND_MAX;
+	  double y = static_cast<double>(rand()) / RAND_MAX;
+	  double z = static_cast<double>(rand()) / RAND_MAX;
+	  simple_msgs::Point p(x, y, z);
+	  WHEN("I get the buffer of that pointer and construct a new point") {
+		  uint8_t* buf = p.getBufferData();
+		  simple_msgs::Point p2(buf);
+		  THEN("The new point is equal to the original") {
+			  REQUIRE(p == p2);
+		  }
+	  }
+	  WHEN("I get the array from the point") {
+		  std::array<double, 3> a = p.toVector();
+		  THEN("The array elements are correct") {
+			  REQUIRE(a[0] == x);
+			  REQUIRE(a[1] == y);
+			  REQUIRE(a[2] == z);
+		  }
+	  }
+  }
 }
