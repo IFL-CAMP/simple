@@ -2,16 +2,7 @@
 #include "catch.hpp"
 
 #include <iostream>
-#include "simple/publisher.hpp"
 #include "simple_msgs/point.h"
-#include "simple_msgs/quaternion.h"
-#include "simple_msgs/pose.h"
-#include "simple_msgs/bool.h"
-#include "simple_msgs/string.h"
-#include "simple_msgs/numeric_type.hpp"
-#include "simple_msgs/rotation_matrix.h"
-#include "simple_msgs/header.h"
-#include "simple/subscriber.hpp"
 #include <time.h>
 #include <stdlib.h>
 
@@ -279,7 +270,7 @@ SCENARIO("Using a Point Message")
 	  double y = static_cast<double>(rand()) / RAND_MAX;
 	  double z = static_cast<double>(rand()) / RAND_MAX;
 	  simple_msgs::Point p(x, y, z);
-	  WHEN("I get the buffer of that pointer and construct a new point") {
+	  WHEN("I get the buffer of that point and construct a new point") {
 		  uint8_t* buf = p.getBufferData();
 		  simple_msgs::Point p2(buf);
 		  THEN("The new point is equal to the original") {
