@@ -161,7 +161,7 @@ SCENARIO("Using a Quaternion Message")
 			q8 = q6;
 			THEN("The new quaternion has to be same as the original") { REQUIRE(q8 == q6); }
 		}
-		WHEN("I move-assign from that point")
+		WHEN("I move-assign from that quaternion")
 		{
 			simple_msgs::Quaternion q9;
 			q9 = std::move(q6);

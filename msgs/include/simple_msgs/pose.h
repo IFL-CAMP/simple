@@ -35,11 +35,23 @@ public:
   /**
    * @brief Returns the translational part of the Pose as a Point message.
    */
-  Point getPosition() const { return position_; }
+  const Point getPosition() const { return position_; }
+
   /**
    * @brief Returns the rotational part of the Pose as a Quaternion message.
    */
-  Quaternion getQuaternion() const { return quaternion_; }
+  const Quaternion getQuaternion() const { return quaternion_; }
+
+  /**
+  * @brief Returns the translational part of the Pose as a Point message.
+  */
+  Point getPosition() { return position_; }
+
+  /**
+  * @brief Returns the rotational part of the Pose as a Quaternion message.
+  */
+  Quaternion getQuaternion() { return quaternion_; }
+
   /**
    * @brief Modifies the rotational part of the Pose.
    */
