@@ -40,7 +40,7 @@ set(CONF_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")
 configure_file(simpleConfig.cmake.in
   "${PROJECT_BINARY_DIR}/simpleConfig.cmake" @ONLY)
 # ... for the install tree
-set(CONF_INCLUDE_DIRS "\${simple_CMAKE_DIR}/${REL_INCLUDE_DIR}")
+set(CONF_INCLUDE_DIRS "\${SIMPLE_CMAKE_DIR}/${REL_INCLUDE_DIR}")
 configure_file(simpleConfig.cmake.in
   "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/simpleConfig.cmake" @ONLY)
 # ... for both
