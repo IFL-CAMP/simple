@@ -52,7 +52,7 @@ SCENARIO("Using a Point Message")
   GIVEN("A point created from an array of a double")
   {
     double d4 = static_cast<double>(rand()) / RAND_MAX;
-    std::array<double, 3> a{d4};
+    std::array<double, 3> a{d4,d4,d4};
     simple_msgs::Point p10(a);
     WHEN("We check the points coordinates")
     {
@@ -67,7 +67,7 @@ SCENARIO("Using a Point Message")
   GIVEN("A point created from moving an array of a double")
   {
     double d5 = static_cast<double>(rand()) / RAND_MAX;
-    std::array<double, 3> a{d5};
+    std::array<double, 3> a{d5,d5,d5};
     simple_msgs::Point p11(std::move(a));
     WHEN("We check the points coordinates")
     {
@@ -91,14 +91,11 @@ SCENARIO("Using a Point Message")
     WHEN("I move-construct a new point")
     {
       simple_msgs::Point p14(std::move(p11));
-      THEN("The new point's coordinates are equal to the previous' ones and the moved point is empty")
+      THEN("The new point's coordinates are equal to the previous' ones")
       {
         REQUIRE(p14.getX() == d5);
         REQUIRE(p14.getY() == d5);
         REQUIRE(p14.getZ() == d5);
-        REQUIRE(p11.getX() == 0);
-        REQUIRE(p11.getY() == 0);
-        REQUIRE(p11.getZ() == 0);
       }
     }
   }
@@ -179,13 +176,10 @@ SCENARIO("Using a Point Message")
 	{
 		simple_msgs::Point p9;
 		p9 = std::move(p6);
-		THEN("The new point has to be same as the original and the original has to be empty") { 
+		THEN("The new point has to be same as the original") { 
 			REQUIRE(p9.getX() == d); 
 			REQUIRE(p9.getY() == d);
 			REQUIRE(p9.getZ() == d);
-			REQUIRE(p6.getX() == 0);
-			REQUIRE(p6.getY() == 0);
-			REQUIRE(p6.getZ() == 0);
 
 		}
 	}
@@ -194,7 +188,7 @@ SCENARIO("Using a Point Message")
 	  simple_msgs::Point p;
 	  WHEN("I copy-assign an array to that point") {
 		  double d1 = static_cast<double>(rand()) / RAND_MAX;
-		  std::array<double, 3> a{ d1 };
+		  std::array<double, 3> a{ d1,d1,d1 };
 		  p = a;
 		  THEN("The point's coordinates are equal to the array") {
 			  REQUIRE(p.getX() == d1);
@@ -204,7 +198,7 @@ SCENARIO("Using a Point Message")
 	  }
 	  WHEN("I move-assign from an array to that point") {
 		  double d2 = static_cast<double>(rand()) / RAND_MAX;
-		  std::array<double, 3> a2{ d2 };
+		  std::array<double, 3> a2{ d2,d2,d2 };
 		  p = std::move(a2);
 		  THEN("The point's coordinates are the same as the array") {
 			  REQUIRE(p.getX() == d2);
