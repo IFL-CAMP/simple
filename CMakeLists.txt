@@ -56,16 +56,15 @@ file(GLOB SIMPLE_HEADERS "include/simple/*.h" "include/simple/*.hpp")
 ###### TARGETS
 add_library(zmq SHARED IMPORTED)
 if (WIN32)
-get_filename_component(ZMQ_LIBRARY_NAME_WO_EXT ${ZeroMQ_LIBRARY} NAME_WE)
-get_filename_component(ZMQ_LIBRARY_PATH ${ZeroMQ_LIBRARY} DIRECTORY)
-get_filename_component(ZMQ_PATH ${ZMQ_LIBRARY_PATH} DIRECTORY)
-set(ZMQ_INSTALL_NAME ${ZMQ_LIBRARY_NAME_WO_EXT}.lib)
+	get_filename_component(ZMQ_LIBRARY_NAME_WE ${ZeroMQ_LIBRARY} NAME_WE)
+	get_filename_component(ZMQ_LIBRARY_PATH ${ZeroMQ_LIBRARY} DIRECTORY)
+	get_filename_component(ZMQ_PATH ${ZMQ_LIBRARY_PATH} DIRECTORY)
+	set(ZMQ_INSTALL_NAME ${ZMQ_LIBRARY_NAME_WE}.lib)
 else()
-set(ZMQ_INSTALL_NAME ${ZeroMQ_LIBRARY})
+	set(ZMQ_INSTALL_NAME ${ZeroMQ_LIBRARY})
 endif()
 
 set_target_properties(zmq PROPERTIES
-PUBLIC_HEADERS ${ZeroMQ_INCLUDE_DIR}
 IMPORTED_LOCATION ${CMAKE_INSTALL_LIBDIR}/${ZMQ_INSTALL_NAME}
 INCLUDE_DIRECTORIES ${ZeroMQ_INCLUDE_DIR}
 )
@@ -108,9 +107,9 @@ endif()
 
 # Install ZeroMQ lib
 if(WIN32)
-	find_file(ZMQ_DYNAMIC_LIBRARY "${ZMQ_LIBRARY_NAME_WO_EXT}.dll"
+	find_file(ZMQ_DYNAMIC_LIBRARY "${ZMQ_LIBRARY_NAME_WE}.dll"
 			HINTS "${ZMQ_PATH}/bin" "${ZMQ_PATH}/lib")
-	find_file(ZMQ_LIBRARY "${ZMQ_LIBRARY_NAME_WO_EXT}.lib"
+	find_file(ZMQ_LIBRARY "${ZMQ_LIBRARY_NAME_WE}.lib"
 			HINTS "${ZMQ_PATH}/bin" "${ZMQ_PATH}/lib")
 	install(FILES ${ZMQ_DYNAMIC_LIBRARY} DESTINATION ${CMAKE_INSTALL_BINDIR})  
 	install(FILES ${ZMQ_LIBRARY} DESTINATION ${CMAKE_INSTALL_LIBDIR})  
