@@ -34,7 +34,7 @@ find_package(Threads)
 
 # Find ZMQ
 if (WIN32)
-  set(ZeroMQ_INCLUDE_DIR "" CACHE FILEPATH "Include directory for ZeroMQ")
+  set(ZeroMQ_INCLUDE_DIR "" CACHE PATH "Include directory for ZeroMQ")
   set(ZeroMQ_LIBRARY "" CACHE FILEPATH "The ZeroMQ library file")
   if (ZeroMQ_INCLUDE_DIR AND ZeroMQ_LIBRARY)
 	set(ZeroMQ_FOUND TRUE)
