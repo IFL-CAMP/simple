@@ -6,7 +6,6 @@ project(simple)
 # Here all the compiler options for all projects created are set
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-include(GNUInstallDirs)
 
 # TODO can this be omitted if we don't use protobuf anymore?
 if (MSVC)
@@ -82,6 +81,8 @@ target_link_libraries(${PROJECT_NAME} INTERFACE ${ZeroMQ_LIBRARY} ${CMAKE_THREAD
 target_compile_definitions(${PROJECT_NAME} INTERFACE SIMPLE_LIBRARY_EXPORT)
 
 ###### INSTALLATION
+
+include(GNUInstallDirs)
 
 # Install SIMPLE in the desired folder
 install(TARGETS ${PROJECT_NAME}
