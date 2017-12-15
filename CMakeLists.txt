@@ -21,7 +21,7 @@ endif(WIN32)
 ###### OPTIONS
 
 option(BUILD_EXAMPLES "Build SIMPLE Examples" FALSE)
-option(BUILD_TEST "Build SIMPLE Test" FALSE)
+option(BUILD_TESTS "Build SIMPLE Test" FALSE)
 
 ###### BUILD SIMPLE MSGS
 
