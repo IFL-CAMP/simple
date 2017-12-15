@@ -32,13 +32,17 @@ set(SIMPLE_MSGS_SRCS
 flatbuffers_generate_c_headers(simple_msgs ${PROJECT_SOURCE_DIR}/fbs ${PROJECT_SOURCE_DIR}/include/simple_msgs/generated)
 
 add_library(${PROJECT_NAME} SHARED ${SIMPLE_MSGS_SRCS})
-target_compile_definitions(${PROJECT_NAME} PRIVATE SIMPLE_LIBRARY_EXPORT) # TODO is this necessary?
+set_target_properties (${PROJECT_NAME} PROPERTIES
+    COMPILE_DEFINITIONS "DLL_EXPORT"
+    OUTPUT_NAME "libsimple_msgs")
 
 ###### INSTALLATION
 
 #install the simple_msgs library in the desired folder
 install(TARGETS ${PROJECT_NAME} 
     EXPORT "simpleTargets"
+	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+	
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
