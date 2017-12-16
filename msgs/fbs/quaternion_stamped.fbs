@@ -1,4 +1,4 @@
-// Schema for S.I.M.P.L.E. Quaternion Stamped
+// Schema for S.I.M.P.L.E. QuaternionStamped
 
 namespace simple_msgs;
 

@@ -1,4 +1,4 @@
-// Schema for S.I.M.P.L.E. Rotation Matrix Stamped
+// Schema for S.I.M.P.L.E. RotationMatrixStamped
 
 namespace simple_msgs;
 

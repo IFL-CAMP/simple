@@ -1,4 +1,4 @@
-// Schema for S.I.M.P.L.E. Pose Stamped
+// Schema for S.I.M.P.L.E. PoseStamped
 
 namespace simple_msgs;
 

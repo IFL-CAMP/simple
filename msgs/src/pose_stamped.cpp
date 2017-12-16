@@ -16,7 +16,9 @@ PoseStamped::PoseStamped(const Pose& pose, const Header& header)
 }
 
 PoseStamped::PoseStamped(const uint8_t* data)
-  : GenericMessage(), pose_(GetPoseStampedFbs(data)->pose()->data()), header_(GetPoseStampedFbs(data)->header()->data())
+  : GenericMessage()
+  , pose_(GetPoseStampedFbs(data)->pose()->data())
+  , header_(GetPoseStampedFbs(data)->header()->data())
 {
 }
 
@@ -79,6 +81,20 @@ uint8_t* PoseStamped::getBufferData() const
     modified_ = false;
   }
   return builder_->GetBufferPointer();
+}
+
+inline void PoseStamped::setPose(const Pose& pose)
+{
+  std::lock_guard<std::mutex> lock(mutex_);
+  pose_ = pose;
+  modified_ = true;
+}
+
+inline void PoseStamped::setHeader(const Header& header)
+{
+  std::lock_guard<std::mutex> lock(mutex_);
+  header_ = header;
+  modified_ = true;
 }
 
 std::ostream& operator<<(std::ostream& out, const PoseStamped& p)
