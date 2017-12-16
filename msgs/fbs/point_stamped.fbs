@@ -1,0 +1,11 @@
+// Schema for S.I.M.P.L.E. PointStamped
+
+namespace simple_msgs;
+
+table PointStampedFbs {
+	point:[ubyte];
+	header:[ubyte];
+}
+
+root_type PointStampedFbs;
+file_identifier "PTST";

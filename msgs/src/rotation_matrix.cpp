@@ -100,16 +100,6 @@ RotationMatrix& RotationMatrix::operator=(const uint8_t* data)
   return *this;
 }
 
-bool RotationMatrix::operator==(const RotationMatrix& rhs) const
-{
-  return data_ == rhs.data_;
-}
-
-bool RotationMatrix::operator!=(const RotationMatrix& rhs) const
-{
-  return !(*this == rhs);
-}
-
 uint8_t* RotationMatrix::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);

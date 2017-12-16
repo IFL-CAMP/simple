@@ -1,0 +1,11 @@
+// Schema for S.I.M.P.L.E. PoseStamped
+
+namespace simple_msgs;
+
+table PoseStampedFbs {
+	pose:[ubyte];
+	header:[ubyte];
+}
+
+root_type PoseStampedFbs;
+file_identifier "POST";

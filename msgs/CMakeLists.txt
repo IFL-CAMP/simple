@@ -18,14 +18,19 @@ file(GLOB_RECURSE SIMPLE_MSGS_HEADERS "*.h" "*.hpp")
 
 set(SIMPLE_MSGS_SRCS
   ${SIMPLE_MSGS_HEADERS}
-  src/header.cpp
-  src/image.cpp
-  src/pose.cpp
-  src/quaternion.cpp
-  src/point.cpp
-  src/rotation_matrix.cpp
   src/bool.cpp
   src/string.cpp
+  src/header.cpp
+  src/image.cpp
+  src/point.cpp
+  src/point_stamped.cpp
+  src/quaternion.cpp
+  src/quaternion_stamped.cpp
+  src/pose.cpp
+  src/pose_stamped.cpp
+  src/rotation_matrix.cpp
+  src/rotation_matrix_stamped.cpp
+
   )
 
 # Generate the Flatbuffers headers - this is defined in FindFlatBuffers.cmake
