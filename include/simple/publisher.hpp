@@ -42,11 +42,7 @@ public:
    * @param msg: buffer containing the data to be published.
    * @param size: size of the buffer to be publish.
    */
-  void publish(const uint8_t* msg, const int msg_size)
-  {
-    GenericSocket<T>::sendMsg(msg, msg_size, "[Simple Publisher] - ");
-  }
-
+  void publish(uint8_t* msg, const int msg_size) { GenericSocket<T>::sendMsg(msg, msg_size, "[Simple Publisher] - "); }
 private:
   static std::shared_ptr<void> context_;
 };
