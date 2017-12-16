@@ -158,7 +158,7 @@ public:
     modified_ = true;
   }
 
-  void setImageResolution(int resX, int resY, int resZ)
+  void setImageResolution(double resX, double resY, double resZ)
   {
     std::lock_guard<std::mutex> lock(mutex_);
     resX_ = resX;
@@ -167,7 +167,7 @@ public:
     modified_ = true;
   }
 
-  void setImageDimensions(double width, double height, double depth)
+  void setImageDimensions(int width, int height, int depth)
   {
     std::lock_guard<std::mutex> lock(mutex_);
     width_ = width;
