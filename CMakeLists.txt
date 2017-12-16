@@ -7,12 +7,6 @@ project(simple)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# TODO can this be omitted if we don't use protobuf anymore?
-if (MSVC)
-  list(APPEND CMAKE_CXX_FLAGS_RELEASE " /MD")
-  list(APPEND CMAKE_CXX_FLAGS_DEBUG " /MDd")
-endif(MSVC)
-
 # Allows all symbols generated from the dynamic library to be exported
 if (WIN32)
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
@@ -59,15 +53,18 @@ if (WIN32)
 	get_filename_component(ZMQ_LIBRARY_NAME_WE ${ZeroMQ_LIBRARY} NAME_WE)
 	get_filename_component(ZMQ_LIBRARY_PATH ${ZeroMQ_LIBRARY} DIRECTORY)
 	get_filename_component(ZMQ_PATH ${ZMQ_LIBRARY_PATH} DIRECTORY)
-	set(ZMQ_INSTALL_NAME ${ZMQ_LIBRARY_NAME_WE}.lib)
+	set(ZMQ_INSTALL_NAME ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/${ZMQ_LIBRARY_NAME_WE}.lib)
 else()
 	set(ZMQ_INSTALL_NAME ${ZeroMQ_LIBRARY})
 endif()
 
-set_target_properties(zmq PROPERTIES
-IMPORTED_LOCATION ${CMAKE_INSTALL_LIBDIR}/${ZMQ_INSTALL_NAME}
-INCLUDE_DIRECTORIES ${ZeroMQ_INCLUDE_DIR}
-)
+if (WIN32)
+	get_target_property(SIMPLE_MSGS_NAME simple_msgs OUTPUT_NAME)
+	set(SIMPLE_MSGS_INSTALL_NAME ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/${SIMPLE_MSGS_NAME}.lib)
+else()
+	set(SIMPLE_MSGS_INSTALL_NAME ${SIMPLE_MSGS_NAME})
+
+endif()
 
 add_library(${PROJECT_NAME} INTERFACE)
 
@@ -76,8 +73,10 @@ target_include_directories(${PROJECT_NAME} INTERFACE
     $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(${PROJECT_NAME} INTERFACE ${ZeroMQ_LIBRARY} ${CMAKE_THREAD_LIBS_INIT} simple_msgs)
-target_compile_definitions(${PROJECT_NAME} INTERFACE SIMPLE_LIBRARY_EXPORT)
+target_link_libraries(${PROJECT_NAME} INTERFACE 
+$<BUILD_INTERFACE:${ZeroMQ_LIBRARY} ${CMAKE_THREAD_LIBS_INIT} simple_msgs>
+$<INSTALL_INTERFACE:${ZMQ_INSTALL_NAME} ${SIMPLE_MSGS_INSTALL_NAME}>
+)
 
 ###### INSTALLATION
 
@@ -93,17 +92,15 @@ install(TARGETS ${PROJECT_NAME}
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 # Install ZeroMQ includes
-if(NOT ${ZeroMQ_INCLUDE_DIR} STREQUAL ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR})
-   install(FILES "${ZeroMQ_INCLUDE_DIR}/zmq.h" "${ZeroMQ_INCLUDE_DIR}/zmq_utils.h" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-endif()
+install(FILES 	"${ZeroMQ_INCLUDE_DIR}/zmq.h" 
+				"${ZeroMQ_INCLUDE_DIR}/zmq_utils.h" 
+				DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 # Install Flatbuffers includes
-if(NOT ${FLATBUFFERS_INCLUDE_DIR} STREQUAL ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR})
-  install(
-  FILES ${FLATBUFFERS_INCLUDE_DIR}/flatbuffers/flatbuffers.h 
+install(
+FILES 	${FLATBUFFERS_INCLUDE_DIR}/flatbuffers/flatbuffers.h 
 		${FLATBUFFERS_INCLUDE_DIR}/flatbuffers/base.h 
 		${FLATBUFFERS_INCLUDE_DIR}/flatbuffers/stl_emulation.h 
-  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/flatbuffers/)
-endif()
+		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/flatbuffers/)
 
 # Install ZeroMQ lib
 if(WIN32)
