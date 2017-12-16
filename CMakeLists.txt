@@ -6,7 +6,7 @@ include(GNUInstallDirs)
 ###### GLOBAL PARAMETERS AND SETTINGS
 
 # Here all the compiler options for all projects created are set
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include(GNUInstallDirs)
 
