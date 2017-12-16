@@ -3,7 +3,7 @@
 #include <zmq.h>
 #include <string>
 #include <memory>
-#include "contextCloser.hpp"
+#include "context_deleter.hpp"
 #include "simple/generic_socket.hpp"
 
 namespace simple
@@ -25,7 +25,7 @@ public:
     GenericSocket<T>::bind(address);
   }
 
-  ~Publisher<T>() {  }
+  ~Publisher<T>() {}
   /**
    * @brief Publishes the message through the open socket.
    * @param msg: SIMPLE class wrapper for Flatbuffer messages.
@@ -52,5 +52,5 @@ private:
 };
 
 template <typename T>
-std::shared_ptr<void> Publisher<T>::context_(zmq_ctx_new(),contextDeleter);
+std::shared_ptr<void> Publisher<T>::context_(zmq_ctx_new(), contextDeleter);
 }  // Namespace simple.

@@ -4,7 +4,7 @@
 #include <string>
 #include <thread>
 #include <memory>
-#include "contextCloser.hpp"
+#include "context_deleter.hpp"
 #include "simple/generic_socket.hpp"
 
 namespace simple
@@ -34,9 +34,8 @@ public:
 
   ~Server()
   {
-    alive_ = false;          //< Stop the request/reply loop.
-    server_thread_.join();   //< Wait for the server thead.
-    
+    alive_ = false;         //< Stop the request/reply loop.
+    server_thread_.join();  //< Wait for the server thead.
   }
 
 private:
