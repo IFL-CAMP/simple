@@ -13,7 +13,7 @@ class GenericMessage
 {
 public:
   GenericMessage()
-    : builder_(std::make_unique<flatbuffers::FlatBufferBuilder>(1024))
+    : builder_(new flatbuffers::FlatBufferBuilder(1024))
   {
   }
   virtual ~GenericMessage() = default;
