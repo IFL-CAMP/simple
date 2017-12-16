@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 project(simple)
 
+include(GNUInstallDirs)
+
 ###### GLOBAL PARAMETERS AND SETTINGS
 
 # Here all the compiler options for all projects created are set
@@ -79,8 +81,6 @@ $<INSTALL_INTERFACE:${ZMQ_INSTALL_NAME} ${SIMPLE_MSGS_INSTALL_NAME}>
 )
 
 ###### INSTALLATION
-
-include(GNUInstallDirs)
 
 # Install SIMPLE in the desired folder
 install(TARGETS ${PROJECT_NAME}
