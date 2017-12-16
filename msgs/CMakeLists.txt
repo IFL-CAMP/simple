@@ -32,9 +32,14 @@ set(SIMPLE_MSGS_SRCS
 flatbuffers_generate_c_headers(simple_msgs ${PROJECT_SOURCE_DIR}/fbs ${PROJECT_SOURCE_DIR}/include/simple_msgs/generated)
 
 add_library(${PROJECT_NAME} SHARED ${SIMPLE_MSGS_SRCS})
+if (WIN32)
 set_target_properties (${PROJECT_NAME} PROPERTIES
     COMPILE_DEFINITIONS "DLL_EXPORT"
     OUTPUT_NAME "libsimple_msgs")
+else()
+set_target_properties (${PROJECT_NAME} PROPERTIES
+    OUTPUT_NAME "simple_msgs")
+endif()
 
 ###### INSTALLATION
 
