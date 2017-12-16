@@ -17,7 +17,7 @@ class QuaternionStamped : public GenericMessage
 {
 public:
   QuaternionStamped();
-  QuaternionStamped(const Quaternion&, const Header&);
+  QuaternionStamped(const Header&, const Quaternion&);
   QuaternionStamped(const uint8_t*);
   QuaternionStamped(const QuaternionStamped&);
   QuaternionStamped(QuaternionStamped&&);
@@ -42,13 +42,13 @@ public:
    * @brief Returns the message Quaternion.
    * @return
    */
-  Quaternion getQuaternion() { return quaternion_; }
-  Quaternion const getQuaternion() const { return quaternion_; }
+  inline Quaternion& getQuaternion() { return quaternion_; }
+  inline const Quaternion& getQuaternion() const { return quaternion_; }
   /**
    * @brief Returns the message Hader.
    */
-  Header getHeader() { return header_; }
-  Header const getHeader() const { return header_; }
+  inline Header& getHeader() { return header_; }
+  inline const Header& getHeader() const { return header_; }
   /**
    * @brief Modifies the message Quaternion.
    */

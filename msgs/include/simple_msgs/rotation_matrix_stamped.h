@@ -17,7 +17,7 @@ class RotationMatrixStamped : public GenericMessage
 {
 public:
   RotationMatrixStamped();
-  RotationMatrixStamped(const RotationMatrix&, const Header&);
+  RotationMatrixStamped(const Header&, const RotationMatrix&);
   RotationMatrixStamped(const uint8_t*);
   RotationMatrixStamped(const RotationMatrixStamped&);
   RotationMatrixStamped(RotationMatrixStamped&&);
@@ -42,13 +42,13 @@ public:
   /**
    * @brief Returns the rotation matrix.
    */
-  inline RotationMatrix getRotationMatrix() { return rotation_matrix_; }
-  inline const RotationMatrix getRotationMatrix() const { return rotation_matrix_; }
+  inline RotationMatrix& getRotationMatrix() { return rotation_matrix_; }
+  inline const RotationMatrix& getRotationMatrix() const { return rotation_matrix_; }
   /**
    * @brief Returns the message Header.
    */
-  inline Header getHeader() { return header_; }
-  inline Header const getHeader() const { return header_; }
+  inline Header& getHeader() { return header_; }
+  inline const Header& getHeader() const { return header_; }
   /**
    * @brief Mofidies the matrix.
    * @param rotation_matrix:

@@ -8,7 +8,7 @@ QuaternionStamped::QuaternionStamped()
 {
 }
 
-QuaternionStamped::QuaternionStamped(const Quaternion& quaternion, const Header& header)
+QuaternionStamped::QuaternionStamped(const Header& header, const Quaternion& quaternion)
   : GenericMessage()
   , quaternion_(quaternion)
   , header_(header)
@@ -23,12 +23,12 @@ QuaternionStamped::QuaternionStamped(const uint8_t* data)
 }
 
 QuaternionStamped::QuaternionStamped(const QuaternionStamped& other)
-  : QuaternionStamped(other.quaternion_, other.header_)
+  : QuaternionStamped(other.header_, other.quaternion_)
 {
 }
 
 QuaternionStamped::QuaternionStamped(QuaternionStamped&& other)
-  : QuaternionStamped(std::move(other.quaternion_), std::move(other.header_))
+  : QuaternionStamped(std::move(other.header_), std::move(other.quaternion_))
 {
 }
 
@@ -70,7 +70,7 @@ QuaternionStamped& QuaternionStamped::operator=(const uint8_t* data)
 uint8_t* QuaternionStamped::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (modified_)
+  if (modified_ || header_.isModified() || quaternion_.isModified())
   {
     builder_->Clear();
     auto quaternion_vector = builder_->CreateVector(quaternion_.getBufferData(), quaternion_.getBufferSize());

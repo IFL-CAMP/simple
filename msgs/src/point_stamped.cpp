@@ -8,7 +8,7 @@ PointStamped::PointStamped()
 {
 }
 
-PointStamped::PointStamped(const Point& point, const Header& header)
+PointStamped::PointStamped(const Header& header, const Point& point)
   : GenericMessage()
   , point_(point)
   , header_(header)
@@ -23,7 +23,7 @@ PointStamped::PointStamped(const uint8_t* data)
 }
 
 PointStamped::PointStamped(const PointStamped& other)
-  : PointStamped(other.point_, other.header_)
+  : PointStamped(other.header_, other.point_)
 {
 }
 
@@ -72,7 +72,7 @@ PointStamped& PointStamped::operator=(const uint8_t* data)
 uint8_t* PointStamped::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (modified_)
+  if (modified_ || header_.isModified() || point_.isModified())
   {
     builder_->Clear();
     auto point_vector = builder_->CreateVector(point_.getBufferData(), point_.getBufferSize());

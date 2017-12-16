@@ -16,7 +16,7 @@ class PointStamped : public GenericMessage
 {
 public:
   PointStamped();
-  PointStamped(const Point& point, const Header& header);
+  PointStamped(const Header&, const Point&);
   PointStamped(const uint8_t*);
   PointStamped(const PointStamped&);
   PointStamped(PointStamped&&);
@@ -38,13 +38,13 @@ public:
   /**
    * @brief Returns the point as an array of 3 elements.
    */
-  inline Point getPoint() { return point_; }
-  inline const Point getPoint() const { return point_; }
+  inline Point& getPoint() { return point_; }
+  inline const Point& getPoint() const { return point_; }
   /**
    * @brief Returns message Header.
    */
-  inline Header getHeader() { return header_; }
-  inline const Header getHeader() const { return header_; }
+  inline Header& getHeader() { return header_; }
+  inline const Header& getHeader() const { return header_; }
   /**
    * @brief Modifies the message header.
    */
