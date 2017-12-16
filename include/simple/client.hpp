@@ -3,7 +3,7 @@
 #include <zmq.h>
 #include <string>
 #include <memory>
-#include "contextCloser.hpp"
+#include "context_deleter.hpp"
 #include "simple/generic_socket.hpp"
 
 namespace simple
@@ -21,7 +21,7 @@ public:
     GenericSocket<T>::connect(address);
   }
 
-  ~Client() { }
+  ~Client() {}
   /**
    * @brief Sends the request to a server and waits for an answer.
    * @param msg: SIMPLE class wrapper for Flatbuffer messages.
