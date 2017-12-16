@@ -12,7 +12,7 @@ class PoseStamped : public GenericMessage
 {
 public:
   PoseStamped();
-  PoseStamped(const Pose&, const Header&);
+  PoseStamped(const Header&, const Pose&);
   PoseStamped(const uint8_t*);
   PoseStamped(const PoseStamped&);
   PoseStamped(PoseStamped&&);
@@ -34,13 +34,13 @@ public:
   /**
    * @brief Returns the message Pose.
    */
-  inline Pose getPose() { return pose_; }
-  inline const Pose getPose() const { return pose_; }
+  inline Pose& getPose() { return pose_; }
+  inline const Pose& getPose() const { return pose_; }
   /**
    * @brief Returns message Header.
    */
-  inline Header getHeader() { return header_; }
-  inline const Header getHeader() const { return header_; }
+  inline Header& getHeader() { return header_; }
+  inline const Header& getHeader() const { return header_; }
   /**
    * @brief Modifies the message Pose.
    */

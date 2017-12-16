@@ -8,7 +8,7 @@ RotationMatrixStamped::RotationMatrixStamped()
 {
 }
 
-RotationMatrixStamped::RotationMatrixStamped(const RotationMatrix& rotation_matrix, const Header& header)
+RotationMatrixStamped::RotationMatrixStamped(const Header& header, const RotationMatrix& rotation_matrix)
   : GenericMessage()
   , rotation_matrix_(rotation_matrix)
   , header_(header)
@@ -23,12 +23,12 @@ RotationMatrixStamped::RotationMatrixStamped(const uint8_t* data)
 }
 
 RotationMatrixStamped::RotationMatrixStamped(const RotationMatrixStamped& m)
-  : RotationMatrixStamped(m.rotation_matrix_, m.header_)
+  : RotationMatrixStamped(m.header_, m.rotation_matrix_)
 {
 }
 
 RotationMatrixStamped::RotationMatrixStamped(RotationMatrixStamped&& m)
-  : RotationMatrixStamped(std::move(m.rotation_matrix_), std::move(m.header_))
+  : RotationMatrixStamped(std::move(m.header_), std::move(m.rotation_matrix_))
 {
 }
 
@@ -70,7 +70,7 @@ RotationMatrixStamped& RotationMatrixStamped::operator=(const uint8_t* data)
 uint8_t* RotationMatrixStamped::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (modified_)
+  if (modified_ || header_.isModified() || rotation_matrix_.isModified())
   {
     builder_->Clear();
     auto rotation_matrix_vector =

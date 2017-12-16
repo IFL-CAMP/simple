@@ -25,6 +25,7 @@ public:
     return builder_->GetSize();
   }
 
+  inline bool isModified() const { return modified_; }
 protected:
   std::unique_ptr<flatbuffers::FlatBufferBuilder> builder_;
   mutable bool modified_{true};

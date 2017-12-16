@@ -70,7 +70,7 @@ Pose& Pose::operator=(const uint8_t* data)
 uint8_t* Pose::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (modified_)
+  if (modified_ || position_.isModified() || quaternion_.isModified())
   {
     builder_->Clear();
     auto positionVec = builder_->CreateVector(position_.getBufferData(), position_.getBufferSize());

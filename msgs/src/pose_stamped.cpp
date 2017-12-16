@@ -8,7 +8,7 @@ PoseStamped::PoseStamped()
 {
 }
 
-PoseStamped::PoseStamped(const Pose& pose, const Header& header)
+PoseStamped::PoseStamped(const Header& header, const Pose& pose)
   : GenericMessage()
   , pose_(pose)
   , header_(header)
@@ -23,12 +23,12 @@ PoseStamped::PoseStamped(const uint8_t* data)
 }
 
 PoseStamped::PoseStamped(const PoseStamped& other)
-  : PoseStamped(other.pose_, other.header_)
+  : PoseStamped(other.header_, other.pose_)
 {
 }
 
 PoseStamped::PoseStamped(PoseStamped&& other)
-  : PoseStamped(std::move(other.pose_), std::move(other.header_))
+  : PoseStamped(std::move(other.header_), std::move(other.pose_))
 {
 }
 
@@ -69,7 +69,7 @@ PoseStamped& PoseStamped::operator=(const uint8_t* data)
 uint8_t* PoseStamped::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (modified_)
+  if (modified_ || pose_.isModified() || header_.isModified())
   {
     builder_->Clear();
     auto poseVec = builder_->CreateVector(pose_.getBufferData(), pose_.getBufferSize());
