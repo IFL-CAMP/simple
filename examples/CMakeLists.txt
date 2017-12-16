@@ -1,15 +1,11 @@
 cmake_minimum_required(VERSION 3.5)
 project(simple_examples)
 
-include_directories(include)
+find_package(OpenCV REQUIRED)
 
-set(LIBRARIES simple)
+include_directories(${OpenCV_INCLUDE_DIRS})
 
-if (NOT WIN32)
-	find_package(X11)
-	include_directories(${X11_INCLUDE_DIR})
-	set(LIBRARIES ${LIBRARIES} ${X11_LIBRARIES} )
-endif()
+set(LIBRARIES simple ${OpenCV_LIBS})
 
 add_definitions( -DDATA_DIR="${PROJECT_SOURCE_DIR}/data/"  )
 

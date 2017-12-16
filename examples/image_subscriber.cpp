@@ -1,34 +1,33 @@
 #include <iostream>
-
-#include "CImg.h"
+#include <opencv2/opencv.hpp>
 
 #include "simple/subscriber.hpp"
 #include "simple_msgs/image.h"
 
-cimg_library::CImgDisplay main_disp(512, 512, "Show the received image.");
+const std::string window_name("Received image");
 
 void example_callback(const simple_msgs::Image<uint8_t>& i)
 {
-  auto img = i.getImageData();
+  uint8_t* img = const_cast<uint8_t*>(i.getImageData());
   auto dimensions = i.getImageDimensions();
 
-  cimg_library::CImg<uint8_t> final_image(img, dimensions[0], dimensions[1], dimensions[2]);
-  main_disp.display(final_image);
+  cv::Mat received_img(dimensions[0], dimensions[1], CV_8UC1, img);
+  cv::imshow(window_name, received_img);
+  cv::waitKey(4000);
 }
 
-int main(int argc, char* argv[])
+int main()
 {
   const int SLEEP_TIME = 60000;  //<  Milliseconds.
+
+  cv::namedWindow(window_name);
 
   std::cout << "Creating a subscriber for Image messages." << std::endl;
   simple::Subscriber<simple_msgs::Image<uint8_t>> sub("tcp://localhost:5555", example_callback);
 
-  main_disp.show();
-  while (!main_disp.is_closed())
-  {
-	  main_disp.wait();
-  }
-
+  std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_TIME));
   std::cout << "Subscribing ended." << std::endl;
+
+  cv::destroyAllWindows();
   return 0;
 }

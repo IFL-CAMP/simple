@@ -25,13 +25,6 @@ option(BUILD_TESTS "Build SIMPLE Test" FALSE)
 add_subdirectory(msgs)
 
 ###### FIND LIBRARIES
-FIND_PACKAGE(X11)
-
-if(X11_FOUND)
-  link_directories(${X11_LIB_DIRS})
-  include_directories(${X11_INCLUDE_DIR})
-  SET( SYSTEM_LIBS ${SYSTEM_LIBS} ${X11_LIBRARIES} )
-endif()
 
 #Find Threads
 find_package(Threads)
