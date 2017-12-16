@@ -117,6 +117,8 @@ else()
   install(FILES ${ZeroMQ_LIBRARY} DESTINATION ${CMAKE_INSTALL_LIBDIR})
 endif(WIN32)
 
+mark_as_advanced(ZMQ_LIBRARY ZMQ_DYNAMIC_LIBRARY)
+
 include(simpleInstall.cmake.in)
 
 ###### EXAMPLES
