@@ -70,7 +70,7 @@ SCENARIO("Using a Pose Message")
   {
     // start a Pose
     simple_msgs::Pose p;
-	
+
     WHEN("I set the X coordinate of the Pose's position")
     {
       double x = static_cast<double>(rand()) / RAND_MAX;
@@ -95,24 +95,24 @@ SCENARIO("Using a Pose Message")
       p.getQuaternion().setX(x);
       THEN("The data Pose's quaternion has the correct coordinate") { REQUIRE(p.getQuaternion().getX() == x); }
     }
-	WHEN("I set the Y coordinate of the Pose's quaternion")
-	{
-		double y = static_cast<double>(rand()) / RAND_MAX;
-		p.getQuaternion().setY(y);
-		THEN("The data Pose's quaternion has the correct coordinate") { REQUIRE(p.getQuaternion().getY() == y); }
-	}
-	WHEN("I set the Z coordinate of the Pose's quaternion")
-	{
-		double z = static_cast<double>(rand()) / RAND_MAX;
-		p.getQuaternion().setZ(z);
-		THEN("The data Pose's quaternion has the correct coordinate") { REQUIRE(p.getQuaternion().getZ() == z); }
-	}
-	WHEN("I set the W coordinate of the Pose's quaternion")
-	{
-		double w = static_cast<double>(rand()) / RAND_MAX;
-		p.getQuaternion().setW(w);
-		THEN("The data Pose's quaternion has the correct coordinate") { REQUIRE(p.getQuaternion().getW() == w); }
-	}
+    WHEN("I set the Y coordinate of the Pose's quaternion")
+    {
+      double y = static_cast<double>(rand()) / RAND_MAX;
+      p.getQuaternion().setY(y);
+      THEN("The data Pose's quaternion has the correct coordinate") { REQUIRE(p.getQuaternion().getY() == y); }
+    }
+    WHEN("I set the Z coordinate of the Pose's quaternion")
+    {
+      double z = static_cast<double>(rand()) / RAND_MAX;
+      p.getQuaternion().setZ(z);
+      THEN("The data Pose's quaternion has the correct coordinate") { REQUIRE(p.getQuaternion().getZ() == z); }
+    }
+    WHEN("I set the W coordinate of the Pose's quaternion")
+    {
+      double w = static_cast<double>(rand()) / RAND_MAX;
+      p.getQuaternion().setW(w);
+      THEN("The data Pose's quaternion has the correct coordinate") { REQUIRE(p.getQuaternion().getW() == w); }
+    }
   }
   GIVEN("Two identical Poses")
   {
@@ -120,15 +120,15 @@ SCENARIO("Using a Pose Message")
     double y = static_cast<double>(rand()) / RAND_MAX;
     double z = static_cast<double>(rand()) / RAND_MAX;
     double w = static_cast<double>(rand()) / RAND_MAX;
-	double x1 = static_cast<double>(rand()) / RAND_MAX;
-	double y1 = static_cast<double>(rand()) / RAND_MAX;
-	double z1 = static_cast<double>(rand()) / RAND_MAX;
+    double x1 = static_cast<double>(rand()) / RAND_MAX;
+    double y1 = static_cast<double>(rand()) / RAND_MAX;
+    double z1 = static_cast<double>(rand()) / RAND_MAX;
     simple_msgs::Point point1(x1, y1, z1);
     simple_msgs::Quaternion quat1(x, y, z, w);
-	simple_msgs::Point point2 = point1;
-	simple_msgs::Quaternion quat2 = quat1;
-	simple_msgs::Pose pose1(point1, quat1);
-	simple_msgs::Pose pose2(point2, quat2);
+    simple_msgs::Point point2 = point1;
+    simple_msgs::Quaternion quat2 = quat1;
+    simple_msgs::Pose pose1(point1, quat1);
+    simple_msgs::Pose pose2(point2, quat2);
     WHEN("I compare these Poses")
     {
       THEN("They have to be equal") { REQUIRE(pose1 == pose2); }
@@ -140,65 +140,37 @@ SCENARIO("Using a Pose Message")
     double y = static_cast<double>(rand()) / RAND_MAX;
     double z = static_cast<double>(rand()) / RAND_MAX;
     double w = static_cast<double>(rand()) / RAND_MAX;
-    simple_msgs::Pose q6(x, y, z, w);
+    double x1 = static_cast<double>(rand()) / RAND_MAX;
+    double y1 = static_cast<double>(rand()) / RAND_MAX;
+    double z1 = static_cast<double>(rand()) / RAND_MAX;
+    simple_msgs::Point point1(x1, y1, z1);
+    simple_msgs::Quaternion quat1(x, y, z, w);
+    simple_msgs::Pose pose(point1, quat1);
     WHEN("I copy-assign from that Pose's buffer")
     {
-      simple_msgs::Pose q7;
-      q7 = q6.getBufferData();
-      THEN("The new Pose has to be same as the original") { REQUIRE(q7 == q6); }
+      simple_msgs::Pose p2;
+      p2 = pose.getBufferData();
+      THEN("The new Pose has to be same as the original") { REQUIRE(p2 == pose); }
     }
     WHEN("I copy-assign from that Pose")
     {
-      simple_msgs::Pose q8;
-      q8 = q6;
-      THEN("The new Pose has to be same as the original") { REQUIRE(q8 == q6); }
+      simple_msgs::Pose p3;
+      p3 = pose;
+      THEN("The new Pose has to be same as the original") { REQUIRE(p3 == pose); }
     }
     WHEN("I move-assign from that Pose")
     {
-      simple_msgs::Pose q9;
-      q9 = std::move(q6);
+      simple_msgs::Pose p4;
+      p4 = std::move(pose);
       THEN("The new Pose has to be same as the original")
       {
-        REQUIRE(q9.getX() == x);
-        REQUIRE(q9.getY() == y);
-        REQUIRE(q9.getZ() == z);
-        REQUIRE(q9.getW() == w);
-      }
-    }
-  }
-  GIVEN("A Pose")
-  {
-    simple_msgs::Pose q;
-    WHEN("I copy-assign an array to that Pose")
-    {
-      double x = static_cast<double>(rand()) / RAND_MAX;
-      double y = static_cast<double>(rand()) / RAND_MAX;
-      double z = static_cast<double>(rand()) / RAND_MAX;
-      double w = static_cast<double>(rand()) / RAND_MAX;
-      std::array<double, 4> a{x, y, z, w};
-      q = a;
-      THEN("The Pose's elements are equal to the array")
-      {
-        REQUIRE(q.getX() == x);
-        REQUIRE(q.getY() == y);
-        REQUIRE(q.getZ() == z);
-        REQUIRE(q.getW() == w);
-      }
-    }
-    WHEN("I move-assign from an array to that Pose")
-    {
-      double x = static_cast<double>(rand()) / RAND_MAX;
-      double y = static_cast<double>(rand()) / RAND_MAX;
-      double z = static_cast<double>(rand()) / RAND_MAX;
-      double w = static_cast<double>(rand()) / RAND_MAX;
-      std::array<double, 4> a{x, y, z, w};
-      q = std::move(a);
-      THEN("The Pose's elements are the same as the array")
-      {
-        REQUIRE(q.getX() == x);
-        REQUIRE(q.getY() == y);
-        REQUIRE(q.getZ() == z);
-        REQUIRE(q.getW() == w);
+        REQUIRE(p4.getPosition().getX() == x1);
+        REQUIRE(p4.getPosition().getY() == y1);
+        REQUIRE(p4.getPosition().getZ() == z1);
+        REQUIRE(p4.getQuaternion().getX() == x);
+        REQUIRE(p4.getQuaternion().getY() == y);
+        REQUIRE(p4.getQuaternion().getZ() == z);
+        REQUIRE(p4.getQuaternion().getW() == w);
       }
     }
   }
@@ -206,11 +178,11 @@ SCENARIO("Using a Pose Message")
   {
     double d1 = static_cast<double>(rand()) / RAND_MAX;
     double d2 = d1 + 1.0;
-    simple_msgs::Pose q1(d1, d1, d1, d1);
-    simple_msgs::Pose q2(d2, d2, d2, d2);
-    WHEN("I compare these Pose")
+    simple_msgs::Pose p1(simple_msgs::Point(d1, d1, d1), simple_msgs::Quaternion(d1, d1, d1, d1));
+    simple_msgs::Pose p2(simple_msgs::Point(d2, d2, d2), simple_msgs::Quaternion(d2, d2, d2, d2));
+    WHEN("I compare these Poses")
     {
-      THEN("They have to be different") { REQUIRE(q1 != q2); }
+      THEN("They have to be different") { REQUIRE(p1 != p2); }
     }
   }
   GIVEN("A Pose")
@@ -219,12 +191,35 @@ SCENARIO("Using a Pose Message")
     double y = static_cast<double>(rand()) / RAND_MAX;
     double z = static_cast<double>(rand()) / RAND_MAX;
     double w = static_cast<double>(rand()) / RAND_MAX;
-    simple_msgs::Pose q(x, y, z, w);
+    simple_msgs::Pose p(simple_msgs::Point(x, y, z), simple_msgs::Quaternion(x,y,z,w));
     WHEN("I get the buffer of that Pose and construct a new Pose")
     {
-      uint8_t* buf = q.getBufferData();
-      simple_msgs::Pose q2(buf);
-      THEN("The new Pose is equal to the original") { REQUIRE(q == q2); }
+      uint8_t* buf = p.getBufferData();
+      simple_msgs::Pose p2(buf);
+      THEN("The new Pose is equal to the original") { REQUIRE(p == p2); }
     }
+  }
+  GIVEN("A Pose")
+  {
+	  simple_msgs::Pose pose;
+	  WHEN("I set the position of the pose") {
+		  double x = static_cast<double>(rand()) / RAND_MAX;
+		  double y = static_cast<double>(rand()) / RAND_MAX;
+		  double z = static_cast<double>(rand()) / RAND_MAX;
+		  pose.setPosition(simple_msgs::Point(x, y, z));
+		  THEN("The position is correct") {
+			  REQUIRE(pose.getPosition() == simple_msgs::Point(x, y, z));
+		  }
+	  }
+	  WHEN("I set the quaternion of the pose") {
+		  double x = static_cast<double>(rand()) / RAND_MAX;
+		  double y = static_cast<double>(rand()) / RAND_MAX;
+		  double z = static_cast<double>(rand()) / RAND_MAX;
+		  double w = static_cast<double>(rand()) / RAND_MAX;
+		  pose.setQuaternion(simple_msgs::Quaternion(x, y, z, w));
+		  THEN("The quaternion is correct") {
+			  REQUIRE(pose.getQuaternion() == simple_msgs::Quaternion(x, y, z, w));
+		  }
+	  }
   }
 }
