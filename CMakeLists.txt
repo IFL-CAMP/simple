@@ -8,6 +8,7 @@ include(GNUInstallDirs)
 # Here all the compiler options for all projects created are set
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+include(GNUInstallDirs)
 
 # Allows all symbols generated from the dynamic library to be exported
 if (WIN32)
@@ -24,6 +25,13 @@ option(BUILD_TESTS "Build SIMPLE Test" FALSE)
 add_subdirectory(msgs)
 
 ###### FIND LIBRARIES
+FIND_PACKAGE(X11)
+
+if(X11_FOUND)
+  link_directories(${X11_LIB_DIRS})
+  include_directories(${X11_INCLUDE_DIR})
+  SET( SYSTEM_LIBS ${SYSTEM_LIBS} ${X11_LIBRARIES} )
+endif()
 
 #Find Threads
 find_package(Threads)
@@ -45,7 +53,7 @@ endif()
 
 ###### FILES AND FOLDERS NEEDED FOR COMPILATION
 
-include_directories(include msgs/include msgs/generated_include ${ZeroMQ_INCLUDE_DIR} ${FLATBUFFERS_INCLUDE_DIR})
+include_directories(include msgs/include ${ZeroMQ_INCLUDE_DIR} ${FLATBUFFERS_INCLUDE_DIR})
 
 file(GLOB SIMPLE_HEADERS "include/simple/*.h" "include/simple/*.hpp")
 
@@ -123,6 +131,6 @@ endif()
 
 ###### TESTS
 
-if (${BUILD_TESTS})
+if (${BUILD_TEST})
   add_subdirectory(tests)
 endif()

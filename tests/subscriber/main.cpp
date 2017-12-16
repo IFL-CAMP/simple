@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+
+#include "CImg.h"
 #include "simple/subscriber.hpp"
 #include "simple_msgs/header.h"
 #include "simple_msgs/point.h"
@@ -9,6 +11,19 @@ void dummy_callback(const simple_msgs::Image<uint8_t>& i)
 {
   auto h = i.getHeader();
   std::cout << h << std::endl;
+  auto p = i.getImageOrigin();
+  std::cout << p << std::endl;
+  auto img = i.getImageData();
+  auto size = i.getImageSize();
+  auto dimensions = i.getImageDimensions();
+
+  cimg_library::CImg<uint8_t> final_image(img, dimensions[0], dimensions[1], dimensions[2]);
+  cimg_library::CImgDisplay main_disp(final_image, "Show received image.");
+
+  while (!main_disp.is_closed())
+  {
+    main_disp.wait();
+  }
 }
 
 int main(int argc, char* argv[])
