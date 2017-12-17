@@ -22,7 +22,7 @@ build_msvc15:
   script:
     - IF NOT EXIST "simple_msvs15" mkdir "simple_msvs15"
     - cd simple_msvs15
-    - cmake -G "Visual Studio 14 2015 Win64" -DCMAKECONFIGURATION_TYPES=Release %FLATBUFFERS_2015% %$ZEROMQ_2015% ..
+    - cmake -G "Visual Studio 14 2015 Win64" -DCMAKECONFIGURATION_TYPES=Release %FLATBUFFERS_2015% %ZEROMQ_2015% ..
     - cmake --build .
   cache:
     key: msvs15_cache
