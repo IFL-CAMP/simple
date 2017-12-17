@@ -18,7 +18,7 @@ build_msvc15:
   script:
     - IF NOT EXIST "simple_msvs15" mkdir "simple_msvs15"
     - cd simple_msvs15
-    - cmake -G "Visual Studio 14 2015 Win64" -DCMAKECONFIGURATION_TYPES=Release %ZEROMQ_2015% ..
+    - cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_CONFIGURATION_TYPES=Release %ZEROMQ_2015% ..
     - cmake --build .
   cache:
     key: msvs15_cache
@@ -35,7 +35,7 @@ build_msvc17:
   script:
     - IF NOT EXIST "simple_msvs17" mkdir "simple_msvs17"
     - cd simple_msvs17
-    - cmake -G "Visual Studio 15 2017 Win64" -DCMAKECONFIGURATION_TYPES=Release %ZEROMQ_2017% ..
+    - cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_CONFIGURATION_TYPES=Release %ZEROMQ_2017% ..
     - cmake --build .
   cache:
     key: msvs17_cache
