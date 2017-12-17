@@ -30,7 +30,7 @@ data Image<double>::getDataUnionType() const
 template <>
 flatbuffers::Offset<void> Image<uint8_t>::getDataUnionElem() const
 {
-  return Createuint8_type(*builder_, builder_->CreateVector(*data_, data_size_)).Union();
+  return Createuint8_type(*builder_, builder_->CreateVector(static_cast<const uint8_t*>(*data_), data_size_)).Union();
 }
 
 template <>
