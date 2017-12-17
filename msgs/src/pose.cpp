@@ -57,20 +57,20 @@ Pose& Pose::operator=(Pose&& p)
   return *this;
 }
 
-bool Pose::operator==(const Pose& p) const
+Pose& Pose::operator=(const uint8_t* data)
 {
-  return (position_ == p.position_ && quaternion_ == p.quaternion_);
-}
+	std::lock_guard<std::mutex> lock(mutex_);
+	position_ = GetPoseFbs(data)->position()->data();
+	quaternion_ = GetPoseFbs(data)->quaternion()->data();
+	modified_ = true;
 
-bool Pose::operator!=(const Pose& p) const
-{
-  return !(*this == p);
+	return *this;
 }
 
 uint8_t* Pose::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (modified_)
+  if (modified_ || position_.isModified() || quaternion_.isModified())
   {
     builder_->Clear();
     auto positionVec = builder_->CreateVector(position_.getBufferData(), position_.getBufferSize());

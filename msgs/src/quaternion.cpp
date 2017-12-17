@@ -99,16 +99,6 @@ Quaternion& Quaternion::operator=(const uint8_t* data)
   return *this;
 }
 
-bool Quaternion::operator==(const Quaternion& rhs) const
-{
-  return data_ == rhs.data_;
-}
-
-bool Quaternion::operator!=(const Quaternion& rhs) const
-{
-  return !(*this == rhs);
-}
-
 uint8_t* Quaternion::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);

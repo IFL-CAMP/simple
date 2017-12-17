@@ -24,45 +24,7 @@ public:
   {
   }
 
-  Image(const uint8_t* data)
-    : GenericMessage()
-  {
-    auto image_data = GetImageFbs(data);
-
-    // Set Header.
-    header_ = image_data->header()->data();
-    // Set Origin.
-    origin_ = image_data->origin()->data();
-    // Set Image Resolution.
-    resX_ = image_data->resX();
-    resY_ = image_data->resY();
-    resZ_ = image_data->resZ();
-    // Set Image Dimensions.
-    width_ = image_data->width();
-    height_ = image_data->height();
-    depth_ = image_data->depth();
-    // Set Encoding.
-    encoding_ = image_data->enconding();
-    // Set the Image data according to the right date type.
-    auto type = image_data->image_type();
-    switch (type)
-    {
-      case simple_msgs::data_uint8_type:
-        data_ = static_cast<const T*>(image_data->image())->raw()->data();
-        break;
-      case simple_msgs::data_int16_type:
-        data_ = static_cast<const T*>(image_data->image())->raw()->data();
-        break;
-      case simple_msgs::data_float_type:
-        data_ = static_cast<const T*>(image_data->image())->raw()->data();
-        break;
-      case simple_msgs::data_double_type:
-        data_ = static_cast<const T*>(image_data->image())->raw()->data();
-        break;
-      default:
-        break;
-    }
-  }
+  Image(const uint8_t* data);
 
   Image(const Image& other)
     : GenericMessage()
@@ -121,7 +83,7 @@ public:
     if (this != std::addressof(other))
     {
       std::lock_guard<std::mutex> lock(mutex_);
-      header_ = std::move(other, header_);
+      header_ = std::move(other.header_);
       origin_ = std::move(other.origin_);
       encoding_ = std::move(other.encoding_);
       resX_ = std::move(other.resX_);
@@ -137,48 +99,7 @@ public:
     return *this;
   }
 
-  Image& operator=(const uint8_t* data)
-  {
-    std::lock_guard<std::mutex> lock(mutex_);
-    auto image_data = GetImageFbs(data);
-
-    // Set Header.
-    header_ = image_data->header()->data();
-    // Set Origin.
-    // origin_ = static_cast<const uint8_t*>(image_data->origin()->data());
-    // Set Image Resolution.
-    resX_ = image_data->resX();
-    resY_ = image_data->resY();
-    resZ_ = image_data->resZ();
-    // Set Image Dimensions.
-    width_ = image_data->width();
-    height_ = image_data->height();
-    depth_ = image_data->depth();
-    // Set Encoding.
-    encoding_ = image_data->enconding()->c_str();
-    // Set the Image data according to the right date type.
-    auto type = image_data->image_type();
-
-    //    switch (type)
-    //    {
-    //      case simple_msgs::data_uint8_type:
-    //        data_ = reinterpret_cast<const T*>(image_data->image())->raw()->data();
-    //        break;
-    //      case simple_msgs::data_int16_type:
-    //        data_ = reinterpret_cast<T*>(image_data->image())->raw()->data();
-    //        break;
-    //      case simple_msgs::data_float_type:
-    //        data_ = reinterpret_cast<T*>(image_data->image())->raw()->data();
-    //        break;
-    //      case simple_msgs::data_double_type:
-    //        data_ = reinterpret_cast<T*>(image_data->image())->raw()->data();
-    //        break;
-    //      default:
-    //        break;
-    //    }
-    modified_ = true;
-    return *this;
-  }
+  Image& operator=(const uint8_t* data);
 
   bool operator==(const Image& rhs) const
   {
@@ -210,6 +131,7 @@ public:
       tmp_builder.add_origin(origin_data);
       tmp_builder.add_image(elem);
       tmp_builder.add_image_type(type);
+      tmp_builder.add_image_size(data_size_);
       tmp_builder.add_resX(resX_);
       tmp_builder.add_resY(resY_);
       tmp_builder.add_resZ(resZ_);
@@ -222,9 +144,9 @@ public:
     return Image::builder_->GetBufferPointer();
   }
 
-  std::array<int, 3> getResolution() const { return std::array<int, 3>{resX_, resY_, resZ_}; }
-  std::array<double, 3> getImageDimensions() const { return std::array<double, 3>{width_, height_, depth_}; }
-  T* getImageData() const { return *data_; }
+  std::array<double, 3> getResolution() const { return std::array<double, 3>{resX_, resY_, resZ_}; }
+  std::array<int, 3> getImageDimensions() const { return std::array<int, 3>{{width_, height_, depth_}}; }
+  const T* getImageData() const { return *data_; }
   int getImageSize() const { return data_size_; }
   Header getHeader() const { return header_; }
   Pose getImageOrigin() const { return origin_; }
@@ -236,7 +158,7 @@ public:
     modified_ = true;
   }
 
-  void setImageResolution(int resX, int resY, int resZ)
+  void setImageResolution(double resX, double resY, double resZ)
   {
     std::lock_guard<std::mutex> lock(mutex_);
     resX_ = resX;
@@ -245,7 +167,7 @@ public:
     modified_ = true;
   }
 
-  void setImageDimensions(double width, double height, double depth)
+  void setImageDimensions(int width, int height, int depth)
   {
     std::lock_guard<std::mutex> lock(mutex_);
     width_ = width;
@@ -268,10 +190,10 @@ public:
     modified_ = true;
   }
 
-  void setImageData(T* data, int data_size)
+  void setImageData(const T* data, int data_size)
   {
     std::lock_guard<std::mutex> lock(mutex_);
-    data_ = data;
+    data_ = std::make_shared<const T*>(data);
     data_size_ = data_size;
     modified_ = true;
   }
@@ -280,7 +202,28 @@ public:
    * @brief Returns an identifier of the message type generated by the flatbuffers.
    */
   static const char* getTopic() { return ImageFbsIdentifier(); }
+
 private:
+  void fillPartialImage(const simple_msgs::ImageFbs* imageData)
+  {
+    // Set Header.
+    header_ = imageData->header()->data();
+    // Set Origin.
+    origin_ = imageData->origin()->data();
+    // Set Image Resolution.
+    resX_ = imageData->resX();
+    resY_ = imageData->resY();
+    resZ_ = imageData->resZ();
+    // Set Image Dimensions.
+    width_ = imageData->width();
+    height_ = imageData->height();
+    depth_ = imageData->depth();
+    // Set Encoding.
+    encoding_ = imageData->enconding()->c_str();
+    data_size_ = imageData->image_size();
+    modified_ = true;
+  }
+
   simple_msgs::data getDataUnionType() const;
   flatbuffers::Offset<void> getDataUnionElem() const;
 
@@ -291,7 +234,9 @@ private:
   double resX_{0.0}, resY_{0.0}, resZ_{0.0};
   int width_{0}, height_{0}, depth_{0};
 
-  T* data_{nullptr};
+  std::shared_ptr<const T*> data_{nullptr};
+  // const T* data_{nullptr};
   int data_size_{0};
 };
+
 }  // Namespace simple_msgs.

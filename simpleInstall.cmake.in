@@ -1,0 +1,61 @@
+set(SIMPLE_MAJOR_VERSION 0)
+set(SIMPLE_MINOR_VERSION 1)
+set(SIMPLE_PATCH_VERSION 0)
+set(SIMPLE_VERSION
+  ${SIMPLE_MAJOR_VERSION}.${SIMPLE_MINOR_VERSION}.${SIMPLE_PATCH_VERSION})
+
+set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
+set(INSTALL_BIN_DIR bin CACHE PATH "Installation directory for executables")
+set(INSTALL_INCLUDE_DIR include CACHE PATH
+  "Installation directory for header files")
+if(WIN32 AND NOT CYGWIN)
+  set(DEF_INSTALL_CMAKE_DIR CMake)
+else()
+  set(DEF_INSTALL_CMAKE_DIR share/cmake/simple)
+endif()
+set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH
+  "Installation directory for CMake files")
+  
+mark_as_advanced(INSTALL_LIB_DIR INSTALL_BIN_DIR INSTALL_INCLUDE_DIR INSTALL_CMAKE_DIR)
+
+ 
+# Make relative paths absolute
+foreach(p LIB BIN INCLUDE CMAKE)
+  set(var INSTALL_${p}_DIR)
+  if(NOT IS_ABSOLUTE "${${var}}")
+    set(${var} "${CMAKE_INSTALL_PREFIX}/${${var}}")
+  endif()
+endforeach()
+
+# Add all targets to the build-tree export set
+export(TARGETS simple simple_msgs
+  FILE "${PROJECT_BINARY_DIR}/simpleTargets.cmake")
+ 
+# Export the package for use from the build-tree
+# (this registers the build-tree with a global CMake-registry)
+export(PACKAGE simple)
+ 
+# Create the simpleConfig.cmake and simpleConfigVersion files
+file(RELATIVE_PATH REL_INCLUDE_DIR "${INSTALL_CMAKE_DIR}"
+   "${INSTALL_INCLUDE_DIR}")
+# ... for the build tree
+set(CONF_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")
+configure_file(simpleConfig.cmake.in
+  "${PROJECT_BINARY_DIR}/simpleConfig.cmake" @ONLY)
+# ... for the install tree
+set(CONF_INCLUDE_DIRS "\${SIMPLE_CMAKE_DIR}/${REL_INCLUDE_DIR}")
+configure_file(simpleConfig.cmake.in
+  "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/simpleConfig.cmake" @ONLY)
+# ... for both
+configure_file(simpleConfigVersion.cmake.in
+  "${PROJECT_BINARY_DIR}/simpleConfigVersion.cmake" @ONLY)
+
+# Install the simpleConfig.cmake and simpleConfigVersion.cmake
+install(FILES
+  "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/simpleConfig.cmake"
+  "${PROJECT_BINARY_DIR}/simpleConfigVersion.cmake"
+  DESTINATION "${INSTALL_CMAKE_DIR}" COMPONENT dev)
+ 
+# Install the export set for use with the install-tree
+install(EXPORT simpleTargets DESTINATION
+  "${INSTALL_CMAKE_DIR}" COMPONENT dev)

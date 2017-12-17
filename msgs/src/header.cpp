@@ -73,16 +73,6 @@ Header& Header::operator=(const uint8_t* data)
   return *this;
 }
 
-bool Header::operator==(const Header& rhs) const
-{
-  return (seq_n_ == rhs.seq_n_ && frame_id_ == rhs.frame_id_ && timestamp_ == rhs.timestamp_);
-}
-
-bool Header::operator!=(const Header& rhs) const
-{
-  return !(*this == rhs);
-}
-
 uint8_t* Header::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
@@ -123,7 +113,8 @@ void Header::setTimestamp(double timestamp)
 
 std::ostream& operator<<(std::ostream& out, const Header& h)
 {
-  out << "Header \n \t seq_n: " << h.seq_n_ << "\n \t"
+  out << "Header\n \t"
+      << "seq_n: " << h.seq_n_ << "\n \t"
       << "frame_id: " << h.frame_id_ << "\n \t"
       << "timestamp: " << h.timestamp_ << "\n";
 

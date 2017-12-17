@@ -2,7 +2,8 @@
 
 #include <zmq.h>
 #include <string>
-
+#include <memory>
+#include "context_deleter.hpp"
 #include "simple/generic_socket.hpp"
 
 namespace simple
@@ -19,12 +20,12 @@ public:
    * @param port string for the connection port.
    */
   Publisher<T>(const std::string& address)
-    : GenericSocket<T>(zmq_socket(context_, ZMQ_PUB))
+    : GenericSocket<T>(zmq_socket(context_.get(), ZMQ_PUB))
   {
     GenericSocket<T>::bind(address);
   }
 
-  ~Publisher<T>() { zmq_ctx_term(context_); }
+  ~Publisher<T>() {}
   /**
    * @brief Publishes the message through the open socket.
    * @param msg: SIMPLE class wrapper for Flatbuffer messages.
@@ -41,15 +42,11 @@ public:
    * @param msg: buffer containing the data to be published.
    * @param size: size of the buffer to be publish.
    */
-  void publish(const uint8_t* msg, const int msg_size)
-  {
-    GenericSocket<T>::sendMsg(msg, msg_size, "[Simple Publisher] - ");
-  }
-
+  void publish(uint8_t* msg, const int msg_size) { GenericSocket<T>::sendMsg(msg, msg_size, "[Simple Publisher] - "); }
 private:
-  static void* context_;
+  static std::shared_ptr<void> context_;
 };
 
 template <typename T>
-void* Publisher<T>::context_(zmq_ctx_new());
+std::shared_ptr<void> Publisher<T>::context_(zmq_ctx_new(), contextDeleter);
 }  // Namespace simple.
