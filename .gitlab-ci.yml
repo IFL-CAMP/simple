@@ -4,12 +4,10 @@ stages:
   - build
 
 variables:
-  FLATBUFFERS_DIR_2015: "C:/Program Files/Flatbuffers_2015"
-  FLATBUFFERS_DIR_2017: "C:/Program Files/Flatbuffers_2017"
+  FLATBUFFERS_DIR: "C:/Program Files/Flatbuffers"
   ZEROMQ_DIR_2015: "C:/Program Files/ZeroMQ_2015"
   ZEROMQ_DIR_2017: "C:/Program Files/ZeroMQ_2017"
-  FLATBUFFERS_2015: "-DFLATBUFFERS_FLATC_EXECUTABLE=%FLATBUFFERS_DIR_2015%/bin/flatc.exe -DFLATBUFFERS_INCLUDE_DIR=%FLATBUFFERS_DIR_2015%/include -DFLATBUFFERS_LIBS=%FLATBUFFERS_DIR_2015%/lib/flatbuffers.lib"
-  FLATBUFFERS_2017: "-DFLATBUFFERS_FLATC_EXECUTABLE=%FLATBUFFERS_DIR_2017%/bin/flatc.exe -DFLATBUFFERS_INCLUDE_DIR=%FLATBUFFERS_DIR_2017%/include -DFLATBUFFERS_LIBS=%FLATBUFFERS_DIR_2017%/lib/flatbuffers.lib"
+  FLATBUFFERS: "-DFLATBUFFERS_FLATC_EXECUTABLE=%FLATBUFFERS_DIR%/bin/flatc.exe -DFLATBUFFERS_INCLUDE_DIR=%FLATBUFFERS_DIR%/include -DFLATBUFFERS_LIBS=%FLATBUFFERS_DIR%/lib/flatbuffers.lib"
   ZEROMQ_2015: "-DZeroMQ_INCLUDE_DIR=%ZEROMQ_DIR_2015%/include -DZeroMQ_LIBRARY=%ZEROMQ_DIR_2015%/lib/libzmq-v140-mt-4_2_4.lib"
   ZEROMQ_2017: "-DZeroMQ_INCLUDE_DIR=%ZEROMQ_DIR_2017%/include -DZeroMQ_LIBRARY=%ZEROMQ_DIR_2017%/lib/libzmq-v141-mt-4_2_4.lib"
 
@@ -22,7 +20,7 @@ build_msvc15:
   script:
     - IF NOT EXIST "simple_msvs15" mkdir "simple_msvs15"
     - cd simple_msvs15
-    - cmake -G "Visual Studio 14 2015 Win64" -DCMAKECONFIGURATION_TYPES=Release %FLATBUFFERS_2015% %ZEROMQ_2015% ..
+    - cmake -G "Visual Studio 14 2015 Win64" -DCMAKECONFIGURATION_TYPES=Release %FLATBUFFERS% %ZEROMQ_2015% ..
     - cmake --build .
   cache:
     key: msvs15_cache
@@ -39,7 +37,7 @@ build_msvc17:
   script:
     - IF NOT EXIST "simple_msvs17" mkdir "simple_msvs17"
     - cd simple_msvs17
-    - cmake -G "Visual Studio 15 2017 Win64"-DCMAKECONFIGURATION_TYPES=Release -DFLATBUFFERS_FLATC_EXECUTABLE=C:/Program Files/Flatbuffers_2017/bin/flatc.exe -DFLATBUFFERS_INCLUDE_DIR=C:/Program Files/Flatbuffers_2017/include -DFLATBUFFERS_LIBS=C:/Program Files/Flatbuffers_2017/lib/flatbuffers/lib -DZeroMQ_INCLUDE_DIR=C:/Program Files/ZeroMQ_2017/include -DZeroMQ_LIBRARY=C:/Program Files/ZeroMQ_2017/lib/libzmq-v141-mt-4_2_4.lib ..
+    - cmake -G "Visual Studio 15 2017 Win64"-DCMAKECONFIGURATION_TYPES=Release %FLATBUFFERS% %ZEROMQ_2017% ..
     - cmake --build .
   cache:
     key: msvs17_cache
