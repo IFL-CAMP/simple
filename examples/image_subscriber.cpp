@@ -13,7 +13,6 @@ void example_callback(const simple_msgs::Image<uint8_t>& i)
 
   cv::Mat received_img(dimensions[0], dimensions[1], CV_8UC1, img);
   cv::imshow(window_name, received_img);
-  cv::waitKey(4000);
 }
 
 int main()
@@ -25,7 +24,8 @@ int main()
   std::cout << "Creating a subscriber for Image messages." << std::endl;
   simple::Subscriber<simple_msgs::Image<uint8_t>> sub("tcp://localhost:5555", example_callback);
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_TIME));
+  cv::waitKey(0);
+
   std::cout << "Subscribing ended." << std::endl;
 
   cv::destroyAllWindows();
