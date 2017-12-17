@@ -1,0 +1,87 @@
+image: ubuntu-simple
+
+stages:
+  - build
+
+variables:
+  FLATBUFFERS_DIR_2015: "C:/Program Files/Flatbuffers_2015"
+  FLATBUFFERS_DIR_2017: "C:/Program Files/Flatbuffers_2017"
+  ZEROMQ_DIR_2015: "C:/Program Files/ZeroMQ_2015"
+  ZEROMQ_DIR_2017: "C:/Program Files/ZeroMQ_2017"
+  FLATBUFFERS_2015: "-DFLATBUFFERS_FLATC_EXECUTABLE=$FLATBUFFERS_DIR_2015/bin/flatc.exe -DFLATBUFFERS_INCLUDE_DIR=$FLATBUFFERS_DIR_2015/include -DFLATBUFFERS_LIBS=$FLATBUFFERS_DIR_2015/lib/flatbuffers.lib"
+  FLATBUFFERS_2017: "-DFLATBUFFERS_FLATC_EXECUTABLE=$FLATBUFFERS_DIR_2017/bin/flatc.exe -DFLATBUFFERS_INCLUDE_DIR=$FLATBUFFERS_DIR_2017/include -DFLATBUFFERS_LIBS=$FLATBUFFERS_DIR_2017/lib/flatbuffers.lib"
+  ZEROMQ_2015: "-DZeroMQ_INCLUDE_DIR=$ZEROMQ_DIR_2015/include -DZeroMQ_LIBRARY=$ZEROMQ_DIR_2015/lib/libzmq-v140-mt-4_2_4.lib"
+  ZEROMQ_2017: "-DZeroMQ_INCLUDE_DIR=$ZEROMQ_DIR_2017/include -DZeroMQ_LIBRARY=$ZEROMQ_DIR_2017/lib/libzmq-v141-mt-4_2_4.lib"
+
+################# Building
+
+build_msvc15:
+  stage: build
+  tags:
+    - windows
+  script:
+    - IF NOT EXIST "simple_msvs15" mkdir "simple_msvs15"
+    - cd simple_msvs15
+    - cmake -DCMAKECONFIGURATION_TYPES=Release $FLATBUFFERS_2015 $ZEROMQ_2015 ..
+    - cmake --build .
+  cache:
+    key: msvs15_cache
+    paths:
+      - simple_msvs15/
+  artifacts:
+    paths:
+    - simple_msvs15/
+
+build_msvc17:
+  stage: build
+  tags:
+    - windows
+  script:
+    - IF NOT EXIST "simple_msvs17" mkdir "simple_msvs17"
+    - cd simple_msvs17
+    - cmake -DCMAKECONFIGURATION_TYPES=Release $FLATBUFFERS_2017 $ZEROMQ_2017 ..
+    - cmake --build .
+  cache:
+    key: msvs17_cache
+    paths:
+      - simple_msvs17/
+  artifacts:
+    paths:
+    - simple_msvs17/
+    
+build_clang:
+  stage: build
+  tags:
+    - linux
+    - clang
+  script:
+    - mkdir -p simple_clang
+    - cd simple_clang
+    - cmake .. -DCMAKE_CXX_COMPILER=clang++
+    - make
+  cache:
+    key: clang_cache
+    paths:
+      - simple_clang/
+  artifacts:
+    paths:
+    - simple_clang/
+
+build_gcc:
+  stage: build
+  tags:
+    - linux
+    - g++
+  script:
+    - mkdir -p simple_gcc
+    - cd simple_gcc
+    - cmake .. -DCMAKE_CXX_COMPILER=g++
+    - make
+  cache:
+    key: gcc_cache
+    paths:
+      - simple_gcc/
+  artifacts:
+    paths:
+    - simple_gcc/
+    
