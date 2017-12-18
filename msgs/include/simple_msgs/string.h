@@ -1,5 +1,7 @@
 #pragma once
 
+#include <ostream>
+
 #include "generic_message.h"
 #include "generated/string_generated.h"
 
