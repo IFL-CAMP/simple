@@ -18,12 +18,6 @@ public:
   {
   }
 
-  Image(const std::string& encoding)
-    : GenericMessage()
-    , encoding_(encoding)
-  {
-  }
-
   Image(const uint8_t* data);
 
   Image(const Image& other)
@@ -39,6 +33,7 @@ public:
     , depth_(other.depth_)
     , data_(other.data_)
     , data_size_(other.data_size_)
+    , num_channels_(other.num_channels_)
   {
   }
 
@@ -55,6 +50,7 @@ public:
     , depth_(std::move(other.depth_))
     , data_(std::move(other.data_))
     , data_size_(std::move(other.data_size_))
+    , num_channels_(other.num_channels_)
   {
   }
 
@@ -74,6 +70,7 @@ public:
       depth_ = other.depth_;
       data_ = other.data_;
       data_size_ = other.data_size_;
+      num_channels_ = other.num_channels_;
       modified_ = true;
     }
     return *this;
@@ -94,6 +91,7 @@ public:
       depth_ = std::move(other.depth_);
       data_ = std::move(other.data_);
       data_size_ = std::move(other.data_size_);
+      num_channels_ = std::move(other.num_channels_);
       modified_ = true;
     }
     return *this;
@@ -106,9 +104,10 @@ public:
     return ((header_ == rhs, header_) && (origin_ == rhs.origin_) && (encoding_ == rhs.encoding_) &&
             (resX_ == rhs.resX_) && (resY_ == rhs.resY_) && (resZ_ == rhs.resZ_) && (width_ == rhs.width_) &&
             (height_ == rhs.height_) && (depth_ == rhs.depth_) && (data_ == rhs.data_) &&
-            (data_size_ == rhs.data_size_));
+            (data_size_ == rhs.data_size_) && (num_channels_ == rhs.num_channels_));
   }
   bool operator!=(const Image& rhs) const { return !(*this == rhs); }
+
   /**
    * @brief getBufferData
    * @return
@@ -116,7 +115,7 @@ public:
   uint8_t* getBufferData() const
   {
     std::lock_guard<std::mutex> lock(mutex_);
-    if (modified_)
+    if (modified_ || header_.isModified() || origin_.isModified())
     {
       builder_->Clear();
       auto encoding_data = builder_->CreateString(encoding_);
@@ -126,7 +125,7 @@ public:
       auto elem = getDataUnionElem();
       ImageFbsBuilder tmp_builder(*builder_);
       // add the information
-      tmp_builder.add_enconding(encoding_data);
+      tmp_builder.add_encoding(encoding_data);
       tmp_builder.add_header(header_data);
       tmp_builder.add_origin(origin_data);
       tmp_builder.add_image(elem);
@@ -138,6 +137,7 @@ public:
       tmp_builder.add_height(height_);
       tmp_builder.add_width(width_);
       tmp_builder.add_depth(depth_);
+      tmp_builder.add_num_channels(num_channels_);
       FinishImageFbsBuffer(*builder_, tmp_builder.Finish());
       modified_ = false;
     }
@@ -148,9 +148,12 @@ public:
   std::array<int, 3> getImageDimensions() const { return std::array<int, 3>{{width_, height_, depth_}}; }
   const T* getImageData() const { return *data_; }
   int getImageSize() const { return data_size_; }
-  Header getHeader() const { return header_; }
-  Pose getImageOrigin() const { return origin_; }
+  const Header& getHeader() const { return header_; }
+  Header& getHeader() { return header_; }
+  const Pose& getImageOrigin() const { return origin_; }
+  Pose& getImageOrigin() { return origin_; }
   std::string getImageEncoding() const { return encoding_; }
+  int getNumChannels() const { return num_channels_; }
   void setImageEncoding(const std::string& encoding)
   {
     std::lock_guard<std::mutex> lock(mutex_);
@@ -190,11 +193,12 @@ public:
     modified_ = true;
   }
 
-  void setImageData(const T* data, int data_size)
+  void setImageData(const T* data, int data_size, int num_channels = 1)
   {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = std::make_shared<const T*>(data);
     data_size_ = data_size;
+	num_channels_ = num_channels;
     modified_ = true;
   }
 
@@ -219,8 +223,9 @@ private:
     height_ = imageData->height();
     depth_ = imageData->depth();
     // Set Encoding.
-    encoding_ = imageData->enconding()->c_str();
+    encoding_ = imageData->encoding()->c_str();
     data_size_ = imageData->image_size();
+	num_channels_ = imageData->num_channels();
     modified_ = true;
   }
 
@@ -235,8 +240,8 @@ private:
   int width_{0}, height_{0}, depth_{0};
 
   std::shared_ptr<const T*> data_{nullptr};
-  // const T* data_{nullptr};
   int data_size_{0};
+  int num_channels_{1};
 };
 
 }  // Namespace simple_msgs.

@@ -3,20 +3,20 @@
 
 namespace simple_msgs
 {
-Point::Point()
-  : GenericMessage()
-{
-}
+	Point::Point()
+		: GenericMessage()
+	{
+	}
 
-Point::Point(double value)
-  : GenericMessage()
-  , data_{value, value, value}
+	Point::Point(double value)
+		: GenericMessage()
+		, data_{{ value, value, value }}
 {
 }
 
 Point::Point(double x, double y, double z)
-  : GenericMessage()
-  , data_{x, y, z}
+: GenericMessage()
+, data_{ { x, y, z } }
 {
 }
 

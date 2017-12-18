@@ -14,8 +14,8 @@ double getTimeNow()
 
 int main()
 {
-  const int N_RUN = 25;
-  const int SLEEP_TIME = 2000;  //<  Milliseconds.
+  const int N_RUN = 30000;
+  const int SLEEP_TIME = 1;  //<  Milliseconds.
   int sequence_num = 1;
 
   auto beginning = getTimeNow();
@@ -39,7 +39,8 @@ int main()
     my_pose_stamped.getHeader().setSequenceNumber(sequence_num + 1);
     my_pose_stamped.getHeader().setTimestamp(getTimeNow() - beginning);
 
-    std::cout << "Message #" << (sequence_num) << " has been published." << std::endl;
+    std::cout << "Message timestamp#" << (my_pose_stamped.getHeader().getTimestamp()) << " has been published."
+              << std::endl;
     std::this_thread::sleep_for(milliseconds(SLEEP_TIME));
   }
 

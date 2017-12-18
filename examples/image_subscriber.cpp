@@ -10,8 +10,7 @@ void example_callback(const simple_msgs::Image<uint8_t>& i)
 {
   uint8_t* img = const_cast<uint8_t*>(i.getImageData());
   auto dimensions = i.getImageDimensions();
-
-  cv::Mat received_img(dimensions[0], dimensions[1], CV_8UC1, img);
+  cv::Mat received_img(dimensions[0], dimensions[1], CV_8UC3, img);
   cv::imshow(window_name, received_img);
 }
 

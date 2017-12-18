@@ -54,7 +54,7 @@ public:
    */
   static const char* getTopic() { return PoseStampedFbsIdentifier(); }
 private:
-  Pose pose_{};
-  Header header_{};
+  Pose pose_;
+  Header header_;
 };
 }  // Namespace simple_msgs.

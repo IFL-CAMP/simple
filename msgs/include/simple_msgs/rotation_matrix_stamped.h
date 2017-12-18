@@ -66,7 +66,7 @@ public:
    */
   static const char* getTopic() { return RotationMatrixStampedFbsIdentifier(); }
 private:
-  RotationMatrix rotation_matrix_{};
-  Header header_{};
+  RotationMatrix rotation_matrix_;
+  Header header_;
 };
 }  // Namespace simple_msgs.
