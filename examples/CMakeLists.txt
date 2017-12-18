@@ -7,7 +7,7 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 
 set(LIBRARIES simple ${OpenCV_LIBS})
 
-add_definitions( -DDATA_DIR="${PROJECT_SOURCE_DIR}/data/"  )
+add_definitions(-DDATA_DIR="${PROJECT_SOURCE_DIR}/data/")
 
 set(pub_example "pub_example")
 set(sub_example "sub_example")

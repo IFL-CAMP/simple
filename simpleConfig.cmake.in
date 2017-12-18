@@ -16,7 +16,6 @@ include("${SIMPLE_CMAKE_DIR}/simpleTargets.cmake")
 # These are IMPORTED targets created by simpleTargets.cmake
 get_target_property(SIMPLE_LIBRARIES simple INTERFACE_LINK_LIBRARIES)
 
-
 if (NOT ${SIMPLE_CMAKE_DIR} STREQUAL "")
 	get_filename_component(SIMPLE_PATH ${CMAKE_CURRENT_LIST_DIR} DIRECTORY)
 	if(NOT WIN32)
