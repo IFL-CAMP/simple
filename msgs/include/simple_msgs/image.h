@@ -115,7 +115,7 @@ public:
   uint8_t* getBufferData() const
   {
     std::lock_guard<std::mutex> lock(mutex_);
-    if (modified_)
+    if (modified_ || header_.isModified() || origin_.isModified())
     {
       builder_->Clear();
       auto encoding_data = builder_->CreateString(encoding_);
@@ -148,8 +148,10 @@ public:
   std::array<int, 3> getImageDimensions() const { return std::array<int, 3>{{width_, height_, depth_}}; }
   const T* getImageData() const { return *data_; }
   int getImageSize() const { return data_size_; }
-  Header getHeader() const { return header_; }
-  Pose getImageOrigin() const { return origin_; }
+  const Header& getHeader() const { return header_; }
+  Header& getHeader() { return header_; }
+  const Pose& getImageOrigin() const { return origin_; }
+  Pose& getImageOrigin() { return origin_; }
   std::string getImageEncoding() const { return encoding_; }
   int getNumChannels() const { return num_channels_; }
   void setImageEncoding(const std::string& encoding)
