@@ -4,11 +4,6 @@ project(simple_msgs)
 # Add extra CMake modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/../cmake/Modules)
 
-# Allows all symbols generated from the dynamic library to be exported
-if (WIN32)
-  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
-endif(WIN32)
-
 # Find FlatBuffers
 find_package(FlatBuffers REQUIRED)
 
@@ -30,7 +25,6 @@ set(SIMPLE_MSGS_SRCS
   src/pose_stamped.cpp
   src/rotation_matrix.cpp
   src/rotation_matrix_stamped.cpp
-
   )
 
 # Generate the Flatbuffers headers - this is defined in FindFlatBuffers.cmake
@@ -51,7 +45,7 @@ endif()
 #install the simple_msgs library in the desired folder
 install(TARGETS ${PROJECT_NAME} 
     EXPORT "simpleTargets"
-	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+	  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 	

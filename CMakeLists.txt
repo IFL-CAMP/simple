@@ -8,7 +8,6 @@ include(GNUInstallDirs)
 # Here all the compiler options for all projects created are set
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-include(GNUInstallDirs)
 
 # Allows all symbols generated from the dynamic library to be exported
 if (WIN32)
@@ -34,15 +33,13 @@ if (WIN32)
   set(ZeroMQ_INCLUDE_DIR "" CACHE PATH "Include directory for ZeroMQ")
   set(ZeroMQ_LIBRARY "" CACHE FILEPATH "The ZeroMQ library file")
   if (ZeroMQ_INCLUDE_DIR AND ZeroMQ_LIBRARY)
-	set(ZeroMQ_FOUND TRUE)
+    set(ZeroMQ_FOUND TRUE)
+  else()
+    message(FATAL_ERROR "Please point to the correct location of the ZeroMQ library and its include files.")
   endif()
 else()
   find_package(ZeroMQ REQUIRED)
 endif(WIN32)
-
-if (NOT ZeroMQ_FOUND)
-  message(FATAL_ERROR "Please point to the correct location of the ZeroMQ library and its include files.")
-endif()
 
 ###### FILES AND FOLDERS NEEDED FOR COMPILATION
 
@@ -51,7 +48,6 @@ include_directories(include msgs/include ${ZeroMQ_INCLUDE_DIR} ${FLATBUFFERS_INC
 file(GLOB SIMPLE_HEADERS "include/simple/*.h" "include/simple/*.hpp")
 
 ###### TARGETS
-add_library(zmq SHARED IMPORTED)
 if (WIN32)
 	get_filename_component(ZMQ_LIBRARY_NAME_WE ${ZeroMQ_LIBRARY} NAME_WE)
 	get_filename_component(ZMQ_LIBRARY_PATH ${ZeroMQ_LIBRARY} DIRECTORY)
@@ -92,14 +88,13 @@ install(TARGETS ${PROJECT_NAME}
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 # Install ZeroMQ includes
-install(FILES 	"${ZeroMQ_INCLUDE_DIR}/zmq.h" 
+install(FILES "${ZeroMQ_INCLUDE_DIR}/zmq.h"
 				"${ZeroMQ_INCLUDE_DIR}/zmq_utils.h" 
 				DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 # Install Flatbuffers includes
-install(
-FILES 	${FLATBUFFERS_INCLUDE_DIR}/flatbuffers/flatbuffers.h 
-		${FLATBUFFERS_INCLUDE_DIR}/flatbuffers/base.h 
-		${FLATBUFFERS_INCLUDE_DIR}/flatbuffers/stl_emulation.h 
+install(FILES "${FLATBUFFERS_INCLUDE_DIR}/flatbuffers/flatbuffers.h"
+    "${FLATBUFFERS_INCLUDE_DIR}/flatbuffers/base.h"
+    "${FLATBUFFERS_INCLUDE_DIR}/flatbuffers/stl_emulation.h"
 		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/flatbuffers/)
 
 # Install ZeroMQ lib
