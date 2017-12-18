@@ -105,9 +105,9 @@ FILES 	${FLATBUFFERS_INCLUDE_DIR}/flatbuffers/flatbuffers.h
 # Install ZeroMQ lib
 if(WIN32)
 	find_file(ZMQ_DYNAMIC_LIBRARY "${ZMQ_LIBRARY_NAME_WE}.dll"
-			HINTS "${ZMQ_PATH}/bin" "${ZMQ_PATH}/lib")
+			HINTS "${ZMQ_PATH}/bin" "${ZMQ_PATH}/lib" "${ZMQ_LIBRARY_PATH}")
 	find_file(ZMQ_LIBRARY "${ZMQ_LIBRARY_NAME_WE}.lib"
-			HINTS "${ZMQ_PATH}/bin" "${ZMQ_PATH}/lib")
+			HINTS "${ZMQ_PATH}/bin" "${ZMQ_PATH}/lib" "${ZMQ_LIBRARY_PATH}")
 	install(FILES ${ZMQ_DYNAMIC_LIBRARY} DESTINATION ${CMAKE_INSTALL_BINDIR})  
 	install(FILES ${ZMQ_LIBRARY} DESTINATION ${CMAKE_INSTALL_LIBDIR})  
 endif(WIN32)
