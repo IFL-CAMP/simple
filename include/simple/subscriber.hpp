@@ -4,7 +4,7 @@
 #include <string>
 #include <thread>
 #include <memory>
-#include "contextCloser.hpp"
+#include "context_deleter.hpp"
 #include "simple/generic_socket.hpp"
 
 namespace simple

@@ -30,8 +30,8 @@ public:
   RotationMatrix& operator=(const std::array<double, 9>&);
   RotationMatrix& operator=(std::array<double, 9>&&);
 
-  bool operator==(const RotationMatrix&) const;
-  bool operator!=(const RotationMatrix&) const;
+  inline bool operator==(const RotationMatrix& rhs) const { return data_ == rhs.data_; }
+  inline bool operator!=(const RotationMatrix& rhs) const { return !(*this == rhs); }
 
   friend std::ostream& operator<<(std::ostream&, const RotationMatrix&);
 
@@ -44,7 +44,7 @@ public:
   /**
    * @brief Returns the rotation matrix as a linearized array.
    */
-  std::array<double, 9> toVector() const { return data_; }
+  inline std::array<double, 9> toVector() const { return data_; }
   /**
    * @brief Returns the matrix transpose
    */

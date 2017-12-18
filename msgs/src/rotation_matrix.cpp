@@ -10,14 +10,14 @@ RotationMatrix::RotationMatrix()
 
 RotationMatrix::RotationMatrix(double value)
   : GenericMessage()
-  , data_{value, value, value, value, value, value, value, value, value}
+  , data_{{value, value, value, value, value, value, value, value, value}}
 {
 }
 
 RotationMatrix::RotationMatrix(double r11, double r12, double r13, double r21, double r22, double r23, double r31,
                                double r32, double r33)
   : GenericMessage()
-  , data_{r11, r12, r13, r21, r22, r23, r31, r32, r33}
+  , data_{{r11, r12, r13, r21, r22, r23, r31, r32, r33}}
 {
 }
 
@@ -37,7 +37,7 @@ RotationMatrix::RotationMatrix(const uint8_t* data)
 {
   auto r = GetRotationMatrixFbs(data);
   data_ =
-      std::array<double, 9>{r->r11(), r->r12(), r->r13(), r->r21(), r->r22(), r->r23(), r->r31(), r->r32(), r->r33()};
+	  std::array<double, 9>{{ r->r11(), r->r12(), r->r13(), r->r21(), r->r22(), r->r23(), r->r31(), r->r32(), r->r33() }};
   modified_ = true;
 }
 
@@ -98,16 +98,6 @@ RotationMatrix& RotationMatrix::operator=(const uint8_t* data)
   modified_ = true;
 
   return *this;
-}
-
-bool RotationMatrix::operator==(const RotationMatrix& rhs) const
-{
-  return data_ == rhs.data_;
-}
-
-bool RotationMatrix::operator!=(const RotationMatrix& rhs) const
-{
-  return !(*this == rhs);
 }
 
 uint8_t* RotationMatrix::getBufferData() const
@@ -185,4 +175,4 @@ std::ostream& operator<<(std::ostream& out, const RotationMatrix& q)
 }
 
 const RotationMatrix RotationMatrix::Identity(RotationMatrix(1, 0, 0, 0, 1, 0, 0, 0, 1));
-}
+}  // namespace simple_msgs

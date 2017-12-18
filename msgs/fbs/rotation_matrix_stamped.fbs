@@ -1,0 +1,11 @@
+// Schema for S.I.M.P.L.E. RotationMatrixStamped
+
+namespace simple_msgs;
+
+table RotationMatrixStampedFbs {
+	rotation_matrix:[ubyte];
+	header:[ubyte];
+}
+
+root_type RotationMatrixStampedFbs;
+file_identifier "RMST";

@@ -3,20 +3,20 @@
 
 namespace simple_msgs
 {
-Point::Point()
-  : GenericMessage()
-{
-}
+	Point::Point()
+		: GenericMessage()
+	{
+	}
 
-Point::Point(double value)
-  : GenericMessage()
-  , data_{value, value, value}
+	Point::Point(double value)
+		: GenericMessage()
+		, data_{{ value, value, value }}
 {
 }
 
 Point::Point(double x, double y, double z)
-  : GenericMessage()
-  , data_{x, y, z}
+: GenericMessage()
+, data_{ { x, y, z } }
 {
 }
 
@@ -100,16 +100,6 @@ Point& Point::operator=(const uint8_t* data)
   modified_ = true;
 
   return *this;
-}
-
-bool Point::operator==(const Point& rhs) const
-{
-  return data_ == rhs.data_;
-}
-
-bool Point::operator!=(const Point& rhs) const
-{
-  return !(*this == rhs);
 }
 
 Point& Point::operator+=(const Point& rhs)

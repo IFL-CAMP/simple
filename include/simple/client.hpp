@@ -3,7 +3,7 @@
 #include <zmq.h>
 #include <string>
 #include <memory>
-#include "contextCloser.hpp"
+#include "context_deleter.hpp"
 #include "simple/generic_socket.hpp"
 
 namespace simple
@@ -21,7 +21,7 @@ public:
     GenericSocket<T>::connect(address);
   }
 
-  ~Client() { }
+  ~Client() {}
   /**
    * @brief Sends the request to a server and waits for an answer.
    * @param msg: SIMPLE class wrapper for Flatbuffer messages.
@@ -34,7 +34,7 @@ public:
   }
 
 private:
-  bool request(const uint8_t* data, const int data_size, T& msg)
+  bool request(uint8_t* data, const int data_size, T& msg)
   {
     bool success{false};
 

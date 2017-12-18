@@ -52,14 +52,15 @@ Bool& Bool::operator=(Bool&& other)
   return *this;
 }
 
-bool Bool::operator==(const Bool& rhs) const
-{
-  return (data_ == rhs.data_);
-}
 
-bool Bool::operator!=(const Bool& rhs) const
+Bool& Bool::operator=(const uint8_t* data)
 {
-  return !(*this == rhs);
+	std::lock_guard<std::mutex> lock(mutex_);
+	auto b = GetBoolFbs(data);
+	data_ = b->data();
+	modified_ = true;
+
+	return *this;
 }
 
 uint8_t* Bool::getBufferData() const

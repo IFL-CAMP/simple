@@ -58,10 +58,11 @@ String& String::operator=(const String& other)
   return *this;
 }
 
-String& String::operator=(String&& other) noexcept
+String& String::operator=(String&& other)
 {
   if (this != std::addressof(other))
   {
+    std::lock_guard<std::mutex> lock(mutex_);
     data_ = std::move(other.data_);
     modified_ = true;
     other.data_.clear();
@@ -69,14 +70,14 @@ String& String::operator=(String&& other) noexcept
   return *this;
 }
 
-bool String::operator==(const String& rhs) const
+String& String::operator=(const uint8_t* data)
 {
-  return (data_ == rhs.data_);
-}
+  std::lock_guard<std::mutex> lock(mutex_);
+  auto s = GetStringFbs(data);
+  data_ = s->data()->c_str();
+  modified_ = true;
 
-bool String::operator!=(const String& rhs) const
-{
-  return !(*this == rhs);
+  return *this;
 }
 
 String& String::operator+=(const String& rhs)
@@ -108,16 +109,9 @@ uint8_t* String::getBufferData() const
   return builder_->GetBufferPointer();
 }
 
-void String::set(const std::string& data)
-{
-  std::lock_guard<std::mutex> lock(mutex_);
-  data_ = data;
-  modified_ = true;
-}
-
 std::ostream& operator<<(std::ostream& out, const String& s)
 {
   out << s.data_;
   return out;
 }
-}
+}  // namespace simple_msgs

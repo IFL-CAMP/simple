@@ -1,12 +1,13 @@
 cmake_minimum_required(VERSION 3.5)
 project(simple)
 
+include(GNUInstallDirs)
+
 ###### GLOBAL PARAMETERS AND SETTINGS
 
 # Here all the compiler options for all projects created are set
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-include(GNUInstallDirs)
 
 # Allows all symbols generated from the dynamic library to be exported
 if (WIN32)
@@ -16,7 +17,7 @@ endif(WIN32)
 ###### OPTIONS
 
 option(BUILD_EXAMPLES "Build SIMPLE Examples" FALSE)
-option(BUILD_TEST "Build SIMPLE Test" FALSE)
+option(BUILD_TESTS "Build SIMPLE Test" FALSE)
 
 ###### BUILD SIMPLE MSGS
 
@@ -29,18 +30,16 @@ find_package(Threads)
 
 # Find ZMQ
 if (WIN32)
-  set(ZeroMQ_INCLUDE_DIR "" CACHE FILEPATH "Include directory for ZeroMQ")
+  set(ZeroMQ_INCLUDE_DIR "" CACHE PATH "Include directory for ZeroMQ")
   set(ZeroMQ_LIBRARY "" CACHE FILEPATH "The ZeroMQ library file")
   if (ZeroMQ_INCLUDE_DIR AND ZeroMQ_LIBRARY)
-	set(ZeroMQ_FOUND TRUE)
+    set(ZeroMQ_FOUND TRUE)
+  else()
+    message(FATAL_ERROR "Please point to the correct location of the ZeroMQ library and its include files.")
   endif()
 else()
   find_package(ZeroMQ REQUIRED)
 endif(WIN32)
-
-if (NOT ZeroMQ_FOUND)
-  message(FATAL_ERROR "Please point to the correct location of the ZeroMQ library and its include files.")
-endif()
 
 ###### FILES AND FOLDERS NEEDED FOR COMPILATION
 
@@ -49,31 +48,68 @@ include_directories(include msgs/include ${ZeroMQ_INCLUDE_DIR} ${FLATBUFFERS_INC
 file(GLOB SIMPLE_HEADERS "include/simple/*.h" "include/simple/*.hpp")
 
 ###### TARGETS
+if (WIN32)
+	get_filename_component(ZMQ_LIBRARY_NAME_WE ${ZeroMQ_LIBRARY} NAME_WE)
+	get_filename_component(ZMQ_LIBRARY_PATH ${ZeroMQ_LIBRARY} DIRECTORY)
+	get_filename_component(ZMQ_PATH ${ZMQ_LIBRARY_PATH} DIRECTORY)
+	set(ZMQ_INSTALL_NAME ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/${ZMQ_LIBRARY_NAME_WE}.lib)
+else()
+	set(ZMQ_INSTALL_NAME ${ZeroMQ_LIBRARY})
+endif()
 
-add_library(zmq STATIC IMPORTED)
-set_target_properties(zmq PROPERTIES IMPORTED_LOCATION ${ZeroMQ_LIBRARY})
+get_target_property(SIMPLE_MSGS_NAME simple_msgs OUTPUT_NAME)
+if (WIN32)
+	set(SIMPLE_MSGS_INSTALL_NAME ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/${SIMPLE_MSGS_NAME}.lib)
+else()
+	set(SIMPLE_MSGS_INSTALL_NAME ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/lib${SIMPLE_MSGS_NAME}.so)
+endif()
 
 add_library(${PROJECT_NAME} INTERFACE)
-target_sources(${PROJECT_NAME} INTERFACE ${SIMPLE_HEADERS})
-target_include_directories(${PROJECT_NAME} INTERFACE include/)
-target_link_libraries(${PROJECT_NAME} INTERFACE zmq ${ZeroMQ_LIBRARY} ${CMAKE_THREAD_LIBS_INIT} simple_msgs)
-target_compile_definitions(${PROJECT_NAME} INTERFACE SIMPLE_LIBRARY_EXPORT)
+
+target_include_directories(${PROJECT_NAME} INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
+
+target_link_libraries(${PROJECT_NAME} INTERFACE 
+$<BUILD_INTERFACE:${ZeroMQ_LIBRARY} ${CMAKE_THREAD_LIBS_INIT} simple_msgs>
+$<INSTALL_INTERFACE:${ZMQ_INSTALL_NAME} ${CMAKE_THREAD_LIBS_INIT} ${SIMPLE_MSGS_INSTALL_NAME}>
+)
 
 ###### INSTALLATION
 
 # Install SIMPLE in the desired folder
 install(TARGETS ${PROJECT_NAME}
-  ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  EXPORT "${PROJECT_NAME}Targets"
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+# Install SIMPLE includes
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-	
+
+# Install ZeroMQ includes
+install(FILES "${ZeroMQ_INCLUDE_DIR}/zmq.h"
+				"${ZeroMQ_INCLUDE_DIR}/zmq_utils.h" 
+				DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+# Install Flatbuffers includes
+install(FILES "${FLATBUFFERS_INCLUDE_DIR}/flatbuffers/flatbuffers.h"
+    "${FLATBUFFERS_INCLUDE_DIR}/flatbuffers/base.h"
+    "${FLATBUFFERS_INCLUDE_DIR}/flatbuffers/stl_emulation.h"
+		DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/flatbuffers/)
+
+# Install ZeroMQ lib
 if(WIN32)
-  get_filename_component(ZMQ_LIBRARY_NAME_WO_EXT ${ZeroMQ_LIBRARY} NAME_WE)
-  get_filename_component(ZMQ_LIBRARY_PATH ${ZeroMQ_LIBRARY} DIRECTORY)
-  set(ZMQ_DYNAMIC_LIBRARY "${ZMQ_LIBRARY_PATH}/${ZMQ_LIBRARY_NAME_WO_EXT}.dll")
-  install(FILES ${ZMQ_DYNAMIC_LIBRARY} DESTINATION ${CMAKE_INSTALL_BINDIR})
+	find_file(ZMQ_DYNAMIC_LIBRARY "${ZMQ_LIBRARY_NAME_WE}.dll"
+			HINTS "${ZMQ_PATH}/bin" "${ZMQ_PATH}/lib" "${ZMQ_LIBRARY_PATH}")
+	find_file(ZMQ_LIBRARY "${ZMQ_LIBRARY_NAME_WE}.lib"
+			HINTS "${ZMQ_PATH}/bin" "${ZMQ_PATH}/lib" "${ZMQ_LIBRARY_PATH}")
+	install(FILES ${ZMQ_DYNAMIC_LIBRARY} DESTINATION ${CMAKE_INSTALL_BINDIR})  
+	install(FILES ${ZMQ_LIBRARY} DESTINATION ${CMAKE_INSTALL_LIBDIR})  
 endif(WIN32)
+
+mark_as_advanced(ZMQ_LIBRARY ZMQ_DYNAMIC_LIBRARY)
+
+include(simpleInstall.cmake.in)
 
 ###### EXAMPLES
 
@@ -83,6 +119,6 @@ endif()
 
 ###### TESTS
 
-if (${BUILD_TEST})
+if (${BUILD_TESTS})
   add_subdirectory(tests)
 endif()

@@ -4,11 +4,6 @@ project(simple_msgs)
 # Add extra CMake modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/../cmake/Modules)
 
-# Allows all symbols generated from the dynamic library to be exported
-if (WIN32)
-  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
-endif(WIN32)
-
 # Find FlatBuffers
 find_package(FlatBuffers REQUIRED)
 
@@ -18,27 +13,40 @@ file(GLOB_RECURSE SIMPLE_MSGS_HEADERS "*.h" "*.hpp")
 
 set(SIMPLE_MSGS_SRCS
   ${SIMPLE_MSGS_HEADERS}
+  src/bool.cpp
+  src/string.cpp
   src/header.cpp
   src/image.cpp
-  src/pose.cpp
-  src/quaternion.cpp
   src/point.cpp
+  src/point_stamped.cpp
+  src/quaternion.cpp
+  src/quaternion_stamped.cpp
+  src/pose.cpp
+  src/pose_stamped.cpp
   src/rotation_matrix.cpp
-  src/bool.cpp
-  src/numeric_type.cpp
-  src/string.cpp
+  src/rotation_matrix_stamped.cpp
   )
 
 # Generate the Flatbuffers headers - this is defined in FindFlatBuffers.cmake
 flatbuffers_generate_c_headers(simple_msgs ${PROJECT_SOURCE_DIR}/fbs ${PROJECT_SOURCE_DIR}/include/simple_msgs/generated)
 
 add_library(${PROJECT_NAME} SHARED ${SIMPLE_MSGS_SRCS})
-target_compile_definitions(${PROJECT_NAME} PRIVATE SIMPLE_LIBRARY_EXPORT) # TODO is this necessary?
+if (WIN32)
+set_target_properties (${PROJECT_NAME} PROPERTIES
+    COMPILE_DEFINITIONS "DLL_EXPORT"
+    OUTPUT_NAME "libsimple_msgs")
+else()
+set_target_properties (${PROJECT_NAME} PROPERTIES
+    OUTPUT_NAME "simple_msgs")
+endif()
 
 ###### INSTALLATION
 
 #install the simple_msgs library in the desired folder
 install(TARGETS ${PROJECT_NAME} 
+    EXPORT "simpleTargets"
+	  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+	
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})

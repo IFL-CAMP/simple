@@ -4,14 +4,14 @@
 namespace simple_msgs
 {
 Quaternion::Quaternion()
-  : GenericMessage()
-  , data_{0, 0, 0, 1}
+: GenericMessage()
+, data_{ { 0, 0, 0, 1 } }
 {
 }
 
 Quaternion::Quaternion(double x, double y, double z, double w)
-  : GenericMessage()
-  , data_{x, y, z, w}
+: GenericMessage()
+, data_{ { x, y, z, w } }
 {
 }
 
@@ -97,16 +97,6 @@ Quaternion& Quaternion::operator=(const uint8_t* data)
   modified_ = true;
 
   return *this;
-}
-
-bool Quaternion::operator==(const Quaternion& rhs) const
-{
-  return data_ == rhs.data_;
-}
-
-bool Quaternion::operator!=(const Quaternion& rhs) const
-{
-  return !(*this == rhs);
 }
 
 uint8_t* Quaternion::getBufferData() const

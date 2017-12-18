@@ -40,22 +40,18 @@ protected:
     }
   }
 
-  bool sendMsg(const uint8_t* msg, int msg_size, const std::string& custom_error = "[SIMPLE Error] - ")
+  static void freeMsg(void* data, void* hint) {}
+  bool sendMsg(uint8_t* msg, int msg_size, const std::string& custom_error = "[SIMPLE Error] - ")
   {
     zmq_msg_t topic;
-    zmq_msg_init_size(&topic, topic_size_);
-    memcpy(zmq_msg_data(&topic), topic_, topic_size_);
+    zmq_msg_init_data(&topic, const_cast<void*>(static_cast<const void*>(topic_)), topic_size_, freeMsg, NULL);
 
     zmq_msg_t message;
-    zmq_msg_init_size(&message, msg_size);
-    memcpy(zmq_msg_data(&message), msg, msg_size);
+    zmq_msg_init_data(&message, msg, msg_size, freeMsg, NULL);
 
     // Send the topic first and add the rest of the message after it.
     auto topic_sent = zmq_sendmsg(socket_, &topic, ZMQ_SNDMORE);
     auto message_sent = zmq_sendmsg(socket_, &message, 0);
-
-    zmq_msg_close(&topic);
-    zmq_msg_close(&message);
 
     if (topic_sent == -1 || message_sent == -1)
     {
