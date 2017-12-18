@@ -62,7 +62,7 @@ public:
    */
   static const char* getTopic() { return QuaternionStampedFbsIdentifier(); }
 private:
-  Quaternion quaternion_{};
-  Header header_{};
+  Quaternion quaternion_;
+  Header header_;
 };
 }  // Namespace simple_msgs.

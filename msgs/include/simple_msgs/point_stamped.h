@@ -58,7 +58,7 @@ public:
    */
   static const char* getTopic() { return PointStampedFbsIdentifier(); }
 private:
-  Point point_{};
-  Header header_{};
+  Point point_;
+  Header header_;
 };
 }  // Namespace simple_msgs.
