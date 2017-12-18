@@ -24,7 +24,7 @@ std::vector<std::pair<cv::Mat, int>> readImage()
   return_vector.push_back(std::make_pair(lena, lena.rows * lena.cols * lena.channels()));
   return_vector.push_back(std::make_pair(barbara, barbara.rows * barbara.cols * barbara.channels()));
   return_vector.push_back(std::make_pair(baboon, baboon.rows * baboon.cols * baboon.channels()));
-  return_vector.push_back(std::make_pair(lena_color, lena_color.rows * lena_color.cols*lena_color.channels()));
+  return_vector.push_back(std::make_pair(lena_color, lena_color.rows * lena_color.cols * lena_color.channels()));
 
   return return_vector;
 }
@@ -32,7 +32,7 @@ std::vector<std::pair<cv::Mat, int>> readImage()
 int main()
 {
   const int N_RUN = 3000;
-  const int SLEEP_TIME = 80;  //<  Milliseconds.
+  const int SLEEP_TIME = 250;  //<  Milliseconds.
 
   auto images = readImage();
 
@@ -48,11 +48,11 @@ int main()
   {
     auto image = images[i % 4];
     img.setImageDimensions(image.first.rows, image.first.cols, 1);
-    img.setImageData(image.first.data, image.second,3);
+    img.setImageData(image.first.data, image.second, 3);
     pub.publish(img);
     std::cout << "Message #" << i + 1 << " has been published. " << std::endl;
     std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_TIME));
-	img.getHeader().setSequenceNumber(i + 2);
+    img.getHeader().setSequenceNumber(i + 2);
   }
 
   std::cout << "Publishing ended." << std::endl;
