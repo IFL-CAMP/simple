@@ -84,7 +84,7 @@ protected:
           {
             msg = static_cast<uint8_t*>(zmq_msg_data(&message));  //< Build a T object from the server reply.
             success = true;
-            zmq_msg_close(&message);
+            //zmq_msg_close(&message);
           }
           else
           {
