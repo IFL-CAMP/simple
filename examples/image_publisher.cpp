@@ -22,9 +22,9 @@ std::vector<std::pair<cv::Mat, int>> readImage()
   cv::Mat lena_color = cv::imread(lena_color_path, CV_LOAD_IMAGE_COLOR);
 
   std::vector<std::pair<cv::Mat, int>> return_vector;
-  //return_vector.push_back(std::make_pair(lena, lena.rows * lena.cols));
-  //return_vector.push_back(std::make_pair(barbara, barbara.rows * barbara.cols));
-  //return_vector.push_back(std::make_pair(baboon, baboon.rows * baboon.cols));
+  return_vector.push_back(std::make_pair(lena, lena.rows * lena.cols * lena.channels()));
+  return_vector.push_back(std::make_pair(barbara, barbara.rows * barbara.cols * barbara.channels()));
+  return_vector.push_back(std::make_pair(baboon, baboon.rows * baboon.cols * baboon.channels()));
   return_vector.push_back(std::make_pair(lena_color, lena_color.rows * lena_color.cols*lena_color.channels()));
 
   return return_vector;
@@ -47,7 +47,7 @@ int main()
 
   for (int i = 0; i < N_RUN; i++)
   {
-    auto image = images[i % 1];
+    auto image = images[i % 4];
     img.setImageDimensions(image.first.rows, image.first.cols, 1);
     img.setImageData(image.first.data, image.second,3);
     pub.publish(img);
