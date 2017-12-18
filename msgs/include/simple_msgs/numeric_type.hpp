@@ -39,7 +39,7 @@ public:
   NumericType& operator=(const NumericType& rhs)
   {
     std::lock_guard<std::mutex> lock(mutex_);
-    std::swap(data_, rhs.data_);
+    data_ = rhs.data_;
     modified_ = true;
     return *this;
   }

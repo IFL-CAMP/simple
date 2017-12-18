@@ -17,9 +17,10 @@ public:
 
   Bool& operator=(const Bool&);
   Bool& operator=(Bool&&);
+  Bool& operator=(const uint8_t* data);
 
-  bool operator==(const Bool&) const;
-  bool operator!=(const Bool&) const;
+  inline bool operator==(const Bool& rhs) const { return (data_ == rhs.data_); }
+  inline bool operator!=(const Bool& rhs) const { return !(*this == rhs); }
 
   friend std::ostream& operator<<(std::ostream& out, const Bool& b);
 

@@ -12,9 +12,9 @@
 #include "simple_msgs/rotation_matrix.h"
 #include "simple_msgs/header.h"
 #include "simple/subscriber.hpp"
-#include "simple_msgs\double.h"
-#include "simple_msgs\float.h"
-#include "simple_msgs\int.h"
+#include "simple_msgs/double.h"
+#include "simple_msgs/float.h"
+#include "simple_msgs/int.h"
 #include <time.h>
 #include <stdlib.h>
 
@@ -72,11 +72,11 @@ int num_receives_float = 0;
 
 simple_msgs::Header createRandomHeader()
 {
-	int x = rand() % 100;
-	std::string y("Header string:");
-	y.append(std::to_string(rand() % 100));
-	double z = static_cast<double>(rand()) / RAND_MAX;
-	return simple_msgs::Header(x, y, z);
+  int x = rand() % 100;
+  std::string y("Header string:");
+  y.append(std::to_string(rand() % 100));
+  double z = static_cast<double>(rand()) / RAND_MAX;
+  return simple_msgs::Header(x, y, z);
 }
 
 simple_msgs::Point createRandomPoint()
@@ -110,10 +110,11 @@ simple_msgs::RotationMatrix createRandomRotationMatrix()
   return simple_msgs::RotationMatrix(x, y, z, w, a, b, c, d, e);
 }
 
-simple_msgs::Pose createRandomPose() {
-	simple_msgs::Point p = createRandomPoint();
-	simple_msgs::Quaternion q = createRandomQuaternion();
-	return simple_msgs::Pose(p, q);
+simple_msgs::Pose createRandomPose()
+{
+  simple_msgs::Point p = createRandomPoint();
+  simple_msgs::Quaternion q = createRandomQuaternion();
+  return simple_msgs::Pose(p, q);
 }
 
 simple_msgs::NumericType<int> createRandomInt()
@@ -161,100 +162,100 @@ void callbackFunctionPoint(const simple_msgs::Point& p)
 // define callback function
 void callbackFunctionHeader(const simple_msgs::Header& h)
 {
-	received_header = h;
-	num_receives_header++;
-	if (!running_header)
-	{
-		running_header = true;
-	}
+  received_header = h;
+  num_receives_header++;
+  if (!running_header)
+  {
+    running_header = true;
+  }
 }
 
 // define callback function
 void callbackFunctionPose(const simple_msgs::Pose& p)
 {
-	received_pose = p;
-	num_receives_pose++;
-	if (!running_pose)
-	{
-		running_pose = true;
-	}
+  received_pose = p;
+  num_receives_pose++;
+  if (!running_pose)
+  {
+    running_pose = true;
+  }
 }
 
 // define callback function
 void callbackFunctionQuaternion(const simple_msgs::Quaternion& q)
 {
-	received_quaternion = q;
-	num_receives_quaternion++;
-	if (!running_quaternion)
-	{
-		running_quaternion = true;
-	}
+  received_quaternion = q;
+  num_receives_quaternion++;
+  if (!running_quaternion)
+  {
+    running_quaternion = true;
+  }
 }
 
 // define callback function
 void callbackFunctionString(const simple_msgs::String& s)
 {
-	received_string = s;
-	num_receives_string++;
-	if (!running_string)
-	{
-		running_string = true;
-	}
+  received_string = s;
+  num_receives_string++;
+  if (!running_string)
+  {
+    running_string = true;
+  }
 }
 
 // define callback function
 void callbackFunctionRotationMatrix(const simple_msgs::RotationMatrix& r)
 {
-	received_rotation_matrix = r;
-	num_receives_rotation_matrix++;
-	if (!running_rotation_matrix)
-	{
-		running_rotation_matrix = true;
-	}
+  received_rotation_matrix = r;
+  num_receives_rotation_matrix++;
+  if (!running_rotation_matrix)
+  {
+    running_rotation_matrix = true;
+  }
 }
 
 // define callback function
 void callbackFunctionBool(const simple_msgs::Bool& b)
 {
-	received_bool = b;
-	num_receives_bool++;
-	if (!running_bool)
-	{
-		running_bool = true;
-	}
+  received_bool = b;
+  num_receives_bool++;
+  if (!running_bool)
+  {
+    running_bool = true;
+  }
 }
 
 // define callback function
 void callbackFunctionInt(const simple_msgs::NumericType<int>& i)
 {
-	received_int = i;
-	num_receives_int++;
-	if (!running_int)
-	{
-		running_int = true;
-	}
+  received_int = i;
+  num_receives_int++;
+  if (!running_int)
+  {
+    running_int = true;
+  }
 }
 
 // define callback function
 void callbackFunctionDouble(const simple_msgs::NumericType<double>& d)
 {
-	received_double = d;
-	num_receives_double++;
-	if (!running_double)
-	{
-		running_double = true;
-	}
+  received_double = d;
+  num_receives_double++;
+  if (!running_double)
+  {
+    running_double = true;
+  }
 }
 
 // define callback function
 void callbackFunctionFloat(const simple_msgs::NumericType<float>& f)
 {
-	received_float = f;
-	num_receives_float++;
-	if (!running_float)
-	{
-		running_float = true;
-	}
+  received_float = f;
+  num_receives_float++;
+  if (!running_float)
+  {
+    running_float = true;
+  }
 }
 
 SCENARIO("Publish and subscribe to a Point message.")
@@ -284,245 +285,244 @@ SCENARIO("Publish and subscribe to a Point message.")
   }
 }
 
-
 SCENARIO("Publish and subscribe to a Pose message.")
 {
-	GIVEN("An instance of a subscriber.")
-	{
-		// start a subscriber
-		simple::Publisher<simple_msgs::Pose> pub("tcp://*:5555");
-		simple::Subscriber<simple_msgs::Pose> sub("tcp://localhost:5555", callbackFunctionPose);
+  GIVEN("An instance of a subscriber.")
+  {
+    // start a subscriber
+    simple::Publisher<simple_msgs::Pose> pub("tcp://*:5555");
+    simple::Subscriber<simple_msgs::Pose> sub("tcp://localhost:5555", callbackFunctionPose);
 
-		std::this_thread::sleep_for(std::chrono::seconds(5));
-		WHEN("A publisher publishes data")
-		{
-			for (int i = 0; i < 10; ++i)
-			{
-				auto p = createRandomPose();
-				pub.publish(p);
-				std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+    WHEN("A publisher publishes data")
+    {
+      for (int i = 0; i < 10; ++i)
+      {
+        auto p = createRandomPose();
+        pub.publish(p);
+        std::this_thread::sleep_for(std::chrono::seconds(1));
 
-				if (running_pose)
-				{
-					THEN("The data received is the same as the one sent") { REQUIRE(p == received_pose); }
-				}
-			}
-		}
-		REQUIRE(num_receives_pose == 10);
-	}
+        if (running_pose)
+        {
+          THEN("The data received is the same as the one sent") { REQUIRE(p == received_pose); }
+        }
+      }
+    }
+    REQUIRE(num_receives_pose == 10);
+  }
 }
 
 SCENARIO("Publish and subscribe to a Quaternion message.")
 {
-	GIVEN("An instance of a subscriber.")
-	{
-		// start a subscriber
-		simple::Publisher<simple_msgs::Quaternion> pub("tcp://*:5555");
-		simple::Subscriber<simple_msgs::Quaternion> sub("tcp://localhost:5555", callbackFunctionQuaternion);
+  GIVEN("An instance of a subscriber.")
+  {
+    // start a subscriber
+    simple::Publisher<simple_msgs::Quaternion> pub("tcp://*:5555");
+    simple::Subscriber<simple_msgs::Quaternion> sub("tcp://localhost:5555", callbackFunctionQuaternion);
 
-		std::this_thread::sleep_for(std::chrono::seconds(5));
-		WHEN("A publisher publishes data")
-		{
-			for (int i = 0; i < 10; ++i)
-			{
-				auto p = createRandomQuaternion();
-				pub.publish(p);
-				std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+    WHEN("A publisher publishes data")
+    {
+      for (int i = 0; i < 10; ++i)
+      {
+        auto p = createRandomQuaternion();
+        pub.publish(p);
+        std::this_thread::sleep_for(std::chrono::seconds(1));
 
-				if (running_quaternion)
-				{
-					THEN("The data received is the same as the one sent") { REQUIRE(p == received_quaternion); }
-				}
-			}
-		}
-		REQUIRE(num_receives_quaternion == 10);
-	}
+        if (running_quaternion)
+        {
+          THEN("The data received is the same as the one sent") { REQUIRE(p == received_quaternion); }
+        }
+      }
+    }
+    REQUIRE(num_receives_quaternion == 10);
+  }
 }
 
 SCENARIO("Publish and subscribe to a Rotation Matrix message.")
 {
-	GIVEN("An instance of a subscriber.")
-	{
-		// start a subscriber
-		simple::Publisher<simple_msgs::RotationMatrix> pub("tcp://*:5555");
-		simple::Subscriber<simple_msgs::RotationMatrix> sub("tcp://localhost:5555", callbackFunctionRotationMatrix);
+  GIVEN("An instance of a subscriber.")
+  {
+    // start a subscriber
+    simple::Publisher<simple_msgs::RotationMatrix> pub("tcp://*:5555");
+    simple::Subscriber<simple_msgs::RotationMatrix> sub("tcp://localhost:5555", callbackFunctionRotationMatrix);
 
-		std::this_thread::sleep_for(std::chrono::seconds(5));
-		WHEN("A publisher publishes data")
-		{
-			for (int i = 0; i < 10; ++i)
-			{
-				auto p = createRandomRotationMatrix();
-				pub.publish(p);
-				std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+    WHEN("A publisher publishes data")
+    {
+      for (int i = 0; i < 10; ++i)
+      {
+        auto p = createRandomRotationMatrix();
+        pub.publish(p);
+        std::this_thread::sleep_for(std::chrono::seconds(1));
 
-				if (running_rotation_matrix)
-				{
-					THEN("The data received is the same as the one sent") { REQUIRE(p == received_rotation_matrix); }
-				}
-			}
-		}
-		REQUIRE(num_receives_rotation_matrix == 10);
-	}
+        if (running_rotation_matrix)
+        {
+          THEN("The data received is the same as the one sent") { REQUIRE(p == received_rotation_matrix); }
+        }
+      }
+    }
+    REQUIRE(num_receives_rotation_matrix == 10);
+  }
 }
 
 SCENARIO("Publish and subscribe to a String message.")
 {
-	GIVEN("An instance of a subscriber.")
-	{
-		// start a subscriber
-		simple::Publisher<simple_msgs::String> pub("tcp://*:5555");
-		simple::Subscriber<simple_msgs::String> sub("tcp://localhost:5555", callbackFunctionString);
+  GIVEN("An instance of a subscriber.")
+  {
+    // start a subscriber
+    simple::Publisher<simple_msgs::String> pub("tcp://*:5555");
+    simple::Subscriber<simple_msgs::String> sub("tcp://localhost:5555", callbackFunctionString);
 
-		std::this_thread::sleep_for(std::chrono::seconds(5));
-		WHEN("A publisher publishes data")
-		{
-			for (int i = 0; i < 10; ++i)
-			{
-				auto p = createRandomString();
-				pub.publish(p);
-				std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+    WHEN("A publisher publishes data")
+    {
+      for (int i = 0; i < 10; ++i)
+      {
+        auto p = createRandomString();
+        pub.publish(p);
+        std::this_thread::sleep_for(std::chrono::seconds(1));
 
-				if (running_string)
-				{
-					THEN("The data received is the same as the one sent") { REQUIRE(p == received_string); }
-				}
-			}
-		}
-		REQUIRE(num_receives_string == 10);
-	}
+        if (running_string)
+        {
+          THEN("The data received is the same as the one sent") { REQUIRE(p == received_string); }
+        }
+      }
+    }
+    REQUIRE(num_receives_string == 10);
+  }
 }
 
 SCENARIO("Publish and subscribe to a Bool message.")
 {
-	GIVEN("An instance of a subscriber.")
-	{
-		// start a subscriber
-		simple::Publisher<simple_msgs::Bool> pub("tcp://*:5555");
-		simple::Subscriber<simple_msgs::Bool> sub("tcp://localhost:5555", callbackFunctionBool);
+  GIVEN("An instance of a subscriber.")
+  {
+    // start a subscriber
+    simple::Publisher<simple_msgs::Bool> pub("tcp://*:5555");
+    simple::Subscriber<simple_msgs::Bool> sub("tcp://localhost:5555", callbackFunctionBool);
 
-		std::this_thread::sleep_for(std::chrono::seconds(5));
-		WHEN("A publisher publishes data")
-		{
-			for (int i = 0; i < 10; ++i)
-			{
-				auto p = createRandomBool();
-				pub.publish(p);
-				std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+    WHEN("A publisher publishes data")
+    {
+      for (int i = 0; i < 10; ++i)
+      {
+        auto p = createRandomBool();
+        pub.publish(p);
+        std::this_thread::sleep_for(std::chrono::seconds(1));
 
-				if (running_bool)
-				{
-					THEN("The data received is the same as the one sent") { REQUIRE(p == received_bool); }
-				}
-			}
-		}
-		REQUIRE(num_receives_bool == 10);
-	}
+        if (running_bool)
+        {
+          THEN("The data received is the same as the one sent") { REQUIRE(p == received_bool); }
+        }
+      }
+    }
+    REQUIRE(num_receives_bool == 10);
+  }
 }
 SCENARIO("Publish and subscribe to a Double message.")
 {
-	GIVEN("An instance of a subscriber.")
-	{
-		// start a subscriber
-		simple::Publisher<simple_msgs::NumericType<double>> pub("tcp://*:5555");
-		simple::Subscriber<simple_msgs::NumericType<double>> sub("tcp://localhost:5555", callbackFunctionDouble);
+  GIVEN("An instance of a subscriber.")
+  {
+    // start a subscriber
+    simple::Publisher<simple_msgs::NumericType<double>> pub("tcp://*:5555");
+    simple::Subscriber<simple_msgs::NumericType<double>> sub("tcp://localhost:5555", callbackFunctionDouble);
 
-		std::this_thread::sleep_for(std::chrono::seconds(5));
-		WHEN("A publisher publishes data")
-		{
-			for (int i = 0; i < 10; ++i)
-			{
-				auto p = createRandomDouble();
-				pub.publish(p);
-				std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+    WHEN("A publisher publishes data")
+    {
+      for (int i = 0; i < 10; ++i)
+      {
+        auto p = createRandomDouble();
+        pub.publish(p);
+        std::this_thread::sleep_for(std::chrono::seconds(1));
 
-				if (running_double)
-				{
-					THEN("The data received is the same as the one sent") { REQUIRE(p == received_double); }
-				}
-			}
-		}
-		REQUIRE(num_receives_double == 10);
-	}
+        if (running_double)
+        {
+          THEN("The data received is the same as the one sent") { REQUIRE(p == received_double); }
+        }
+      }
+    }
+    REQUIRE(num_receives_double == 10);
+  }
 }
 
 SCENARIO("Publish and subscribe to a Int message.")
 {
-	GIVEN("An instance of a subscriber.")
-	{
-		// start a subscriber
-		simple::Publisher<simple_msgs::NumericType<int>> pub("tcp://*:5555");
-		simple::Subscriber<simple_msgs::NumericType<int>> sub("tcp://localhost:5555", callbackFunctionInt);
+  GIVEN("An instance of a subscriber.")
+  {
+    // start a subscriber
+    simple::Publisher<simple_msgs::NumericType<int>> pub("tcp://*:5555");
+    simple::Subscriber<simple_msgs::NumericType<int>> sub("tcp://localhost:5555", callbackFunctionInt);
 
-		std::this_thread::sleep_for(std::chrono::seconds(5));
-		WHEN("A publisher publishes data")
-		{
-			for (int i = 0; i < 10; ++i)
-			{
-				auto p = createRandomInt();
-				pub.publish(p);
-				std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+    WHEN("A publisher publishes data")
+    {
+      for (int i = 0; i < 10; ++i)
+      {
+        auto p = createRandomInt();
+        pub.publish(p);
+        std::this_thread::sleep_for(std::chrono::seconds(1));
 
-				if (running_int)
-				{
-					THEN("The data received is the same as the one sent") { REQUIRE(p == received_int); }
-				}
-			}
-		}
-		REQUIRE(num_receives_int == 10);
-	}
+        if (running_int)
+        {
+          THEN("The data received is the same as the one sent") { REQUIRE(p == received_int); }
+        }
+      }
+    }
+    REQUIRE(num_receives_int == 10);
+  }
 }
 
 SCENARIO("Publish and subscribe to a Float message.")
 {
-	GIVEN("An instance of a subscriber.")
-	{
-		// start a subscriber
-		simple::Publisher<simple_msgs::NumericType<float>> pub("tcp://*:5555");
-		simple::Subscriber<simple_msgs::NumericType<float>> sub("tcp://localhost:5555", callbackFunctionFloat);
+  GIVEN("An instance of a subscriber.")
+  {
+    // start a subscriber
+    simple::Publisher<simple_msgs::NumericType<float>> pub("tcp://*:5555");
+    simple::Subscriber<simple_msgs::NumericType<float>> sub("tcp://localhost:5555", callbackFunctionFloat);
 
-		std::this_thread::sleep_for(std::chrono::seconds(5));
-		WHEN("A publisher publishes data")
-		{
-			for (int i = 0; i < 10; ++i)
-			{
-				auto p = createRandomFloat();
-				pub.publish(p);
-				std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+    WHEN("A publisher publishes data")
+    {
+      for (int i = 0; i < 10; ++i)
+      {
+        auto p = createRandomFloat();
+        pub.publish(p);
+        std::this_thread::sleep_for(std::chrono::seconds(1));
 
-				if (running_float)
-				{
-					THEN("The data received is the same as the one sent") { REQUIRE(p == received_float); }
-				}
-			}
-		}
-		REQUIRE(num_receives_float == 10);
-	}
+        if (running_float)
+        {
+          THEN("The data received is the same as the one sent") { REQUIRE(p == received_float); }
+        }
+      }
+    }
+    REQUIRE(num_receives_float == 10);
+  }
 }
 
 SCENARIO("Publish and subscribe to a Header message.")
 {
-	GIVEN("An instance of a subscriber.")
-	{
-		// start a subscriber
-		simple::Publisher<simple_msgs::Header> pub("tcp://*:5555");
-		simple::Subscriber<simple_msgs::Header> sub("tcp://localhost:5555", callbackFunctionHeader);
+  GIVEN("An instance of a subscriber.")
+  {
+    // start a subscriber
+    simple::Publisher<simple_msgs::Header> pub("tcp://*:5555");
+    simple::Subscriber<simple_msgs::Header> sub("tcp://localhost:5555", callbackFunctionHeader);
 
-		std::this_thread::sleep_for(std::chrono::seconds(5));
-		WHEN("A publisher publishes data")
-		{
-			for (int i = 0; i < 10; ++i)
-			{
-				auto p = createRandomHeader();
-				pub.publish(p);
-				std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+    WHEN("A publisher publishes data")
+    {
+      for (int i = 0; i < 10; ++i)
+      {
+        auto p = createRandomHeader();
+        pub.publish(p);
+        std::this_thread::sleep_for(std::chrono::seconds(1));
 
-				if (running_header)
-				{
-					THEN("The data received is the same as the one sent") { REQUIRE(p == received_header); }
-				}
-			}
-		}
-		REQUIRE(num_receives_header == 10);
-	}
+        if (running_header)
+        {
+          THEN("The data received is the same as the one sent") { REQUIRE(p == received_header); }
+        }
+      }
+    }
+    REQUIRE(num_receives_header == 10);
+  }
 }
