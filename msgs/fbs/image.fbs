@@ -24,7 +24,7 @@ table ImageFbs{
 
 	header:[ubyte];
 	origin:[ubyte];
-	enconding:string;
+	encoding:string;
 	resX:double;
 	resY:double;
 	resZ:double;
@@ -33,6 +33,7 @@ table ImageFbs{
 	depth:int;
 	image:data;
 	image_size:int;
+	num_channels:int;
 }
 
 root_type ImageFbs;
