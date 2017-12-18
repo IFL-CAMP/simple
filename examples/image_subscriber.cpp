@@ -8,11 +8,17 @@ const std::string window_name("Received image");
 
 void example_callback(const simple_msgs::Image<uint8_t>& i)
 {
+	std::cout << "1" << std::endl;
   uint8_t* img = const_cast<uint8_t*>(i.getImageData());
+  std::cout << "2" << std::endl;
   auto dimensions = i.getImageDimensions();
+  std::cout << "3" << std::endl;
   std::cout << "Image dimensions are: " << dimensions[0] << " x " << dimensions[1] << std::endl;
   cv::Mat received_img(dimensions[0], dimensions[1], CV_8UC3, img);
+  std::cout << "4" << std::endl;
   cv::imshow(window_name, received_img);
+  std::cout << "5" << std::endl;
+  cv::waitKey(1);
 }
 
 int main()

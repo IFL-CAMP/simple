@@ -7,7 +7,6 @@
 #include "simple_msgs/image.h"
 
 const std::string data_dir = DATA_DIR;
-const std::string window_name("Sent image");
 
 std::vector<std::pair<cv::Mat, int>> readImage()
 {
@@ -32,8 +31,8 @@ std::vector<std::pair<cv::Mat, int>> readImage()
 
 int main()
 {
-  const int N_RUN = 30;
-  const int SLEEP_TIME = 5000;  //<  Milliseconds.
+  const int N_RUN = 3000;
+  const int SLEEP_TIME = 80;  //<  Milliseconds.
 
   auto images = readImage();
 
@@ -52,9 +51,8 @@ int main()
     img.setImageData(image.first.data, image.second,3);
     pub.publish(img);
     std::cout << "Message #" << i + 1 << " has been published. " << std::endl;
-	cv::waitKey(1);
-	cv::imshow(window_name, image.first);
     std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_TIME));
+	img.getHeader().setSequenceNumber(i + 2);
   }
 
   std::cout << "Publishing ended." << std::endl;
