@@ -146,7 +146,7 @@ public:
 
   std::array<double, 3> getResolution() const { return std::array<double, 3>{resX_, resY_, resZ_}; }
   std::array<int, 3> getImageDimensions() const { return std::array<int, 3>{{width_, height_, depth_}}; }
-  const T* getImageData() const { return data_; }
+  const T* getImageData() const { return *data_; }
   int getImageSize() const { return data_size_; }
   const Header& getHeader() const { return header_; }
   Header& getHeader() { return header_; }
@@ -196,8 +196,7 @@ public:
   void setImageData(const T* data, int data_size, int num_channels = 1)
   {
     std::lock_guard<std::mutex> lock(mutex_);
-    //data_ = std::make_shared<const T*>(data);
-	data_ = data;
+    data_ = std::make_shared<const T*>(data);
     data_size_ = data_size;
 	num_channels_ = num_channels;
     modified_ = true;
@@ -240,8 +239,7 @@ private:
   double resX_{0.0}, resY_{0.0}, resZ_{0.0};
   int width_{0}, height_{0}, depth_{0};
 
-  //std::shared_ptr<const T*> data_{nullptr};
-  const T* data_{ nullptr };
+  std::shared_ptr<const T*> data_{nullptr};
   int data_size_{0};
   int num_channels_{1};
 };

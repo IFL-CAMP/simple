@@ -30,29 +30,25 @@ data Image<double>::getDataUnionType() const
 template <>
 flatbuffers::Offset<void> Image<uint8_t>::getDataUnionElem() const
 {
-  //return Createuint8_type(*builder_, builder_->CreateVector(static_cast<const uint8_t*>(*data_), data_size_)).Union();
-	return Createuint8_type(*builder_, builder_->CreateVector(data_, data_size_)).Union();
+  return Createuint8_type(*builder_, builder_->CreateVector(static_cast<const uint8_t*>(*data_), data_size_)).Union();
 }
 
 template <>
 flatbuffers::Offset<void> Image<int16_t>::getDataUnionElem() const
 {
-  //return Createint16_type(*builder_, builder_->CreateVector(*data_, data_size_)).Union();
-	return Createint16_type(*builder_, builder_->CreateVector(data_, data_size_)).Union();
+	return Createint16_type(*builder_, builder_->CreateVector(static_cast<const int16_t*>(*data_), data_size_)).Union();
 }
 
 template <>
 flatbuffers::Offset<void> Image<float>::getDataUnionElem() const
 {
-  //return Createfloat_type(*builder_, builder_->CreateVector(*data_, data_size_)).Union();
-  return Createfloat_type(*builder_, builder_->CreateVector(data_, data_size_)).Union();
+	return Createfloat_type(*builder_, builder_->CreateVector(static_cast<const float*>(*data_), data_size_)).Union();
 }
 
 template <>
 flatbuffers::Offset<void> Image<double>::getDataUnionElem() const
 {
-  //return Createdouble_type(*builder_, builder_->CreateVector(*data_, data_size_)).Union();
-  return Createdouble_type(*builder_, builder_->CreateVector(data_, data_size_)).Union();
+	return Createdouble_type(*builder_, builder_->CreateVector(static_cast<const double*>(*data_), data_size_)).Union();
 }
 
 template <>
@@ -66,8 +62,7 @@ Image<uint8_t>& Image<uint8_t>::operator=(const uint8_t* data)
   // Set the Image data according to the right date type.
   // PROBLEM IS HERE
   auto mydata = static_cast<const uint8_type*>(image_data->image())->raw()->data();
-  //data_ = std::make_shared<const uint8_t*>(mydata);
-  data_ = mydata;
+  data_ = std::make_shared<const uint8_t*>(mydata);
   return *this;
 }
 
@@ -81,8 +76,7 @@ Image<int16_t>& Image<int16_t>::operator=(const uint8_t* data)
 
   // Set the Image data according to the right date type.
   auto mydata = static_cast<const int16_type*>(image_data->image())->raw()->data();
-  //data_ = std::make_shared<const int16_t*>(mydata);
-  data_ = mydata;
+  data_ = std::make_shared<const int16_t*>(mydata);
   return *this;
 }
 
@@ -96,8 +90,7 @@ Image<double>& Image<double>::operator=(const uint8_t* data)
 
   // Set the Image data according to the right date type.
   auto mydata = static_cast<const double_type*>(image_data->image())->raw()->data();
-  //data_ = std::make_shared<const double*>(mydata);
-  data_ = mydata;
+  data_ = std::make_shared<const double*>(mydata);
   return *this;
 }
 
@@ -111,8 +104,8 @@ Image<float>& Image<float>::operator=(const uint8_t* data)
 
   // Set the Image data according to the right date type.
   auto mydata = static_cast<const float_type*>(image_data->image())->raw()->data();
-  data_ = mydata;
-  //data_ = std::make_shared<const float*>(mydata);
+  
+  data_ = std::make_shared<const float*>(mydata);
   return *this;
 }
 
@@ -125,8 +118,7 @@ Image<uint8_t>::Image(const uint8_t* data)
   Image<uint8_t>::fillPartialImage(image_data);
   // Set the Image data according to the right date type.
   auto mydata = static_cast<const uint8_type*>(image_data->image())->raw()->data();
-  //data_ = std::make_shared<const uint8_t*>(mydata);
-  data_ = mydata;
+  data_ = std::make_shared<const uint8_t*>(mydata);
 }
 
 template <>
@@ -138,8 +130,8 @@ Image<int16_t>::Image(const uint8_t* data)
   Image<int16_t>::fillPartialImage(image_data);
   // Set the Image data according to the right date type.
   auto mydata = static_cast<const int16_type*>(image_data->image())->raw()->data();
-  data_ = mydata;
-  //data_ = std::make_shared<const int16_t*>(mydata);
+  
+  data_ = std::make_shared<const int16_t*>(mydata);
 }
 
 template <>
@@ -151,8 +143,8 @@ Image<double>::Image(const uint8_t* data)
   Image<double>::fillPartialImage(image_data);
   // Set the Image data according to the right date type.
   auto mydata = static_cast<const double_type*>(image_data->image())->raw()->data();
-  data_ = mydata;
-  //data_ = std::make_shared<const double*>(mydata);
+  
+  data_ = std::make_shared<const double*>(mydata);
 }
 
 template <>
@@ -164,7 +156,7 @@ Image<float>::Image(const uint8_t* data)
   Image<float>::fillPartialImage(image_data);
   // Set the Image data according to the right date type.
   auto mydata = static_cast<const float_type*>(image_data->image())->raw()->data();
-  //data_ = std::make_shared<const float*>(mydata);
-  data_ = mydata;
+  data_ = std::make_shared<const float*>(mydata);
+  
 }
 }
