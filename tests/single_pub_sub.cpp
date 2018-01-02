@@ -526,3 +526,4 @@ SCENARIO("Publish and subscribe to a Header message.")
     REQUIRE(num_receives_header == 10);
   }
 }
+
