@@ -61,7 +61,7 @@ void callbackFunctionPose01(const simple_msgs::Pose& p)
 	}
 }
 
-int numPublishes = 100000;
+int numPublishes = 10000;
 
 SCENARIO("Publish a pose and have many subscribers.")
 {
@@ -79,7 +79,6 @@ SCENARIO("Publish a pose and have many subscribers.")
 			{
 				auto p = createRandomPose();
 				pub.publish(p);
-				std::this_thread::sleep_for(std::chrono::milliseconds(1));
 				REQUIRE(received_pose01 == p);
 
 			}
