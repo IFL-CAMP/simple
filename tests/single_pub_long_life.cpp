@@ -19,7 +19,7 @@
 #include <time.h>
 #include <stdlib.h>
 
-// TEST ONE PUBLISHER WITH MANY SUBSCRIBERS
+// TEST ONE PUBLISHER WITH ONE SUBSCRIBER PUBLISHING FOR LONG
 
 // create static poses for comparing with data sent
 simple_msgs::Pose received_pose01;
@@ -63,7 +63,7 @@ void callbackFunctionPose01(const simple_msgs::Pose& p)
 
 int numPublishes = 100000;
 
-SCENARIO("Publish a pose and have many subscribers.")
+SCENARIO("Publish a pose for a long time.")
 {
 	GIVEN("An instance of a publisher and 1 subscriber.")
 	{
