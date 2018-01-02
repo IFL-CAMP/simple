@@ -20,6 +20,9 @@ target_link_libraries(on_off_pub_test simple)
 add_executable(late_sub_test latecomer_sub.cpp)
 target_link_libraries(late_sub_test simple)
 
+add_executable(single_req_rep single_req_rep.cpp)
+target_link_libraries(single_req_rep simple)
+
 add_executable(wrapper_point_test wrapper_point_test.cpp)
 target_link_libraries(wrapper_point_test simple)
 
@@ -41,4 +44,4 @@ if(NOT EXISTS ${PROJECT_SOURCE_DIR}/include/catch.hpp)
 		)
 endif()
 
-install(TARGETS single_pub_sub_test long_life_pub_test on_off_pub_test late_sub_test multi_sub_test  wrapper_point_test wrapper_pose_test wrapper_rotation_matrix_test wrapper_quaternion_test DESTINATION bin)
+install(TARGETS single_pub_sub_test long_life_pub_test on_off_pub_test late_sub_test multi_sub_test single_req_rep  wrapper_point_test wrapper_pose_test wrapper_rotation_matrix_test wrapper_quaternion_test DESTINATION bin)
