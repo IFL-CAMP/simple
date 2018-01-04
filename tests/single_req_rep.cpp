@@ -118,9 +118,9 @@ void callbackFunctionHeader(simple_msgs::Header& h)
 // define callback function
 void callbackFunctionPose(simple_msgs::Pose& p)
 {
+	std::cout << "Request received";
   // add one's to the pose
-  simple_msgs::Point point(1, 1, 1);
-  p.getPosition() += point;
+  p.getPosition() += 1.0;
   p.getQuaternion().setW(p.getQuaternion().getW() + 1);
   p.getQuaternion().setX(p.getQuaternion().getX() + 1);
   p.getQuaternion().setY(p.getQuaternion().getY() + 1);
@@ -207,8 +207,8 @@ SCENARIO("Client-Server to a Pose message.")
   GIVEN("An instance of a server.")
   {
     // start a server
-    simple::Client<simple_msgs::Pose> client("tcp://localhost::5555");
     simple::Server<simple_msgs::Pose> server("tcp://*:5555", callbackFunctionPose);
+	simple::Client<simple_msgs::Pose> client("tcp://localhost::5555");
 
     WHEN("The client sends a request")
     {

@@ -15,10 +15,11 @@ template <typename T>
 class Client : public GenericSocket<T>
 {
 public:
-  Client(const std::string& address)
+  Client(const std::string& address, int timeout = 1500)
     : GenericSocket<T>(zmq_socket(context_.get(), ZMQ_REQ))
   {
     GenericSocket<T>::connect(address);
+	GenericSocket<T>::setTimeout(timeout);
   }
 
   ~Client() {}

@@ -38,7 +38,9 @@ public:
   ~Subscriber<T>()
   {
     alive_ = false;             //< Stop the subscription loop.
-    subscriber_thread_.join();  //< Wait for the subscriber thead.
+	if (subscriber_thread_.joinable()) {
+		subscriber_thread_.join();  //< Wait for the subscriber thread.
+	}
   }
 
 private:

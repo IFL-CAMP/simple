@@ -3,6 +3,7 @@
 #include <mutex>
 #include <memory>
 #include <flatbuffers/flatbuffers.h>
+#include <iostream>
 
 namespace simple_msgs
 {
@@ -14,8 +15,7 @@ class GenericMessage
 public:
   GenericMessage()
     : builder_(new flatbuffers::FlatBufferBuilder(1024))
-  {
-  }
+  {}
   virtual ~GenericMessage() = default;
 
   virtual uint8_t* getBufferData() const = 0;
@@ -26,7 +26,7 @@ public:
   }
   
   std::shared_ptr<flatbuffers::FlatBufferBuilder>* getBuilderPointer() const {
-	  auto builderPointer =  new std::shared_ptr<flatbuffers::FlatBufferBuilder>(builder_);
+	  auto builderPointer = new std::shared_ptr<flatbuffers::FlatBufferBuilder>{ builder_ };
 	  return builderPointer;
   }
 
