@@ -38,7 +38,7 @@ private:
   {
     bool success{false};
 
-    if (GenericSocket<T>::sendMsg(data, data_size, "[SIMPLE Client] - "))
+    if (GenericSocket<T>::sendMsg(data, data_size, msg.getBuilderPointer(), "[SIMPLE Client] - "))
     {
       if (GenericSocket<T>::receiveMsg(msg, "[SIMPLE Client] - "))
       {
