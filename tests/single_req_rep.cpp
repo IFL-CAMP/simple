@@ -11,6 +11,10 @@
 #include "simple_msgs/numeric_type.hpp"
 #include "simple_msgs/rotation_matrix.h"
 #include "simple_msgs/header.h"
+#include "simple_msgs/point_stamped.h"
+#include "simple_msgs/quaternion_stamped.h"
+#include "simple_msgs/pose_stamped.h"
+#include "simple_msgs/rotation_matrix_stamped.h"
 #include "simple/client.hpp"
 #include "simple_msgs/double.h"
 #include "simple_msgs/float.h"
@@ -62,9 +66,7 @@ simple_msgs::RotationMatrix createRandomRotationMatrix()
 
 simple_msgs::Pose createRandomPose()
 {
-  simple_msgs::Point p = createRandomPoint();
-  simple_msgs::Quaternion q = createRandomQuaternion();
-  return simple_msgs::Pose(p, q);
+  return simple_msgs::Pose(createRandomPoint(), createRandomQuaternion());
 }
 
 simple_msgs::NumericType<int> createRandomInt()
@@ -96,6 +98,22 @@ simple_msgs::String createRandomString()
   std::string s("Random string:");
   s.append(std::to_string(rand() % 100));
   return simple_msgs::String(s);
+}
+
+simple_msgs::PointStamped createRandomPointStamped() {
+	return simple_msgs::PointStamped(createRandomHeader(), createRandomPoint());
+}
+
+simple_msgs::PoseStamped createRandomPoseStamped() {
+	return simple_msgs::PoseStamped(createRandomHeader(), createRandomPose());
+}
+
+simple_msgs::QuaternionStamped createRandomQuaternionStamped() {
+	return simple_msgs::QuaternionStamped(createRandomHeader(), createRandomQuaternion());
+}
+
+simple_msgs::RotationMatrixStamped createRandomRotationMatrixStamped() {
+	return simple_msgs::RotationMatrixStamped(createRandomHeader(), createRandomRotationMatrix());
 }
 
 // define callback function
@@ -179,6 +197,30 @@ void callbackFunctionFloat(simple_msgs::NumericType<float>& f)
 {
   // add 1 to the float
   f += 1.0f;
+}
+
+void callbackFunctionPointStamped(simple_msgs::PointStamped& p) {
+	//add one's to the point and set default header
+	callbackFunctionPoint(p.getPoint());
+	callbackFunctionHeader(p.getHeader());
+}
+
+void callbackFunctionPoseStamped(simple_msgs::PoseStamped& p) {
+	//add one's to the point and set default header
+	callbackFunctionPose(p.getPose());
+	callbackFunctionHeader(p.getHeader());
+}
+
+void callbackFunctionQuaternionStamped(simple_msgs::QuaternionStamped& q) {
+	//add one's to the point and set default header
+	callbackFunctionQuaternion(q.getQuaternion());
+	callbackFunctionHeader(q.getHeader());
+}
+
+void callbackFunctionRotationMatrixStamped(simple_msgs::RotationMatrixStamped& r) {
+	//add one's to the point and set default header
+	callbackFunctionRotationMatrix(r.getRotationMatrix());
+	callbackFunctionHeader(r.getHeader());
 }
 
 SCENARIO("Client-Server to a Point message.")
@@ -380,4 +422,107 @@ SCENARIO("Client-Server to a Header message.")
       }
     }
   }
+}
+
+SCENARIO("Client-Server to a Stamped Point message.")
+{
+	GIVEN("An instance of a server.")
+	{
+		// start a server
+		simple::Server<simple_msgs::PointStamped> server("tcp://*:5555", callbackFunctionPointStamped);
+		simple::Client<simple_msgs::PointStamped> client("tcp://localhost:5555");
+
+		WHEN("The client sends a request")
+		{
+			auto p = createRandomPointStamped();
+			auto sentPoint = p;
+			client.request(p);
+			simple_msgs::Point unitPoint(1, 1, 1);
+
+			THEN("The data received is the equal to the sent point plus one's") {
+				REQUIRE(p.getPoint() == sentPoint.getPoint() + unitPoint);
+				REQUIRE(p.getHeader().getFrameID() == "ID");
+				REQUIRE(p.getHeader().getSequenceNumber() == 1);
+				REQUIRE(p.getHeader().getTimestamp() == 1.0);
+			}
+		}
+	}
+}
+
+SCENARIO("Client-Server to a Stamped Pose message.")
+{
+	GIVEN("An instance of a server.")
+	{
+		// start a server
+		simple::Server<simple_msgs::PoseStamped> server("tcp://*:5556", callbackFunctionPoseStamped);
+		simple::Client<simple_msgs::PoseStamped> client("tcp://localhost:5556");
+
+		WHEN("The client sends a request")
+		{
+			auto p = createRandomPoseStamped();
+			auto sentPose = p;
+			client.request(p);
+			simple_msgs::Point unitPoint(1, 1, 1);
+			THEN("The data received is the equal to the sent pose plus one's")
+			{
+				REQUIRE(p.getPose().getPosition() == sentPose.getPose().getPosition() + unitPoint);
+				REQUIRE(p.getPose().getQuaternion().getW() == sentPose.getPose().getQuaternion().getW() + 1);
+				REQUIRE(p.getPose().getQuaternion().getX() == sentPose.getPose().getQuaternion().getX() + 1);
+				REQUIRE(p.getPose().getQuaternion().getY() == sentPose.getPose().getQuaternion().getY() + 1);
+				REQUIRE(p.getPose().getQuaternion().getZ() == sentPose.getPose().getQuaternion().getZ() + 1);
+				REQUIRE(p.getHeader().getFrameID() == "ID");
+				REQUIRE(p.getHeader().getSequenceNumber() == 1);
+				REQUIRE(p.getHeader().getTimestamp() == 1.0);
+			}
+		}
+	}
+}
+
+SCENARIO("Client-Server to a Stamped Quaternion message.")
+{
+	GIVEN("An instance of a server.")
+	{
+		// start a server
+		simple::Client<simple_msgs::QuaternionStamped> client("tcp://localhost:5555");
+		simple::Server<simple_msgs::QuaternionStamped> server("tcp://*:5555", callbackFunctionQuaternionStamped);
+
+		WHEN("The client sends a request")
+		{
+			auto q = createRandomQuaternionStamped();
+			auto sentQ = q;
+			client.request(q);
+			THEN("The data received is the equal to the sent pose plus one's")
+			{
+				REQUIRE(q.getQuaternion().getW() == sentQ.getQuaternion().getW() + 1);
+				REQUIRE(q.getQuaternion().getX() == sentQ.getQuaternion().getX() + 1);
+				REQUIRE(q.getQuaternion().getY() == sentQ.getQuaternion().getY() + 1);
+				REQUIRE(q.getQuaternion().getZ() == sentQ.getQuaternion().getZ() + 1);
+				REQUIRE(q.getHeader().getFrameID() == "ID");
+				REQUIRE(q.getHeader().getSequenceNumber() == 1);
+				REQUIRE(q.getHeader().getTimestamp() == 1.0);
+			}
+		}
+	}
+}
+
+SCENARIO("Client-Server to a Stamped Rotation Matrix message.")
+{
+	GIVEN("An instance of a server.")
+	{
+		// start a server.
+		simple::Client<simple_msgs::RotationMatrixStamped> client("tcp://localhost:5555");
+		simple::Server<simple_msgs::RotationMatrixStamped> server("tcp://*:5555", callbackFunctionRotationMatrixStamped);
+
+		WHEN("The client sends a request")
+		{
+			auto r = createRandomRotationMatrixStamped();
+			client.request(r);
+			THEN("The data received is the the identity matrix") { 
+				REQUIRE(r.getRotationMatrix() == simple_msgs::RotationMatrix()); 
+				REQUIRE(r.getHeader().getFrameID() == "ID");
+				REQUIRE(r.getHeader().getSequenceNumber() == 1);
+				REQUIRE(r.getHeader().getTimestamp() == 1.0);
+			}
+		}
+	}
 }
