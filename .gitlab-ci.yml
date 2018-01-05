@@ -38,7 +38,7 @@ build_msvc17:
   script:
     - IF NOT EXIST "simple_msvs17" mkdir "simple_msvs17"
     - cd simple_msvs17
-    - "@call ""%VS150COMNTOOLS%VsDevCmd.bat"""
+    - '@call "%VS150COMNTOOLS%VsDevCmd.bat"'
     - cmake -G "Visual Studio 15 2017 Win64" %ZEROMQ_2017% -DBUILD_TESTS=ON ..
     - devenv /build Release simple.sln
   cache:
