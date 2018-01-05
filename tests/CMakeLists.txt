@@ -17,6 +17,14 @@ target_link_libraries(wrapper_pose_test simple)
 add_executable(wrapper_quaternion_test wrapper_quaternion_test.cpp)
 target_link_libraries(wrapper_quaternion_test simple)
 
+add_executable(wrapper_double_test wrapper_double_test.cpp)
+target_link_libraries(wrapper_double_test simple)
+
+add_executable(wrapper_float_test wrapper_float_test.cpp)
+target_link_libraries(wrapper_float_test simple)
+
+add_executable(wrapper_int_test wrapper_int_test.cpp)
+target_link_libraries(wrapper_int_test simple)
  
 if(NOT EXISTS ${PROJECT_SOURCE_DIR}/include/catch.hpp)
 		message(STATUS "Downloading catch.hpp. This may take a while.")
@@ -26,4 +34,4 @@ if(NOT EXISTS ${PROJECT_SOURCE_DIR}/include/catch.hpp)
 		)
 endif()
 
-install(TARGETS wrapper_point_test wrapper_pose_test wrapper_rotation_matrix_test wrapper_quaternion_test DESTINATION bin)
+install(TARGETS wrapper_point_test wrapper_double_test wrapper_float_test wrapper_int_test wrapper_pose_test wrapper_rotation_matrix_test wrapper_quaternion_test DESTINATION bin)
