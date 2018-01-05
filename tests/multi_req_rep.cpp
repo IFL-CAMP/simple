@@ -23,71 +23,12 @@
 #include <stdlib.h>
 #include <vector>
 #include <thread>
+#include "test_utils.hpp"
+#include <memory>
+#include <functional>
 
 // TEST FOR SEVERAL CLIENTS AND ONE SERVER OF ONE DATA TYPE - POSE STAMPED
 
-simple_msgs::Header createRandomHeader()
-{
-  int x = rand() % 100;
-  std::string y("Header string:");
-  y.append(std::to_string(rand() % 100));
-  double z = static_cast<double>(rand()) / RAND_MAX;
-  return simple_msgs::Header(x, y, z);
-}
-
-simple_msgs::Point createRandomPoint()
-{
-  double x = static_cast<double>(rand()) / RAND_MAX;
-  double y = static_cast<double>(rand()) / RAND_MAX;
-  double z = static_cast<double>(rand()) / RAND_MAX;
-  return simple_msgs::Point(x, y, z);
-}
-
-simple_msgs::Quaternion createRandomQuaternion()
-{
-  double x = static_cast<double>(rand()) / RAND_MAX;
-  double y = static_cast<double>(rand()) / RAND_MAX;
-  double z = static_cast<double>(rand()) / RAND_MAX;
-  double w = static_cast<double>(rand()) / RAND_MAX;
-  return simple_msgs::Quaternion(x, y, z, w);
-}
-
-simple_msgs::Pose createRandomPose()
-{
-  return simple_msgs::Pose(createRandomPoint(), createRandomQuaternion());
-}
-
-simple_msgs::PoseStamped createRandomPoseStamped()
-{
-  return simple_msgs::PoseStamped(createRandomHeader(), createRandomPose());
-}
-
-// define callback function
-void callbackFunctionHeader(simple_msgs::Header& h)
-{
-  // fill the header fields
-  h.setFrameID("ID");
-  h.setSequenceNumber(1);
-  h.setTimestamp(1.0);
-}
-
-// define callback function
-void callbackFunctionPose(simple_msgs::Pose& p)
-{
-  // add one's to the pose
-  p.getPosition() += 1.0;
-  p.getQuaternion().setW(p.getQuaternion().getW() + 1);
-  p.getQuaternion().setX(p.getQuaternion().getX() + 1);
-  p.getQuaternion().setY(p.getQuaternion().getY() + 1);
-  p.getQuaternion().setZ(p.getQuaternion().getZ() + 1);
-}
-
-void callbackFunctionPoseStamped(simple_msgs::PoseStamped& p)
-{
-  // add one's to the point and set default header
-  callbackFunctionPose(p.getPose());
-  callbackFunctionHeader(p.getHeader());
-}
 
 void requestInParallel(simple::Client<simple_msgs::PoseStamped>& client, simple_msgs::PoseStamped& pose) {
 	client.request(pose);
