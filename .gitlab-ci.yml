@@ -9,7 +9,7 @@ variables:
   ZEROMQ_DIR_2017: "C:/Program Files/ZeroMQ_2017"
   ZEROMQ_2015: "-DZeroMQ_INCLUDE_DIR=%ZEROMQ_DIR_2015%/include -DZeroMQ_LIBRARY=%ZEROMQ_DIR_2015%/lib/libzmq-v140-mt-4_2_4.lib"
   ZEROMQ_2017: "-DZeroMQ_INCLUDE_DIR=%ZEROMQ_DIR_2017%/include -DZeroMQ_LIBRARY=%ZEROMQ_DIR_2017%/lib/libzmq-v141-mt-4_2_4.lib"
-  VS150COMNTOOLS: "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\Tools\"
+  VS150COMNTOOLS: "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/Common7/Tools/"
 
 ################# Building
 
