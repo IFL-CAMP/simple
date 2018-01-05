@@ -249,8 +249,8 @@ SCENARIO("Using a Point Message")
       THEN("The result is correct")
       {
         REQUIRE(first_point.getX() == double_1 / second_point.getX());
-        REQUIRE(first_point.getY() == double_1 / second_point.getY());
-        REQUIRE(first_point.getZ() == double_1 / second_point.getZ());
+        REQUIRE(first_point.getY() == double_2 / second_point.getY());
+        REQUIRE(first_point.getZ() == double_3 / second_point.getZ());
       }
     }
   }
