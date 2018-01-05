@@ -2,6 +2,7 @@ image: ubuntu-simple
 
 stages:
   - build
+  - test
 
 variables:
   ZEROMQ_DIR_2015: "C:/Program Files/ZeroMQ_2015"
