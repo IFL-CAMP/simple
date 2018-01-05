@@ -13,6 +13,15 @@ include_directories(include)
 
 #TESTS FOR WRAPPERS
 
+add_executable(double_test double_test.cpp)
+target_link_libraries(double_test simple)
+
+add_executable(float_test float_test.cpp)
+target_link_libraries(float_test simple)
+
+add_executable(int_test int_test.cpp)
+target_link_libraries(int_test simple)
+
 add_executable(point_test point_test.cpp)
 target_link_libraries(point_test simple)
 
@@ -25,8 +34,13 @@ target_link_libraries(pose_test simple)
 add_executable(quaternion_test quaternion_test.cpp)
 target_link_libraries(quaternion_test simple)
 
+
+
 install(
-TARGETS 
+TARGETS
+  double_test
+  float_test
+  int_test
   point_test
   pose_test
   rotation_matrix_test
