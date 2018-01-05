@@ -43,7 +43,7 @@ protected:
 
   static void freeMsg(void* data, void* hint) {
 	  if (hint) {
-	  delete (reinterpret_cast<std::shared_ptr<flatbuffers::FlatBufferBuilder>*>(hint));//<Keep a copy of the message builder alive until the sending of the message is done.
+	  delete (static_cast<std::shared_ptr<flatbuffers::FlatBufferBuilder>*>(hint));//<Keep a copy of the message builder alive until the sending of the message is done.
   }
   }
   bool sendMsg(uint8_t* msg, int msg_size, std::shared_ptr<flatbuffers::FlatBufferBuilder>* builder_pointer, const std::string& custom_error = "[SIMPLE Error] - ")
