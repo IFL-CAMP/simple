@@ -19,7 +19,7 @@ build_msvc15:
   script:
     - IF NOT EXIST "simple_msvs15" mkdir "simple_msvs15"
     - cd simple_msvs15
-    - cmake -G "Visual Studio 14 2015 Win64" %ZEROMQ_2015% -DBUILD_TESTS=ON -DBUILD_EXAMPLES=ON ..
+    - cmake -G "Visual Studio 14 2015 Win64" %ZEROMQ_2015% -DBUILD_TESTS=ON ..
     - cmake --build .
   cache:
     key: msvs15_cache
@@ -36,7 +36,7 @@ build_msvc17:
   script:
     - IF NOT EXIST "simple_msvs17" mkdir "simple_msvs17"
     - cd simple_msvs17
-    - cmake -G "Visual Studio 15 2017 Win64" %ZEROMQ_2017% -DBUILD_TESTS=ON -DBUILD_EXAMPLES=ON ..
+    - cmake -G "Visual Studio 15 2017 Win64" %ZEROMQ_2017% -DBUILD_TESTS=ON ..
     - cmake --build .
   cache:
     key: msvs17_cache
@@ -54,7 +54,7 @@ build_gcc:
   script:
     - mkdir -p simple_gcc
     - cd simple_gcc
-    - cmake -DCMAKE_CXX_COMPILER=g++ -DBUILD_TESTS=ON -DBUILD_EXAMPLES=ON ..
+    - cmake -DCMAKE_CXX_COMPILER=g++ -DBUILD_TESTS=ON ..
     - make
   cache:
     key: gcc_cache
@@ -72,7 +72,7 @@ build_clang:
   script:
     - mkdir -p simple_clang
     - cd simple_clang
-    - cmake -DCMAKE_CXX_COMPILER=clang++ -DBUILD_TESTS=ON -DBUILD_EXAMPLES=ON ..
+    - cmake -DCMAKE_CXX_COMPILER=clang++ -DBUILD_TESTS=ON ..
     - make
   cache:
     key: clang_cache
