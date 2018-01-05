@@ -45,24 +45,6 @@ build_msvc17:
     paths:
     - simple_msvs17/
     
-build_clang:
-  stage: build
-  tags:
-    - linux
-    - clang
-  script:
-    - mkdir -p simple_clang
-    - cd simple_clang
-    - cmake .. -DCMAKE_CXX_COMPILER=clang++
-    - make
-  cache:
-    key: clang_cache
-    paths:
-      - simple_clang/
-  artifacts:
-    paths:
-    - simple_clang/
-
 build_gcc:
   stage: build
   tags:
@@ -81,3 +63,64 @@ build_gcc:
     paths:
     - simple_gcc/
     
+build_clang:
+  stage: build
+  tags:
+    - linux
+    - clang
+  script:
+    - mkdir -p simple_clang
+    - cd simple_clang
+    - cmake .. -DCMAKE_CXX_COMPILER=clang++
+    - make
+  cache:
+    key: clang_cache
+    paths:
+      - simple_clang/
+  artifacts:
+    paths:
+    - simple_clang/
+
+################# Testing
+
+test_msvs15:
+    stage : test
+    dependencies:
+      - build_msvc15
+    tags:
+      - windows
+    script:
+      - cd simple_msvs15
+      - ctest -R simple_tests --output-on-failure
+
+test_msvs17:
+    stage : test
+    dependencies:
+      - build_msvc17
+    tags:
+      - windows
+    script:
+      - cd simple_msvs17
+      - ctest -R simple_tests --output-on-failure
+      
+test_gcc:
+    stage : test
+    dependencies:
+      - build_gcc
+    tags:
+      - linux
+      - gcc
+    script:
+      - cd simple_gcc
+      - ctest -R simple_tests --output-on-failure
+     
+test_clang:
+    stage : test
+    dependencies:
+      - build_clang
+    tags:
+      - linux
+      - clang
+    script:
+      - cd simple_clang
+      - ctest -R simple_tests --output-on-failure
