@@ -9,6 +9,7 @@ variables:
   ZEROMQ_DIR_2017: "C:/Program Files/ZeroMQ_2017"
   ZEROMQ_2015: "-DZeroMQ_INCLUDE_DIR=%ZEROMQ_DIR_2015%/include -DZeroMQ_LIBRARY=%ZEROMQ_DIR_2015%/lib/libzmq-v140-mt-4_2_4.lib"
   ZEROMQ_2017: "-DZeroMQ_INCLUDE_DIR=%ZEROMQ_DIR_2017%/include -DZeroMQ_LIBRARY=%ZEROMQ_DIR_2017%/lib/libzmq-v141-mt-4_2_4.lib"
+  VS150COMNTOOLS: "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\Tools\"
 
 ################# Building
 
@@ -19,8 +20,9 @@ build_msvc15:
   script:
     - IF NOT EXIST "simple_msvs15" mkdir "simple_msvs15"
     - cd simple_msvs15
+    - @call "%VS140COMNTOOLS%VsDevCmd.bat"
     - cmake -G "Visual Studio 14 2015 Win64" %ZEROMQ_2015% -DBUILD_TESTS=ON ..
-    - cmake --build .
+    - devenv /build Release simple.sln
   cache:
     key: msvs15_cache
     paths:
@@ -36,8 +38,9 @@ build_msvc17:
   script:
     - IF NOT EXIST "simple_msvs17" mkdir "simple_msvs17"
     - cd simple_msvs17
+    - @call "%VS150COMNTOOLS%VsDevCmd.bat"
     - cmake -G "Visual Studio 15 2017 Win64" %ZEROMQ_2017% -DBUILD_TESTS=ON ..
-    - cmake --build .
+    - devenv /build Release simple.sln
   cache:
     key: msvs17_cache
     paths:
@@ -92,7 +95,8 @@ test_msvs15:
       - windows
     script:
       - cd simple_msvs15
-      - ctest -R simple_tests --output-on-failure
+      - copy .\msgs\Release\libsimple_msgs.dll .\tests\Release\libsimple_msgs.dll
+      - ctest -R simple_tests -C Release --output-on-failure
 
 test_msvs17:
     stage : test
@@ -102,7 +106,8 @@ test_msvs17:
       - windows
     script:
       - cd simple_msvs17
-      - ctest -R simple_tests --output-on-failure
+      - copy .\msgs\Release\libsimple_msgs.dll .\tests\Release\libsimple_msgs.dll
+      - ctest -R simple_tests -C Release --output-on-failure
       
 test_gcc:
     stage : test
