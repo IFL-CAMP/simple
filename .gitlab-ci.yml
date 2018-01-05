@@ -20,7 +20,7 @@ build_msvc15:
   script:
     - IF NOT EXIST "simple_msvs15" mkdir "simple_msvs15"
     - cd simple_msvs15
-    - "@call ""%VS140COMNTOOLS%VsDevCmd.bat"""
+    - '@call %VS140COMNTOOLS%VsDevCmd.bat"'
     - cmake -G "Visual Studio 14 2015 Win64" %ZEROMQ_2015% -DBUILD_TESTS=ON ..
     - devenv /build Release simple.sln
   cache:
