@@ -40,6 +40,10 @@ add_executable(quaternion_test quaternion_test.cpp)
 target_link_libraries(quaternion_test simple)
 add_test(NAME simple_tests.quaternion COMMAND quaternion_test)
 
+add_executable(header_test header_test.cpp)
+target_link_libraries(header_test simple)
+add_test(NAME simple_tests.header COMMAND header_test)
+
 install(
 TARGETS
   double_test
@@ -49,6 +53,7 @@ TARGETS
   pose_test
   rotation_matrix_test
   quaternion_test
+  header_test
 DESTINATION 
 	bin
 )
