@@ -6,3 +6,4 @@ tests/include
 
 msgs/include/simple_msgs/generated/
 build2017/
+simpleConfigVersion.cmake
