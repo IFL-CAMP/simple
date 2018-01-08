@@ -15,13 +15,16 @@ int main(int argc, char* argv[])
   simple_msgs::Bool b;
 
   // create a client
-  simple::Client<simple_msgs::Bool> client("tcp://localhost:5555");
+  simple::Client<simple_msgs::Point> client("tcp://localhost:5555");
   std::cout << "Send: x = 5.0, y = 6.0, z = 7.0. Expect: x = 6.0, y = 7.0, z = 8.0" << std::endl;
+
+  //try copy-constructing a new client
+  simple::Client<simple_msgs::Point> client2(client);
 
   for (auto i = 0; i < 10; ++i)
   {
     std::cout << "Requesting point #" << i << "." << std::endl;
-    if (client.request(b))
+    if (client2.request(p))
     {
       std::cout << b << std::endl;
     }
