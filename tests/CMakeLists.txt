@@ -44,6 +44,10 @@ add_executable(header_test header_test.cpp)
 target_link_libraries(header_test simple)
 add_test(NAME simple_tests.header COMMAND header_test)
 
+add_executable(image_test image_test.cpp)
+target_link_libraries(image_test simple)
+add_test(NAME simple_tests.image COMMAND image_test)
+
 install(
 TARGETS
   double_test
@@ -54,6 +58,7 @@ TARGETS
   rotation_matrix_test
   quaternion_test
   header_test
+  image_test
 DESTINATION 
 	bin
 )

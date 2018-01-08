@@ -291,7 +291,7 @@ SCENARIO("Using a Point Message")
     }
     WHEN("I get the message topic")
     {
-      auto topic_name = single_point.getTopic();
+      std::string topic_name = single_point.getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "POIT"); }
     }
   }
