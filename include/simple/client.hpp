@@ -21,6 +21,13 @@ public:
     GenericSocket<T>::connect(address);
   }
 
+  /**
+  * @brief Copy constructor for Client. Opens a new socket of the same type, connected to the same address.
+  */
+  Client(const Client& c) : GenericSocket<T>(zmq_socket(context_.get(), ZMQ_REQ)) {
+	  GenericSocket<T>::connect(zmq_getsockopt(c.socket_, ZMQ_LAST_ENDPOINT));
+  }
+
   ~Client() {}
   /**
    * @brief Sends the request to a server and waits for an answer.
