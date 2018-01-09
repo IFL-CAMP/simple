@@ -10,383 +10,348 @@
 
 SCENARIO("Using a Rotation Matrix Message")
 {
-  GIVEN("A Rotation Matrix created from 1 double1")
+  double double_1 = static_cast<double>(rand()) / RAND_MAX;
+  double double_2 = static_cast<double>(rand()) / RAND_MAX;
+  double double_3 = static_cast<double>(rand()) / RAND_MAX;
+  double double_4 = static_cast<double>(rand()) / RAND_MAX;
+  double double_5 = static_cast<double>(rand()) / RAND_MAX;
+  double double_6 = static_cast<double>(rand()) / RAND_MAX;
+  double double_7 = static_cast<double>(rand()) / RAND_MAX;
+  double double_8 = static_cast<double>(rand()) / RAND_MAX;
+  double double_9 = static_cast<double>(rand()) / RAND_MAX;
+  std::array<double, 9> doubles_array{double_1, double_2, double_3, double_4, double_5,
+                                      double_6, double_7, double_8, double_9};
+  std::array<double, 3> column0_array{double_1, double_4, double_7};
+  std::array<double, 3> column1_array{double_2, double_5, double_8};
+  std::array<double, 3> column2_array{double_3, double_6, double_9};
+  std::array<double, 3> row0_array{double_1, double_2, double_3};
+  std::array<double, 3> row1_array{double_4, double_5, double_6};
+  std::array<double, 3> row2_array{double_7, double_8, double_9};
+  // Testing constructors.
+  GIVEN("An empty rotation matrix")
   {
-    double d1 = static_cast<double>(rand()) / RAND_MAX;
-    simple_msgs::RotationMatrix r(d1);
+    simple_msgs::RotationMatrix rotation_matrix;
+
+    WHEN("It is constructed")
+    {
+      THEN("The Rotation Matrix elements have to be zero")
+      {
+        REQUIRE(rotation_matrix.getRow(0)[0] == 0);
+        REQUIRE(rotation_matrix.getRow(0)[1] == 0);
+        REQUIRE(rotation_matrix.getRow(0)[2] == 0);
+        REQUIRE(rotation_matrix.getRow(1)[0] == 0);
+        REQUIRE(rotation_matrix.getRow(1)[1] == 0);
+        REQUIRE(rotation_matrix.getRow(1)[2] == 0);
+        REQUIRE(rotation_matrix.getRow(2)[0] == 0);
+        REQUIRE(rotation_matrix.getRow(2)[1] == 0);
+        REQUIRE(rotation_matrix.getRow(2)[2] == 0);
+      }
+    }
+  }
+
+  GIVEN("A Rotation Matrix created from 1 double")
+  {
+    simple_msgs::RotationMatrix double_rotation_matrix(double_1);
     WHEN("We check the Rotation Matrix's elements")
     {
       THEN("They all have to be equal to the double from the constructor")
       {
-        REQUIRE(r.getRow(0)[0] == d1);
-        REQUIRE(r.getRow(0)[1] == d1);
-        REQUIRE(r.getRow(0)[2] == d1);
-        REQUIRE(r.getRow(1)[0] == d1);
-        REQUIRE(r.getRow(1)[1] == d1);
-        REQUIRE(r.getRow(1)[2] == d1);
-        REQUIRE(r.getRow(2)[0] == d1);
-        REQUIRE(r.getRow(2)[1] == d1);
-        REQUIRE(r.getRow(2)[2] == d1);
+        REQUIRE(double_rotation_matrix.getRow(0)[0] == double_1);
+        REQUIRE(double_rotation_matrix.getRow(0)[1] == double_1);
+        REQUIRE(double_rotation_matrix.getRow(0)[2] == double_1);
+        REQUIRE(double_rotation_matrix.getRow(1)[0] == double_1);
+        REQUIRE(double_rotation_matrix.getRow(1)[1] == double_1);
+        REQUIRE(double_rotation_matrix.getRow(1)[2] == double_1);
+        REQUIRE(double_rotation_matrix.getRow(2)[0] == double_1);
+        REQUIRE(double_rotation_matrix.getRow(2)[1] == double_1);
+        REQUIRE(double_rotation_matrix.getRow(2)[2] == double_1);
       }
     }
   }
+
   GIVEN("A Rotation Matrix created from 9 doubles")
   {
-    double d1 = static_cast<double>(rand()) / RAND_MAX;
-    double d2 = static_cast<double>(rand()) / RAND_MAX;
-    double d3 = static_cast<double>(rand()) / RAND_MAX;
-    double d4 = static_cast<double>(rand()) / RAND_MAX;
-    double d5 = static_cast<double>(rand()) / RAND_MAX;
-    double d6 = static_cast<double>(rand()) / RAND_MAX;
-    double d7 = static_cast<double>(rand()) / RAND_MAX;
-    double d8 = static_cast<double>(rand()) / RAND_MAX;
-    double d9 = static_cast<double>(rand()) / RAND_MAX;
-    simple_msgs::RotationMatrix r(d1, d2, d3, d4, d5, d6, d7, d8, d9);
+    simple_msgs::RotationMatrix doubles_rotation_matrix(double_1, double_2, double_3, double_4, double_5, double_6,
+                                                        double_7, double_8, double_9);
     WHEN("We check the Rotation Matrix's elements")
     {
       THEN("They all have to be equal to the doubles from the constructor")
       {
-        REQUIRE(r.getRow(0)[0] == d1);
-        REQUIRE(r.getRow(0)[1] == d2);
-        REQUIRE(r.getRow(0)[2] == d3);
-        REQUIRE(r.getRow(1)[0] == d4);
-        REQUIRE(r.getRow(1)[1] == d5);
-        REQUIRE(r.getRow(1)[2] == d6);
-        REQUIRE(r.getRow(2)[0] == d7);
-        REQUIRE(r.getRow(2)[1] == d8);
-        REQUIRE(r.getRow(2)[2] == d9);
+        REQUIRE(doubles_rotation_matrix.getRow(0)[0] == double_1);
+        REQUIRE(doubles_rotation_matrix.getRow(0)[1] == double_2);
+        REQUIRE(doubles_rotation_matrix.getRow(0)[2] == double_3);
+        REQUIRE(doubles_rotation_matrix.getRow(1)[0] == double_4);
+        REQUIRE(doubles_rotation_matrix.getRow(1)[1] == double_5);
+        REQUIRE(doubles_rotation_matrix.getRow(1)[2] == double_6);
+        REQUIRE(doubles_rotation_matrix.getRow(2)[0] == double_7);
+        REQUIRE(doubles_rotation_matrix.getRow(2)[1] == double_8);
+        REQUIRE(doubles_rotation_matrix.getRow(2)[2] == double_9);
       }
     }
   }
+
   GIVEN("A Rotation Matrix created from an array of doubles")
   {
-    double d1 = static_cast<double>(rand()) / RAND_MAX;
-    double d2 = static_cast<double>(rand()) / RAND_MAX;
-    double d3 = static_cast<double>(rand()) / RAND_MAX;
-    double d4 = static_cast<double>(rand()) / RAND_MAX;
-    double d5 = static_cast<double>(rand()) / RAND_MAX;
-    double d6 = static_cast<double>(rand()) / RAND_MAX;
-    double d7 = static_cast<double>(rand()) / RAND_MAX;
-    double d8 = static_cast<double>(rand()) / RAND_MAX;
-    double d9 = static_cast<double>(rand()) / RAND_MAX;
-    std::array<double, 9> a{d1, d2, d3, d4, d5, d6, d7, d8, d9};
-    simple_msgs::RotationMatrix r(a);
+    simple_msgs::RotationMatrix array_rotation_matrix(doubles_array);
     WHEN("We check the Rotation Matrix's elements")
     {
       THEN("They all have to be equal to the doubles")
       {
-        REQUIRE(r.getRow(0)[0] == d1);
-        REQUIRE(r.getRow(0)[1] == d2);
-        REQUIRE(r.getRow(0)[2] == d3);
-        REQUIRE(r.getRow(1)[0] == d4);
-        REQUIRE(r.getRow(1)[1] == d5);
-        REQUIRE(r.getRow(1)[2] == d6);
-        REQUIRE(r.getRow(2)[0] == d7);
-        REQUIRE(r.getRow(2)[1] == d8);
-        REQUIRE(r.getRow(2)[2] == d9);
+        REQUIRE(array_rotation_matrix.getRow(0)[0] == double_1);
+        REQUIRE(array_rotation_matrix.getRow(0)[1] == double_2);
+        REQUIRE(array_rotation_matrix.getRow(0)[2] == double_3);
+        REQUIRE(array_rotation_matrix.getRow(1)[0] == double_4);
+        REQUIRE(array_rotation_matrix.getRow(1)[1] == double_5);
+        REQUIRE(array_rotation_matrix.getRow(1)[2] == double_6);
+        REQUIRE(array_rotation_matrix.getRow(2)[0] == double_7);
+        REQUIRE(array_rotation_matrix.getRow(2)[1] == double_8);
+        REQUIRE(array_rotation_matrix.getRow(2)[2] == double_9);
       }
     }
   }
+
   GIVEN("A Rotation Matrix created from moving an array of doubles")
   {
-	  double d1 = static_cast<double>(rand()) / RAND_MAX;
-	  double d2 = static_cast<double>(rand()) / RAND_MAX;
-	  double d3 = static_cast<double>(rand()) / RAND_MAX;
-	  double d4 = static_cast<double>(rand()) / RAND_MAX;
-	  double d5 = static_cast<double>(rand()) / RAND_MAX;
-	  double d6 = static_cast<double>(rand()) / RAND_MAX;
-	  double d7 = static_cast<double>(rand()) / RAND_MAX;
-	  double d8 = static_cast<double>(rand()) / RAND_MAX;
-	  double d9 = static_cast<double>(rand()) / RAND_MAX;
-	  std::array<double, 9> a{ d1, d2, d3, d4, d5, d6, d7, d8, d9 };
-    simple_msgs::RotationMatrix r(std::move(a));
+    simple_msgs::RotationMatrix moved_array_rotation_matrix(std::move(doubles_array));
     WHEN("We check the Rotation Matrix's elements")
     {
       THEN("They all have to be equal to the doubles")
       {
-		  REQUIRE(r.getRow(0)[0] == d1);
-		  REQUIRE(r.getRow(0)[1] == d2);
-		  REQUIRE(r.getRow(0)[2] == d3);
-		  REQUIRE(r.getRow(1)[0] == d4);
-		  REQUIRE(r.getRow(1)[1] == d5);
-		  REQUIRE(r.getRow(1)[2] == d6);
-		  REQUIRE(r.getRow(2)[0] == d7);
-		  REQUIRE(r.getRow(2)[1] == d8);
-		  REQUIRE(r.getRow(2)[2] == d9);
+        REQUIRE(moved_array_rotation_matrix.getRow(0)[0] == double_1);
+        REQUIRE(moved_array_rotation_matrix.getRow(0)[1] == double_2);
+        REQUIRE(moved_array_rotation_matrix.getRow(0)[2] == double_3);
+        REQUIRE(moved_array_rotation_matrix.getRow(1)[0] == double_4);
+        REQUIRE(moved_array_rotation_matrix.getRow(1)[1] == double_5);
+        REQUIRE(moved_array_rotation_matrix.getRow(1)[2] == double_6);
+        REQUIRE(moved_array_rotation_matrix.getRow(2)[0] == double_7);
+        REQUIRE(moved_array_rotation_matrix.getRow(2)[1] == double_8);
+        REQUIRE(moved_array_rotation_matrix.getRow(2)[2] == double_9);
       }
     }
+  }
+
+  // Testing copy-constructors.
+  GIVEN("A rotation Matrix")
+  {
+    simple_msgs::RotationMatrix array_rotation_matrix(doubles_array);
     WHEN("I construct a new Rotation Matrix from the serialized data of the existing Rotation Matrix")
     {
-      simple_msgs::RotationMatrix r2(r.getBufferData());
-      THEN("The new Rotation Matrix has to be equal to the other") { REQUIRE(r2 == r); }
+      simple_msgs::RotationMatrix copy_buffer_rotation_matrix(array_rotation_matrix.getBufferData());
+      THEN("The new Rotation Matrix has to be equal to the other")
+      {
+        REQUIRE(copy_buffer_rotation_matrix == array_rotation_matrix);
+      }
     }
     WHEN("I copy-construct a new Rotation Matrix")
     {
-      simple_msgs::RotationMatrix r3(r);
-      THEN("The new Rotation Matrix is equal to the other") { REQUIRE(r3 == r); }
+      simple_msgs::RotationMatrix copy_rotation_matrix(array_rotation_matrix);
+      THEN("The new Rotation Matrix is equal to the other") { REQUIRE(copy_rotation_matrix == array_rotation_matrix); }
     }
     WHEN("I move-construct a new Rotation Matrix")
     {
-      simple_msgs::RotationMatrix r4(std::move(r));
+      simple_msgs::RotationMatrix moved_rotation_matrix(std::move(array_rotation_matrix));
       THEN("The new Rotation Matrix's coordinates are equal to the previous' ones")
       {
-		  REQUIRE(r4.getRow(0)[0] == d1);
-		  REQUIRE(r4.getRow(0)[1] == d2);
-		  REQUIRE(r4.getRow(0)[2] == d3);
-		  REQUIRE(r4.getRow(1)[0] == d4);
-		  REQUIRE(r4.getRow(1)[1] == d5);
-		  REQUIRE(r4.getRow(1)[2] == d6);
-		  REQUIRE(r4.getRow(2)[0] == d7);
-		  REQUIRE(r4.getRow(2)[1] == d8);
-		  REQUIRE(r4.getRow(2)[2] == d9);
+        REQUIRE(moved_rotation_matrix.getRow(0)[0] == double_1);
+        REQUIRE(moved_rotation_matrix.getRow(0)[1] == double_2);
+        REQUIRE(moved_rotation_matrix.getRow(0)[2] == double_3);
+        REQUIRE(moved_rotation_matrix.getRow(1)[0] == double_4);
+        REQUIRE(moved_rotation_matrix.getRow(1)[1] == double_5);
+        REQUIRE(moved_rotation_matrix.getRow(1)[2] == double_6);
+        REQUIRE(moved_rotation_matrix.getRow(2)[0] == double_7);
+        REQUIRE(moved_rotation_matrix.getRow(2)[1] == double_8);
+        REQUIRE(moved_rotation_matrix.getRow(2)[2] == double_9);
       }
     }
   }
-  GIVEN("An instance of a Rotation Matrix.")
-  {
-    // start a quaternion
-    simple_msgs::RotationMatrix r;
 
-    WHEN("We use the empty constructor")
-    {
-      THEN("The Rotation Matrix elements have to be zero")
-      {
-        REQUIRE(r.getRow(0)[0] == 0);
-        REQUIRE(r.getRow(0)[1] == 0);
-        REQUIRE(r.getRow(0)[2] == 0);
-        REQUIRE(r.getRow(1)[0] == 0);
-        REQUIRE(r.getRow(1)[1] == 0);
-        REQUIRE(r.getRow(1)[2] == 0);
-        REQUIRE(r.getRow(2)[0] == 0);
-        REQUIRE(r.getRow(2)[1] == 0);
-        REQUIRE(r.getRow(2)[2] == 0);
-      }
-    }
-    WHEN("I set the 1st row of the Rotation Matrix")
-    {
-      double x = static_cast<double>(rand()) / RAND_MAX;
-      double y = static_cast<double>(rand()) / RAND_MAX;
-      double z = static_cast<double>(rand()) / RAND_MAX;
-      std::array<double, 3> a{x, y, z};
-      r.setRow(0, a);
-      THEN("The Rotation Matrix row has the correct elements") { REQUIRE(r.getRow(0) == a); }
-    }
-    WHEN("I set the 1st column of the Rotation Matrix")
-    {
-      double x = static_cast<double>(rand()) / RAND_MAX;
-      double y = static_cast<double>(rand()) / RAND_MAX;
-      double z = static_cast<double>(rand()) / RAND_MAX;
-      std::array<double, 3> a{x, y, z};
-      r.setColumn(0, a);
-      THEN("The Rotation Matrix column has the correct elements") { REQUIRE(r.getColumn(0) == a); }
-    }
-    WHEN("I set the 2nd row of the Rotation Matrix")
-    {
-      double x = static_cast<double>(rand()) / RAND_MAX;
-      double y = static_cast<double>(rand()) / RAND_MAX;
-      double z = static_cast<double>(rand()) / RAND_MAX;
-      std::array<double, 3> a{x, y, z};
-      r.setRow(1, a);
-      THEN("The Rotation Matrix row has the correct elements") { REQUIRE(r.getRow(1) == a); }
-    }
-    WHEN("I set the 2nd column of the Rotation Matrix")
-    {
-      double x = static_cast<double>(rand()) / RAND_MAX;
-      double y = static_cast<double>(rand()) / RAND_MAX;
-      double z = static_cast<double>(rand()) / RAND_MAX;
-      std::array<double, 3> a{x, y, z};
-      r.setColumn(1, a);
-      THEN("The Rotation Matrix column has the correct elements") { REQUIRE(r.getColumn(1) == a); }
-    }
-    WHEN("I set the 3rd row of the Rotation Matrix")
-    {
-      double x = static_cast<double>(rand()) / RAND_MAX;
-      double y = static_cast<double>(rand()) / RAND_MAX;
-      double z = static_cast<double>(rand()) / RAND_MAX;
-      std::array<double, 3> a{x, y, z};
-      r.setRow(2, a);
-      THEN("The Rotation Matrix row has the correct elements") { REQUIRE(r.getRow(2) == a); }
-    }
-    WHEN("I set the 3rd column of the Rotation Matrix")
-    {
-      double x = static_cast<double>(rand()) / RAND_MAX;
-      double y = static_cast<double>(rand()) / RAND_MAX;
-      double z = static_cast<double>(rand()) / RAND_MAX;
-      std::array<double, 3> a{x, y, z};
-      r.setColumn(2, a);
-      THEN("The Rotation Matrix column has the correct elements") { REQUIRE(r.getColumn(2) == a); }
-    }
-  }
-  GIVEN("Two identical Rotation Matrixes")
-  {
-	  double d1 = static_cast<double>(rand()) / RAND_MAX;
-	  double d2 = static_cast<double>(rand()) / RAND_MAX;
-	  double d3 = static_cast<double>(rand()) / RAND_MAX;
-	  double d4 = static_cast<double>(rand()) / RAND_MAX;
-	  double d5 = static_cast<double>(rand()) / RAND_MAX;
-	  double d6 = static_cast<double>(rand()) / RAND_MAX;
-	  double d7 = static_cast<double>(rand()) / RAND_MAX;
-	  double d8 = static_cast<double>(rand()) / RAND_MAX;
-	  double d9 = static_cast<double>(rand()) / RAND_MAX;
-	  simple_msgs::RotationMatrix r(d1, d2, d3, d4, d5, d6, d7, d8, d9);
-	  simple_msgs::RotationMatrix r2(d1, d2, d3, d4, d5, d6, d7, d8, d9);
-    WHEN("I compare these Rotation Matrixes")
-    {
-      THEN("They have to be equal") { REQUIRE(r == r2); }
-    }
-  }
+  // Testing copy-assignments.
   GIVEN("A Rotation Matrix")
   {
-	  double d1 = static_cast<double>(rand()) / RAND_MAX;
-	  double d2 = static_cast<double>(rand()) / RAND_MAX;
-	  double d3 = static_cast<double>(rand()) / RAND_MAX;
-	  double d4 = static_cast<double>(rand()) / RAND_MAX;
-	  double d5 = static_cast<double>(rand()) / RAND_MAX;
-	  double d6 = static_cast<double>(rand()) / RAND_MAX;
-	  double d7 = static_cast<double>(rand()) / RAND_MAX;
-	  double d8 = static_cast<double>(rand()) / RAND_MAX;
-	  double d9 = static_cast<double>(rand()) / RAND_MAX;
-	  simple_msgs::RotationMatrix r(d1, d2, d3, d4, d5, d6, d7, d8, d9);
+    simple_msgs::RotationMatrix array_rotation_matrix(doubles_array);
     WHEN("I copy-assign from that Rotation Matrix's buffer")
     {
-      simple_msgs::RotationMatrix r2;
-      r2 = r.getBufferData();
-      THEN("The new Rotation Matrix has to be same as the original") { REQUIRE(r2 == r); }
+      simple_msgs::RotationMatrix copy_assigned_buffer_rotation_matrix;
+      copy_assigned_buffer_rotation_matrix = array_rotation_matrix.getBufferData();
+      THEN("The new Rotation Matrix has to be same as the original")
+      {
+        REQUIRE(copy_assigned_buffer_rotation_matrix == array_rotation_matrix);
+      }
     }
     WHEN("I copy-assign from that Rotation Matrix")
     {
-      simple_msgs::RotationMatrix r3;
-      r3 = r;
-      THEN("The new Rotation Matrix has to be same as the original") { REQUIRE(r3 == r); }
+      simple_msgs::RotationMatrix copy_assigned_rotation_matrix;
+      copy_assigned_rotation_matrix = array_rotation_matrix;
+      THEN("The new Rotation Matrix has to be same as the original")
+      {
+        REQUIRE(copy_assigned_rotation_matrix == array_rotation_matrix);
+      }
     }
     WHEN("I move-assign from that Rotation Matrix")
     {
-      simple_msgs::RotationMatrix r4;
-      r4 = std::move(r);
+      simple_msgs::RotationMatrix move_assigned_rotation_matrix;
+      move_assigned_rotation_matrix = std::move(array_rotation_matrix);
       THEN("The new Rotation Matrix has to be same as the original")
       {
-		  REQUIRE(r4.getRow(0)[0] == d1);
-		  REQUIRE(r4.getRow(0)[1] == d2);
-		  REQUIRE(r4.getRow(0)[2] == d3);
-		  REQUIRE(r4.getRow(1)[0] == d4);
-		  REQUIRE(r4.getRow(1)[1] == d5);
-		  REQUIRE(r4.getRow(1)[2] == d6);
-		  REQUIRE(r4.getRow(2)[0] == d7);
-		  REQUIRE(r4.getRow(2)[1] == d8);
-		  REQUIRE(r4.getRow(2)[2] == d9);
+        REQUIRE(move_assigned_rotation_matrix.getRow(0)[0] == double_1);
+        REQUIRE(move_assigned_rotation_matrix.getRow(0)[1] == double_2);
+        REQUIRE(move_assigned_rotation_matrix.getRow(0)[2] == double_3);
+        REQUIRE(move_assigned_rotation_matrix.getRow(1)[0] == double_4);
+        REQUIRE(move_assigned_rotation_matrix.getRow(1)[1] == double_5);
+        REQUIRE(move_assigned_rotation_matrix.getRow(1)[2] == double_6);
+        REQUIRE(move_assigned_rotation_matrix.getRow(2)[0] == double_7);
+        REQUIRE(move_assigned_rotation_matrix.getRow(2)[1] == double_8);
+        REQUIRE(move_assigned_rotation_matrix.getRow(2)[2] == double_9);
       }
     }
   }
+
   GIVEN("A Rotation Matrix")
   {
-    simple_msgs::RotationMatrix r;
+    simple_msgs::RotationMatrix empty_rotation_matrix;
     WHEN("I copy-assign an array to that Rotation Matrix")
     {
-		double d1 = static_cast<double>(rand()) / RAND_MAX;
-		double d2 = static_cast<double>(rand()) / RAND_MAX;
-		double d3 = static_cast<double>(rand()) / RAND_MAX;
-		double d4 = static_cast<double>(rand()) / RAND_MAX;
-		double d5 = static_cast<double>(rand()) / RAND_MAX;
-		double d6 = static_cast<double>(rand()) / RAND_MAX;
-		double d7 = static_cast<double>(rand()) / RAND_MAX;
-		double d8 = static_cast<double>(rand()) / RAND_MAX;
-		double d9 = static_cast<double>(rand()) / RAND_MAX;
-      std::array<double, 9> a{d1, d2, d3,d4, d5, d6, d7, d8, d9};
-      r = a;
+      empty_rotation_matrix = doubles_array;
       THEN("The Rotation Matrix's elements are equal to the array")
       {
-		  REQUIRE(r.getRow(0)[0] == d1);
-		  REQUIRE(r.getRow(0)[1] == d2);
-		  REQUIRE(r.getRow(0)[2] == d3);
-		  REQUIRE(r.getRow(1)[0] == d4);
-		  REQUIRE(r.getRow(1)[1] == d5);
-		  REQUIRE(r.getRow(1)[2] == d6);
-		  REQUIRE(r.getRow(2)[0] == d7);
-		  REQUIRE(r.getRow(2)[1] == d8);
-		  REQUIRE(r.getRow(2)[2] == d9);
+        REQUIRE(empty_rotation_matrix.getRow(0)[0] == double_1);
+        REQUIRE(empty_rotation_matrix.getRow(0)[1] == double_2);
+        REQUIRE(empty_rotation_matrix.getRow(0)[2] == double_3);
+        REQUIRE(empty_rotation_matrix.getRow(1)[0] == double_4);
+        REQUIRE(empty_rotation_matrix.getRow(1)[1] == double_5);
+        REQUIRE(empty_rotation_matrix.getRow(1)[2] == double_6);
+        REQUIRE(empty_rotation_matrix.getRow(2)[0] == double_7);
+        REQUIRE(empty_rotation_matrix.getRow(2)[1] == double_8);
+        REQUIRE(empty_rotation_matrix.getRow(2)[2] == double_9);
       }
     }
     WHEN("I move-assign from an array to that Rotation Matrix")
     {
-		double d1 = static_cast<double>(rand()) / RAND_MAX;
-		double d2 = static_cast<double>(rand()) / RAND_MAX;
-		double d3 = static_cast<double>(rand()) / RAND_MAX;
-		double d4 = static_cast<double>(rand()) / RAND_MAX;
-		double d5 = static_cast<double>(rand()) / RAND_MAX;
-		double d6 = static_cast<double>(rand()) / RAND_MAX;
-		double d7 = static_cast<double>(rand()) / RAND_MAX;
-		double d8 = static_cast<double>(rand()) / RAND_MAX;
-		double d9 = static_cast<double>(rand()) / RAND_MAX;
-		std::array<double, 9> a{ d1, d2, d3,d4, d5, d6, d7, d8, d9 };
-      r = std::move(a);
+      empty_rotation_matrix = std::move(doubles_array);
       THEN("The quaternion's elements are the same as the array")
       {
-		  REQUIRE(r.getRow(0)[0] == d1);
-		  REQUIRE(r.getRow(0)[1] == d2);
-		  REQUIRE(r.getRow(0)[2] == d3);
-		  REQUIRE(r.getRow(1)[0] == d4);
-		  REQUIRE(r.getRow(1)[1] == d5);
-		  REQUIRE(r.getRow(1)[2] == d6);
-		  REQUIRE(r.getRow(2)[0] == d7);
-		  REQUIRE(r.getRow(2)[1] == d8);
-		  REQUIRE(r.getRow(2)[2] == d9);
+        REQUIRE(empty_rotation_matrix.getRow(0)[0] == double_1);
+        REQUIRE(empty_rotation_matrix.getRow(0)[1] == double_2);
+        REQUIRE(empty_rotation_matrix.getRow(0)[2] == double_3);
+        REQUIRE(empty_rotation_matrix.getRow(1)[0] == double_4);
+        REQUIRE(empty_rotation_matrix.getRow(1)[1] == double_5);
+        REQUIRE(empty_rotation_matrix.getRow(1)[2] == double_6);
+        REQUIRE(empty_rotation_matrix.getRow(2)[0] == double_7);
+        REQUIRE(empty_rotation_matrix.getRow(2)[1] == double_8);
+        REQUIRE(empty_rotation_matrix.getRow(2)[2] == double_9);
       }
     }
   }
-  GIVEN("Two different Rotation Matrixes")
+
+  // Testing operations.
+  GIVEN("Two identical Rotation Matrixes")
   {
-    double d1 = static_cast<double>(rand()) / RAND_MAX;
-    double d2 = d1 + 1.0;
-    simple_msgs::RotationMatrix r1(d1);
-    simple_msgs::RotationMatrix r2(d2);
+    simple_msgs::RotationMatrix rotation_matrix_1(doubles_array);
+    simple_msgs::RotationMatrix rotation_matrix_2(doubles_array);
     WHEN("I compare these Rotation Matrixes")
     {
-      THEN("They have to be different") { REQUIRE(r1 != r2); }
+      THEN("They have to be equal") { REQUIRE(rotation_matrix_1 == rotation_matrix_2); }
+    }
+    WHEN("I change something in the first matrix")
+    {
+      rotation_matrix_1.setColumn(0, column2_array);
+      THEN("They have to different") { REQUIRE(rotation_matrix_1 != rotation_matrix_2); }
     }
   }
-  GIVEN("A Rotation Matrix")
+
+  // Testing elements getters-setters.
+  GIVEN("An empty rotation matrix")
   {
-	  double d1 = static_cast<double>(rand()) / RAND_MAX;
-	  double d2 = static_cast<double>(rand()) / RAND_MAX;
-	  double d3 = static_cast<double>(rand()) / RAND_MAX;
-	  double d4 = static_cast<double>(rand()) / RAND_MAX;
-	  double d5 = static_cast<double>(rand()) / RAND_MAX;
-	  double d6 = static_cast<double>(rand()) / RAND_MAX;
-	  double d7 = static_cast<double>(rand()) / RAND_MAX;
-	  double d8 = static_cast<double>(rand()) / RAND_MAX;
-	  double d9 = static_cast<double>(rand()) / RAND_MAX;
-	  simple_msgs::RotationMatrix r(d1, d2, d3, d4, d5, d6, d7, d8, d9);
-    WHEN("I get the array from the Rotation Matrix")
+    simple_msgs::RotationMatrix empty_rotation_matrix;
+    WHEN("I set the 1st row of the Rotation Matrix")
     {
-      std::array<double, 9> a = r.toVector();
-      THEN("The array elements are correct")
+      empty_rotation_matrix.setRow(0, row0_array);
+      THEN("The Rotation Matrix row has the correct elements")
       {
-        REQUIRE(a[0] == d1);
-        REQUIRE(a[1] == d2);
-        REQUIRE(a[2] == d3);
-        REQUIRE(a[3] == d4);
-		REQUIRE(a[4] == d5);
-		REQUIRE(a[5] == d6);
-		REQUIRE(a[6] == d7);
-		REQUIRE(a[7] == d8);
-		REQUIRE(a[8] == d9);
+        REQUIRE(empty_rotation_matrix.getRow(0) == row0_array);
       }
     }
-	WHEN("I get the transpose from the Rotation Matrix")
-	{
-		simple_msgs::RotationMatrix transpose = r.getTranspose();
-		THEN("The transpose elements are correct")
-		{
-			REQUIRE(transpose.getRow(0)[0] == d1);
-			REQUIRE(transpose.getRow(0)[1] == d4);
-			REQUIRE(transpose.getRow(0)[2] == d7);
-			REQUIRE(transpose.getRow(1)[0] == d2);
-			REQUIRE(transpose.getRow(1)[1] == d5);
-			REQUIRE(transpose.getRow(1)[2] == d8);
-			REQUIRE(transpose.getRow(2)[0] == d3);
-			REQUIRE(transpose.getRow(2)[1] == d6);
-			REQUIRE(transpose.getRow(2)[2] == d9);
-		}
-	}
+    WHEN("I set the 1st column of the Rotation Matrix")
+    {
+      empty_rotation_matrix.setColumn(0, column0_array);
+      THEN("The Rotation Matrix column has the correct elements")
+      {
+        REQUIRE(empty_rotation_matrix.getColumn(0) == column0_array);
+      }
+    }
+    WHEN("I set the 2nd row of the Rotation Matrix")
+    {
+      empty_rotation_matrix.setRow(1, row1_array);
+      THEN("The Rotation Matrix row has the correct elements")
+      {
+        REQUIRE(empty_rotation_matrix.getRow(1) == row1_array);
+      }
+    }
+    WHEN("I set the 2nd column of the Rotation Matrix")
+    {
+      empty_rotation_matrix.setColumn(1, column1_array);
+      THEN("The Rotation Matrix column has the correct elements")
+      {
+        REQUIRE(empty_rotation_matrix.getColumn(1) == column1_array);
+      }
+    }
+    WHEN("I set the 3rd row of the Rotation Matrix")
+    {
+      empty_rotation_matrix.setRow(2, row2_array);
+      THEN("The Rotation Matrix row has the correct elements")
+      {
+        REQUIRE(empty_rotation_matrix.getRow(2) == row2_array);
+      }
+    }
+    WHEN("I set the 3rd column of the Rotation Matrix")
+    {
+      empty_rotation_matrix.setColumn(2, column2_array);
+      THEN("The Rotation Matrix column has the correct elements")
+      {
+        REQUIRE(empty_rotation_matrix.getColumn(2) == column2_array);
+      }
+    }
+  }
+
+  GIVEN("A Rotation Matrix")
+  {
+    simple_msgs::RotationMatrix rotation_matrix(doubles_array);
+    WHEN("I get the array from the Rotation Matrix")
+    {
+      std::array<double, 9> array = rotation_matrix.toVector();
+      THEN("The array elements are correct")
+      {
+        REQUIRE(array[0] == double_1);
+        REQUIRE(array[1] == double_2);
+        REQUIRE(array[2] == double_3);
+        REQUIRE(array[3] == double_4);
+        REQUIRE(array[4] == double_5);
+        REQUIRE(array[5] == double_6);
+        REQUIRE(array[6] == double_7);
+        REQUIRE(array[7] == double_8);
+        REQUIRE(array[8] == double_9);
+      }
+    }
+    WHEN("I get the transpose from the Rotation Matrix")
+    {
+      simple_msgs::RotationMatrix transpose = rotation_matrix.getTranspose();
+      THEN("The transpose elements are correct")
+      {
+        REQUIRE(transpose.getRow(0)[0] == double_1);
+        REQUIRE(transpose.getRow(0)[1] == double_4);
+        REQUIRE(transpose.getRow(0)[2] == double_7);
+        REQUIRE(transpose.getRow(1)[0] == double_2);
+        REQUIRE(transpose.getRow(1)[1] == double_5);
+        REQUIRE(transpose.getRow(1)[2] == double_8);
+        REQUIRE(transpose.getRow(2)[0] == double_3);
+        REQUIRE(transpose.getRow(2)[1] == double_6);
+        REQUIRE(transpose.getRow(2)[2] == double_9);
+      }
+    }
+    WHEN("I get the message topic")
+    {
+      std::string topic_name = rotation_matrix.getTopic();
+      THEN("I get the correct one") { REQUIRE(topic_name == "RMAT"); }
+    }
   }
 }
