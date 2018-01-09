@@ -115,52 +115,52 @@ SCENARIO("Using a Float Message")
 		WHEN("I increase the value of the float_")
 		{
 			single_float++;
-			THEN("The new value is correct") { REQUIRE(single_float.get() == float_1 + 1.0); }
+			THEN("The new value is correct") { REQUIRE(single_float.get() == float_1 + 1.0f); }
 		}
 		WHEN("I decrease the value of the float_")
 		{
 			single_float--;
-			THEN("The new value is correct") { REQUIRE(single_float.get() == float_1 - 1.0); }
+			THEN("The new value is correct") { REQUIRE(single_float.get() == float_1 - 1.0f); }
 		}
 		WHEN("I add to the value of the float_")
 		{
-			single_float += 2.0;
-			THEN("The new value is correct") { REQUIRE(single_float.get() == float_1 + 2.0); }
+			single_float += 2.0f;
+			THEN("The new value is correct") { REQUIRE(single_float.get() == float_1 + 2.0f); }
 		}
 		WHEN("I subtract from the value of the float_")
 		{
-			single_float -= 5.0;
-			THEN("The new value is correct") { REQUIRE(single_float.get() == float_1 - 5.0); }
+			single_float -= 5.0f;
+			THEN("The new value is correct") { REQUIRE(single_float.get() == float_1 - 5.0f); }
 		}
 		WHEN("I add a float to the float_")
 		{
-			simple_msgs::Float added_float = single_float + 6.0;
-			THEN("The new value is correct") { REQUIRE(added_float.get() == float_1 + 6.0); }
+			simple_msgs::Float added_float = single_float + 6.0f;
+			THEN("The new value is correct") { REQUIRE(added_float.get() == float_1 + 6.0f); }
 		}
 		WHEN("I subtract a float of the float_")
 		{
-			simple_msgs::Float subtracted_float = single_float - 6.0;
-			THEN("The new value is correct") { REQUIRE(subtracted_float.get() == float_1 - 6.0); }
+			simple_msgs::Float subtracted_float = single_float - 6.0f;
+			THEN("The new value is correct") { REQUIRE(subtracted_float.get() == float_1 - 6.0f); }
 		}
 		WHEN("I multiply to the value of the float_")
 		{
-			single_float *= 2.0;
-			THEN("The new value is correct") { REQUIRE(single_float.get() == float_1 * 2.0); }
+			single_float *= 2.0f;
+			THEN("The new value is correct") { REQUIRE(single_float.get() == float_1 * 2.0f); }
 		}
 		WHEN("I divide from the value of the float_")
 		{
-			single_float /= 5.0;
-			THEN("The new value is correct") { REQUIRE(single_float.get() == float_1 / 5.0); }
+			single_float /= 5.0f;
+			THEN("The new value is correct") { REQUIRE(single_float.get() == float_1 / 5.0f); }
 		}
 		WHEN("I multiply a float to the float_")
 		{
-			simple_msgs::Float multiplied_float = single_float * 6.0;
-			THEN("The new value is correct") { REQUIRE(multiplied_float.get() == float_1 * 6.0); }
+			simple_msgs::Float multiplied_float = single_float * 6.0f;
+			THEN("The new value is correct") { REQUIRE(multiplied_float.get() == float_1 * 6.0f); }
 		}
 		WHEN("I divide the float by a float_")
 		{
-			simple_msgs::Float divided_float = single_float / 6.0;
-			THEN("The new value is correct") { REQUIRE(divided_float.get() == float_1 / 6.0); }
+			simple_msgs::Float divided_float = single_float / 6.0f;
+			THEN("The new value is correct") { REQUIRE(divided_float.get() == float_1 / 6.0f); }
 		}
 		WHEN("I get the message topic")
 		{

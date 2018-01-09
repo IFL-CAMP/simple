@@ -115,52 +115,52 @@ SCENARIO("Using a Int Message")
 		WHEN("I increase the value of the int_")
 		{
 			single_int++;
-			THEN("The new value is correct") { REQUIRE(single_int.get() == int_1 + 1.0); }
+			THEN("The new value is correct") { REQUIRE(single_int.get() == int_1 + 1); }
 		}
 		WHEN("I decrease the value of the int_")
 		{
 			single_int--;
-			THEN("The new value is correct") { REQUIRE(single_int.get() == int_1 - 1.0); }
+			THEN("The new value is correct") { REQUIRE(single_int.get() == int_1 - 1); }
 		}
 		WHEN("I add to the value of the int_")
 		{
-			single_int += 2.0;
-			THEN("The new value is correct") { REQUIRE(single_int.get() == int_1 + 2.0); }
+			single_int += 2;
+			THEN("The new value is correct") { REQUIRE(single_int.get() == int_1 + 2); }
 		}
 		WHEN("I subtract from the value of the int_")
 		{
-			single_int -= 5.0;
-			THEN("The new value is correct") { REQUIRE(single_int.get() == int_1 - 5.0); }
+			single_int -= 5;
+			THEN("The new value is correct") { REQUIRE(single_int.get() == int_1 - 5); }
 		}
 		WHEN("I add a int to the int_")
 		{
-			simple_msgs::Int added_int = single_int + 6.0;
-			THEN("The new value is correct") { REQUIRE(added_int.get() == int_1 + 6.0); }
+			simple_msgs::Int added_int = single_int + 6;
+			THEN("The new value is correct") { REQUIRE(added_int.get() == int_1 + 6); }
 		}
 		WHEN("I subtract a int of the int_")
 		{
-			simple_msgs::Int subtracted_int = single_int - 6.0;
-			THEN("The new value is correct") { REQUIRE(subtracted_int.get() == int_1 - 6.0); }
+			simple_msgs::Int subtracted_int = single_int - 6;
+			THEN("The new value is correct") { REQUIRE(subtracted_int.get() == int_1 - 6); }
 		}
 		WHEN("I multiply to the value of the int_")
 		{
-			single_int *= 2.0;
-			THEN("The new value is correct") { REQUIRE(single_int.get() == int_1 * 2.0); }
+			single_int *= 2;
+			THEN("The new value is correct") { REQUIRE(single_int.get() == int_1 * 2); }
 		}
 		WHEN("I divide from the value of the int_")
 		{
-			single_int /= 5.0;
-			THEN("The new value is correct") { REQUIRE(single_int.get() == int_1 / 5.0); }
+			single_int /= 5;
+			THEN("The new value is correct") { REQUIRE(single_int.get() == int_1 / 5); }
 		}
 		WHEN("I multiply a int to the int_")
 		{
-			simple_msgs::Int multiplied_int = single_int * 6.0;
-			THEN("The new value is correct") { REQUIRE(multiplied_int.get() == int_1 * 6.0); }
+			simple_msgs::Int multiplied_int = single_int * 6;
+			THEN("The new value is correct") { REQUIRE(multiplied_int.get() == int_1 * 6); }
 		}
 		WHEN("I divide the int by a int_")
 		{
-			simple_msgs::Int divided_int = single_int / 6.0;
-			THEN("The new value is correct") { REQUIRE(divided_int.get() == int_1 / 6.0); }
+			simple_msgs::Int divided_int = single_int / 6;
+			THEN("The new value is correct") { REQUIRE(divided_int.get() == int_1 / 6); }
 		}
 		WHEN("I get the message topic")
 		{
