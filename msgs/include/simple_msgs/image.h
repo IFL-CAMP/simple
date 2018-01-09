@@ -59,7 +59,7 @@ public:
     if (this != std::addressof(other))
     {
       std::lock_guard<std::mutex> lock(mutex_);
-      header_ = other, header_;
+      header_ = other.header_;
       origin_ = other.origin_;
       encoding_ = other.encoding_;
       resX_ = other.resX_;
@@ -101,7 +101,7 @@ public:
 
   bool operator==(const Image& rhs) const
   {
-    return ((header_ == rhs, header_) && (origin_ == rhs.origin_) && (encoding_ == rhs.encoding_) &&
+    return ((header_ == rhs.header_) && (origin_ == rhs.origin_) && (encoding_ == rhs.encoding_) &&
             (resX_ == rhs.resX_) && (resY_ == rhs.resY_) && (resZ_ == rhs.resZ_) && (width_ == rhs.width_) &&
             (height_ == rhs.height_) && (depth_ == rhs.depth_) && (memcmp(data_.get(),rhs.data_.get(),data_size_)==0) &&
             (data_size_ == rhs.data_size_) && (num_channels_ == rhs.num_channels_));
