@@ -6,236 +6,217 @@
 #include <time.h>
 #include <stdlib.h>
 
-
 // TEST FOR USING THE QUATERNION MESSAGE WRAPPER
 
 SCENARIO("Using a Quaternion Message")
 {
-	GIVEN("A quaternion created from 4 doubles")
-	{
-		double d1 = static_cast<double>(rand()) / RAND_MAX;
-		double d2 = static_cast<double>(rand()) / RAND_MAX;
-		double d3 = static_cast<double>(rand()) / RAND_MAX;
-		double d4 = static_cast<double>(rand()) / RAND_MAX;
-		simple_msgs::Quaternion q(d1, d2, d3, d4);
-		WHEN("We check the quaternion's elements")
-		{
-			THEN("They all have to be equal to the doubles from the constructor")
-			{
-				REQUIRE(q.getX() == d1);
-				REQUIRE(q.getY() == d2);
-				REQUIRE(q.getZ() == d3);
-				REQUIRE(q.getW() == d4);
-			}
-		}
-	}
-	GIVEN("A quaternion created from an array of doubles")
-	{
-		double d1 = static_cast<double>(rand()) / RAND_MAX;
-		double d2 = static_cast<double>(rand()) / RAND_MAX;
-		double d3 = static_cast<double>(rand()) / RAND_MAX;
-		double d4 = static_cast<double>(rand()) / RAND_MAX;
-		std::array<double, 4> a{ d1, d2, d3, d4 };
-		simple_msgs::Quaternion p(a);
-		WHEN("We check the quaternion's elements")
-		{
-			THEN("They all have to be equal to the doubles")
-			{
-				REQUIRE(p.getX() == d1);
-				REQUIRE(p.getY() == d2);
-				REQUIRE(p.getZ() == d3);
-				REQUIRE(p.getW() == d4);
-			}
-		}
-	}
-	GIVEN("A quaternion created from moving an array of doubles")
-	{
-		double d1 = static_cast<double>(rand()) / RAND_MAX;
-		double d2 = static_cast<double>(rand()) / RAND_MAX;
-		double d3 = static_cast<double>(rand()) / RAND_MAX;
-		double d4 = static_cast<double>(rand()) / RAND_MAX;
-		std::array<double, 4> a{ d1, d2, d3, d4 };
-		simple_msgs::Quaternion p(std::move(a));
-		WHEN("We check the quaternion's elements")
-		{
-			THEN("They all have to be equal to the doubles")
-			{
-				REQUIRE(p.getX() == d1);
-				REQUIRE(p.getY() == d2);
-				REQUIRE(p.getZ() == d3);
-				REQUIRE(p.getW() == d4);
-			}
-		}
-		WHEN("I construct a new quaternion from the serialized data of the existing quaternion")
-		{
-			simple_msgs::Quaternion p2(p.getBufferData());
-			THEN("The new quaternion has to be equal to the other") { REQUIRE(p2 == p); }
-		}
-		WHEN("I copy-construct a new quaternion")
-		{
-			simple_msgs::Quaternion p3(p);
-			THEN("The new quaternion is equal to the other") { REQUIRE(p3 == p); }
-		}
-		WHEN("I move-construct a new quaternion")
-		{
-			simple_msgs::Quaternion p4(std::move(p));
-			THEN("The new quaternion's coordinates are equal to the previous' ones")
-			{
-				REQUIRE(p4.getX() == d1);
-				REQUIRE(p4.getY() == d2);
-				REQUIRE(p4.getZ() == d3);
-				REQUIRE(p4.getW() == d4);
-			}
-		}
-	}
-	GIVEN("An instance of a quaternion.")
-	{
-		// start a quaternion
-		simple_msgs::Quaternion q;
+  double double_1 = static_cast<double>(rand()) / RAND_MAX;
+  double double_2 = static_cast<double>(rand()) / RAND_MAX;
+  double double_3 = static_cast<double>(rand()) / RAND_MAX;
+  double double_4 = static_cast<double>(rand()) / RAND_MAX;
+  std::array<double, 4> double_array{double_1, double_2, double_3, double_4};
+  // Testing constructors.
+  GIVEN("An empty Quaternion")
+  {
+    simple_msgs::Quaternion empty_quaternion;
+    WHEN("It is constructed")
+    {
+      THEN("The first 3 elements have to be zero and the last one")
+      {
+        REQUIRE(empty_quaternion.getX() == 0.0);
+        REQUIRE(empty_quaternion.getY() == 0.0);
+        REQUIRE(empty_quaternion.getZ() == 0.0);
+        REQUIRE(empty_quaternion.getW() == 1.0);
+      }
+    }
+  }
 
-		WHEN("We use the empty constructor")
-		{
-			THEN("The quaternion has to be zero")
-			{
-				REQUIRE(q.getX() == 0);
-				REQUIRE(q.getY() == 0);
-				REQUIRE(q.getZ() == 0);
-			}
-		}
+  GIVEN("A quaternion created from 4 doubles")
+  {
+    simple_msgs::Quaternion q(double_1, double_2, double_3, double_4);
+    WHEN("We check the quaternion's elements")
+    {
+      THEN("They all have to be equal to the doubles from the constructor")
+      {
+        REQUIRE(q.getX() == double_1);
+        REQUIRE(q.getY() == double_2);
+        REQUIRE(q.getZ() == double_3);
+        REQUIRE(q.getW() == double_4);
+      }
+    }
+  }
 
-		WHEN("I set the X coordinate of the quaternion")
-		{
-			double x = static_cast<double>(rand()) / RAND_MAX;
-			q.setX(x);
-			THEN("The data quaternion has the correct coordinate") { REQUIRE(q.getX() == x); }
-		}
-		WHEN("I set the Y coordinate of the quaternion")
-		{
-			double y = static_cast<double>(rand()) / RAND_MAX;
-			q.setY(y);
-			THEN("The data quaternion has the correct coordinate") { REQUIRE(q.getY() == y); }
-		}
-		WHEN("I set the Z coordinate of the quaternion")
-		{
-			double z = static_cast<double>(rand()) / RAND_MAX;
-			q.setZ(z);
-			THEN("The data quaternion has the correct coordinate") { REQUIRE(q.getZ() == z); }
-		}
-		WHEN("I set the W coordinate of the quaternion")
-		{
-			double w = static_cast<double>(rand()) / RAND_MAX;
-			q.setW(w);
-			THEN("The data quaternion has the correct coordinate") { REQUIRE(q.getW() == w); }
-		}
-	}
-	GIVEN("Two identical quaternions")
-	{
-		double x = static_cast<double>(rand()) / RAND_MAX;
-		double y = static_cast<double>(rand()) / RAND_MAX;
-		double z = static_cast<double>(rand()) / RAND_MAX;
-		double w = static_cast<double>(rand()) / RAND_MAX;
-		simple_msgs::Quaternion q3(x, y, z, w);
-		simple_msgs::Quaternion q4(x, y, z, w);
-		WHEN("I compare these quaternions") {
-			THEN("They have to be equal") {
-				REQUIRE(q3 == q4);
-			}
-		}
-	}
-	GIVEN("A quaternion")
-	{
-		double x = static_cast<double>(rand()) / RAND_MAX;
-		double y = static_cast<double>(rand()) / RAND_MAX;
-		double z = static_cast<double>(rand()) / RAND_MAX;
-		double w = static_cast<double>(rand()) / RAND_MAX;
-		simple_msgs::Quaternion q6(x, y, z, w);
-		WHEN("I copy-assign from that quaternion's buffer")
-		{
-			simple_msgs::Quaternion q7;
-			q7 = q6.getBufferData();
-			THEN("The new quaternion has to be same as the original") { REQUIRE(q7 == q6); }
-		}
-		WHEN("I copy-assign from that quaternion")
-		{
-			simple_msgs::Quaternion q8;
-			q8 = q6;
-			THEN("The new quaternion has to be same as the original") { REQUIRE(q8 == q6); }
-		}
-		WHEN("I move-assign from that quaternion")
-		{
-			simple_msgs::Quaternion q9;
-			q9 = std::move(q6);
-			THEN("The new quaternion has to be same as the original") {
-				REQUIRE(q9.getX() == x);
-				REQUIRE(q9.getY() == y);
-				REQUIRE(q9.getZ() == z);
-				REQUIRE(q9.getW() == w);
-			}
-		}
-	}
-	GIVEN("A quaternion") {
-		simple_msgs::Quaternion q;
-		WHEN("I copy-assign an array to that quaternion") {
-			double x = static_cast<double>(rand()) / RAND_MAX;
-			double y = static_cast<double>(rand()) / RAND_MAX;
-			double z = static_cast<double>(rand()) / RAND_MAX;
-			double w = static_cast<double>(rand()) / RAND_MAX;
-			std::array<double, 4> a{ x, y, z, w };
-			q = a;
-			THEN("The quaternion's elements are equal to the array") {
-				REQUIRE(q.getX() == x);
-				REQUIRE(q.getY() == y);
-				REQUIRE(q.getZ() == z);
-				REQUIRE(q.getW() == w);
-			}
-		}
-		WHEN("I move-assign from an array to that quaternion") {
-			double x = static_cast<double>(rand()) / RAND_MAX;
-			double y = static_cast<double>(rand()) / RAND_MAX;
-			double z = static_cast<double>(rand()) / RAND_MAX;
-			double w = static_cast<double>(rand()) / RAND_MAX;
-			std::array<double, 4> a{ x, y, z, w };
-			q = std::move(a);
-			THEN("The quaternion's elements are the same as the array") {
-				REQUIRE(q.getX() == x);
-				REQUIRE(q.getY() == y);
-				REQUIRE(q.getZ() == z);
-				REQUIRE(q.getW() == w);
-			}
-		}
-	}
-	GIVEN("Two different quaternions") {
-		double d1 = static_cast<double>(rand()) / RAND_MAX;
-		double d2 = d1 + 1.0;
-		simple_msgs::Quaternion q1(d1,d1,d1,d1);
-		simple_msgs::Quaternion q2(d2,d2,d2,d2);
-		WHEN("I compare these quaternions") {
-			THEN("They have to be different") {
-				REQUIRE(q1 != q2);
-			}
-		}
-	}
-	GIVEN("A quaternion") {
-		double x = static_cast<double>(rand()) / RAND_MAX;
-		double y = static_cast<double>(rand()) / RAND_MAX;
-		double z = static_cast<double>(rand()) / RAND_MAX;
-		double w = static_cast<double>(rand()) / RAND_MAX;
-		simple_msgs::Quaternion q(x, y, z, w);
-		WHEN("I get the buffer of that quaternion and construct a new quaternion") {
-			uint8_t* buf = q.getBufferData();
-			simple_msgs::Quaternion q2(buf);
-			THEN("The new quaternion is equal to the original") {
-				REQUIRE(q == q2);
-			}
-		}
-		WHEN("I get the array from the quaternion") {
-			std::array<double, 4> a = q.toVector();
-			THEN("The array elements are correct") {
-				REQUIRE(a[0] == x);
-				REQUIRE(a[1] == y);
-				REQUIRE(a[2] == z);
-				REQUIRE(a[3] == w);
-			}
-		}
-	}
+  GIVEN("A quaternion created from an array of doubles")
+  {
+    simple_msgs::Quaternion array_quaternion(double_array);
+    WHEN("We check the quaternion's elements")
+    {
+      THEN("They all have to be equal to the doubles")
+      {
+        REQUIRE(array_quaternion.getX() == double_1);
+        REQUIRE(array_quaternion.getY() == double_2);
+        REQUIRE(array_quaternion.getZ() == double_3);
+        REQUIRE(array_quaternion.getW() == double_4);
+      }
+    }
+  }
+
+  GIVEN("A quaternion created from moving an array of doubles")
+  {
+    simple_msgs::Quaternion moved_array_quaternion(std::move(double_array));
+    WHEN("We check the quaternion's elements")
+    {
+      THEN("They all have to be equal to the doubles")
+      {
+        REQUIRE(moved_array_quaternion.getX() == double_1);
+        REQUIRE(moved_array_quaternion.getY() == double_2);
+        REQUIRE(moved_array_quaternion.getZ() == double_3);
+        REQUIRE(moved_array_quaternion.getW() == double_4);
+      }
+    }
+  }
+
+  // Testing Copy-constructors.
+  GIVEN("A quaternion")
+  {
+    simple_msgs::Quaternion quaternion(double_array);
+    WHEN("I construct a new quaternion from the serialized data of the existing quaternion")
+    {
+      simple_msgs::Quaternion buffer_quaternion(quaternion.getBufferData());
+      THEN("The new quaternion has to be equal to the other") { REQUIRE(buffer_quaternion == quaternion); }
+    }
+    WHEN("I copy-construct a new quaternion")
+    {
+      simple_msgs::Quaternion copy_quaternion(quaternion);
+      THEN("The new quaternion is equal to the other") { REQUIRE(copy_quaternion == quaternion); }
+    }
+    WHEN("I move-construct a new quaternion")
+    {
+      simple_msgs::Quaternion moved_quaternion(std::move(quaternion));
+      THEN("The new quaternion's coordinates are equal to the previous' ones")
+      {
+        REQUIRE(moved_quaternion.getX() == double_1);
+        REQUIRE(moved_quaternion.getY() == double_2);
+        REQUIRE(moved_quaternion.getZ() == double_3);
+        REQUIRE(moved_quaternion.getW() == double_4);
+      }
+    }
+  }
+
+  // Testing Copy-assignments.
+  GIVEN("A quaternion")
+  {
+    simple_msgs::Quaternion quaternion(double_array);
+    WHEN("I copy-assign from that quaternion's buffer")
+    {
+      simple_msgs::Quaternion copy_assigned_buffer_quaternion;
+      copy_assigned_buffer_quaternion = quaternion.getBufferData();
+      THEN("The new quaternion has to be same as the original")
+      {
+        REQUIRE(copy_assigned_buffer_quaternion == quaternion);
+      }
+    }
+    WHEN("I copy-assign from that quaternion")
+    {
+      simple_msgs::Quaternion copy_assigned_quaternion;
+      copy_assigned_quaternion = quaternion;
+      THEN("The new quaternion has to be same as the original") { REQUIRE(copy_assigned_quaternion == quaternion); }
+    }
+    WHEN("I move-assign from that quaternion")
+    {
+      simple_msgs::Quaternion move_assigned_quaternion;
+      move_assigned_quaternion = std::move(quaternion);
+      THEN("The new quaternion has to be same as the original")
+      {
+        REQUIRE(move_assigned_quaternion.getX() == double_1);
+        REQUIRE(move_assigned_quaternion.getY() == double_2);
+        REQUIRE(move_assigned_quaternion.getZ() == double_3);
+        REQUIRE(move_assigned_quaternion.getW() == double_4);
+      }
+    }
+    WHEN("I copy-assign an array to that quaternion")
+    {
+      simple_msgs::Quaternion copy_assined_array_quaternion;
+      copy_assined_array_quaternion = double_array;
+      THEN("The quaternion's elements are equal to the array")
+      {
+        REQUIRE(copy_assined_array_quaternion.getX() == double_1);
+        REQUIRE(copy_assined_array_quaternion.getY() == double_2);
+        REQUIRE(copy_assined_array_quaternion.getZ() == double_3);
+        REQUIRE(copy_assined_array_quaternion.getW() == double_4);
+      }
+    }
+    WHEN("I move-assign from an array to that quaternion")
+    {
+      simple_msgs::Quaternion move_assined_array_quaternion;
+      move_assined_array_quaternion = std::move(double_array);
+      THEN("The quaternion's elements are the same as the array")
+      {
+        REQUIRE(move_assined_array_quaternion.getX() == double_1);
+        REQUIRE(move_assined_array_quaternion.getY() == double_2);
+        REQUIRE(move_assined_array_quaternion.getZ() == double_3);
+        REQUIRE(move_assined_array_quaternion.getW() == double_4);
+      }
+    }
+  }
+
+  // Testing operations.
+  GIVEN("Two identical quaternions")
+  {
+    simple_msgs::Quaternion quaternion_1(double_array);
+    simple_msgs::Quaternion quaternion_2(double_array);
+    WHEN("I compare these quaternions")
+    {
+      THEN("They have to be equal") { REQUIRE(quaternion_1 == quaternion_2); }
+    }
+    WHEN("I change one of the quaternions")
+    {
+      quaternion_1.setX(double_1 + double_2);
+      THEN("They have to be different") { REQUIRE(quaternion_1 != quaternion_2); }
+    }
+    WHEN("I get the array from the quaternion")
+    {
+      std::array<double, 4> vector = quaternion_1.toVector();
+      THEN("The array elements are correct")
+      {
+        REQUIRE(vector[0] == double_1);
+        REQUIRE(vector[1] == double_2);
+        REQUIRE(vector[2] == double_3);
+        REQUIRE(vector[3] == double_4);
+      }
+    }
+    WHEN("I get the message topic")
+    {
+      std::string topic_name = quaternion_1.getTopic();
+      THEN("I get the correct one") { REQUIRE(topic_name == "QUAT"); }
+    }
+  }
+
+  // Testing coordinates setters/getters.
+  GIVEN("An instance of a quaternion.")
+  {
+    // start a quaternion
+    simple_msgs::Quaternion quaternion;
+
+    WHEN("I set the X coordinate of the quaternion")
+    {
+      quaternion.setX(double_1);
+      THEN("The data quaternion has the correct coordinate") { REQUIRE(quaternion.getX() == double_1); }
+    }
+    WHEN("I set the Y coordinate of the quaternion")
+    {
+      quaternion.setY(double_2);
+      THEN("The data quaternion has the correct coordinate") { REQUIRE(quaternion.getY() == double_2); }
+    }
+    WHEN("I set the Z coordinate of the quaternion")
+    {
+      quaternion.setZ(double_3);
+      THEN("The data quaternion has the correct coordinate") { REQUIRE(quaternion.getZ() == double_3); }
+    }
+    WHEN("I set the W coordinate of the quaternion")
+    {
+      quaternion.setW(double_4);
+      THEN("The data quaternion has the correct coordinate") { REQUIRE(quaternion.getW() == double_4); }
+    }
+  }
 }
