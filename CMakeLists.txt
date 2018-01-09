@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.5)
 project(simple)
-set(simple_VERSION 0.1)
+
+# Set the project version
+set(PROJECT_VER_PATCH 0)
+set(PROJECT_VER_MINOR 1)
+set(PROJECT_VER_MAJOR 1)
+set(simple_VERSION "${PROJECT_VER_MAJOR}.${PROJECT_VER_MINOR}.${PROJECT_VER_PATCH}")
 
 include(GNUInstallDirs)
 
