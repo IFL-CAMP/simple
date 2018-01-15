@@ -43,6 +43,12 @@ SCENARIO("Using an Image Message")
 		  //REQUIRE(empty_image.getImageData() == nullptr);
 	  }
     }
+	WHEN("I build another empty image from the buffer of the empty image") {
+		simple_msgs::Image<uint8_t> copy_empty_image(empty_image.getBufferData());
+		THEN("All image fields have to match the default parameters") {
+			REQUIRE(copy_empty_image == empty_image);
+		}
+	}
   }
 
   //Testing copy-constructors.

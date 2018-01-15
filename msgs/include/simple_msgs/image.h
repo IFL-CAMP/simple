@@ -24,7 +24,7 @@ public:
     : GenericMessage()
     , header_(other.header_)
     , origin_(other.origin_)
-    , encoding_(encoding_)
+    , encoding_(other.encoding_)
     , resX_(other.resX_)
     , resY_(other.resY_)
     , resZ_(other.resZ_)
@@ -41,7 +41,7 @@ public:
     : GenericMessage()
     , header_(std::move(other.header_))
     , origin_(std::move(other.origin_))
-    , encoding_(std::move(encoding_))
+    , encoding_(std::move(other.encoding_))
     , resX_(std::move(other.resX_))
     , resY_(std::move(other.resY_))
     , resZ_(std::move(other.resZ_))
@@ -122,13 +122,21 @@ public:
       auto header_data = builder_->CreateVector(header_.getBufferData(), header_.getBufferSize());
       auto origin_data = builder_->CreateVector(origin_.getBufferData(), origin_.getBufferSize());
       auto type = getDataUnionType();
-      auto elem = getDataUnionElem();
+	  flatbuffers::Offset<void> elem;
+	  if (data_)
+	  {
+		elem = getDataUnionElem();
+	  }
+      
       ImageFbsBuilder tmp_builder(*builder_);
       // add the information
       tmp_builder.add_encoding(encoding_data);
       tmp_builder.add_header(header_data);
       tmp_builder.add_origin(origin_data);
-      tmp_builder.add_image(elem);
+	  if (data_)
+	  {
+		  tmp_builder.add_image(elem);
+	  }
       tmp_builder.add_image_type(type);
       tmp_builder.add_image_size(data_size_);
       tmp_builder.add_resX(resX_);
@@ -239,7 +247,7 @@ private:
   double resX_{0.0}, resY_{0.0}, resZ_{0.0};
   int width_{0}, height_{0}, depth_{0};
 
-  std::shared_ptr<const T*> data_{nullptr};
+  std::shared_ptr<const T*> data_{};
   int data_size_{0};
   int num_channels_{1};
 };
