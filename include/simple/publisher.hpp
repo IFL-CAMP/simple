@@ -25,6 +25,12 @@ public:
     GenericSocket<T>::bind(address);
   }
 
+  Publisher(const Publisher& other)
+    : GenericSocket<T>(zmq_socket(context_.get(), ZMQ_PUB))
+  {
+    GenericSocket<T>::bind(other.address_);
+  }
+
   ~Publisher<T>() {}
   /**
    * @brief Publishes the message through the open socket.

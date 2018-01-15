@@ -2,12 +2,7 @@ image: ubuntu-simple
 
 stages:
   - build
-
-variables:
-  ZEROMQ_DIR_2015: "C:/Program Files/ZeroMQ_2015"
-  ZEROMQ_DIR_2017: "C:/Program Files/ZeroMQ_2017"
-  ZEROMQ_2015: "-DZeroMQ_INCLUDE_DIR=%ZEROMQ_DIR_2015%/include -DZeroMQ_LIBRARY=%ZEROMQ_DIR_2015%/lib/libzmq-v140-mt-4_2_4.lib"
-  ZEROMQ_2017: "-DZeroMQ_INCLUDE_DIR=%ZEROMQ_DIR_2017%/include -DZeroMQ_LIBRARY=%ZEROMQ_DIR_2017%/lib/libzmq-v141-mt-4_2_4.lib"
+  - test
 
 ################# Building
 
@@ -16,34 +11,22 @@ build_msvc15:
   tags:
     - windows
   script:
+    - cd ..
     - IF NOT EXIST "simple_msvs15" mkdir "simple_msvs15"
     - cd simple_msvs15
-    - cmake -G "Visual Studio 14 2015 Win64" %ZEROMQ_2015% ..
-    - cmake --build .
-  cache:
-    key: msvs15_cache
-    paths:
-      - simple_msvs15/
-  artifacts:
-    paths:
-    - simple_msvs15/
+    - cmake -G "Visual Studio 14 2015 Win64" -DBUILD_TESTS=ON ../simple
+    - cmake --build . --clean-first --config Release
 
 build_msvc17:
   stage: build
   tags:
     - windows
   script:
+    - cd ..
     - IF NOT EXIST "simple_msvs17" mkdir "simple_msvs17"
     - cd simple_msvs17
-    - cmake -G "Visual Studio 15 2017 Win64" %ZEROMQ_2017% ..
-    - cmake --build .
-  cache:
-    key: msvs17_cache
-    paths:
-      - simple_msvs17/
-  artifacts:
-    paths:
-    - simple_msvs17/
+    - cmake -G "Visual Studio 15 2017 Win64" -DBUILD_TESTS=ON ../simple
+    - cmake --build . --clean-first --config Release
     
 build_clang:
   stage: build
@@ -53,7 +36,7 @@ build_clang:
   script:
     - mkdir -p simple_clang
     - cd simple_clang
-    - cmake .. -DCMAKE_CXX_COMPILER=clang++
+    - cmake -DCMAKE_CXX_COMPILER=clang++ -DBUILD_TESTS=ON ..
     - make
   cache:
     key: clang_cache
@@ -71,7 +54,7 @@ build_gcc:
   script:
     - mkdir -p simple_gcc
     - cd simple_gcc
-    - cmake .. -DCMAKE_CXX_COMPILER=g++
+    - cmake -DCMAKE_CXX_COMPILER=g++ -DBUILD_TESTS=ON ..
     - make
   cache:
     key: gcc_cache
@@ -80,4 +63,48 @@ build_gcc:
   artifacts:
     paths:
     - simple_gcc/
+
     
+################# Testing
+
+test_msvs15:
+    stage : test
+    dependencies:
+      - build_msvc15
+    tags:
+      - windows
+    script:
+      - cd ../simple_msvs15
+      - ctest -R simple_tests -C Release --output-on-failure
+
+test_msvs17:
+    stage : test
+    dependencies:
+      - build_msvc17
+    tags:
+      - windows
+    script:
+      - cd ../simple_msvs17
+      - ctest -R simple_tests -C Release --output-on-failure
+      
+test_gcc:
+    stage : test
+    dependencies:
+      - build_gcc
+    tags:
+      - linux
+      - gcc
+    script:
+      - cd simple_gcc
+      - ctest -R simple_tests --output-on-failure
+     
+test_clang:
+    stage : test
+    dependencies:
+      - build_clang
+    tags:
+      - linux
+      - clang
+    script:
+      - cd simple_clang
+      - ctest -R simple_tests --output-on-failure

@@ -35,6 +35,18 @@ public:
     subscriber_thread_ = std::thread(&Subscriber::subscribe, this);
   }
 
+  Subscriber(const Subscriber& other)
+    : GenericSocket<T>(zmq_socket(context_.get(), ZMQ_SUB))
+    , callback_(callback)
+  {
+    GenericSocket<T>::connect(other.address_);
+    GenericSocket<T>::filter();
+    GenericSocket<T>::setTimeout(other.timeout_);
+
+    // Start the callback thread.
+    subscriber_thread_ = std::thread(&Subscriber::subscribe, this);
+  }
+
   ~Subscriber<T>()
   {
     alive_ = false;             //< Stop the subscription loop.
