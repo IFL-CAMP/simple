@@ -1,3 +1,21 @@
+/**
+* S.I.M.P.L.E. - Smart Intra-operative Messaging Platform with Less Effort
+* Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Lesser Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU Lesser Public License for more details.
+*
+* You should have received a copy of the GNU Lesser Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <iostream>
 #include <thread>
 
@@ -14,8 +32,8 @@ double getTimeNow()
 
 int main()
 {
-  const int N_RUN = 25;
-  const int SLEEP_TIME = 2000;  //<  Milliseconds.
+  const int N_RUN = 30000;
+  const int SLEEP_TIME = 1;  //<  Milliseconds.
   int sequence_num = 1;
 
   auto beginning = getTimeNow();
@@ -39,7 +57,8 @@ int main()
     my_pose_stamped.getHeader().setSequenceNumber(sequence_num + 1);
     my_pose_stamped.getHeader().setTimestamp(getTimeNow() - beginning);
 
-    std::cout << "Message #" << (sequence_num) << " has been published." << std::endl;
+    std::cout << "Message timestamp#" << (my_pose_stamped.getHeader().getTimestamp()) << " has been published."
+              << std::endl;
     std::this_thread::sleep_for(milliseconds(SLEEP_TIME));
   }
 

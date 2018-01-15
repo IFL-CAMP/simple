@@ -1,3 +1,20 @@
+/**
+* S.I.M.P.L.E. - Smart Intra-operative Messaging Platform with Less Effort
+* Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Lesser Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU Lesser Public License for more details.
+*
+* You should have received a copy of the GNU Lesser Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 #include "simple_msgs/rotation_matrix.h"
 
@@ -10,14 +27,14 @@ RotationMatrix::RotationMatrix()
 
 RotationMatrix::RotationMatrix(double value)
   : GenericMessage()
-  , data_{value, value, value, value, value, value, value, value, value}
+  , data_{{value, value, value, value, value, value, value, value, value}}
 {
 }
 
 RotationMatrix::RotationMatrix(double r11, double r12, double r13, double r21, double r22, double r23, double r31,
                                double r32, double r33)
   : GenericMessage()
-  , data_{r11, r12, r13, r21, r22, r23, r31, r32, r33}
+  , data_{{r11, r12, r13, r21, r22, r23, r31, r32, r33}}
 {
 }
 
@@ -37,7 +54,7 @@ RotationMatrix::RotationMatrix(const uint8_t* data)
 {
   auto r = GetRotationMatrixFbs(data);
   data_ =
-      std::array<double, 9>{r->r11(), r->r12(), r->r13(), r->r21(), r->r22(), r->r23(), r->r31(), r->r32(), r->r33()};
+	  std::array<double, 9>{{ r->r11(), r->r12(), r->r13(), r->r21(), r->r22(), r->r23(), r->r31(), r->r32(), r->r33() }};
   modified_ = true;
 }
 
@@ -175,4 +192,4 @@ std::ostream& operator<<(std::ostream& out, const RotationMatrix& q)
 }
 
 const RotationMatrix RotationMatrix::Identity(RotationMatrix(1, 0, 0, 0, 1, 0, 0, 0, 1));
-}
+}  // namespace simple_msgs

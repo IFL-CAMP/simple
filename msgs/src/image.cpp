@@ -1,3 +1,20 @@
+/**
+* S.I.M.P.L.E. - Smart Intra-operative Messaging Platform with Less Effort
+* Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Lesser Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU Lesser Public License for more details.
+*
+* You should have received a copy of the GNU Lesser Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 #include "simple_msgs/image.h"
 
@@ -36,19 +53,19 @@ flatbuffers::Offset<void> Image<uint8_t>::getDataUnionElem() const
 template <>
 flatbuffers::Offset<void> Image<int16_t>::getDataUnionElem() const
 {
-  return Createint16_type(*builder_, builder_->CreateVector(*data_, data_size_)).Union();
+	return Createint16_type(*builder_, builder_->CreateVector(static_cast<const int16_t*>(*data_), data_size_)).Union();
 }
 
 template <>
 flatbuffers::Offset<void> Image<float>::getDataUnionElem() const
 {
-  return Createfloat_type(*builder_, builder_->CreateVector(*data_, data_size_)).Union();
+	return Createfloat_type(*builder_, builder_->CreateVector(static_cast<const float*>(*data_), data_size_)).Union();
 }
 
 template <>
 flatbuffers::Offset<void> Image<double>::getDataUnionElem() const
 {
-  return Createdouble_type(*builder_, builder_->CreateVector(*data_, data_size_)).Union();
+	return Createdouble_type(*builder_, builder_->CreateVector(static_cast<const double*>(*data_), data_size_)).Union();
 }
 
 template <>
@@ -77,7 +94,6 @@ Image<int16_t>& Image<int16_t>::operator=(const uint8_t* data)
   // Set the Image data according to the right date type.
   auto mydata = static_cast<const int16_type*>(image_data->image())->raw()->data();
   data_ = std::make_shared<const int16_t*>(mydata);
-
   return *this;
 }
 
@@ -105,6 +121,7 @@ Image<float>& Image<float>::operator=(const uint8_t* data)
 
   // Set the Image data according to the right date type.
   auto mydata = static_cast<const float_type*>(image_data->image())->raw()->data();
+  
   data_ = std::make_shared<const float*>(mydata);
   return *this;
 }
@@ -130,6 +147,7 @@ Image<int16_t>::Image(const uint8_t* data)
   Image<int16_t>::fillPartialImage(image_data);
   // Set the Image data according to the right date type.
   auto mydata = static_cast<const int16_type*>(image_data->image())->raw()->data();
+  
   data_ = std::make_shared<const int16_t*>(mydata);
 }
 
@@ -142,6 +160,7 @@ Image<double>::Image(const uint8_t* data)
   Image<double>::fillPartialImage(image_data);
   // Set the Image data according to the right date type.
   auto mydata = static_cast<const double_type*>(image_data->image())->raw()->data();
+  
   data_ = std::make_shared<const double*>(mydata);
 }
 
@@ -155,5 +174,6 @@ Image<float>::Image(const uint8_t* data)
   // Set the Image data according to the right date type.
   auto mydata = static_cast<const float_type*>(image_data->image())->raw()->data();
   data_ = std::make_shared<const float*>(mydata);
+  
 }
 }
