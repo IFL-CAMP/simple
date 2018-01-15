@@ -39,7 +39,7 @@ ___
 ```bash
 git clone https://github.com/google/flatbuffers.git
 cd flatbuffers && mkdir build && cd build
-cmake ..
+cmake -DCMAKE_BUILD_TYPE=Release ..
 make -j8
 make install
 ```
@@ -47,7 +47,7 @@ make install
 ```bash
 git clone https://github.com/zeromq/libzmq.git
 cd libzmq && mkdir build && cd build
-cmake ..
+cmake -DCMAKE_BUILD_TYPE=Release ..
 make -j8
 make install
 ```
@@ -55,7 +55,7 @@ make install
 ```bash
 git clone https://gitlab.lrz.de/CAMP_IFL/simple.git
 cd simple && mkdir build && cd build
-cmake ..
+cmake -DCMAKE_BUILD_TYPE=Release ..
 make -j8
 make install
 ```
