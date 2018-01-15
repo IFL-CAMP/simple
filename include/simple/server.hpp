@@ -32,6 +32,18 @@ public:
     server_thread_ = std::thread(&Server::awaitRequest, this);
   }
 
+  Server(const Server& other)
+    : GenericSocket<T>(zmq_socket(context_.get(), ZMQ_REP))
+    , callback_(other.callback_)
+  {
+    GenericSocket<T>::bind(other.address_);
+    GenericSocket<T>::filter();
+    GenericSocket<T>::setTimeout(other.timeout_);
+
+    // Start the thread of the server: wait for requests on the dedicated thread.
+    server_thread_ = std::thread(&Server::awaitRequest, this);
+  }
+
   ~Server()
   {
     alive_ = false;         //< Stop the request/reply loop.

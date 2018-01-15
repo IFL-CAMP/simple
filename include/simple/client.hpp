@@ -6,8 +6,6 @@
 #include "context_deleter.hpp"
 #include "simple/generic_socket.hpp"
 
-#define MAX_SOCKET_STRING sizeof("tcp://127.0.0.1:65536")
-
 namespace simple
 {
 /**
@@ -24,13 +22,12 @@ public:
   }
 
   /**
-  * @brief Copy constructor for Client. Opens a new socket of the same type, connected to the same address.
-  */
-  Client(const Client& c) : GenericSocket<T>(zmq_socket(context_.get(), ZMQ_REQ)) {
-	  size_t len = MAX_SOCKET_STRING;
-	  char my_endpoint[MAX_SOCKET_STRING];
-	  zmq_getsockopt(c.socket_, ZMQ_LAST_ENDPOINT, my_endpoint, &len);
-	  GenericSocket<T>::connect(my_endpoint);
+   * @brief Copy constructor for Client. Opens a new socket of the same type, connected to the same address.
+   */
+  Client(const Client& other)
+    : GenericSocket<T>(zmq_socket(context_.get(), ZMQ_REQ))
+  {
+    GenericSocket<T>::connect(other.address_);
   }
 
   ~Client() {}

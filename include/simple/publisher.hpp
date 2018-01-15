@@ -25,6 +25,12 @@ public:
     GenericSocket<T>::bind(address);
   }
 
+  Publisher(const Publisher& other)
+    : GenericSocket<T>(zmq_socket(context_.get(), ZMQ_PUB))
+  {
+    GenericSocket<T>::bind(other.address_);
+  }
+
   ~Publisher<T>() {}
   /**
    * @brief Publishes the message through the open socket.
@@ -43,6 +49,7 @@ public:
    * @param size: size of the buffer to be publish.
    */
   void publish(uint8_t* msg, const int msg_size) { GenericSocket<T>::sendMsg(msg, msg_size, "[Simple Publisher] - "); }
+
 private:
   static std::shared_ptr<void> context_;
 };

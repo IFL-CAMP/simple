@@ -22,6 +22,7 @@ protected:
 
   void bind(const std::string& address)
   {
+    address_ = address;
     auto success = zmq_bind(socket_, address.c_str());
     if (success != 0)
     {
@@ -32,6 +33,7 @@ protected:
 
   void connect(const std::string& address)
   {
+    address_ = address;
     auto success = zmq_connect(socket_, address.c_str());
     if (success != 0)
     {
@@ -102,10 +104,16 @@ protected:
   }
 
   void filter() { zmq_setsockopt(socket_, ZMQ_SUBSCRIBE, topic_, topic_size_); }
-  void setTimeout(int timeout) { zmq_setsockopt(socket_, ZMQ_RCVTIMEO, &timeout, sizeof(timeout)); }
+  void setTimeout(int timeout)
+  {
+    zmq_setsockopt(socket_, ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
+    timeout_ = timeout;
+  }
   void* socket_;
   const char* topic_{T::getTopic()};
   const size_t topic_size_{strlen(topic_)};
+  std::string address_;
+  int timeout_;
 };
 
 }  // Namespace simple.
