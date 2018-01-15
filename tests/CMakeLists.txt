@@ -12,53 +12,59 @@ endif()
 include_directories(include)
 
 #TESTS FOR WRAPPERS
-add_executable(double_test double_test.cpp)
-target_link_libraries(double_test simple)
-add_test(NAME simple_tests.double COMMAND double_test)
+add_executable(test_double test_double.cpp)
+target_link_libraries(test_double simple)
+add_test(NAME simple_tests.double COMMAND test_double)
 
-add_executable(float_test float_test.cpp)
-target_link_libraries(float_test simple)
-add_test(NAME simple_tests.float COMMAND float_test)
+add_executable(test_float test_float.cpp)
+target_link_libraries(test_float simple)
+add_test(NAME simple_tests.float COMMAND test_float)
 
-add_executable(int_test int_test.cpp)
-target_link_libraries(int_test simple)
-add_test(NAME simple_tests.int COMMAND int_test)
+add_executable(test_int test_int.cpp)
+target_link_libraries(test_int simple)
+add_test(NAME simple_tests.int COMMAND test_int)
 
-add_executable(point_test point_test.cpp)
-target_link_libraries(point_test simple)
-add_test(NAME simple_tests.point COMMAND point_test)
+add_executable(test_point test_point.cpp)
+target_link_libraries(test_point simple)
+add_test(NAME simple_tests.point COMMAND test_point)
 
-add_executable(rotation_matrix_test rotation_matrix_test.cpp)
-target_link_libraries(rotation_matrix_test simple)
-add_test(NAME simple_tests.matrix COMMAND rotation_matrix_test)
+add_executable(test_rotation_matrix test_rotation_matrix.cpp)
+target_link_libraries(test_rotation_matrix simple)
+add_test(NAME simple_tests.matrix COMMAND test_rotation_matrix)
 
-add_executable(pose_test pose_test.cpp)
-target_link_libraries(pose_test simple)
-add_test(NAME simple_tests.pose COMMAND pose_test)
+add_executable(test_pose test_pose.cpp)
+target_link_libraries(test_pose simple)
+add_test(NAME simple_tests.pose COMMAND test_pose)
 
-add_executable(quaternion_test quaternion_test.cpp)
-target_link_libraries(quaternion_test simple)
-add_test(NAME simple_tests.quaternion COMMAND quaternion_test)
+add_executable(test_quaternion test_quaternion.cpp)
+target_link_libraries(test_quaternion simple)
+add_test(NAME simple_tests.quaternion COMMAND test_quaternion)
 
-add_executable(header_test header_test.cpp)
-target_link_libraries(header_test simple)
-add_test(NAME simple_tests.header COMMAND header_test)
+add_executable(test_header test_header.cpp)
+target_link_libraries(test_header simple)
+add_test(NAME simple_tests.header COMMAND test_header)
 
-add_executable(image_test image_test.cpp)
-target_link_libraries(image_test simple)
-add_test(NAME simple_tests.image COMMAND image_test)
+add_executable(test_image test_image.cpp)
+target_link_libraries(test_image simple)
+add_test(NAME simple_tests.image COMMAND test_image)
+
+add_executable(test_pose_stamped test_pose_stamped.cpp)
+target_link_libraries(test_pose_stamped simple)
+add_test(NAME simple_tests.pose_stamped COMMAND test_pose_stamped)
+
 
 install(
 TARGETS
-  double_test
-  float_test
-  int_test
-  point_test
-  pose_test
-  rotation_matrix_test
-  quaternion_test
-  header_test
-  image_test
+  test_double
+  test_float
+  test_int
+  test_point
+  test_pose
+  test_rotation_matrix
+  test_quaternion
+  test_header
+  test_image
+  test_pose_stamped
 DESTINATION 
 	bin
 )

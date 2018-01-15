@@ -247,7 +247,7 @@ private:
   double resX_{0.0}, resY_{0.0}, resZ_{0.0};
   int width_{0}, height_{0}, depth_{0};
 
-  std::shared_ptr<const T*> data_{};
+  std::shared_ptr<const T*> data_{nullptr};
   int data_size_{0};
   int num_channels_{1};
 };
