@@ -122,8 +122,8 @@ protected:
   void* socket_;
   const char* topic_{T::getTopic()};
   const size_t topic_size_{strlen(topic_)};
-  std::string address_;
-  int timeout_;
+  std::string address_{ "" };
+  int timeout_{ 0 };
 };
 
 }  // Namespace simple.
