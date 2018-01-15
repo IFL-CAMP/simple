@@ -83,14 +83,14 @@ uint8_t* PoseStamped::getBufferData() const
   return builder_->GetBufferPointer();
 }
 
-inline void PoseStamped::setPose(const Pose& pose)
+void PoseStamped::setPose(const Pose& pose)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   pose_ = pose;
   modified_ = true;
 }
 
-inline void PoseStamped::setHeader(const Header& header)
+void PoseStamped::setHeader(const Header& header)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   header_ = header;
