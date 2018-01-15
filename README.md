@@ -1,5 +1,5 @@
 ## S.I.M.P.L.E.
-A Smart Intra-operative Messaging Platform with Less Effort.
+A Smart Intra-operative Messaging Platform with Less Effort.         
 [![Build Status](https://gitlab.lrz.de/CAMP_IFL/simple/badges/master/build.svg)](https://gitlab.lrz.de/CAMP_IFL/simple/commits/master)
 ___
 
