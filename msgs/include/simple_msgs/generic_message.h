@@ -24,10 +24,15 @@ public:
     getBufferData();
     return builder_->GetSize();
   }
+  
+  std::shared_ptr<flatbuffers::FlatBufferBuilder>* getBuilderPointer() const {
+	  auto builderPointer =  new std::shared_ptr<flatbuffers::FlatBufferBuilder>(builder_);
+	  return builderPointer;
+  }
 
   inline bool isModified() const { return modified_; }
 protected:
-  std::unique_ptr<flatbuffers::FlatBufferBuilder> builder_;
+  std::shared_ptr<flatbuffers::FlatBufferBuilder> builder_;
   mutable bool modified_{true};
   mutable std::mutex mutex_;
 };
