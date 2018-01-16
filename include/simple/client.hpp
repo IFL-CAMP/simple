@@ -36,9 +36,9 @@ public:
   /**
    * @brief Default constructor for a socket of type Client.
    * @param address where the client connects to, in the form: tcp://HOSTNAME:PORT. e.g tcp://localhost:5555.
-   * @param timeout Time, in msec, the client shall wait for a reply.
+   * @param timeout Time, in msec, the client shall wait for a reply. Default 30 seconds.
    */
-  Client(const std::string& address, int timeout = 300000)
+  Client(const std::string& address, int timeout = 30000)
     : GenericSocket<T>(zmq_socket(context_.get(), ZMQ_REQ))
   {
     setTimeout(timeout);
