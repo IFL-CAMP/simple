@@ -39,9 +39,12 @@ SCENARIO("Client-Server to a Point message.")
       auto p = createRandomPoint();
       auto sentPoint = p;
       client.request(p);
-      simple_msgs::Point unitPoint(1, 1, 1);
 
-      THEN("The data received is the equal to the sent point plus one's") { REQUIRE(p == sentPoint + unitPoint); }
+      THEN("The data received is the equal to the sent point plus one's") {
+		  REQUIRE(p.getX() == Approx(sentPoint.getX() + 1.0)); 
+		  REQUIRE(p.getY() == Approx(sentPoint.getY() + 1.0));
+		  REQUIRE(p.getZ() == Approx(sentPoint.getZ() + 1.0));
+	  }
     }
   }
 }
@@ -59,14 +62,15 @@ SCENARIO("Client-Server to a Pose message.")
       auto p = createRandomPose();
       auto sentPose = p;
       client.request(p);
-      simple_msgs::Point unitPoint(1, 1, 1);
       THEN("The data received is the equal to the sent pose plus one's")
       {
-        REQUIRE(p.getPosition() == sentPose.getPosition() + unitPoint);
-        REQUIRE(p.getQuaternion().getW() == sentPose.getQuaternion().getW() + 1);
-        REQUIRE(p.getQuaternion().getX() == sentPose.getQuaternion().getX() + 1);
-        REQUIRE(p.getQuaternion().getY() == sentPose.getQuaternion().getY() + 1);
-        REQUIRE(p.getQuaternion().getZ() == sentPose.getQuaternion().getZ() + 1);
+        REQUIRE(p.getPosition().getX() == Approx(sentPose.getPosition().getX() + 1.0));
+		REQUIRE(p.getPosition().getY() == Approx(sentPose.getPosition().getY() + 1.0));
+		REQUIRE(p.getPosition().getZ() == Approx(sentPose.getPosition().getZ() + 1.0));
+        REQUIRE(p.getQuaternion().getW() == Approx(sentPose.getQuaternion().getW() + 1.0));
+        REQUIRE(p.getQuaternion().getX() == Approx(sentPose.getQuaternion().getX() + 1.0));
+        REQUIRE(p.getQuaternion().getY() == Approx(sentPose.getQuaternion().getY() + 1.0));
+        REQUIRE(p.getQuaternion().getZ() == Approx(sentPose.getQuaternion().getZ() + 1.0));
       }
     }
   }
@@ -87,10 +91,10 @@ SCENARIO("Client-Server to a Quaternion message.")
       client.request(q);
       THEN("The data received is the equal to the sent pose plus one's")
       {
-        REQUIRE(q.getW() == sentQ.getW() + 1);
-        REQUIRE(q.getX() == sentQ.getX() + 1);
-        REQUIRE(q.getY() == sentQ.getY() + 1);
-        REQUIRE(q.getZ() == sentQ.getZ() + 1);
+        REQUIRE(q.getW() == Approx(sentQ.getW() + 1.0));
+        REQUIRE(q.getX() == Approx(sentQ.getX() + 1.0));
+        REQUIRE(q.getY() == Approx(sentQ.getY() + 1.0));
+        REQUIRE(q.getZ() == Approx(sentQ.getZ() + 1.0));
       }
     }
   }
@@ -161,7 +165,7 @@ SCENARIO("Client-Server to a Double message.")
       auto p = createRandomDouble();
       auto sentDouble = p;
       client.request(p);
-      THEN("The data received is the same as the one sent plus 1") { REQUIRE(p == sentDouble + 1.0); }
+      THEN("The data received is the same as the one sent plus 1") { REQUIRE(p.get() == Approx(sentDouble.get() + 1.0)); }
     }
   }
 }
@@ -199,7 +203,7 @@ SCENARIO("Client-Server to a Float message.")
       auto sentFloat = p;
       client.request(p);
 
-      THEN("The data received is the same as the one sent plus 1") { REQUIRE(p == sentFloat + 1.0f); }
+      THEN("The data received is the same as the one sent plus 1") { REQUIRE(p.get() == Approx(sentFloat.get() + 1.0f)); }
     }
   }
 }
@@ -243,7 +247,9 @@ SCENARIO("Client-Server to a Stamped Point message.")
 			simple_msgs::Point unitPoint(1, 1, 1);
 
 			THEN("The data received is the equal to the sent point plus one's") {
-				REQUIRE(p.getPoint() == sentPoint.getPoint() + unitPoint);
+				REQUIRE(p.getPoint().getX() == Approx(sentPoint.getPoint().getX() + 1.0));
+				REQUIRE(p.getPoint().getY() == Approx(sentPoint.getPoint().getY() + 1.0));
+				REQUIRE(p.getPoint().getZ() == Approx(sentPoint.getPoint().getZ() + 1.0));
 				REQUIRE(p.getHeader().getFrameID() == "ID");
 				REQUIRE(p.getHeader().getSequenceNumber() == 1);
 				REQUIRE(p.getHeader().getTimestamp() == 1.0);
@@ -268,11 +274,13 @@ SCENARIO("Client-Server to a Stamped Pose message.")
 			simple_msgs::Point unitPoint(1, 1, 1);
 			THEN("The data received is the equal to the sent pose plus one's")
 			{
-				REQUIRE(p.getPose().getPosition() == sentPose.getPose().getPosition() + unitPoint);
-				REQUIRE(p.getPose().getQuaternion().getW() == sentPose.getPose().getQuaternion().getW() + 1);
-				REQUIRE(p.getPose().getQuaternion().getX() == sentPose.getPose().getQuaternion().getX() + 1);
-				REQUIRE(p.getPose().getQuaternion().getY() == sentPose.getPose().getQuaternion().getY() + 1);
-				REQUIRE(p.getPose().getQuaternion().getZ() == sentPose.getPose().getQuaternion().getZ() + 1);
+				REQUIRE(p.getPose().getPosition().getX() == Approx(sentPose.getPose().getPosition().getX() + 1.0));
+				REQUIRE(p.getPose().getPosition().getY() == Approx(sentPose.getPose().getPosition().getY() + 1.0));
+				REQUIRE(p.getPose().getPosition().getZ() == Approx(sentPose.getPose().getPosition().getZ() + 1.0));
+				REQUIRE(p.getPose().getQuaternion().getW() == Approx(sentPose.getPose().getQuaternion().getW() + 1.0));
+				REQUIRE(p.getPose().getQuaternion().getX() == Approx(sentPose.getPose().getQuaternion().getX() + 1.0));
+				REQUIRE(p.getPose().getQuaternion().getY() == Approx(sentPose.getPose().getQuaternion().getY() + 1.0));
+				REQUIRE(p.getPose().getQuaternion().getZ() == Approx(sentPose.getPose().getQuaternion().getZ() + 1.0));
 				REQUIRE(p.getHeader().getFrameID() == "ID");
 				REQUIRE(p.getHeader().getSequenceNumber() == 1);
 				REQUIRE(p.getHeader().getTimestamp() == 1.0);
@@ -296,10 +304,10 @@ SCENARIO("Client-Server to a Stamped Quaternion message.")
 			client.request(q);
 			THEN("The data received is the equal to the sent pose plus one's")
 			{
-				REQUIRE(q.getQuaternion().getW() == sentQ.getQuaternion().getW() + 1);
-				REQUIRE(q.getQuaternion().getX() == sentQ.getQuaternion().getX() + 1);
-				REQUIRE(q.getQuaternion().getY() == sentQ.getQuaternion().getY() + 1);
-				REQUIRE(q.getQuaternion().getZ() == sentQ.getQuaternion().getZ() + 1);
+				REQUIRE(q.getQuaternion().getW() == Approx(sentQ.getQuaternion().getW() + 1.0));
+				REQUIRE(q.getQuaternion().getX() == Approx(sentQ.getQuaternion().getX() + 1.0));
+				REQUIRE(q.getQuaternion().getY() == Approx(sentQ.getQuaternion().getY() + 1.0));
+				REQUIRE(q.getQuaternion().getZ() == Approx(sentQ.getQuaternion().getZ() + 1.0));
 				REQUIRE(q.getHeader().getFrameID() == "ID");
 				REQUIRE(q.getHeader().getSequenceNumber() == 1);
 				REQUIRE(q.getHeader().getTimestamp() == 1.0);

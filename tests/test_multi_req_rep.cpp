@@ -75,11 +75,13 @@ SCENARIO("Several Clients to one Server to a Stamped Pose message.")
       {
 		  for (int i = 0; i < 20; i++)
 		  {
-			  REQUIRE(p.at(i).getPose().getPosition() == sentPoses.at(i).getPose().getPosition() + unitPoint);
-			  REQUIRE(p.at(i).getPose().getQuaternion().getW() == sentPoses.at(i).getPose().getQuaternion().getW() + 1);
-			  REQUIRE(p.at(i).getPose().getQuaternion().getX() == sentPoses.at(i).getPose().getQuaternion().getX() + 1);
-			  REQUIRE(p.at(i).getPose().getQuaternion().getY() == sentPoses.at(i).getPose().getQuaternion().getY() + 1);
-			  REQUIRE(p.at(i).getPose().getQuaternion().getZ() == sentPoses.at(i).getPose().getQuaternion().getZ() + 1);
+			  REQUIRE(p.at(i).getPose().getPosition().getX() == Approx(sentPoses.at(i).getPose().getPosition().getX() + 1.0));
+			  REQUIRE(p.at(i).getPose().getPosition().getY() == Approx(sentPoses.at(i).getPose().getPosition().getY() + 1.0));
+			  REQUIRE(p.at(i).getPose().getPosition().getZ() == Approx(sentPoses.at(i).getPose().getPosition().getZ() + 1.0));
+			  REQUIRE(p.at(i).getPose().getQuaternion().getW() == Approx(sentPoses.at(i).getPose().getQuaternion().getW() + 1.0));
+			  REQUIRE(p.at(i).getPose().getQuaternion().getX() == Approx(sentPoses.at(i).getPose().getQuaternion().getX() + 1.0));
+			  REQUIRE(p.at(i).getPose().getQuaternion().getY() == Approx(sentPoses.at(i).getPose().getQuaternion().getY() + 1.0));
+			  REQUIRE(p.at(i).getPose().getQuaternion().getZ() == Approx(sentPoses.at(i).getPose().getQuaternion().getZ() + 1.0));
 			  REQUIRE(p.at(i).getHeader().getFrameID() == "ID");
 			  REQUIRE(p.at(i).getHeader().getSequenceNumber() == 1);
 			  REQUIRE(p.at(i).getHeader().getTimestamp() == 1.0);
