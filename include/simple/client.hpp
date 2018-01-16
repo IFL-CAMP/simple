@@ -41,7 +41,7 @@ public:
   Client(const std::string& address, int timeout = 30000)
     : GenericSocket<T>(zmq_socket(context_.get(), ZMQ_REQ))
   {
-    setTimeout(timeout);
+    GenericSocket<T>::setTimeout(timeout);
     GenericSocket<T>::connect(address);
   }
 
@@ -83,10 +83,10 @@ private:
       {
         std::cerr << "[SIMPLE Client] - No reply received. Aborting this request." << std::endl;
         // Delete the existing socket and create a new one.
-        zmq_close(socket_);
-        socket_ = zmq_socket(context_.get(), ZMQ_REQ);
-        setTimeout(timeout_);
-        GenericSocket<T>::connect(address_);
+        zmq_close(GenericSocket<T>::socket_);
+        GenericSocket<T>::socket_ = zmq_socket(context_.get(), ZMQ_REQ);
+        setTimeout(GenericSocket<T>::timeout_);
+        GenericSocket<T>::connect(GenericSocket<T>::address_);
       }
     }
     return success;
