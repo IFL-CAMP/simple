@@ -1,28 +1,6 @@
 cmake_minimum_required(VERSION 3.5) 
 project(simple-tests) 
 
-include_directories(include)
-
-#PUB-SUB TESTS
-
-add_executable(single_pub_sub_test single_pub_sub.cpp)
-target_link_libraries(single_pub_sub_test simple)
-
-add_executable(multi_sub_test single_pub_multi_sub.cpp)
-target_link_libraries(multi_sub_test simple)
-
-add_executable(long_life_pub_test single_pub_long_life.cpp)
-target_link_libraries(long_life_pub_test simple)
-
-add_executable(on_off_pub_test on_off_pub.cpp)
-target_link_libraries(on_off_pub_test simple)
-
-add_executable(late_sub_test latecomer_sub.cpp)
-target_link_libraries(late_sub_test simple)
-
-add_executable(wrong_pub_sub_test wrong_pub_sub.cpp)
-target_link_libraries(wrong_pub_sub_test simple)
- 
 if(NOT EXISTS ${PROJECT_SOURCE_DIR}/include/catch.hpp)
 		message(STATUS "Downloading catch.hpp. This may take a while.")
 		file(DOWNLOAD
@@ -31,4 +9,41 @@ if(NOT EXISTS ${PROJECT_SOURCE_DIR}/include/catch.hpp)
 		)
 endif()
 
-install(TARGETS single_pub_sub_test wrong_pub_sub_test long_life_pub_test on_off_pub_test late_sub_test multi_sub_test DESTINATION bin)
+include_directories(include)
+
+#PUB-SUB TESTS
+
+add_executable(test_single_pub_sub test_single_pub_sub.cpp)
+target_link_libraries(test_single_pub_sub simple)
+add_test(NAME simple_tests.single_pub_sub COMMAND test_single_pub_sub)
+
+add_executable(test_multi_sub test_single_pub_multi_sub.cpp)
+target_link_libraries(test_multi_sub simple)
+add_test(NAME simple_tests.multi_pub_sub COMMAND test_multi_sub)
+
+add_executable(test_long_life_pub test_single_pub_long_life.cpp)
+target_link_libraries(test_long_life_pub simple)
+add_test(NAME simple_tests.long_life_pub COMMAND test_long_life_pub)
+
+add_executable(test_on_off_pub test_on_off_pub.cpp)
+target_link_libraries(test_on_off_pub simple)
+add_test(NAME simple_tests.on_off_pub COMMAND test_on_off_pub)
+
+add_executable(test_late_sub test_latecomer_sub.cpp)
+target_link_libraries(test_late_sub simple)
+add_test(NAME simple_tests.late_sub COMMAND test_late_sub)
+
+add_executable(test_wrong_pub_sub test_wrong_pub_sub.cpp)
+target_link_libraries(test_wrong_pub_sub simple)
+add_test(NAME simple_tests.wrong_pub_sub COMMAND test_wrong_pub_sub) 
+
+install(
+TARGETS
+   test_single_pub_sub 
+   test_wrong_pub_sub 
+   test_long_life_pub 
+   test_on_off_pub 
+   test_late_sub 
+   test_multi_sub
+DESTINATION bin
+)
