@@ -2,7 +2,7 @@
 build
 msgs/generated_include
 *.autosave
-tests/include
+tests/include/catch.hpp
 
 msgs/include/simple_msgs/generated/
 build2017/
