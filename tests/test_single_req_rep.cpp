@@ -77,8 +77,8 @@ SCENARIO("Client-Server to a Quaternion message.")
   GIVEN("An instance of a server.")
   {
     // start a server
-    simple::Client<simple_msgs::Quaternion> client("tcp://localhost:5555");
-    simple::Server<simple_msgs::Quaternion> server("tcp://*:5555", callbackFunctionQuaternion);
+    simple::Client<simple_msgs::Quaternion> client("tcp://localhost:5557");
+    simple::Server<simple_msgs::Quaternion> server("tcp://*:5557", callbackFunctionQuaternion);
 
     WHEN("The client sends a request")
     {
@@ -101,8 +101,8 @@ SCENARIO("Client-Server to a Rotation Matrix message.")
   GIVEN("An instance of a server.")
   {
     // start a server.
-    simple::Client<simple_msgs::RotationMatrix> client("tcp://localhost:5555");
-    simple::Server<simple_msgs::RotationMatrix> server("tcp://*:5555", callbackFunctionRotationMatrix);
+    simple::Client<simple_msgs::RotationMatrix> client("tcp://localhost:5558");
+    simple::Server<simple_msgs::RotationMatrix> server("tcp://*:5558", callbackFunctionRotationMatrix);
 
     WHEN("The client sends a request")
     {
@@ -118,8 +118,8 @@ SCENARIO("Client-Server to a String message.")
   GIVEN("An instance of a server.")
   {
     // start a server
-    simple::Client<simple_msgs::String> client("tcp://localhost:5555");
-    simple::Server<simple_msgs::String> server("tcp://*:5555", callbackFunctionString);
+    simple::Client<simple_msgs::String> client("tcp://localhost:5559");
+    simple::Server<simple_msgs::String> server("tcp://*:5559", callbackFunctionString);
 
     WHEN("The client sends a request")
     {
@@ -136,8 +136,8 @@ SCENARIO("Client-Server to a Bool message.")
   GIVEN("An instance of a server.")
   {
     // Start a server
-    simple::Client<simple_msgs::Bool> client("tcp://localhost:5555");
-    simple::Server<simple_msgs::Bool> server("tcp://*:5555", callbackFunctionBool);
+    simple::Client<simple_msgs::Bool> client("tcp://localhost:5560");
+    simple::Server<simple_msgs::Bool> server("tcp://*:5560", callbackFunctionBool);
 
     WHEN("The client sends a request")
     {
@@ -153,8 +153,8 @@ SCENARIO("Client-Server to a Double message.")
   GIVEN("An instance of a server.")
   {
     // start a server
-    simple::Client<simple_msgs::NumericType<double>> client("tcp://localhost:5555");
-    simple::Server<simple_msgs::NumericType<double>> server("tcp://*:5555", callbackFunctionDouble);
+    simple::Client<simple_msgs::NumericType<double>> client("tcp://localhost:5561");
+    simple::Server<simple_msgs::NumericType<double>> server("tcp://*:5561", callbackFunctionDouble);
 
     WHEN("The client sends a request")
     {
@@ -171,8 +171,8 @@ SCENARIO("Client-Server to a Int message.")
   GIVEN("An instance of a server.")
   {
     // start a server
-    simple::Client<simple_msgs::NumericType<int>> client("tcp://localhost:5555");
-    simple::Server<simple_msgs::NumericType<int>> server("tcp://*:5555", callbackFunctionInt);
+    simple::Client<simple_msgs::NumericType<int>> client("tcp://localhost:5562");
+    simple::Server<simple_msgs::NumericType<int>> server("tcp://*:5562", callbackFunctionInt);
 
     WHEN("The client sends a request")
     {
@@ -189,8 +189,8 @@ SCENARIO("Client-Server to a Float message.")
   GIVEN("An instance of a server.")
   {
     // start a server
-    simple::Client<simple_msgs::NumericType<float>> client("tcp://localhost:5555");
-    simple::Server<simple_msgs::NumericType<float>> server("tcp://*:5555", callbackFunctionFloat);
+    simple::Client<simple_msgs::NumericType<float>> client("tcp://localhost:5563");
+    simple::Server<simple_msgs::NumericType<float>> server("tcp://*:5563", callbackFunctionFloat);
 
     std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("The client sends a request")
@@ -209,8 +209,8 @@ SCENARIO("Client-Server to a Header message.")
   GIVEN("An instance of a server.")
   {
     // start a server
-    simple::Client<simple_msgs::Header> client("tcp://localhost:5555");
-    simple::Server<simple_msgs::Header> server("tcp://*:5555", callbackFunctionHeader);
+    simple::Client<simple_msgs::Header> client("tcp://localhost:5564");
+    simple::Server<simple_msgs::Header> server("tcp://*:5564", callbackFunctionHeader);
 
     std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("The client sends a request")
@@ -232,8 +232,8 @@ SCENARIO("Client-Server to a Stamped Point message.")
 	GIVEN("An instance of a server.")
 	{
 		// start a server
-		simple::Server<simple_msgs::PointStamped> server("tcp://*:5555", callbackFunctionPointStamped);
-		simple::Client<simple_msgs::PointStamped> client("tcp://localhost:5555");
+		simple::Server<simple_msgs::PointStamped> server("tcp://*:5565", callbackFunctionPointStamped);
+		simple::Client<simple_msgs::PointStamped> client("tcp://localhost:5565");
 
 		WHEN("The client sends a request")
 		{
@@ -257,8 +257,8 @@ SCENARIO("Client-Server to a Stamped Pose message.")
 	GIVEN("An instance of a server.")
 	{
 		// start a server
-		simple::Server<simple_msgs::PoseStamped> server("tcp://*:5556", callbackFunctionPoseStamped);
-		simple::Client<simple_msgs::PoseStamped> client("tcp://localhost:5556");
+		simple::Server<simple_msgs::PoseStamped> server("tcp://*:5566", callbackFunctionPoseStamped);
+		simple::Client<simple_msgs::PoseStamped> client("tcp://localhost:5566");
 
 		WHEN("The client sends a request")
 		{
@@ -286,8 +286,8 @@ SCENARIO("Client-Server to a Stamped Quaternion message.")
 	GIVEN("An instance of a server.")
 	{
 		// start a server
-		simple::Client<simple_msgs::QuaternionStamped> client("tcp://localhost:5555");
-		simple::Server<simple_msgs::QuaternionStamped> server("tcp://*:5555", callbackFunctionQuaternionStamped);
+		simple::Client<simple_msgs::QuaternionStamped> client("tcp://localhost:5567");
+		simple::Server<simple_msgs::QuaternionStamped> server("tcp://*:5567", callbackFunctionQuaternionStamped);
 
 		WHEN("The client sends a request")
 		{
@@ -313,8 +313,8 @@ SCENARIO("Client-Server to a Stamped Rotation Matrix message.")
 	GIVEN("An instance of a server.")
 	{
 		// start a server.
-		simple::Client<simple_msgs::RotationMatrixStamped> client("tcp://localhost:5555");
-		simple::Server<simple_msgs::RotationMatrixStamped> server("tcp://*:5555", callbackFunctionRotationMatrixStamped);
+		simple::Client<simple_msgs::RotationMatrixStamped> client("tcp://localhost:5568");
+		simple::Server<simple_msgs::RotationMatrixStamped> server("tcp://*:5568", callbackFunctionRotationMatrixStamped);
 
 		WHEN("The client sends a request")
 		{
