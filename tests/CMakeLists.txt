@@ -52,6 +52,17 @@ add_executable(test_pose_stamped test_pose_stamped.cpp)
 target_link_libraries(test_pose_stamped simple)
 add_test(NAME simple_tests.pose_stamped COMMAND test_pose_stamped)
 
+add_executable(test_point_stamped test_point_stamped.cpp)
+target_link_libraries(test_point_stamped simple)
+add_test(NAME simple_tests.point_stamped COMMAND test_point_stamped)
+
+add_executable(test_quaternion_stamped test_quaternion_stamped.cpp)
+target_link_libraries(test_quaternion_stamped simple)
+add_test(NAME simple_tests.quaternion_stamped COMMAND test_quaternion_stamped)
+
+add_executable(test_rotation_matrix_stamped test_rotation_matrix_stamped.cpp)
+target_link_libraries(test_rotation_matrix_stamped simple)
+add_test(NAME simple_tests.rotation_matrix_stamped COMMAND test_rotation_matrix_stamped)
 
 install(
 TARGETS
@@ -65,6 +76,9 @@ TARGETS
   test_header
   test_image
   test_pose_stamped
+  test_point_stamped
+  test_quaternion_stamped
+  test_rotation_matrix_stamped
 DESTINATION 
 	bin
 )

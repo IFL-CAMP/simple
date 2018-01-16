@@ -85,14 +85,14 @@ uint8_t* RotationMatrixStamped::getBufferData() const
   return builder_->GetBufferPointer();
 }
 
-inline void RotationMatrixStamped::setRotationMatrix(const RotationMatrix& rotation_matrix)
+void RotationMatrixStamped::setRotationMatrix(const RotationMatrix& rotation_matrix)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   rotation_matrix_ = rotation_matrix;
   modified_ = true;
 }
 
-inline void RotationMatrixStamped::setHeader(const Header& header)
+void RotationMatrixStamped::setHeader(const Header& header)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   header_ = header;

@@ -86,14 +86,14 @@ uint8_t* PointStamped::getBufferData() const
   return builder_->GetBufferPointer();
 }
 
-inline void PointStamped::setHeader(const Header& h)
+void PointStamped::setHeader(const Header& h)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   header_ = h;
   modified_ = true;
 }
 
-inline void PointStamped::setPoint(const Point& p)
+void PointStamped::setPoint(const Point& p)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   point_ = p;
