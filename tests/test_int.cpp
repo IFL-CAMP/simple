@@ -10,8 +10,8 @@
 
 SCENARIO("Using a Int Message")
 {
-	int int_1 = static_cast<int>(rand()) / RAND_MAX;
-	int int_2 = static_cast<int>(rand()) / RAND_MAX;
+	int int_1 = rand() /100;
+	int int_2 = rand() / 100;
 	// Testing constructors.
 	GIVEN("A Int created from an empty constructor")
 	{
@@ -165,7 +165,7 @@ SCENARIO("Using a Int Message")
 		WHEN("I get the message topic")
 		{
 			std::string topic_name = single_int.getTopic();
-			THEN("I get the correct one") { REQUIRE(topic_name == "INTG"); }
+			THEN("I get the correct one") { REQUIRE(topic_name == "INTF"); }
 		}
 	}
 }
