@@ -46,8 +46,8 @@ public:
   }
 
   /**
-   * @brief Copy constructor for Client. Opens a new socket of the same type, connected to the same address, with the
-   * same timeout.
+   * @brief Copy constructor for Client. 
+   * Opens a new socket of the same type, connected to the same address, with the same timeout.
    */
   Client(const Client& other)
     : GenericSocket<T>(zmq_socket(context_.get(), ZMQ_REQ))
