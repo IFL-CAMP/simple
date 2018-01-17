@@ -185,12 +185,6 @@ void callbackFunctionPoseStamped(simple_msgs::PoseStamped& p) {
 	callbackFunctionHeader(p.getHeader());
 }
 
-void callbackFunctionPoseStampedLazy(simple_msgs::PoseStamped& p) {
-  // Add one to the point and set a default header.
-  callbackFunctionPoseStamped(p);
-	std::this_thread::sleep_for(std::chrono::milliseconds(10));
-}
-
 void callbackFunctionQuaternionStamped(simple_msgs::QuaternionStamped& q) {
   // Add one to the point and set a default header.
   callbackFunctionQuaternion(q.getQuaternion());
