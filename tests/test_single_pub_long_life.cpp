@@ -1,7 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-
 #include <iostream>
 #include "simple/publisher.hpp"
 #include "simple_msgs/point.h"
@@ -26,28 +25,24 @@ int numPublishes = 100000;
 
 SCENARIO("Publish a pose for a long time.")
 {
-	GIVEN("An instance of a publisher and 1 subscriber.")
-	{
-		// start a publisher
-		simple::Publisher<simple_msgs::Pose> pub("tcp://*:5555");
-		// start 20 subscribers
-		simple::Subscriber<simple_msgs::Pose> sub("tcp://localhost:5555", callbackFunctionConstPose);
-		// wait so the subscribers get every message
-		std::this_thread::sleep_for(std::chrono::seconds(5));
-		WHEN("A publisher publishes data")
-		{
-			for (int i = 0; i < numPublishes; ++i)
-			{
-				auto p = createRandomPose();
-				pub.publish(p);
-				std::this_thread::sleep_for(std::chrono::milliseconds(1));
-				REQUIRE(received_pose == p);
-
-			}
-			REQUIRE(num_receives_pose == numPublishes);
-		}
-
-	}
+  GIVEN("An instance of a publisher and 1 subscriber.")
+  {
+    // Start a publisher
+    simple::Publisher<simple_msgs::Pose> pub("tcp://*:5555");
+    // Start 20 subscribers
+    simple::Subscriber<simple_msgs::Pose> sub("tcp://localhost:5555", callbackFunctionConstPose);
+    // Wait so the subscribers get every message
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    WHEN("A publisher publishes data")
+    {
+      for (int i = 0; i < numPublishes; ++i)
+      {
+        auto p = createRandomPose();
+        pub.publish(p);
+        std::this_thread::sleep_for(std::chrono::milliseconds(2));
+        REQUIRE(received_pose == p);
+      }
+      REQUIRE(num_receives_pose == numPublishes);
+    }
+  }
 }
-
-
