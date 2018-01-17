@@ -43,7 +43,7 @@ public:
   }
 
   Publisher(const Publisher& other)
-    : GenericSocket<T>(ZMQ_PUB))
+    : GenericSocket<T>(ZMQ_PUB)
   {
     GenericSocket<T>::bind(other.address_);
   }

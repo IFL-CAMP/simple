@@ -84,7 +84,7 @@ private:
         std::cerr << "[SIMPLE Client] - No reply received. Aborting this request." << std::endl;
         // Delete the existing socket and create a new one.
         zmq_close(GenericSocket<T>::socket_);
-        GenericSocket<T>::socket_ = zmq_socket(context_.get(), ZMQ_REQ);
+        GenericSocket<T>::socket_ = zmq_socket(context_.instance(), ZMQ_REQ);
         setTimeout(GenericSocket<T>::timeout_);
         GenericSocket<T>::connect(GenericSocket<T>::address_);
       }
