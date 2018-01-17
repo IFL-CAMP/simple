@@ -146,9 +146,9 @@ void callbackFunctionString(simple_msgs::String& s)
 
 void callbackFunctionRotationMatrix(simple_msgs::RotationMatrix& r)
 {
-  r.setColumn(0, {0, 0, 0});
-  r.setColumn(1, {0, 0, 0});
-  r.setColumn(2, {0, 0, 0});
+  r.setColumn(0, {{0, 0, 0}});
+  r.setColumn(1, {{0, 0, 0}});
+  r.setColumn(2, {{0, 0, 0}});
 }
 
 void callbackFunctionBool(simple_msgs::Bool& b)

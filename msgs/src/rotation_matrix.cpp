@@ -1,20 +1,20 @@
 /**
-* S.I.M.P.L.E. - Smart Intra-operative Messaging Platform with Less Effort
-* Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Lesser Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU Lesser Public License for more details.
-*
-* You should have received a copy of the GNU Lesser Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * S.I.M.P.L.E. - Smart Intra-operative Messaging Platform with Less Effort
+ * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include "simple_msgs/rotation_matrix.h"
 
@@ -54,7 +54,7 @@ RotationMatrix::RotationMatrix(const uint8_t* data)
 {
   auto r = GetRotationMatrixFbs(data);
   data_ =
-	  std::array<double, 9>{{ r->r11(), r->r12(), r->r13(), r->r21(), r->r22(), r->r23(), r->r31(), r->r32(), r->r33() }};
+      std::array<double, 9>{{r->r11(), r->r12(), r->r13(), r->r21(), r->r22(), r->r23(), r->r31(), r->r32(), r->r33()}};
   modified_ = true;
 }
 
@@ -110,8 +110,8 @@ RotationMatrix& RotationMatrix::operator=(const uint8_t* data)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   auto matrix = GetRotationMatrixFbs(data);
-  data_ = std::array<double, 9>{matrix->r11(), matrix->r12(), matrix->r13(), matrix->r21(), matrix->r22(),
-                                matrix->r23(), matrix->r31(), matrix->r32(), matrix->r33()};
+  data_ = std::array<double, 9>{{matrix->r11(), matrix->r12(), matrix->r13(), matrix->r21(), matrix->r22(),
+                                 matrix->r23(), matrix->r31(), matrix->r32(), matrix->r33()}};
   modified_ = true;
 
   return *this;
@@ -148,7 +148,7 @@ std::array<double, 3> RotationMatrix::getRow(int row_index) const
 {
   if (0 <= row_index && row_index <= 2)
   {
-    return std::array<double, 3>{data_[row_index * 3], data_[row_index * 3 + 1], data_[row_index * 3 + 2]};
+    return std::array<double, 3>{{data_[row_index * 3], data_[row_index * 3 + 1], data_[row_index * 3 + 2]}};
   }
   else
   {
@@ -160,7 +160,7 @@ std::array<double, 3> RotationMatrix::getColumn(int column_index) const
 {
   if (0 <= column_index && column_index <= 2)
   {
-    return std::array<double, 3>{data_[column_index], data_[3 * 1 + column_index], data_[3 * 2 + column_index]};
+    return std::array<double, 3>{{data_[column_index], data_[3 * 1 + column_index], data_[3 * 2 + column_index]}};
   }
   else
   {
@@ -169,7 +169,7 @@ std::array<double, 3> RotationMatrix::getColumn(int column_index) const
 }
 void RotationMatrix::setRow(int row_index, const std::array<double, 3>& values)
 {
-  for (auto i = 0; i < values.size(); ++i)
+  for (size_t i = 0; i < values.size(); ++i)
   {
     data_[row_index * 3 + i] = values[i];
   }
@@ -177,7 +177,7 @@ void RotationMatrix::setRow(int row_index, const std::array<double, 3>& values)
 
 void RotationMatrix::setColumn(int column_index, const std::array<double, 3>& values)
 {
-  for (auto i = 0; i < values.size(); ++i)
+  for (size_t i = 0; i < values.size(); ++i)
   {
     data_[3 * i + column_index] = values[i];
   }
