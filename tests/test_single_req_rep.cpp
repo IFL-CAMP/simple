@@ -25,7 +25,6 @@
 
 // TEST FOR A CLIENT AND SERVER OF ALL DATA TYPES
 
-
 SCENARIO("Client-Server to a Point message.")
 {
   GIVEN("An instance of a server.")
@@ -40,11 +39,12 @@ SCENARIO("Client-Server to a Point message.")
       auto sentPoint = p;
       client.request(p);
 
-      THEN("The data received is the equal to the sent point plus one's") {
-		  REQUIRE(p.getX() == Approx(sentPoint.getX() + 1.0)); 
-		  REQUIRE(p.getY() == Approx(sentPoint.getY() + 1.0));
-		  REQUIRE(p.getZ() == Approx(sentPoint.getZ() + 1.0));
-	  }
+      THEN("The data received is the equal to the sent point plus one's")
+      {
+        REQUIRE(p.getX() == Approx(sentPoint.getX() + 1.0));
+        REQUIRE(p.getY() == Approx(sentPoint.getY() + 1.0));
+        REQUIRE(p.getZ() == Approx(sentPoint.getZ() + 1.0));
+      }
     }
   }
 }
@@ -55,7 +55,7 @@ SCENARIO("Client-Server to a Pose message.")
   {
     // start a server
     simple::Server<simple_msgs::Pose> server("tcp://*:5556", callbackFunctionPose);
-	simple::Client<simple_msgs::Pose> client("tcp://localhost:5556");
+    simple::Client<simple_msgs::Pose> client("tcp://localhost:5556");
 
     WHEN("The client sends a request")
     {
@@ -65,8 +65,8 @@ SCENARIO("Client-Server to a Pose message.")
       THEN("The data received is the equal to the sent pose plus one's")
       {
         REQUIRE(p.getPosition().getX() == Approx(sentPose.getPosition().getX() + 1.0));
-		REQUIRE(p.getPosition().getY() == Approx(sentPose.getPosition().getY() + 1.0));
-		REQUIRE(p.getPosition().getZ() == Approx(sentPose.getPosition().getZ() + 1.0));
+        REQUIRE(p.getPosition().getY() == Approx(sentPose.getPosition().getY() + 1.0));
+        REQUIRE(p.getPosition().getZ() == Approx(sentPose.getPosition().getZ() + 1.0));
         REQUIRE(p.getQuaternion().getW() == Approx(sentPose.getQuaternion().getW() + 1.0));
         REQUIRE(p.getQuaternion().getX() == Approx(sentPose.getQuaternion().getX() + 1.0));
         REQUIRE(p.getQuaternion().getY() == Approx(sentPose.getQuaternion().getY() + 1.0));
@@ -157,15 +157,18 @@ SCENARIO("Client-Server to a Double message.")
   GIVEN("An instance of a server.")
   {
     // start a server
-    simple::Client<simple_msgs::NumericType<double>> client("tcp://localhost:5561");
-    simple::Server<simple_msgs::NumericType<double>> server("tcp://*:5561", callbackFunctionDouble);
+    simple::Client<simple_msgs::Double> client("tcp://localhost:5561");
+    simple::Server<simple_msgs::Double> server("tcp://*:5561", callbackFunctionDouble);
 
     WHEN("The client sends a request")
     {
       auto p = createRandomDouble();
       auto sentDouble = p;
       client.request(p);
-      THEN("The data received is the same as the one sent plus 1") { REQUIRE(p.get() == Approx(sentDouble.get() + 1.0)); }
+      THEN("The data received is the same as the one sent plus 1")
+      {
+        REQUIRE(p.get() == Approx(sentDouble.get() + 1.0));
+      }
     }
   }
 }
@@ -175,8 +178,8 @@ SCENARIO("Client-Server to a Int message.")
   GIVEN("An instance of a server.")
   {
     // start a server
-    simple::Client<simple_msgs::NumericType<int>> client("tcp://localhost:5562");
-    simple::Server<simple_msgs::NumericType<int>> server("tcp://*:5562", callbackFunctionInt);
+    simple::Client<simple_msgs::Int> client("tcp://localhost:5562");
+    simple::Server<simple_msgs::Int> server("tcp://*:5562", callbackFunctionInt);
 
     WHEN("The client sends a request")
     {
@@ -193,8 +196,8 @@ SCENARIO("Client-Server to a Float message.")
   GIVEN("An instance of a server.")
   {
     // start a server
-    simple::Client<simple_msgs::NumericType<float>> client("tcp://localhost:5563");
-    simple::Server<simple_msgs::NumericType<float>> server("tcp://*:5563", callbackFunctionFloat);
+    simple::Client<simple_msgs::Float> client("tcp://localhost:5563");
+    simple::Server<simple_msgs::Float> server("tcp://*:5563", callbackFunctionFloat);
 
     std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("The client sends a request")
@@ -203,7 +206,10 @@ SCENARIO("Client-Server to a Float message.")
       auto sentFloat = p;
       client.request(p);
 
-      THEN("The data received is the same as the one sent plus 1") { REQUIRE(p.get() == Approx(sentFloat.get() + 1.0f)); }
+      THEN("The data received is the same as the one sent plus 1")
+      {
+        REQUIRE(p.get() == Approx(sentFloat.get() + 1.0f));
+      }
     }
   }
 }
@@ -233,107 +239,109 @@ SCENARIO("Client-Server to a Header message.")
 
 SCENARIO("Client-Server to a Stamped Point message.")
 {
-	GIVEN("An instance of a server.")
-	{
-		// start a server
-		simple::Server<simple_msgs::PointStamped> server("tcp://*:5565", callbackFunctionPointStamped);
-		simple::Client<simple_msgs::PointStamped> client("tcp://localhost:5565");
+  GIVEN("An instance of a server.")
+  {
+    // start a server
+    simple::Server<simple_msgs::PointStamped> server("tcp://*:5565", callbackFunctionPointStamped);
+    simple::Client<simple_msgs::PointStamped> client("tcp://localhost:5565");
 
-		WHEN("The client sends a request")
-		{
-			auto p = createRandomPointStamped();
-			auto sentPoint = p;
-			client.request(p);
-			simple_msgs::Point unitPoint(1, 1, 1);
+    WHEN("The client sends a request")
+    {
+      auto p = createRandomPointStamped();
+      auto sentPoint = p;
+      client.request(p);
+      simple_msgs::Point unitPoint(1, 1, 1);
 
-			THEN("The data received is the equal to the sent point plus one's") {
-				REQUIRE(p.getPoint().getX() == Approx(sentPoint.getPoint().getX() + 1.0));
-				REQUIRE(p.getPoint().getY() == Approx(sentPoint.getPoint().getY() + 1.0));
-				REQUIRE(p.getPoint().getZ() == Approx(sentPoint.getPoint().getZ() + 1.0));
-				REQUIRE(p.getHeader().getFrameID() == "ID");
-				REQUIRE(p.getHeader().getSequenceNumber() == 1);
-				REQUIRE(p.getHeader().getTimestamp() == 1.0);
-			}
-		}
-	}
+      THEN("The data received is the equal to the sent point plus one's")
+      {
+        REQUIRE(p.getPoint().getX() == Approx(sentPoint.getPoint().getX() + 1.0));
+        REQUIRE(p.getPoint().getY() == Approx(sentPoint.getPoint().getY() + 1.0));
+        REQUIRE(p.getPoint().getZ() == Approx(sentPoint.getPoint().getZ() + 1.0));
+        REQUIRE(p.getHeader().getFrameID() == "ID");
+        REQUIRE(p.getHeader().getSequenceNumber() == 1);
+        REQUIRE(p.getHeader().getTimestamp() == 1.0);
+      }
+    }
+  }
 }
 
 SCENARIO("Client-Server to a Stamped Pose message.")
 {
-	GIVEN("An instance of a server.")
-	{
-		// start a server
-		simple::Server<simple_msgs::PoseStamped> server("tcp://*:5566", callbackFunctionPoseStamped);
-		simple::Client<simple_msgs::PoseStamped> client("tcp://localhost:5566");
+  GIVEN("An instance of a server.")
+  {
+    // start a server
+    simple::Server<simple_msgs::PoseStamped> server("tcp://*:5566", callbackFunctionPoseStamped);
+    simple::Client<simple_msgs::PoseStamped> client("tcp://localhost:5566");
 
-		WHEN("The client sends a request")
-		{
-			auto p = createRandomPoseStamped();
-			auto sentPose = p;
-			client.request(p);
-			simple_msgs::Point unitPoint(1, 1, 1);
-			THEN("The data received is the equal to the sent pose plus one's")
-			{
-				REQUIRE(p.getPose().getPosition().getX() == Approx(sentPose.getPose().getPosition().getX() + 1.0));
-				REQUIRE(p.getPose().getPosition().getY() == Approx(sentPose.getPose().getPosition().getY() + 1.0));
-				REQUIRE(p.getPose().getPosition().getZ() == Approx(sentPose.getPose().getPosition().getZ() + 1.0));
-				REQUIRE(p.getPose().getQuaternion().getW() == Approx(sentPose.getPose().getQuaternion().getW() + 1.0));
-				REQUIRE(p.getPose().getQuaternion().getX() == Approx(sentPose.getPose().getQuaternion().getX() + 1.0));
-				REQUIRE(p.getPose().getQuaternion().getY() == Approx(sentPose.getPose().getQuaternion().getY() + 1.0));
-				REQUIRE(p.getPose().getQuaternion().getZ() == Approx(sentPose.getPose().getQuaternion().getZ() + 1.0));
-				REQUIRE(p.getHeader().getFrameID() == "ID");
-				REQUIRE(p.getHeader().getSequenceNumber() == 1);
-				REQUIRE(p.getHeader().getTimestamp() == 1.0);
-			}
-		}
-	}
+    WHEN("The client sends a request")
+    {
+      auto p = createRandomPoseStamped();
+      auto sentPose = p;
+      client.request(p);
+      simple_msgs::Point unitPoint(1, 1, 1);
+      THEN("The data received is the equal to the sent pose plus one's")
+      {
+        REQUIRE(p.getPose().getPosition().getX() == Approx(sentPose.getPose().getPosition().getX() + 1.0));
+        REQUIRE(p.getPose().getPosition().getY() == Approx(sentPose.getPose().getPosition().getY() + 1.0));
+        REQUIRE(p.getPose().getPosition().getZ() == Approx(sentPose.getPose().getPosition().getZ() + 1.0));
+        REQUIRE(p.getPose().getQuaternion().getW() == Approx(sentPose.getPose().getQuaternion().getW() + 1.0));
+        REQUIRE(p.getPose().getQuaternion().getX() == Approx(sentPose.getPose().getQuaternion().getX() + 1.0));
+        REQUIRE(p.getPose().getQuaternion().getY() == Approx(sentPose.getPose().getQuaternion().getY() + 1.0));
+        REQUIRE(p.getPose().getQuaternion().getZ() == Approx(sentPose.getPose().getQuaternion().getZ() + 1.0));
+        REQUIRE(p.getHeader().getFrameID() == "ID");
+        REQUIRE(p.getHeader().getSequenceNumber() == 1);
+        REQUIRE(p.getHeader().getTimestamp() == 1.0);
+      }
+    }
+  }
 }
 
 SCENARIO("Client-Server to a Stamped Quaternion message.")
 {
-	GIVEN("An instance of a server.")
-	{
-		// start a server
-		simple::Client<simple_msgs::QuaternionStamped> client("tcp://localhost:5567");
-		simple::Server<simple_msgs::QuaternionStamped> server("tcp://*:5567", callbackFunctionQuaternionStamped);
+  GIVEN("An instance of a server.")
+  {
+    // start a server
+    simple::Client<simple_msgs::QuaternionStamped> client("tcp://localhost:5567");
+    simple::Server<simple_msgs::QuaternionStamped> server("tcp://*:5567", callbackFunctionQuaternionStamped);
 
-		WHEN("The client sends a request")
-		{
-			auto q = createRandomQuaternionStamped();
-			auto sentQ = q;
-			client.request(q);
-			THEN("The data received is the equal to the sent pose plus one's")
-			{
-				REQUIRE(q.getQuaternion().getW() == Approx(sentQ.getQuaternion().getW() + 1.0));
-				REQUIRE(q.getQuaternion().getX() == Approx(sentQ.getQuaternion().getX() + 1.0));
-				REQUIRE(q.getQuaternion().getY() == Approx(sentQ.getQuaternion().getY() + 1.0));
-				REQUIRE(q.getQuaternion().getZ() == Approx(sentQ.getQuaternion().getZ() + 1.0));
-				REQUIRE(q.getHeader().getFrameID() == "ID");
-				REQUIRE(q.getHeader().getSequenceNumber() == 1);
-				REQUIRE(q.getHeader().getTimestamp() == 1.0);
-			}
-		}
-	}
+    WHEN("The client sends a request")
+    {
+      auto q = createRandomQuaternionStamped();
+      auto sentQ = q;
+      client.request(q);
+      THEN("The data received is the equal to the sent pose plus one's")
+      {
+        REQUIRE(q.getQuaternion().getW() == Approx(sentQ.getQuaternion().getW() + 1.0));
+        REQUIRE(q.getQuaternion().getX() == Approx(sentQ.getQuaternion().getX() + 1.0));
+        REQUIRE(q.getQuaternion().getY() == Approx(sentQ.getQuaternion().getY() + 1.0));
+        REQUIRE(q.getQuaternion().getZ() == Approx(sentQ.getQuaternion().getZ() + 1.0));
+        REQUIRE(q.getHeader().getFrameID() == "ID");
+        REQUIRE(q.getHeader().getSequenceNumber() == 1);
+        REQUIRE(q.getHeader().getTimestamp() == 1.0);
+      }
+    }
+  }
 }
 
 SCENARIO("Client-Server to a Stamped Rotation Matrix message.")
 {
-	GIVEN("An instance of a server.")
-	{
-		// start a server.
-		simple::Client<simple_msgs::RotationMatrixStamped> client("tcp://localhost:5568");
-		simple::Server<simple_msgs::RotationMatrixStamped> server("tcp://*:5568", callbackFunctionRotationMatrixStamped);
+  GIVEN("An instance of a server.")
+  {
+    // start a server.
+    simple::Client<simple_msgs::RotationMatrixStamped> client("tcp://localhost:5568");
+    simple::Server<simple_msgs::RotationMatrixStamped> server("tcp://*:5568", callbackFunctionRotationMatrixStamped);
 
-		WHEN("The client sends a request")
-		{
-			auto r = createRandomRotationMatrixStamped();
-			client.request(r);
-			THEN("The data received is the the identity matrix") { 
-				REQUIRE(r.getRotationMatrix() == simple_msgs::RotationMatrix()); 
-				REQUIRE(r.getHeader().getFrameID() == "ID");
-				REQUIRE(r.getHeader().getSequenceNumber() == 1);
-				REQUIRE(r.getHeader().getTimestamp() == 1.0);
-			}
-		}
-	}
+    WHEN("The client sends a request")
+    {
+      auto r = createRandomRotationMatrixStamped();
+      client.request(r);
+      THEN("The data received is the the identity matrix")
+      {
+        REQUIRE(r.getRotationMatrix() == simple_msgs::RotationMatrix());
+        REQUIRE(r.getHeader().getFrameID() == "ID");
+        REQUIRE(r.getHeader().getSequenceNumber() == 1);
+        REQUIRE(r.getHeader().getTimestamp() == 1.0);
+      }
+    }
+  }
 }
