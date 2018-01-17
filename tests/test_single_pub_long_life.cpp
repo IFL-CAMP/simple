@@ -39,7 +39,7 @@ SCENARIO("Publish a pose for a long time.")
       {
         auto p = createRandomPose();
         pub.publish(p);
-        std::this_thread::sleep_for(std::chrono::milliseconds(2));
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
         REQUIRE(received_pose == p);
       }
       REQUIRE(num_receives_pose == numPublishes);
