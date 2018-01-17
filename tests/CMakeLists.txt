@@ -37,7 +37,6 @@ install(
 TARGETS
    test_single_pub_sub 
    test_wrong_pub_sub 
-   test_long_life_pub 
    test_on_off_pub 
    test_late_sub 
    test_multi_sub
