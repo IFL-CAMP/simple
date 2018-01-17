@@ -73,6 +73,12 @@ add_executable(test_wrong_pub_sub test_wrong_pub_sub.cpp)
 target_link_libraries(test_wrong_pub_sub simple-static)
 add_test(NAME simple_tests.wrong_pub_sub COMMAND test_wrong_pub_sub) 
 
+# CLIENT / SERVER TESTS
+
+add_executable(test_single_req_rep test_single_req_rep.cpp)
+target_link_libraries(test_single_req_rep simple-static)
+add_test(NAME simple_tests.single_req_rep COMMAND test_single_req_rep)
+
 install(
 TARGETS
   test_double
@@ -90,6 +96,7 @@ TARGETS
   test_rotation_matrix_stamped
   test_pub_sub 
   test_wrong_pub_sub 
+  test_single_req_rep
 DESTINATION 
 	bin
 )

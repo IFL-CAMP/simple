@@ -32,7 +32,6 @@ template <typename T>
 class Client : public GenericSocket<T>
 {
 public:
-
   /**
    * @brief Default constructor for a socket of type Client.
    * @param address where the client connects to, in the form: tcp://HOSTNAME:PORT. e.g tcp://localhost:5555.
@@ -46,13 +45,13 @@ public:
   }
 
   /**
-   * @brief Copy constructor for Client. 
+   * @brief Copy constructor for Client.
    * Opens a new socket of the same type, connected to the same address, with the same timeout.
    */
   Client(const Client& other)
-    : GenericSocket<T>(zmq_socket(context_.get(), ZMQ_REQ))
+    : GenericSocket<T>(ZMQ_REQ)
   {
-    setTimeout(other.timeout_);
+    GenericSocket<T>::setTimeout(other.timeout_);
     GenericSocket<T>::connect(other.address_);
   }
 
@@ -84,8 +83,8 @@ private:
         std::cerr << "[SIMPLE Client] - No reply received. Aborting this request." << std::endl;
         // Delete the existing socket and create a new one.
         zmq_close(GenericSocket<T>::socket_);
-        GenericSocket<T>::socket_ = zmq_socket(context_.instance(), ZMQ_REQ);
-        setTimeout(GenericSocket<T>::timeout_);
+        GenericSocket<T>::renewSocket(ZMQ_REQ);
+        GenericSocket<T>::setTimeout(GenericSocket<T>::timeout_);
         GenericSocket<T>::connect(GenericSocket<T>::address_);
       }
     }

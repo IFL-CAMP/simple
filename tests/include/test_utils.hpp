@@ -1,3 +1,5 @@
+#include <time.h>
+#include <thread>
 #include "simple_msgs/bool.h"
 #include "simple_msgs/int.h"
 #include "simple_msgs/float.h"
@@ -184,6 +186,13 @@ void callbackFunctionPoseStamped(simple_msgs::PoseStamped& p) {
   callbackFunctionPose(p.getPose());
 	callbackFunctionHeader(p.getHeader());
 }
+
+void callbackFunctionPoseStampedLazy(simple_msgs::PoseStamped& p) {
+  // Add one to the point and set a default header.
+  callbackFunctionPoseStamped(p);
+  std::this_thread::sleep_for(std::chrono::milliseconds(10));
+}
+
 
 void callbackFunctionQuaternionStamped(simple_msgs::QuaternionStamped& q) {
   // Add one to the point and set a default header.
