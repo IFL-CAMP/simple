@@ -22,6 +22,12 @@ public:
   inline bool operator==(const Bool& rhs) const { return (data_ == rhs.data_); }
   inline bool operator!=(const Bool& rhs) const { return !(*this == rhs); }
 
+  inline Bool& operator!()
+  {
+    data_ = !data_;
+    return *this;
+  }
+
   friend std::ostream& operator<<(std::ostream& out, const Bool& b);
 
   /**

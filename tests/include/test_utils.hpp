@@ -1,75 +1,19 @@
-
-#include <iostream>
-#include "simple/server.hpp"
-#include "simple_msgs/point.h"
-#include "simple_msgs/quaternion.h"
-#include "simple_msgs/pose.h"
 #include "simple_msgs/bool.h"
-#include "simple_msgs/string.h"
-#include "simple_msgs/numeric_type.hpp"
-#include "simple_msgs/rotation_matrix.h"
-#include "simple_msgs/header.h"
-#include "simple_msgs/point_stamped.h"
-#include "simple_msgs/quaternion_stamped.h"
-#include "simple_msgs/pose_stamped.h"
-#include "simple_msgs/rotation_matrix_stamped.h"
-#include "simple/client.hpp"
-#include "simple_msgs/double.h"
-#include "simple_msgs/float.h"
 #include "simple_msgs/int.h"
-#include <time.h>
-#include <stdlib.h>
+#include "simple_msgs/float.h"
+#include "simple_msgs/double.h"
+#include "simple_msgs/string.h"
+#include "simple_msgs/header.h"
+#include "simple_msgs/point.h"
+#include "simple_msgs/point_stamped.h"
+#include "simple_msgs/quaternion.h"
+#include "simple_msgs/quaternion_stamped.h"
+#include "simple_msgs/pose.h"
+#include "simple_msgs/pose_stamped.h"
+#include "simple_msgs/rotation_matrix.h"
+#include "simple_msgs/rotation_matrix_stamped.h"
 
-// create static header for comparing with data sent
-simple_msgs::Header received_header;
-bool running_header = false;
-int num_receives_header = 0;
-
-// create static point for comparing with data sent
-simple_msgs::Point received_point;
-bool running_point = false;
-int num_receives_point = 0;
-
-// create static pose for comparing with data sent
-simple_msgs::Pose received_pose;
-bool running_pose = false;
-int num_receives_pose = 0;
-
-// create static quaternion for comparing with data sent
-simple_msgs::Quaternion received_quaternion;
-bool running_quaternion = false;
-int num_receives_quaternion = 0;
-
-// create static rotation matrix for comparing with data sent
-simple_msgs::RotationMatrix received_rotation_matrix;
-bool running_rotation_matrix = false;
-int num_receives_rotation_matrix = 0;
-
-// create static string for comparing with data sent
-simple_msgs::String received_string;
-bool running_string = false;
-int num_receives_string = 0;
-
-// create static bool for comparing with data sent
-simple_msgs::Bool received_bool;
-bool running_bool = false;
-int num_receives_bool = 0;
-
-// create static int for comparing with data sent
-simple_msgs::NumericType<int> received_int;
-bool running_int = false;
-int num_receives_int = 0;
-
-// create static double for comparing with data sent
-simple_msgs::NumericType<double> received_double;
-bool running_double = false;
-int num_receives_double = 0;
-
-// create static float for comparing with data sent
-simple_msgs::NumericType<float> received_float;
-bool running_float = false;
-int num_receives_float = 0;
-
+// Function for random message generation.
 simple_msgs::Header createRandomHeader()
 {
   int x = rand() % 100;
@@ -98,16 +42,16 @@ simple_msgs::Quaternion createRandomQuaternion()
 
 simple_msgs::RotationMatrix createRandomRotationMatrix()
 {
-  double x = static_cast<double>(rand()) / RAND_MAX;
-  double y = static_cast<double>(rand()) / RAND_MAX;
-  double z = static_cast<double>(rand()) / RAND_MAX;
-  double w = static_cast<double>(rand()) / RAND_MAX;
-  double a = static_cast<double>(rand()) / RAND_MAX;
-  double b = static_cast<double>(rand()) / RAND_MAX;
-  double c = static_cast<double>(rand()) / RAND_MAX;
-  double d = static_cast<double>(rand()) / RAND_MAX;
-  double e = static_cast<double>(rand()) / RAND_MAX;
-  return simple_msgs::RotationMatrix(x, y, z, w, a, b, c, d, e);
+  double m_11 = static_cast<double>(rand()) / RAND_MAX;
+  double m_12 = static_cast<double>(rand()) / RAND_MAX;
+  double m_13 = static_cast<double>(rand()) / RAND_MAX;
+  double m_21 = static_cast<double>(rand()) / RAND_MAX;
+  double m_22 = static_cast<double>(rand()) / RAND_MAX;
+  double m_23 = static_cast<double>(rand()) / RAND_MAX;
+  double m_31 = static_cast<double>(rand()) / RAND_MAX;
+  double m_32 = static_cast<double>(rand()) / RAND_MAX;
+  double m_33 = static_cast<double>(rand()) / RAND_MAX;
+  return simple_msgs::RotationMatrix(m_11, m_12, m_13, m_21, m_22, m_23, m_31, m_32, m_33);
 }
 
 simple_msgs::Pose createRandomPose()
@@ -115,22 +59,22 @@ simple_msgs::Pose createRandomPose()
   return simple_msgs::Pose(createRandomPoint(), createRandomQuaternion());
 }
 
-simple_msgs::NumericType<int> createRandomInt()
+simple_msgs::Int createRandomInt()
 {
   int x = rand() % 100;
-  return simple_msgs::NumericType<int>(x);
+  return simple_msgs::Int(x);
 }
 
-simple_msgs::NumericType<double> createRandomDouble()
+simple_msgs::Double createRandomDouble()
 {
   double x = static_cast<double>(rand()) / RAND_MAX;
-  return simple_msgs::NumericType<double>(x);
+  return simple_msgs::Double(x);
 }
 
-simple_msgs::NumericType<float> createRandomFloat()
+simple_msgs::Float createRandomFloat()
 {
   float x = static_cast<float>(rand()) / RAND_MAX;
-  return simple_msgs::NumericType<float>(x);
+  return simple_msgs::Float(x);
 }
 
 simple_msgs::Bool createRandomBool()
@@ -141,8 +85,7 @@ simple_msgs::Bool createRandomBool()
 
 simple_msgs::String createRandomString()
 {
-  std::string s("Random string:");
-  s.append(std::to_string(rand() % 100));
+  std::string s("Random string: " + std::to_string(rand() % 100));
   return simple_msgs::String(s);
 }
 
@@ -162,27 +105,24 @@ simple_msgs::RotationMatrixStamped createRandomRotationMatrixStamped() {
 	return simple_msgs::RotationMatrixStamped(createRandomHeader(), createRandomRotationMatrix());
 }
 
-// define callback function
+// Set of callback functions for all the simple_msgs.
+// They modify the received point.
+
 void callbackFunctionPoint(simple_msgs::Point& p)
 {
-  // adds one's to the received point
   simple_msgs::Point point(1, 1, 1);
   p += point;
 }
 
-// define callback function
 void callbackFunctionHeader(simple_msgs::Header& h)
 {
-  // fill the header fields
   h.setFrameID("ID");
   h.setSequenceNumber(1);
   h.setTimestamp(1.0);
 }
 
-// define callback function
 void callbackFunctionPose(simple_msgs::Pose& p)
 {
-  // add one's to the pose
   p.getPosition() += 1.0;
   p.getQuaternion().setW(p.getQuaternion().getW() + 1);
   p.getQuaternion().setX(p.getQuaternion().getX() + 1);
@@ -190,197 +130,249 @@ void callbackFunctionPose(simple_msgs::Pose& p)
   p.getQuaternion().setZ(p.getQuaternion().getZ() + 1);
 }
 
-// define callback function
 void callbackFunctionQuaternion(simple_msgs::Quaternion& q)
 {
-  // add one's to the quaternion
   q.setW(q.getW() + 1);
   q.setX(q.getX() + 1);
   q.setY(q.getY() + 1);
   q.setZ(q.getZ() + 1);
 }
 
-// define callback function
 void callbackFunctionString(simple_msgs::String& s)
 {
-  // replace string by standard reply
+  // Replace the string by a standard reply.
   s.set("REPLY");
-  
 }
 
-// define callback function
 void callbackFunctionRotationMatrix(simple_msgs::RotationMatrix& r)
 {
-  // set rotation matrix to zero
   r.setColumn(0, {0, 0, 0});
   r.setColumn(1, {0, 0, 0});
   r.setColumn(2, {0, 0, 0});
 }
 
-// define callback function
 void callbackFunctionBool(simple_msgs::Bool& b)
 {
-  // set bool to true
-  b.set(true);
+  b = !b; //< Invert the value of the Bool message.
+}
+
+void callbackFunctionInt(simple_msgs::Int& i)
+{
+  i += 1; //< Add 1.
 }
 
 // define callback function
-void callbackFunctionInt(simple_msgs::NumericType<int>& i)
+void callbackFunctionDouble(simple_msgs::Double& d)
 {
-  // add 1 to the int
-  i += 1;
+  d += 1.0; //< Add 1.
 }
 
 // define callback function
-void callbackFunctionDouble(simple_msgs::NumericType<double>& d)
+void callbackFunctionFloat(simple_msgs::Float& f)
 {
-  // add 1 to the double
-  d += 1.0;
-}
-
-// define callback function
-void callbackFunctionFloat(simple_msgs::NumericType<float>& f)
-{
-  // add 1 to the float
-  f += 1.0f;
+  f += 1.0f; //< Add 1.
 }
 
 void callbackFunctionPointStamped(simple_msgs::PointStamped& p) {
-	//add one's to the point and set default header
+  // Add one to the point and set a default header.
 	callbackFunctionPoint(p.getPoint());
 	callbackFunctionHeader(p.getHeader());
 }
 
 void callbackFunctionPoseStamped(simple_msgs::PoseStamped& p) {
-	//add one's to the point and set default header
-	callbackFunctionPose(p.getPose());
+  // Add one to the point and set a default header.
+  callbackFunctionPose(p.getPose());
 	callbackFunctionHeader(p.getHeader());
 }
 
 void callbackFunctionPoseStampedLazy(simple_msgs::PoseStamped& p) {
-	//add one's to the point and set default header
-	callbackFunctionPoseStamped(p);
+  // Add one to the point and set a default header.
+  callbackFunctionPoseStamped(p);
 	std::this_thread::sleep_for(std::chrono::milliseconds(10));
 }
 
 void callbackFunctionQuaternionStamped(simple_msgs::QuaternionStamped& q) {
-	//add one's to the point and set default header
-	callbackFunctionQuaternion(q.getQuaternion());
+  // Add one to the point and set a default header.
+  callbackFunctionQuaternion(q.getQuaternion());
 	callbackFunctionHeader(q.getHeader());
 }
 
 void callbackFunctionRotationMatrixStamped(simple_msgs::RotationMatrixStamped& r) {
-	//add one's to the point and set default header
-	callbackFunctionRotationMatrix(r.getRotationMatrix());
+  // Add one to the point and set a default header.
+  callbackFunctionRotationMatrix(r.getRotationMatrix());
 	callbackFunctionHeader(r.getHeader());
 }
 
-// define callback function
-void callbackFunctionConstPoint(const simple_msgs::Point& p)
+// Set of const callbacks for all the simple_msgs
+// They receive a message and just save it.
+
+bool running_bool = false, running_int = false, running_float = false,
+     running_double = false, running_string = false, running_header = false,
+     running_point =  false, running_quaternion = false, running_pose = false,
+     running_rotation_matrix = false, running_point_stamped = false,
+     running_quaternion_stamped = false, running_pose_stamped = false,
+     running_rotation_matrix_stamped = false;
+
+int num_received_bool = 0, num_received_int = 0, num_received_float = 0,
+    num_received_double = 0, num_received_string = 0, num_received_header = 0,
+    num_received_point = 0, num_received_quaternion = 0, num_received_pose = 0,
+    num_received_rotation_matrix = 0, num_received_point_stamped = 0,
+    num_received_quaternion_stamped = 0, num_received_pose_stamped = 0,
+    num_received_rotation_matrix_stamped = 0;
+
+simple_msgs::Bool received_bool;
+simple_msgs::Int received_int;
+simple_msgs::Double received_double;
+simple_msgs::Float received_float;
+simple_msgs::String received_string;
+simple_msgs::Header received_header;
+simple_msgs::Point received_point;
+simple_msgs::PointStamped received_point_stamped;
+simple_msgs::Quaternion received_quaternion;
+simple_msgs::QuaternionStamped received_quaternion_stamped;
+simple_msgs::Pose received_pose;
+simple_msgs::PoseStamped received_pose_stamped;
+simple_msgs::RotationMatrix received_rotation_matrix;
+simple_msgs::RotationMatrixStamped received_rotation_matrix_stamped;
+
+void callbackFunctionConstBool(const simple_msgs::Bool& b)
 {
-	received_point = p;
-	num_receives_point++;
-	if (!running_point)
-	{
-		running_point = true;
-	}
+  received_bool = b;
+  num_received_bool++;
+  if (!running_bool)
+  {
+    running_bool = true;
+  }
 }
 
-// define callback function
-void callbackFunctionConstHeader(const simple_msgs::Header& h)
+void callbackFunctionConstInt(const simple_msgs::Int& i)
 {
-	received_header = h;
-	num_receives_header++;
-	if (!running_header)
-	{
-		running_header = true;
-	}
+  received_int = i;
+  num_received_int++;
+  if (!running_int)
+  {
+    running_int = true;
+  }
 }
 
-// define callback function
-void callbackFunctionConstPose(const simple_msgs::Pose& p)
+void callbackFunctionConstFloat(const simple_msgs::Float& f)
 {
-	received_pose = p;
-	num_receives_pose++;
-	if (!running_pose)
-	{
-		running_pose = true;
-	}
+  received_float = f;
+  num_received_float++;
+  if (!running_float)
+  {
+    running_float = true;
+  }
 }
 
-// define callback function
-void callbackFunctionConstQuaternion(const simple_msgs::Quaternion& q)
+void callbackFunctionConstDouble(const simple_msgs::Double& d)
 {
-	received_quaternion = q;
-	num_receives_quaternion++;
-	if (!running_quaternion)
-	{
-		running_quaternion = true;
-	}
+  received_double = d;
+  num_received_double++;
+  if (!running_double)
+  {
+    running_double = true;
+  }
 }
 
-// define callback function
 void callbackFunctionConstString(const simple_msgs::String& s)
 {
 	received_string = s;
-	num_receives_string++;
+  num_received_string++;
 	if (!running_string)
 	{
 		running_string = true;
 	}
 }
 
-// define callback function
+
+void callbackFunctionConstHeader(const simple_msgs::Header& h)
+{
+  received_header = h;
+  num_received_header++;
+  if (!running_header)
+  {
+    running_header = true;
+  }
+}
+
+void callbackFunctionConstPoint(const simple_msgs::Point& p)
+{
+  received_point = p;
+  num_received_point++;
+  if (!running_point)
+  {
+    running_point = true;
+  }
+}
+
+void callbackFunctionConstPointStamped(const simple_msgs::PointStamped& ps)
+{
+  received_point_stamped = ps;
+  num_received_point_stamped++;
+  if (!running_point_stamped)
+  {
+    running_point_stamped = true;
+  }
+}
+
+void callbackFunctionConstQuaternion(const simple_msgs::Quaternion& q)
+{
+  received_quaternion = q;
+  num_received_quaternion++;
+  if (!running_quaternion)
+  {
+    running_quaternion = true;
+  }
+}
+
+
+void callbackFunctionConstQuaternionStamped(const simple_msgs::QuaternionStamped& qs)
+{
+  received_quaternion_stamped = qs;
+  num_received_quaternion_stamped++;
+  if (!running_quaternion_stamped)
+  {
+    running_quaternion_stamped = true;
+  }
+}
+
+void callbackFunctionConstPose(const simple_msgs::Pose& p)
+{
+  received_pose = p;
+  num_received_pose++;
+  if (!running_pose)
+  {
+    running_pose = true;
+  }
+}
+
+void callbackFunctionConstPoseStamped(const simple_msgs::PoseStamped& ps)
+{
+  received_pose_stamped = ps;
+  num_received_pose_stamped++;
+  if (!running_pose_stamped)
+  {
+    running_pose_stamped = true;
+  }
+}
+
 void callbackFunctionConstRotationMatrix(const simple_msgs::RotationMatrix& r)
 {
-	received_rotation_matrix = r;
-	num_receives_rotation_matrix++;
-	if (!running_rotation_matrix)
-	{
-		running_rotation_matrix = true;
-	}
+  received_rotation_matrix = r;
+  num_received_rotation_matrix++;
+  if (!running_rotation_matrix)
+  {
+    running_rotation_matrix = true;
+  }
 }
 
-// define callback function
-void callbackFunctionConstBool(const simple_msgs::Bool& b)
+void callbackFunctionConstRotationMatrixStamped(const simple_msgs::RotationMatrixStamped& rs)
 {
-	received_bool = b;
-	num_receives_bool++;
-	if (!running_bool)
-	{
-		running_bool = true;
-	}
-}
-
-// define callback function
-void callbackFunctionConstInt(const simple_msgs::NumericType<int>& i)
-{
-	received_int = i;
-	num_receives_int++;
-	if (!running_int)
-	{
-		running_int = true;
-	}
-}
-
-// define callback function
-void callbackFunctionConstDouble(const simple_msgs::NumericType<double>& d)
-{
-	received_double = d;
-	num_receives_double++;
-	if (!running_double)
-	{
-		running_double = true;
-	}
-}
-
-// define callback function
-void callbackFunctionConstFloat(const simple_msgs::NumericType<float>& f)
-{
-	received_float = f;
-	num_receives_float++;
-	if (!running_float)
-	{
-		running_float = true;
-	}
+  received_rotation_matrix_stamped = rs;
+  num_received_rotation_matrix_stamped++;
+  if (!running_rotation_matrix_stamped)
+  {
+    running_rotation_matrix_stamped = true;
+  }
 }
