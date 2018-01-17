@@ -18,48 +18,9 @@
 #include "simple_msgs/int.h"
 #include <time.h>
 #include <stdlib.h>
+#include "test_utils.hpp"
 
 // TEST ONE PUBLISHER WITH ONE SUBSCRIBER PUBLISHING FOR LONG
-
-// create static poses for comparing with data sent
-simple_msgs::Pose received_pose01;
-bool running_pose01 = false;
-int num_receives_pose01 = 0;
-
-simple_msgs::Point createRandomPoint()
-{
-	double x = static_cast<double>(rand()) / RAND_MAX;
-	double y = static_cast<double>(rand()) / RAND_MAX;
-	double z = static_cast<double>(rand()) / RAND_MAX;
-	return simple_msgs::Point(x, y, z);
-}
-
-simple_msgs::Quaternion createRandomQuaternion()
-{
-	double x = static_cast<double>(rand()) / RAND_MAX;
-	double y = static_cast<double>(rand()) / RAND_MAX;
-	double z = static_cast<double>(rand()) / RAND_MAX;
-	double w = static_cast<double>(rand()) / RAND_MAX;
-	return simple_msgs::Quaternion(x, y, z, w);
-}
-
-simple_msgs::Pose createRandomPose()
-{
-	simple_msgs::Point p = createRandomPoint();
-	simple_msgs::Quaternion q = createRandomQuaternion();
-	return simple_msgs::Pose(p, q);
-}
-
-// define callback functions
-void callbackFunctionPose01(const simple_msgs::Pose& p)
-{
-	received_pose01 = p;
-	num_receives_pose01++;
-	if (!running_pose01)
-	{
-		running_pose01 = true;
-	}
-}
 
 int numPublishes = 100000;
 
@@ -70,7 +31,7 @@ SCENARIO("Publish a pose for a long time.")
 		// start a publisher
 		simple::Publisher<simple_msgs::Pose> pub("tcp://*:5555");
 		// start 20 subscribers
-		simple::Subscriber<simple_msgs::Pose> sub01("tcp://localhost:5555", callbackFunctionPose01);
+		simple::Subscriber<simple_msgs::Pose> sub("tcp://localhost:5555", callbackFunctionConstPose);
 		// wait so the subscribers get every message
 		std::this_thread::sleep_for(std::chrono::seconds(5));
 		WHEN("A publisher publishes data")
@@ -80,10 +41,10 @@ SCENARIO("Publish a pose for a long time.")
 				auto p = createRandomPose();
 				pub.publish(p);
 				std::this_thread::sleep_for(std::chrono::milliseconds(1));
-				REQUIRE(received_pose01 == p);
+				REQUIRE(received_pose == p);
 
 			}
-			REQUIRE(num_receives_pose01 == numPublishes);
+			REQUIRE(num_receives_pose == numPublishes);
 		}
 
 	}
