@@ -4,6 +4,7 @@
 #include <string>
 #include <string.h>
 #include <flatbuffers/flatbuffers.h>
+#include "context_manager.hpp"
 
 namespace simple
 {
@@ -16,10 +17,7 @@ public:
 
 protected:
   GenericSocket() = default;
-  GenericSocket(void* socket)
-    : socket_(socket)
-  {
-  }
+  GenericSocket(int type) { socket_ = zmq_socket(context_.instance(), type); }
 
   void bind(const std::string& address)
   {
@@ -41,12 +39,17 @@ protected:
     }
   }
 
-  static void freeMsg(void* data, void* hint) {
-	  if (hint) {
-	  delete (static_cast<std::shared_ptr<flatbuffers::FlatBufferBuilder>*>(hint));//<Keep a copy of the message builder alive until the sending of the message is done.
+  static void freeMsg(void* data, void* hint)
+  {
+    if (hint)
+    {
+      // Keep a copy of the message builder alive until the sending of the message is done.
+      delete (static_cast<std::shared_ptr<flatbuffers::FlatBufferBuilder>*>(hint));
+    }
   }
-  }
-  bool sendMsg(uint8_t* msg, int msg_size, std::shared_ptr<flatbuffers::FlatBufferBuilder>* builder_pointer, const std::string& custom_error = "[SIMPLE Error] - ")
+
+  bool sendMsg(uint8_t* msg, int msg_size, std::shared_ptr<flatbuffers::FlatBufferBuilder>* builder_pointer,
+               const std::string& custom_error = "[SIMPLE Error] - ")
   {
     zmq_msg_t topic;
     zmq_msg_init_data(&topic, const_cast<void*>(static_cast<const void*>(topic_)), topic_size_, freeMsg, NULL);
@@ -111,6 +114,7 @@ protected:
   void* socket_;
   const char* topic_{T::getTopic()};
   const size_t topic_size_{strlen(topic_)};
+  ContextManager context_;
 };
 
 }  // Namespace simple.
