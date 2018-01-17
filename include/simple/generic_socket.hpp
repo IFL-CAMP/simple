@@ -22,6 +22,7 @@
 #include <string>
 #include <string.h>
 #include <flatbuffers/flatbuffers.h>
+#include "context_manager.hpp"
 
 namespace simple
 {
@@ -34,10 +35,7 @@ public:
 
 protected:
   GenericSocket() = default;
-  GenericSocket(void* socket)
-    : socket_(socket)
-  {
-  }
+  GenericSocket(int type) { socket_ = zmq_socket(context_.instance(), type); }
 
   void bind(const std::string& address)
   {
@@ -140,8 +138,6 @@ protected:
   void* socket_{ nullptr };
   const char* topic_{T::getTopic()};
   const size_t topic_size_{strlen(topic_)};
-  std::string address_{ "" };
-  int timeout_{ 0 };
 };
 
 }  // Namespace simple.

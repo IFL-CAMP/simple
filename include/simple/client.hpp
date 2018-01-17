@@ -21,7 +21,6 @@
 #include <zmq.h>
 #include <string>
 #include <memory>
-#include "context_deleter.hpp"
 #include "simple/generic_socket.hpp"
 
 namespace simple
@@ -33,13 +32,14 @@ template <typename T>
 class Client : public GenericSocket<T>
 {
 public:
+
   /**
    * @brief Default constructor for a socket of type Client.
    * @param address where the client connects to, in the form: tcp://HOSTNAME:PORT. e.g tcp://localhost:5555.
    * @param timeout Time, in msec, the client shall wait for a reply. Default 30 seconds.
    */
   Client(const std::string& address, int timeout = 30000)
-    : GenericSocket<T>(zmq_socket(context_.get(), ZMQ_REQ))
+    : GenericSocket<T>(ZMQ_REQ)
   {
     GenericSocket<T>::setTimeout(timeout);
     GenericSocket<T>::connect(address);
@@ -91,9 +91,5 @@ private:
     }
     return success;
   }
-  static std::shared_ptr<void> context_;
 };
-
-template <typename T>
-std::shared_ptr<void> Client<T>::context_(zmq_ctx_new(), contextDeleter);
 }  // Namespace simple.

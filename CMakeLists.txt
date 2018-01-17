@@ -38,6 +38,9 @@ find_package(ZeroMQ REQUIRED)
 
 ###### TARGETS
 
+file(GLOB SIMPLE_HEADERS "include/simple/*.hpp")
+add_custom_target(${PROJECT_NAME}-ide SOURCES ${SIMPLE_HEADERS})
+
 add_library(${PROJECT_NAME} INTERFACE)
 
 target_include_directories(${PROJECT_NAME} INTERFACE

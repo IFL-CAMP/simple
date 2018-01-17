@@ -22,7 +22,6 @@
 #include <string>
 #include <thread>
 #include <memory>
-#include "context_deleter.hpp"
 #include "simple/generic_socket.hpp"
 
 namespace simple
@@ -39,7 +38,7 @@ public:
    * function is responsible for taking the received request and filling it with the reply data
    */
   Server(const std::string& address, const std::function<void(T&)>& callback, int timeout = 100)
-    : GenericSocket<T>(zmq_socket(context_.get(), ZMQ_REP))
+    : GenericSocket<T>(ZMQ_REP)
     , callback_(callback)
   {
     GenericSocket<T>::bind(address);
@@ -93,16 +92,12 @@ private:
   {
     uint8_t* buffer = msg.getBufferData();
     int buffer_size = msg.getBufferSize();
-	std::shared_ptr<flatbuffers::FlatBufferBuilder>* builder_pointer = msg.getBuilderPointer();
+    std::shared_ptr<flatbuffers::FlatBufferBuilder>* builder_pointer = msg.getBuilderPointer();
     GenericSocket<T>::sendMsg(buffer, buffer_size, builder_pointer, "[SIMPLE Server] - ");
   }
 
   std::thread server_thread_;
   bool alive_{true};
   std::function<void(T&)> callback_;
-  static std::shared_ptr<void> context_;
 };
-
-template <typename T>
-std::shared_ptr<void> Server<T>::context_(zmq_ctx_new(), contextDeleter);
 }  // Namespace simple.

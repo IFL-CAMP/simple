@@ -22,7 +22,6 @@
 #include <string>
 #include <thread>
 #include <memory>
-#include "context_deleter.hpp"
 #include "simple/generic_socket.hpp"
 
 namespace simple
@@ -42,7 +41,7 @@ public:
    * @param Time the subscriber will block the thread waiting for a message. In milliseconds.
    */
   Subscriber<T>(const std::string& address, const std::function<void(const T&)>& callback, int timeout = 100)
-    : GenericSocket<T>(zmq_socket(context_.get(), ZMQ_SUB))
+    : GenericSocket<T>(ZMQ_SUB)
     , callback_(callback)
   {
     GenericSocket<T>::connect(address);
@@ -67,10 +66,11 @@ public:
 
   ~Subscriber<T>()
   {
-    alive_ = false;             //< Stop the subscription loop.
-	if (subscriber_thread_.joinable()) {
-		subscriber_thread_.join();  //< Wait for the subscriber thread.
-	}
+    alive_ = false;  //< Stop the subscription loop.
+    if (subscriber_thread_.joinable())
+    {
+      subscriber_thread_.join();  //< Wait for the subscriber thread.
+    }
   }
 
 private:
@@ -93,10 +93,5 @@ private:
   std::thread subscriber_thread_;
   bool alive_{true};
   std::function<void(const T&)> callback_;
-  static std::shared_ptr<void> context_;
 };
-
-template <typename T>
-std::shared_ptr<void> Subscriber<T>::context_(zmq_ctx_new(), contextDeleter);
-
 }  // Namespace simple.
