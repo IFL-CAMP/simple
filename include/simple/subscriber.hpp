@@ -53,8 +53,8 @@ public:
   }
 
   Subscriber(const Subscriber& other)
-    : GenericSocket<T>(zmq_socket(context_.get(), ZMQ_SUB))
-    , callback_(callback)
+    : GenericSocket<T>(ZMQ_SUB))
+    , callback_(other.callback_)
   {
     GenericSocket<T>::connect(other.address_);
     GenericSocket<T>::filter();
