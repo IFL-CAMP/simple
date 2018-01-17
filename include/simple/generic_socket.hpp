@@ -1,9 +1,28 @@
+/**
+* S.I.M.P.L.E. - Smart Intra-operative Messaging Platform with Less Effort
+* Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Lesser Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU Lesser Public License for more details.
+*
+* You should have received a copy of the GNU Lesser Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #pragma once
 
 #include <zmq.h>
 #include <string>
 #include <string.h>
 #include <flatbuffers/flatbuffers.h>
+#include "context_manager.hpp"
 
 namespace simple
 {
@@ -16,13 +35,11 @@ public:
 
 protected:
   GenericSocket() = default;
-  GenericSocket(void* socket)
-    : socket_(socket)
-  {
-  }
+  GenericSocket(int type) { socket_ = zmq_socket(context_.instance(), type); }
 
   void bind(const std::string& address)
   {
+    address_ = address;
     auto success = zmq_bind(socket_, address.c_str());
     if (success != 0)
     {
@@ -33,20 +50,26 @@ protected:
 
   void connect(const std::string& address)
   {
+    address_ = address;
     auto success = zmq_connect(socket_, address.c_str());
     if (success != 0)
     {
-      throw std::runtime_error("[SIMPLE Error] - Cannot connect to the given address/port. ZMQ Error: " +
+      throw std::runtime_error("[SIMPLE Error] - Cannot bind to the given address/port. ZMQ Error: " +
                                std::to_string(zmq_errno()));
     }
   }
 
-  static void freeMsg(void* data, void* hint) {
-	  if (hint) {
-	  delete (static_cast<std::shared_ptr<flatbuffers::FlatBufferBuilder>*>(hint));//<Keep a copy of the message builder alive until the sending of the message is done.
+  static void freeMsg(void* data, void* hint)
+  {
+    if (hint)
+    {
+      // Keep a copy of the message builder alive until the sending of the message is done.
+      delete (static_cast<std::shared_ptr<flatbuffers::FlatBufferBuilder>*>(hint));
+    }
   }
-  }
-  bool sendMsg(uint8_t* msg, int msg_size, std::shared_ptr<flatbuffers::FlatBufferBuilder>* builder_pointer, const std::string& custom_error = "[SIMPLE Error] - ")
+
+  bool sendMsg(uint8_t* msg, int msg_size, std::shared_ptr<flatbuffers::FlatBufferBuilder>* builder_pointer,
+               const std::string& custom_error = "[SIMPLE Error] - ")
   {
     zmq_msg_t topic;
     zmq_msg_init_data(&topic, const_cast<void*>(static_cast<const void*>(topic_)), topic_size_, freeMsg, NULL);
@@ -107,10 +130,17 @@ protected:
   }
 
   void filter() { zmq_setsockopt(socket_, ZMQ_SUBSCRIBE, topic_, topic_size_); }
-  void setTimeout(int timeout) { zmq_setsockopt(socket_, ZMQ_RCVTIMEO, &timeout, sizeof(timeout)); }
+  void setTimeout(int timeout)
+  {
+    zmq_setsockopt(socket_, ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
+    timeout_ = timeout;
+  }
   void* socket_;
-  const char* topic_{T::getTopic()};
-  const size_t topic_size_{strlen(topic_)};
+  const char* topic_{ T::getTopic() };
+  const size_t topic_size_{ strlen(topic_) };
+  std::string address_{ "" };
+  int timeout_{ 0 };
+  ContextManager context_;
 };
 
 }  // Namespace simple.

@@ -36,7 +36,7 @@ build_clang:
   script:
     - mkdir -p simple_clang
     - cd simple_clang
-    - cmake -DCMAKE_CXX_COMPILER=clang++ -DBUILD_TESTS=ON ..
+    - cmake -DCMAKE_CXX_COMPILER=clang++ -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Release ..
     - make
   cache:
     key: clang_cache
@@ -54,7 +54,7 @@ build_gcc:
   script:
     - mkdir -p simple_gcc
     - cd simple_gcc
-    - cmake -DCMAKE_CXX_COMPILER=g++ -DBUILD_TESTS=ON ..
+    - cmake -DCMAKE_CXX_COMPILER=g++ -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Release ..
     - make
   cache:
     key: gcc_cache

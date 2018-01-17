@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.5)
 project(simple)
-set(simple_VERSION 0.1)
+
+# Set the project version
+set(PROJECT_VER_PATCH 0)
+set(PROJECT_VER_MINOR 1)
+set(PROJECT_VER_MAJOR 1)
+set(simple_VERSION "${PROJECT_VER_MAJOR}.${PROJECT_VER_MINOR}.${PROJECT_VER_PATCH}")
 
 include(GNUInstallDirs)
 
@@ -32,6 +37,9 @@ find_package(Threads REQUIRED)
 find_package(ZeroMQ REQUIRED)
 
 ###### TARGETS
+
+file(GLOB SIMPLE_HEADERS "include/simple/*.hpp")
+add_custom_target(${PROJECT_NAME}-ide SOURCES ${SIMPLE_HEADERS})
 
 add_library(${PROJECT_NAME} INTERFACE)
 

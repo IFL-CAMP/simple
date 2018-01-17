@@ -1,12 +1,27 @@
+/**
+ * S.I.M.P.L.E. - Smart Intra-operative Messaging Platform with Less Effort
+ * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #pragma once
 
 #include <zmq.h>
 #include <string>
 #include <memory>
-#include "context_deleter.hpp"
 #include "simple/generic_socket.hpp"
-
-#define MAX_SOCKET_STRING sizeof("tcp://127.0.0.1:65536")
 
 namespace simple
 {
@@ -17,22 +32,28 @@ template <typename T>
 class Client : public GenericSocket<T>
 {
 public:
-  Client(const std::string& address, int timeout = 1500)
-    : GenericSocket<T>(zmq_socket(context_.get(), ZMQ_REQ))
-  {
 
-	  //GenericSocket<T>::setTimeout(timeout); //Time-out doesn't work for a client - the next request will fail.
-	  GenericSocket<T>::connect(address);
+  /**
+   * @brief Default constructor for a socket of type Client.
+   * @param address where the client connects to, in the form: tcp://HOSTNAME:PORT. e.g tcp://localhost:5555.
+   * @param timeout Time, in msec, the client shall wait for a reply. Default 30 seconds.
+   */
+  Client(const std::string& address, int timeout = 30000)
+    : GenericSocket<T>(ZMQ_REQ)
+  {
+    GenericSocket<T>::setTimeout(timeout);
+    GenericSocket<T>::connect(address);
   }
 
   /**
-  * @brief Copy constructor for Client. Opens a new socket of the same type, connected to the same address.
-  */
-  Client(const Client& c) : GenericSocket<T>(zmq_socket(context_.get(), ZMQ_REQ)) {
-	  size_t len = MAX_SOCKET_STRING;
-	  char my_endpoint[MAX_SOCKET_STRING];
-	  zmq_getsockopt(c.socket_, ZMQ_LAST_ENDPOINT, my_endpoint, &len);
-	  GenericSocket<T>::connect(my_endpoint);
+   * @brief Copy constructor for Client. 
+   * Opens a new socket of the same type, connected to the same address, with the same timeout.
+   */
+  Client(const Client& other)
+    : GenericSocket<T>(zmq_socket(context_.get(), ZMQ_REQ))
+  {
+    setTimeout(other.timeout_);
+    GenericSocket<T>::connect(other.address_);
   }
 
   ~Client() {}
@@ -58,12 +79,17 @@ private:
       {
         success = true;
       }
+      else
+      {
+        std::cerr << "[SIMPLE Client] - No reply received. Aborting this request." << std::endl;
+        // Delete the existing socket and create a new one.
+        zmq_close(GenericSocket<T>::socket_);
+        GenericSocket<T>::socket_ = zmq_socket(context_.instance(), ZMQ_REQ);
+        setTimeout(GenericSocket<T>::timeout_);
+        GenericSocket<T>::connect(GenericSocket<T>::address_);
+      }
     }
     return success;
   }
-  static std::shared_ptr<void> context_;
 };
-
-template <typename T>
-std::shared_ptr<void> Client<T>::context_(zmq_ctx_new(), contextDeleter);
 }  // Namespace simple.

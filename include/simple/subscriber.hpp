@@ -1,10 +1,27 @@
+/**
+* S.I.M.P.L.E. - Smart Intra-operative Messaging Platform with Less Effort
+* Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Lesser Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU Lesser Public License for more details.
+*
+* You should have received a copy of the GNU Lesser Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #pragma once
 
 #include <zmq.h>
 #include <string>
 #include <thread>
 #include <memory>
-#include "context_deleter.hpp"
 #include "simple/generic_socket.hpp"
 
 namespace simple
@@ -24,7 +41,7 @@ public:
    * @param Time the subscriber will block the thread waiting for a message. In milliseconds.
    */
   Subscriber<T>(const std::string& address, const std::function<void(const T&)>& callback, int timeout = 100)
-    : GenericSocket<T>(zmq_socket(context_.get(), ZMQ_SUB))
+    : GenericSocket<T>(ZMQ_SUB)
     , callback_(callback)
   {
     GenericSocket<T>::connect(address);
@@ -35,12 +52,25 @@ public:
     subscriber_thread_ = std::thread(&Subscriber::subscribe, this);
   }
 
+  Subscriber(const Subscriber& other)
+    : GenericSocket<T>(ZMQ_SUB)
+    , callback_(other.callback_)
+  {
+    GenericSocket<T>::connect(other.address_);
+    GenericSocket<T>::filter();
+    GenericSocket<T>::setTimeout(other.timeout_);
+
+    // Start the callback thread.
+    subscriber_thread_ = std::thread(&Subscriber::subscribe, this);
+  }
+
   ~Subscriber<T>()
   {
-    alive_ = false;             //< Stop the subscription loop.
-	if (subscriber_thread_.joinable()) {
-		subscriber_thread_.join();  //< Wait for the subscriber thread.
-	}
+    alive_ = false;  //< Stop the subscription loop.
+    if (subscriber_thread_.joinable())
+    {
+      subscriber_thread_.join();  //< Wait for the subscriber thread.
+    }
   }
 
 private:
@@ -63,10 +93,5 @@ private:
   std::thread subscriber_thread_;
   bool alive_{true};
   std::function<void(const T&)> callback_;
-  static std::shared_ptr<void> context_;
 };
-
-template <typename T>
-std::shared_ptr<void> Subscriber<T>::context_(zmq_ctx_new(), contextDeleter);
-
 }  // Namespace simple.
