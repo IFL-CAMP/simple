@@ -27,8 +27,8 @@
 namespace simple_msgs
 {
 /**
- * @brief RotationMatrix: wrapper class arounf the RotationMatrixFbs generated code from flatbuffers.
- * The matrix is stored colo
+ * @brief RotationMatrix: wrapper class around the RotationMatrixFbs generated code from flatbuffers.
+ * The matrix is stored row-wise
  */
 class RotationMatrix : public GenericMessage
 {
@@ -61,6 +61,7 @@ public:
 
   /**
    * @brief Returns the rotation matrix as a linearized array.
+   * @return Array that contains the elements of the Matrix, row-wise
    */
   inline std::array<double, 9> toVector() const { return data_; }
   /**

@@ -20,16 +20,16 @@
 #include <thread>
 
 #include "simple/client.hpp"
-#include "simple_msgs/point.h"
+#include "simple_msgs/pose.h"
 
 int main()
 {
   const int N_RUN = 25;
   const int SLEEP_TIME = 1000;  //<  Milliseconds.
 
-  simple_msgs::Point p(5.0, 6.0, 7.0);  //< Create a point message.
+  simple_msgs::Pose p(simple_msgs::Point(5.0, 6.0, 7.0),simple_msgs::Quaternion(1.0,2.0,3.0,4.0));  //< Create a point message.
 
-  simple::Client<simple_msgs::Point> client("tcp://localhost:5555");
+  simple::Client<simple_msgs::Pose> client("tcp://localhost:5555");
 
   for (auto i = 0; i < N_RUN; ++i)
   {

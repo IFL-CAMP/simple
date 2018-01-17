@@ -137,7 +137,7 @@ protected:
     zmq_setsockopt(socket_, ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
     timeout_ = timeout;
   }
-  void* socket_;
+  void* socket_{ nullptr };
   const char* topic_{T::getTopic()};
   const size_t topic_size_{strlen(topic_)};
   std::string address_{ "" };

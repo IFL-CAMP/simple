@@ -70,7 +70,7 @@ public:
 
 private:
   /**
-   * @brief TODO
+   * @brief Keep waiting for a request to arrive. Process the request with the callback function and reply.
    */
   void awaitRequest()
   {
@@ -86,8 +86,8 @@ private:
   }
 
   /**
-   * @brief TODO
-   * @param msg
+   * @brief Sends the message back to the client who requested it.
+   * @param msg The message to be sent.
    */
   void reply(const T& msg)
   {

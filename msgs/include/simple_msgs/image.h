@@ -42,7 +42,7 @@ public:
     : GenericMessage()
     , header_(other.header_)
     , origin_(other.origin_)
-    , encoding_(encoding_)
+    , encoding_(other.encoding_)
     , resX_(other.resX_)
     , resY_(other.resY_)
     , resZ_(other.resZ_)
@@ -59,7 +59,7 @@ public:
     : GenericMessage()
     , header_(std::move(other.header_))
     , origin_(std::move(other.origin_))
-    , encoding_(std::move(encoding_))
+    , encoding_(std::move(other.encoding_))
     , resX_(std::move(other.resX_))
     , resY_(std::move(other.resY_))
     , resZ_(std::move(other.resZ_))
@@ -77,7 +77,7 @@ public:
     if (this != std::addressof(other))
     {
       std::lock_guard<std::mutex> lock(mutex_);
-      header_ = other, header_;
+      header_ = other.header_;
       origin_ = other.origin_;
       encoding_ = other.encoding_;
       resX_ = other.resX_;
@@ -119,9 +119,9 @@ public:
 
   bool operator==(const Image& rhs) const
   {
-    return ((header_ == rhs, header_) && (origin_ == rhs.origin_) && (encoding_ == rhs.encoding_) &&
+    return ((header_ == rhs.header_) && (origin_ == rhs.origin_) && (encoding_ == rhs.encoding_) &&
             (resX_ == rhs.resX_) && (resY_ == rhs.resY_) && (resZ_ == rhs.resZ_) && (width_ == rhs.width_) &&
-            (height_ == rhs.height_) && (depth_ == rhs.depth_) && (data_ == rhs.data_) &&
+            (height_ == rhs.height_) && (depth_ == rhs.depth_) && (memcmp(data_.get(),rhs.data_.get(),data_size_)==0) &&
             (data_size_ == rhs.data_size_) && (num_channels_ == rhs.num_channels_));
   }
   bool operator!=(const Image& rhs) const { return !(*this == rhs); }
@@ -140,13 +140,21 @@ public:
       auto header_data = builder_->CreateVector(header_.getBufferData(), header_.getBufferSize());
       auto origin_data = builder_->CreateVector(origin_.getBufferData(), origin_.getBufferSize());
       auto type = getDataUnionType();
-      auto elem = getDataUnionElem();
+	  flatbuffers::Offset<void> elem;
+	  if (data_)
+	  {
+		elem = getDataUnionElem();
+	  }
+      
       ImageFbsBuilder tmp_builder(*builder_);
       // add the information
       tmp_builder.add_encoding(encoding_data);
       tmp_builder.add_header(header_data);
       tmp_builder.add_origin(origin_data);
-      tmp_builder.add_image(elem);
+	  if (data_)
+	  {
+		  tmp_builder.add_image(elem);
+	  }
       tmp_builder.add_image_type(type);
       tmp_builder.add_image_size(data_size_);
       tmp_builder.add_resX(resX_);

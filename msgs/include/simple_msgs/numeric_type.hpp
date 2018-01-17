@@ -80,12 +80,12 @@ public:
   }
 
   // Relational operators.
-  inline bool operator==(const NumericType& rhs) { return data_ == rhs.data_; }
-  inline bool operator!=(const NumericType& rhs) { return !(*this == rhs); }
-  inline bool operator<(const NumericType& rhs) { return data_ < rhs.data_; }
-  inline bool operator>(const NumericType& rhs) { return rhs < *this; }
-  inline bool operator<=(const NumericType& rhs) { return !(*this > rhs); }
-  inline bool operator>=(const NumericType& rhs) { return !(*this < rhs); }
+  inline bool operator==(const NumericType& rhs) const { return data_ == rhs.data_; }
+  inline bool operator!=(const NumericType& rhs) const { return !(*this == rhs); }
+  inline bool operator<(const NumericType& rhs) const { return data_ < rhs.data_; }
+  inline bool operator>(const NumericType& rhs) const { return rhs < *this; }
+  inline bool operator<=(const NumericType& rhs) const { return !(*this > rhs); }
+  inline bool operator>=(const NumericType& rhs) const { return !(*this < rhs); }
   // Increment and decrement operators.
 
   NumericType& operator--()

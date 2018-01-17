@@ -101,14 +101,14 @@ uint8_t* QuaternionStamped::getBufferData() const
   return builder_->GetBufferPointer();
 }
 
-inline void QuaternionStamped::setQuaternion(const Quaternion& quaternion)
+void QuaternionStamped::setQuaternion(const Quaternion& quaternion)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   quaternion_ = quaternion;
   modified_ = true;
 }
 
-inline void QuaternionStamped::setHeader(const Header& header)
+void QuaternionStamped::setHeader(const Header& header)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   header_ = header;
