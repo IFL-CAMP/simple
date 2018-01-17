@@ -73,6 +73,14 @@ add_executable(test_wrong_pub_sub test_wrong_pub_sub.cpp)
 target_link_libraries(test_wrong_pub_sub simple-static)
 add_test(NAME simple_tests.wrong_pub_sub COMMAND test_wrong_pub_sub) 
 
+if(MSVC)
+	target_compile_definitions(test_quaternion
+		INTERFACE /permissive- /W4 /W44640 /WX)
+else()
+	target_compile_definitions(test_quaternion
+		INTERFACE -Werror -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic)
+endif()
+
 install(
 TARGETS
   test_double

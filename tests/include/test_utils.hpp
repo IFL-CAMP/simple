@@ -79,7 +79,7 @@ simple_msgs::Float createRandomFloat()
 
 simple_msgs::Bool createRandomBool()
 {
-  bool x = rand() % 1;
+  bool x((rand() % 1) != 0);
   return simple_msgs::Bool(x);
 }
 
