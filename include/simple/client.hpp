@@ -16,7 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef SIMPLE_CLIENT_H
+#define SIMPLE_CLIENT_H
 
 #include <zmq.h>
 #include <string>
@@ -92,3 +93,5 @@ private:
   }
 };
 }  // Namespace simple.
+
+#endif  // SIMPLE_CLIENT_H
