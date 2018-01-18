@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SIMPLE_GENERIC_SOCKET_H
-#define SIMPLE_GENERIC_SOCKET_H
+#ifndef SIMPLE_GENERIC_SOCKET_HPP
+#define SIMPLE_GENERIC_SOCKET_HPP
 
 #pragma once
 
@@ -151,4 +151,4 @@ protected:
 
 }  // Namespace simple.
 
-#endif  // SIMPLE_GENERIC_SOCKET_H
+#endif  // SIMPLE_GENERIC_SOCKET_HPP

@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SIMPLE_SERVER_H
-#define SIMPLE_SERVER_H
+#ifndef SIMPLE_SERVER_HPP
+#define SIMPLE_SERVER_HPP
 
 #include <zmq.h>
 #include <string>
@@ -103,4 +103,4 @@ private:
 };
 }  // Namespace simple.
 
-#endif  // SIMPLE_SERVER_H
+#endif  // SIMPLE_SERVER_HPP

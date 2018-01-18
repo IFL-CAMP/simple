@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SIMPLE_PUBLISHER_H
-#define SIMPLE_PUBLISHER_H
+#ifndef SIMPLE_PUBLISHER_HPP
+#define SIMPLE_PUBLISHER_HPP
 
 #include <zmq.h>
 #include <string>
@@ -73,4 +73,4 @@ public:
 };
 }  // Namespace simple.
 
-#endif  // SIMPLE_PUBLISHER_H
+#endif  // SIMPLE_PUBLISHER_HPP

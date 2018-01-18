@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SIMPLE_SUBSCRIBER_H
-#define SIMPLE_SUBSCRIBER_H
+#ifndef SIMPLE_SUBSCRIBER_HPP
+#define SIMPLE_SUBSCRIBER_HPP
 
 #include <zmq.h>
 #include <string>
@@ -97,4 +97,4 @@ private:
 };
 }  // Namespace simple.
 
-#endif  // SIMPLE_SUBSCRIBER_H
+#endif  // SIMPLE_SUBSCRIBER_HPP
