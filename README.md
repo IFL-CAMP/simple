@@ -11,7 +11,7 @@ ___
 ### Dependencies
 
 - A C++11 compatible compiler (tested on **gcc**, **clang**, **msvc14** and **msvc15**.)
-- CMake 3.5
+- CMake 3.5+
 - [ZeroMQ](https://github.com/zeromq/libzmq)
 - [FlatBuffers](https://github.com/google/flatbuffers)
 
