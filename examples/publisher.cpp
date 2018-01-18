@@ -22,13 +22,11 @@
 #include "simple/publisher.hpp"
 #include "simple_msgs/pose_stamped.h"
 
-using namespace std::chrono;
-
 // Helper function to get the current time as a double.
 double getTimeNow()
 {
-  auto now = system_clock::now();
-  return static_cast<double>(time_point_cast<milliseconds>(now).time_since_epoch().count());
+  auto now = std::chrono::system_clock::now();
+  return static_cast<double>(std::chrono::time_point_cast<std::chrono::milliseconds>(now).time_since_epoch().count());
 }
 
 int main()
@@ -63,7 +61,7 @@ int main()
 
     std::cout << "Message #" << (my_pose_stamped.getHeader().getSequenceNumber()) << " has been published."
               << std::endl;
-    std::this_thread::sleep_for(milliseconds(SLEEP_TIME));
+    std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_TIME));
   }
 
   std::cout << "Publishing ended." << std::endl;

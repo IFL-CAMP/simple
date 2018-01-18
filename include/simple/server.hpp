@@ -19,11 +19,11 @@
 #ifndef SIMPLE_SERVER_HPP
 #define SIMPLE_SERVER_HPP
 
-#include <zmq.h>
+#include "simple/generic_socket.hpp"
+#include <memory>
 #include <string>
 #include <thread>
-#include <memory>
-#include "simple/generic_socket.hpp"
+#include <zmq.h>
 
 namespace simple
 {
@@ -42,24 +42,20 @@ public:
     : GenericSocket<T>(ZMQ_REP)
     , callback_(callback)
   {
-    GenericSocket<T>::bind(address);
-    GenericSocket<T>::filter();
-    GenericSocket<T>::setTimeout(timeout);
-
-    // Start the thread of the server: wait for requests on the dedicated thread.
-    server_thread_ = std::thread(&Server::awaitRequest, this);
+    initServer(address, timeout);
   }
 
   Server(const Server& other)
     : GenericSocket<T>(ZMQ_REP)
     , callback_(other.callback_)
   {
-    GenericSocket<T>::bind(other.address_);
-    GenericSocket<T>::filter();
-    GenericSocket<T>::setTimeout(other.timeout_);
+    initServer(other.address_, other.timeout_);
+  }
 
-    // Start the thread of the server: wait for requests on the dedicated thread.
-    server_thread_ = std::thread(&Server::awaitRequest, this);
+  Server& operator=(const Server& other)
+  {
+    GenericSocket<T>::renewSocket(ZMQ_REP);
+    initServer(other.address_, other.timeout_);
   }
 
   ~Server()
@@ -69,6 +65,16 @@ public:
   }
 
 private:
+  void initServer(const std::string& address, int timeout)
+  {
+    GenericSocket<T>::bind(address);
+    GenericSocket<T>::filter();
+    GenericSocket<T>::setTimeout(timeout);
+
+    // Start the thread of the server: wait for requests on the dedicated thread.
+    server_thread_ = std::thread(&Server::awaitRequest, this);
+  }
+
   /**
    * @brief Keep waiting for a request to arrive. Process the request with the callback function and reply.
    */

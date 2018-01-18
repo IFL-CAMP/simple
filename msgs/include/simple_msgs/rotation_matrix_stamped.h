@@ -16,15 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SIMPLE_MSGS_ROTATION_MATRIX_S_H
-#define SIMPLE_MSGS_ROTATION_MATRIX_S_H
+#ifndef SIMPLE_MSGS_ROTATION_MATRIX_STAMPED_H
+#define SIMPLE_MSGS_ROTATION_MATRIX_STAMPED_H
 
+#include "rotation_matrix.h"
+#include "generated/rotation_matrix_stamped_generated.h"
+#include "generic_message.h"
+#include "header.h"
 #include <array>
 #include <iostream>
-#include "rotation_matrix.h"
-#include "header.h"
-#include "generic_message.h"
-#include "generated/rotation_matrix_stamped_generated.h"
 
 namespace simple_msgs
 {
@@ -91,4 +91,4 @@ private:
 };
 }  // Namespace simple_msgs.
 
-#endif  // SIMPLE_MSGS_QUATERNION_S_H
+#endif // SIMPLE_MSGS_ROTATION_MATRIX_STAMPED_H

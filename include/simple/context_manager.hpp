@@ -28,6 +28,8 @@ public:
     : context_(zmq_ctx_new())
   {
   }
+  ContextManager(const ContextManager&) = delete;
+  ContextManager& operator=(const ContextManager&) = delete;
   ~ContextManager() { zmq_ctx_term(context_); }
   void* instance() const { return context_; }
 

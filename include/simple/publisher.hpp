@@ -19,10 +19,10 @@
 #ifndef SIMPLE_PUBLISHER_HPP
 #define SIMPLE_PUBLISHER_HPP
 
-#include <zmq.h>
-#include <string>
-#include <memory>
 #include "simple/generic_socket.hpp"
+#include <memory>
+#include <string>
+#include <zmq.h>
 
 namespace simple
 {
@@ -37,7 +37,7 @@ public:
    * @brief Class constructor. Creates a ZMQ_PUB socket and binds it to the port.
    * @param port string for the connection port.
    */
-  Publisher<T>(const std::string& address)
+  explicit Publisher<T>(const std::string& address)
     : GenericSocket<T>(ZMQ_PUB)
   {
     GenericSocket<T>::bind(address);
@@ -48,6 +48,14 @@ public:
   {
     GenericSocket<T>::bind(other.address_);
   }
+
+  Publisher& operator=(const Publisher& other)
+  {
+    GenericSocket<T>::renewSocket(ZMQ_PUB);
+    GenericSocket<T>::bind(other.address_);
+  }
+
+  ~Publisher() = default;
 
   /**
    * @brief Publishes the message through the open socket.

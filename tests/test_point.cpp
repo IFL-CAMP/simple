@@ -19,10 +19,10 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include <iostream>
 #include "simple_msgs/point.h"
-#include <time.h>
-#include <stdlib.h>
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
 
 // Tests for Point Message.
 SCENARIO("Using a Point Message")

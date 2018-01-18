@@ -19,10 +19,10 @@
 #ifndef SIMPLE_CLIENT_HPP
 #define SIMPLE_CLIENT_HPP
 
-#include <zmq.h>
-#include <string>
-#include <memory>
 #include "simple/generic_socket.hpp"
+#include <memory>
+#include <string>
+#include <zmq.h>
 
 namespace simple
 {
@@ -38,7 +38,7 @@ public:
    * @param address where the client connects to, in the form: tcp://HOSTNAME:PORT. e.g tcp://localhost:5555.
    * @param timeout Time, in msec, the client shall wait for a reply. Default 30 seconds.
    */
-  Client(const std::string& address, int timeout = 30000)
+  explicit Client(const std::string& address, int timeout = 30000)
     : GenericSocket<T>(ZMQ_REQ)
   {
     GenericSocket<T>::setTimeout(timeout);
@@ -56,7 +56,14 @@ public:
     GenericSocket<T>::connect(other.address_);
   }
 
-  ~Client() {}
+  Client& operator=(const Client& other)
+  {
+    GenericSocket<T>::renewSocket(ZMQ_REQ);
+    GenericSocket<T>::setTimeout(other.timeout_);
+    GenericSocket<T>::connect(other.address_);
+  }
+
+  ~Client() = default;
   /**
    * @brief Sends the request to a server and waits for an answer.
    * @param msg: SIMPLE class wrapper for Flatbuffer messages.
