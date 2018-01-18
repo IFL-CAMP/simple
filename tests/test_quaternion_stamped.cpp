@@ -1,3 +1,21 @@
+/**
+ * S.I.M.P.L.E. - Smart Intra-operative Messaging Platform with Less Effort
+ * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
@@ -55,7 +73,10 @@ SCENARIO("Using a QuaternionStamped Message")
     simple_msgs::QuaternionStamped buffer_quaternion_stamped(quaternion_stamped.getBufferData());
     WHEN("I check the QuaternionStamped's elements")
     {
-      THEN("The new QuaternionStamped has to be equal to the other") { REQUIRE(buffer_quaternion_stamped == quaternion_stamped); }
+      THEN("The new QuaternionStamped has to be equal to the other")
+      {
+        REQUIRE(buffer_quaternion_stamped == quaternion_stamped);
+      }
     }
   }
 
@@ -66,7 +87,10 @@ SCENARIO("Using a QuaternionStamped Message")
     WHEN("I copy-construct a new QuaternionStamped")
     {
       simple_msgs::QuaternionStamped copy_quaternion_stamped(quaternion_stamped);
-      THEN("The new QuaternionStamped is equal to the other") { REQUIRE(copy_quaternion_stamped == quaternion_stamped); }
+      THEN("The new QuaternionStamped is equal to the other")
+      {
+        REQUIRE(copy_quaternion_stamped == quaternion_stamped);
+      }
     }
     WHEN("I move-construct a new QuaternionStamped")
     {
@@ -116,7 +140,7 @@ SCENARIO("Using a QuaternionStamped Message")
   // Testing setters/getters.
   GIVEN("A QuaternionStamped")
   {
-	  simple_msgs::QuaternionStamped quaternion_stamped;
+    simple_msgs::QuaternionStamped quaternion_stamped;
     WHEN("I set the quaternion of the quaternion_stamped")
     {
       quaternion_stamped.setQuaternion(random_quaternion);

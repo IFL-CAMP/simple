@@ -1,3 +1,21 @@
+/**
+ * S.I.M.P.L.E. - Smart Intra-operative Messaging Platform with Less Effort
+ * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
@@ -170,12 +188,12 @@ SCENARIO("Using a Pose Message")
     WHEN("I set the position of the pose")
     {
       pose.setPosition(point_);
-	  THEN("The position is correct") { REQUIRE(pose.getPosition() == point_); }
+      THEN("The position is correct") { REQUIRE(pose.getPosition() == point_); }
     }
     WHEN("I set the quaternion of the pose")
     {
       pose.setQuaternion(quaternion_);
-	  THEN("The quaternion is correct") { REQUIRE(pose.getQuaternion() == quaternion_); }
+      THEN("The quaternion is correct") { REQUIRE(pose.getQuaternion() == quaternion_); }
     }
   }
 
@@ -195,13 +213,14 @@ SCENARIO("Using a Pose Message")
     }
   }
 
-  //Testing Topic
-  GIVEN("A point") {
-	  simple_msgs::Pose pose;
-	  WHEN("I get the message topic")
-	  {
-		  std::string topic_name = pose.getTopic();
-		  THEN("I get the correct one") { REQUIRE(topic_name == "POSE"); }
-	  }
+  // Testing Topic
+  GIVEN("A point")
+  {
+    simple_msgs::Pose pose;
+    WHEN("I get the message topic")
+    {
+      std::string topic_name = pose.getTopic();
+      THEN("I get the correct one") { REQUIRE(topic_name == "POSE"); }
+    }
   }
 }

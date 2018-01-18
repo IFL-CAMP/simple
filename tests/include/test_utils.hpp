@@ -1,19 +1,6 @@
 #include <time.h>
 #include <thread>
-#include "simple_msgs/bool.h"
-#include "simple_msgs/int.h"
-#include "simple_msgs/float.h"
-#include "simple_msgs/double.h"
-#include "simple_msgs/string.h"
-#include "simple_msgs/header.h"
-#include "simple_msgs/point.h"
-#include "simple_msgs/point_stamped.h"
-#include "simple_msgs/quaternion.h"
-#include "simple_msgs/quaternion_stamped.h"
-#include "simple_msgs/pose.h"
-#include "simple_msgs/pose_stamped.h"
-#include "simple_msgs/rotation_matrix.h"
-#include "simple_msgs/rotation_matrix_stamped.h"
+#include "simple_msgs/all_messages.h"
 
 // Function for random message generation.
 simple_msgs::Header createRandomHeader()
