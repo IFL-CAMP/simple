@@ -14,7 +14,7 @@ SCENARIO("Using a Quaternion Message")
   double double_2 = static_cast<double>(rand()) / RAND_MAX;
   double double_3 = static_cast<double>(rand()) / RAND_MAX;
   double double_4 = static_cast<double>(rand()) / RAND_MAX;
-  std::array<double, 4> double_array{double_1, double_2, double_3, double_4};
+  std::array<double, 4> double_array{{double_1, double_2, double_3, double_4}};
   // Testing constructors.
   GIVEN("An empty Quaternion")
   {

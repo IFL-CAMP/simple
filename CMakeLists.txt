@@ -22,6 +22,15 @@ endif(WIN32)
 
 set(CMAKE_DEBUG_POSTFIX "-d")
 
+if(MSVC)
+	add_compile_options(/W4 /w44640 /WX)
+	if (MSVC_VERSION GREATER 1900)
+		add_compile_options(/permissive-)
+	endif()
+else()
+	add_compile_options(-Werror -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic)
+endif()
+
 ###### OPTIONS
 
 option(BUILD_EXAMPLES "Build SIMPLE Examples" FALSE)

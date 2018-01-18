@@ -19,14 +19,14 @@ SCENARIO("Using a Rotation Matrix Message")
   double double_7 = static_cast<double>(rand()) / RAND_MAX;
   double double_8 = static_cast<double>(rand()) / RAND_MAX;
   double double_9 = static_cast<double>(rand()) / RAND_MAX;
-  std::array<double, 9> doubles_array{double_1, double_2, double_3, double_4, double_5,
-                                      double_6, double_7, double_8, double_9};
-  std::array<double, 3> column0_array{double_1, double_4, double_7};
-  std::array<double, 3> column1_array{double_2, double_5, double_8};
-  std::array<double, 3> column2_array{double_3, double_6, double_9};
-  std::array<double, 3> row0_array{double_1, double_2, double_3};
-  std::array<double, 3> row1_array{double_4, double_5, double_6};
-  std::array<double, 3> row2_array{double_7, double_8, double_9};
+  std::array<double, 9> doubles_array{
+      {double_1, double_2, double_3, double_4, double_5, double_6, double_7, double_8, double_9}};
+  std::array<double, 3> column0_array{{double_1, double_4, double_7}};
+  std::array<double, 3> column1_array{{double_2, double_5, double_8}};
+  std::array<double, 3> column2_array{{double_3, double_6, double_9}};
+  std::array<double, 3> row0_array{{double_1, double_2, double_3}};
+  std::array<double, 3> row1_array{{double_4, double_5, double_6}};
+  std::array<double, 3> row2_array{{double_7, double_8, double_9}};
   // Testing constructors.
   GIVEN("An empty rotation matrix")
   {

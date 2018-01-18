@@ -12,8 +12,8 @@ SCENARIO("Using a Point Message")
   double double_1 = static_cast<double>(rand()) / RAND_MAX;
   double double_2 = static_cast<double>(rand()) / RAND_MAX;
   double double_3 = static_cast<double>(rand()) / RAND_MAX;
-  std::array<double, 3> double_array{double_1, double_2, double_3};
-  std::array<double, 3> twisted_double_array{double_3, double_1, double_2};
+  std::array<double, 3> double_array{{double_1, double_2, double_3}};
+  std::array<double, 3> twisted_double_array{{double_3, double_1, double_2}};
 
   // Testing Constructors.
   GIVEN("An empty point")

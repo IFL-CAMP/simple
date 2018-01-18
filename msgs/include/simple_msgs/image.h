@@ -1,20 +1,20 @@
 /**
-* S.I.M.P.L.E. - Smart Intra-operative Messaging Platform with Less Effort
-* Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Lesser Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU Lesser Public License for more details.
-*
-* You should have received a copy of the GNU Lesser Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * S.I.M.P.L.E. - Smart Intra-operative Messaging Platform with Less Effort
+ * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #pragma once
 
@@ -121,8 +121,9 @@ public:
   {
     return ((header_ == rhs.header_) && (origin_ == rhs.origin_) && (encoding_ == rhs.encoding_) &&
             (resX_ == rhs.resX_) && (resY_ == rhs.resY_) && (resZ_ == rhs.resZ_) && (width_ == rhs.width_) &&
-            (height_ == rhs.height_) && (depth_ == rhs.depth_) && (memcmp(data_.get(),rhs.data_.get(),data_size_)==0) &&
-            (data_size_ == rhs.data_size_) && (num_channels_ == rhs.num_channels_));
+            (height_ == rhs.height_) && (depth_ == rhs.depth_) &&
+            (memcmp(data_.get(), rhs.data_.get(), data_size_) == 0) && (data_size_ == rhs.data_size_) &&
+            (num_channels_ == rhs.num_channels_));
   }
   bool operator!=(const Image& rhs) const { return !(*this == rhs); }
 
@@ -140,21 +141,21 @@ public:
       auto header_data = builder_->CreateVector(header_.getBufferData(), header_.getBufferSize());
       auto origin_data = builder_->CreateVector(origin_.getBufferData(), origin_.getBufferSize());
       auto type = getDataUnionType();
-	  flatbuffers::Offset<void> elem;
-	  if (data_)
-	  {
-		elem = getDataUnionElem();
-	  }
-      
+      flatbuffers::Offset<void> elem;
+      if (data_)
+      {
+        elem = getDataUnionElem();
+      }
+
       ImageFbsBuilder tmp_builder(*builder_);
       // add the information
       tmp_builder.add_encoding(encoding_data);
       tmp_builder.add_header(header_data);
       tmp_builder.add_origin(origin_data);
-	  if (data_)
-	  {
-		  tmp_builder.add_image(elem);
-	  }
+      if (data_)
+      {
+        tmp_builder.add_image(elem);
+      }
       tmp_builder.add_image_type(type);
       tmp_builder.add_image_size(data_size_);
       tmp_builder.add_resX(resX_);
@@ -170,7 +171,7 @@ public:
     return Image::builder_->GetBufferPointer();
   }
 
-  std::array<double, 3> getResolution() const { return std::array<double, 3>{resX_, resY_, resZ_}; }
+  std::array<double, 3> getResolution() const { return std::array<double, 3>{{resX_, resY_, resZ_}}; }
   std::array<int, 3> getImageDimensions() const { return std::array<int, 3>{{width_, height_, depth_}}; }
   const T* getImageData() const { return *data_; }
   int getImageSize() const { return data_size_; }
@@ -224,7 +225,7 @@ public:
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = std::make_shared<const T*>(data);
     data_size_ = data_size;
-	num_channels_ = num_channels;
+    num_channels_ = num_channels;
     modified_ = true;
   }
 
@@ -251,7 +252,7 @@ private:
     // Set Encoding.
     encoding_ = imageData->encoding()->c_str();
     data_size_ = imageData->image_size();
-	num_channels_ = imageData->num_channels();
+    num_channels_ = imageData->num_channels();
     modified_ = true;
   }
 

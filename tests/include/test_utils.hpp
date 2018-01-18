@@ -81,7 +81,7 @@ simple_msgs::Float createRandomFloat()
 
 simple_msgs::Bool createRandomBool()
 {
-  bool x = rand() % 1;
+  bool x((rand() % 1) != 0);
   return simple_msgs::Bool(x);
 }
 
@@ -148,9 +148,9 @@ void callbackFunctionString(simple_msgs::String& s)
 
 void callbackFunctionRotationMatrix(simple_msgs::RotationMatrix& r)
 {
-  r.setColumn(0, {0, 0, 0});
-  r.setColumn(1, {0, 0, 0});
-  r.setColumn(2, {0, 0, 0});
+  r.setColumn(0, {{0, 0, 0}});
+  r.setColumn(1, {{0, 0, 0}});
+  r.setColumn(2, {{0, 0, 0}});
 }
 
 void callbackFunctionBool(simple_msgs::Bool& b)

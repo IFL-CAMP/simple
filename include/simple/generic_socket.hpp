@@ -59,7 +59,7 @@ protected:
     }
   }
 
-  static void freeMsg(void* data, void* hint)
+  static void freeMsg(void*, void* hint)
   {
     if (hint)
     {

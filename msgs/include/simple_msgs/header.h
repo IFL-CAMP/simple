@@ -58,7 +58,7 @@ public:
    * @brief Returns the sequence number of the message.
    */
   inline int getSequenceNumber() { return seq_n_; }
-  inline const int getSequenceNumber() const { return seq_n_; }
+  inline int getSequenceNumber() const { return seq_n_; }
   /**
    * @brief Returns the frame id of the message.
    */
@@ -68,7 +68,7 @@ public:
    * @brief Returns the timestamp of the message.
    */
   inline double getTimestamp() { return timestamp_; }
-  inline const double getTimestamp() const { return timestamp_; }
+  inline double getTimestamp() const { return timestamp_; }
   /**
    * @brief Modifies the sequence number of the message.
    */

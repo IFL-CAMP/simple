@@ -27,7 +27,7 @@ using namespace std::chrono;
 double getTimeNow()
 {
   auto now = system_clock::now();
-  return time_point_cast<milliseconds>(now).time_since_epoch().count();
+  return static_cast<double>(time_point_cast<milliseconds>(now).time_since_epoch().count());
 }
 
 int main()
