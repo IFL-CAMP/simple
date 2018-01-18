@@ -33,10 +33,12 @@ ___
 
 ### Usage
 
-You can build it.
-You can use it via CMake.
-You have some messages already defined.
-You have publisher/subscriber and request/reply
+To be written, messages to convey:      
+
+You can build it easily.      
+You can use it via CMake.              
+You have some messages already defined.          
+You have publisher/subscriber and request/reply.            
 
 #### Ehi...it looks like ROS!
 
