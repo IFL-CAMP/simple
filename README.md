@@ -18,8 +18,7 @@ ___
 ___
 
 ### simple_msgs
-*simple* provides a set of message that can be immediately used to exchange data.        
-They represent common information that are usually needed
+*simple* provides a set of messages that can be immediately used to exchange data.        
 
 The following messages are defined:
 - Bool, Int, Float, Double, String
