@@ -80,7 +80,7 @@ target_link_libraries(YourTargetName simple::simple-static)
 ##### Publisher / Subscriber
 
 The Publisher / Subscriber pattern is implemented using the classes [*Publisher*](include/simple/publisher.hpp) and [*Subscriber*](include/simple/subscriber.hpp).         
-A Publisher simply sends out messages to any Subscriber that is listening to its **ip address** and **port**.         
+A Publisher simply sends out messages to all Subscribers (if any) that are listening to its **ip address** and **port**.         
 Here is an example of a Publisher for messages of type **simple_msgs::Point**, it will publish 10 times to any listeners on port **5555**.        
 
 ```cpp
@@ -93,8 +93,8 @@ int main() {
 }
 ```
 
-A Subscriber listens to messages sent my a Publisher on the given **ip address** and **port**.        
-Every message that arrives will be handles by the given callback function. That function could do anything, in this example it just prints out the content of the message.    
+A Subscriber listens to messages sent by a Publisher on the given **ip address** and **port**.        
+Every message that arrives will be handled by the given callback function. That function could do anything, in this example it just prints out the content of the message.    
 
 ```cpp
 void example_callback(const simple_msgs::Point& p)
