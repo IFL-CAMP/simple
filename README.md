@@ -18,19 +18,6 @@ ___
 
 ___
 
-### simple_msgs
-
-The following messages are provided:
-- Bool, Int, Float, Double, String
-- Header
-- Position
-- Quaternion
-- Pose
-- Rotation Matrix
-- Image
-
-___
-
 ### Usage
 
 To be written, messages to convey:      
@@ -38,7 +25,7 @@ To be written, messages to convey:
 You can build it easily.      
 You can use it via CMake.              
 You have some messages already defined.          
-You have publisher/subscriber and request/reply.            
+You have publisher/subscriber and request/reply.    
 
 #### Ehi...it looks like ROS!
 
