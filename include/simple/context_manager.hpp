@@ -16,7 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef SIMPLE_CONTEXT_MANAGER_H
+#define SIMPLE_CONTEXT_MANAGER_H
 
 #include <zmq.h>
 
@@ -33,3 +34,5 @@ public:
 private:
   void* context_;
 };
+
+#endif  // SIMPLE_CONTEXT_MANAGER_H

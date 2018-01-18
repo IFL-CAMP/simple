@@ -16,7 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef SIMPLE_MSGS_IMAGE_H
+#define SIMPLE_MSGS_IMAGE_H
 
 #include <mutex>
 
@@ -272,3 +273,5 @@ private:
 };
 
 }  // Namespace simple_msgs.
+
+#endif  // SIMPLE_MSGS_IMAGE_H

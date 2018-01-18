@@ -16,7 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef SIMPLE_SERVER_H
+#define SIMPLE_SERVER_H
 
 #include <zmq.h>
 #include <string>
@@ -101,3 +102,5 @@ private:
   std::function<void(T&)> callback_;
 };
 }  // Namespace simple.
+
+#endif  // SIMPLE_SERVER_H
