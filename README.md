@@ -45,6 +45,7 @@ ___
 
 ### Contacts
 
+[![TUM](http://campar.in.tum.de/files/goeblr/TUM_Web_Logo_blau.png "TUM Logo")](http://tum.de)        
 [Chair for Computer Aided Medical Procedures](http://campar.in.tum.de/)        
 [Technical University of Munich](www.tum.de), Germany.       
 
