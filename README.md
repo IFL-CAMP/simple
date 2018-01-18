@@ -6,11 +6,11 @@ ___
 S.I.M.P.L.E. (or just *simple*) is a cross-platform C++ library to exchange between devices data across a network, and to do it in an easy way.          
 It is built on top of [ZeroMQ](https://github.com/zeromq/libzmq) and uses custom defined [FlatBuffers](https://github.com/google/flatbuffers) messages, it implements a clean interface to the classic **Publisher-Subscriber** and **Request-Reply** patters.         
 
-*simple* can be used on **Windows**, **Linux** and **OSX** platforms and it is tested on **gcc**, **clang**, **msvc14** and **msvc15**.
+*simple* can be used on **Windows**, **Linux** and **OSX**. 
 ___
 ### Dependencies
 
-- A C++11 compatible compiler
+- A C++11 compatible compiler (tested on **gcc**, **clang**, **msvc14** and **msvc15**.)
 - CMake 3.5
 - [ZeroMQ](https://github.com/zeromq/libzmq)
 - [FlatBuffers](https://github.com/google/flatbuffers)
