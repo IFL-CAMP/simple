@@ -34,7 +34,7 @@ endif()
 ###### OPTIONS
 
 option(BUILD_EXAMPLES "Build SIMPLE Examples" FALSE)
-option(BUILD_TESTS "Build SIMPLE Test" FALSE)
+option(BUILD_TESTS "Build SIMPLE Tests" FALSE)
 
 ###### BUILD SIMPLE MSGS
 
