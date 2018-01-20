@@ -100,20 +100,20 @@ simple_msgs::RotationMatrixStamped createRandomRotationMatrixStamped() {
 // Set of callback functions for all the simple_msgs.
 // They modify the received point.
 
-void callbackFunctionPoint(simple_msgs::Point&  /*p*/)
+void callbackFunctionPoint(simple_msgs::Point&  p)
 {
   simple_msgs::Point point(1, 1, 1);
   p += point;
 }
 
-void callbackFunctionHeader(simple_msgs::Header&  /*h*/)
+void callbackFunctionHeader(simple_msgs::Header&  h)
 {
   h.setFrameID("ID");
   h.setSequenceNumber(1);
   h.setTimestamp(1.0);
 }
 
-void callbackFunctionPose(simple_msgs::Pose&  /*p*/)
+void callbackFunctionPose(simple_msgs::Pose&  p)
 {
   p.getPosition() += 1.0;
   p.getQuaternion().setW(p.getQuaternion().getW() + 1);
@@ -122,7 +122,7 @@ void callbackFunctionPose(simple_msgs::Pose&  /*p*/)
   p.getQuaternion().setZ(p.getQuaternion().getZ() + 1);
 }
 
-void callbackFunctionQuaternion(simple_msgs::Quaternion&  /*q*/)
+void callbackFunctionQuaternion(simple_msgs::Quaternion&  q)
 {
   q.setW(q.getW() + 1);
   q.setX(q.getX() + 1);
@@ -130,67 +130,67 @@ void callbackFunctionQuaternion(simple_msgs::Quaternion&  /*q*/)
   q.setZ(q.getZ() + 1);
 }
 
-void callbackFunctionString(simple_msgs::String&  /*s*/)
+void callbackFunctionString(simple_msgs::String&  s)
 {
   // Replace the string by a standard reply.
   s.set("REPLY");
 }
 
-void callbackFunctionRotationMatrix(simple_msgs::RotationMatrix&  /*r*/)
+void callbackFunctionRotationMatrix(simple_msgs::RotationMatrix&  r)
 {
   r.setColumn(0, {{0, 0, 0}});
   r.setColumn(1, {{0, 0, 0}});
   r.setColumn(2, {{0, 0, 0}});
 }
 
-void callbackFunctionBool(simple_msgs::Bool&  /*b*/)
+void callbackFunctionBool(simple_msgs::Bool&  b)
 {
   b = !b; //< Invert the value of the Bool message.
 }
 
-void callbackFunctionInt(simple_msgs::Int&  /*i*/)
+void callbackFunctionInt(simple_msgs::Int&  i)
 {
   i += 1; //< Add 1.
 }
 
 // define callback function
-void callbackFunctionDouble(simple_msgs::Double&  /*d*/)
+void callbackFunctionDouble(simple_msgs::Double&  d)
 {
   d += 1.0; //< Add 1.
 }
 
 // define callback function
-void callbackFunctionFloat(simple_msgs::Float&  /*f*/)
+void callbackFunctionFloat(simple_msgs::Float&  f)
 {
   f += 1.0f; //< Add 1.
 }
 
-void callbackFunctionPointStamped(simple_msgs::PointStamped&  /*p*/) {
+void callbackFunctionPointStamped(simple_msgs::PointStamped&  p) {
   // Add one to the point and set a default header.
 	callbackFunctionPoint(p.getPoint());
 	callbackFunctionHeader(p.getHeader());
 }
 
-void callbackFunctionPoseStamped(simple_msgs::PoseStamped&  /*p*/) {
+void callbackFunctionPoseStamped(simple_msgs::PoseStamped&  p) {
   // Add one to the point and set a default header.
   callbackFunctionPose(p.getPose());
 	callbackFunctionHeader(p.getHeader());
 }
 
-void callbackFunctionPoseStampedLazy(simple_msgs::PoseStamped&  /*p*/) {
+void callbackFunctionPoseStampedLazy(simple_msgs::PoseStamped&  p) {
   // Add one to the point and set a default header.
   callbackFunctionPoseStamped(p);
   std::this_thread::sleep_for(std::chrono::milliseconds(10));
 }
 
 
-void callbackFunctionQuaternionStamped(simple_msgs::QuaternionStamped&  /*q*/) {
+void callbackFunctionQuaternionStamped(simple_msgs::QuaternionStamped&  q) {
   // Add one to the point and set a default header.
   callbackFunctionQuaternion(q.getQuaternion());
 	callbackFunctionHeader(q.getHeader());
 }
 
-void callbackFunctionRotationMatrixStamped(simple_msgs::RotationMatrixStamped&  /*r*/) {
+void callbackFunctionRotationMatrixStamped(simple_msgs::RotationMatrixStamped&  r) {
   // Add one to the point and set a default header.
   callbackFunctionRotationMatrix(r.getRotationMatrix());
 	callbackFunctionHeader(r.getHeader());
@@ -228,7 +228,7 @@ simple_msgs::PoseStamped received_pose_stamped;
 simple_msgs::RotationMatrix received_rotation_matrix;
 simple_msgs::RotationMatrixStamped received_rotation_matrix_stamped;
 
-void callbackFunctionConstBool(const simple_msgs::Bool&  /*b*/)
+void callbackFunctionConstBool(const simple_msgs::Bool&  b)
 {
   received_bool = b;
   num_received_bool++;
@@ -238,7 +238,7 @@ void callbackFunctionConstBool(const simple_msgs::Bool&  /*b*/)
   }
 }
 
-void callbackFunctionConstInt(const simple_msgs::Int&  /*i*/)
+void callbackFunctionConstInt(const simple_msgs::Int&  i)
 {
   received_int = i;
   num_received_int++;
@@ -248,7 +248,7 @@ void callbackFunctionConstInt(const simple_msgs::Int&  /*i*/)
   }
 }
 
-void callbackFunctionConstFloat(const simple_msgs::Float&  /*f*/)
+void callbackFunctionConstFloat(const simple_msgs::Float&  f)
 {
   received_float = f;
   num_received_float++;
@@ -258,7 +258,7 @@ void callbackFunctionConstFloat(const simple_msgs::Float&  /*f*/)
   }
 }
 
-void callbackFunctionConstDouble(const simple_msgs::Double&  /*d*/)
+void callbackFunctionConstDouble(const simple_msgs::Double&  d)
 {
   received_double = d;
   num_received_double++;
@@ -268,7 +268,7 @@ void callbackFunctionConstDouble(const simple_msgs::Double&  /*d*/)
   }
 }
 
-void callbackFunctionConstString(const simple_msgs::String&  /*s*/)
+void callbackFunctionConstString(const simple_msgs::String&  s)
 {
 	received_string = s;
   num_received_string++;
@@ -279,7 +279,7 @@ void callbackFunctionConstString(const simple_msgs::String&  /*s*/)
 }
 
 
-void callbackFunctionConstHeader(const simple_msgs::Header&  /*h*/)
+void callbackFunctionConstHeader(const simple_msgs::Header&  h)
 {
   received_header = h;
   num_received_header++;
@@ -289,7 +289,7 @@ void callbackFunctionConstHeader(const simple_msgs::Header&  /*h*/)
   }
 }
 
-void callbackFunctionConstPoint(const simple_msgs::Point&  /*p*/)
+void callbackFunctionConstPoint(const simple_msgs::Point&  p)
 {
   received_point = p;
   num_received_point++;
@@ -299,7 +299,7 @@ void callbackFunctionConstPoint(const simple_msgs::Point&  /*p*/)
   }
 }
 
-void callbackFunctionConstPointStamped(const simple_msgs::PointStamped&  /*ps*/)
+void callbackFunctionConstPointStamped(const simple_msgs::PointStamped&  ps)
 {
   received_point_stamped = ps;
   num_received_point_stamped++;
@@ -309,7 +309,7 @@ void callbackFunctionConstPointStamped(const simple_msgs::PointStamped&  /*ps*/)
   }
 }
 
-void callbackFunctionConstQuaternion(const simple_msgs::Quaternion&  /*q*/)
+void callbackFunctionConstQuaternion(const simple_msgs::Quaternion&  q)
 {
   received_quaternion = q;
   num_received_quaternion++;
@@ -320,7 +320,7 @@ void callbackFunctionConstQuaternion(const simple_msgs::Quaternion&  /*q*/)
 }
 
 
-void callbackFunctionConstQuaternionStamped(const simple_msgs::QuaternionStamped&  /*qs*/)
+void callbackFunctionConstQuaternionStamped(const simple_msgs::QuaternionStamped&  qs)
 {
   received_quaternion_stamped = qs;
   num_received_quaternion_stamped++;
@@ -330,7 +330,7 @@ void callbackFunctionConstQuaternionStamped(const simple_msgs::QuaternionStamped
   }
 }
 
-void callbackFunctionConstPose(const simple_msgs::Pose&  /*p*/)
+void callbackFunctionConstPose(const simple_msgs::Pose&  p)
 {
   received_pose = p;
   num_received_pose++;
@@ -340,7 +340,7 @@ void callbackFunctionConstPose(const simple_msgs::Pose&  /*p*/)
   }
 }
 
-void callbackFunctionConstPoseStamped(const simple_msgs::PoseStamped&  /*ps*/)
+void callbackFunctionConstPoseStamped(const simple_msgs::PoseStamped&  ps)
 {
   received_pose_stamped = ps;
   num_received_pose_stamped++;
@@ -350,7 +350,7 @@ void callbackFunctionConstPoseStamped(const simple_msgs::PoseStamped&  /*ps*/)
   }
 }
 
-void callbackFunctionConstRotationMatrix(const simple_msgs::RotationMatrix&  /*r*/)
+void callbackFunctionConstRotationMatrix(const simple_msgs::RotationMatrix&  r)
 {
   received_rotation_matrix = r;
   num_received_rotation_matrix++;
@@ -360,7 +360,7 @@ void callbackFunctionConstRotationMatrix(const simple_msgs::RotationMatrix&  /*r
   }
 }
 
-void callbackFunctionConstRotationMatrixStamped(const simple_msgs::RotationMatrixStamped&  /*rs*/)
+void callbackFunctionConstRotationMatrixStamped(const simple_msgs::RotationMatrixStamped&  rs)
 {
   received_rotation_matrix_stamped = rs;
   num_received_rotation_matrix_stamped++;
