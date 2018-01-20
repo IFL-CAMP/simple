@@ -19,10 +19,10 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include <iostream>
 #include "simple_msgs/rotation_matrix.h"
-#include <time.h>
-#include <stdlib.h>
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
 
 // TEST FOR USING THE ROTATION MATRIX MESSAGE WRAPPER
 

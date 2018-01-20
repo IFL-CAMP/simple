@@ -22,8 +22,8 @@
 #include <iostream>
 
 #include "generated/pose_generated.h"
-#include "quaternion.h"
 #include "point.h"
+#include "quaternion.h"
 
 namespace simple_msgs
 {

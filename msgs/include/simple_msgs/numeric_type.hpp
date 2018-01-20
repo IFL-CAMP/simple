@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SIMPLE_MSGS_NUMERIC_H
-#define SIMPLE_MSGS_NUMERIC_H
+#ifndef SIMPLE_MSGS_NUMERIC_TYPE_HPP
+#define SIMPLE_MSGS_NUMERIC_TYPE_HPP
 
 #include <algorithm>
 #include <ostream>
@@ -46,7 +46,7 @@ public:
   /**
    * @brief Constructor from the buffer data, implementation is specific to the template specialization.
    */
-  NumericType(const uint8_t* data);
+  explicit NumericType(const uint8_t* data);
 
   // Copy operations.
 
@@ -80,6 +80,8 @@ public:
     return *this;
   }
 
+  ~NumericType() = default;
+
   // Relational operators.
   inline bool operator==(const NumericType& rhs) const { return data_ == rhs.data_; }
   inline bool operator!=(const NumericType& rhs) const { return !(*this == rhs); }
@@ -95,7 +97,7 @@ public:
     return *this;
   }
 
-  NumericType operator--(int)
+  const NumericType operator--(int)
   {
     const NumericType old(*this);
     --(*this);
@@ -108,7 +110,7 @@ public:
     return *this;
   }
 
-  NumericType operator++(int)
+  const NumericType operator++(int)
   {
     const NumericType old(*this);
     ++(*this);
@@ -206,4 +208,4 @@ std::ostream& operator<<(std::ostream& out, const NumericType<T>& obj)
 }
 }  // Namespace simple_msgs.
 
-#endif  // SIMPLE_MSGS_NUMERIC_H
+#endif  // SIMPLE_MSGS_NUMERIC_TYPE_HPP

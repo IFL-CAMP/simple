@@ -16,16 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SIMPLE_GENERIC_SOCKET_H
-#define SIMPLE_GENERIC_SOCKET_H
+#ifndef SIMPLE_GENERIC_SOCKET_HPP
+#define SIMPLE_GENERIC_SOCKET_HPP
 
-#pragma once
-
-#include <zmq.h>
-#include <string>
-#include <string.h>
-#include <flatbuffers/flatbuffers.h>
 #include "context_manager.hpp"
+#include <cstring>
+#include <flatbuffers/flatbuffers.h>
+#include <string>
+#include <zmq.h>
 
 namespace simple
 {
@@ -35,10 +33,11 @@ class GenericSocket
 public:
   virtual ~GenericSocket() { zmq_close(socket_); }
   GenericSocket(const GenericSocket&) = delete;
+  GenericSocket& operator=(const GenericSocket&) = delete;
 
 protected:
   GenericSocket() = default;
-  GenericSocket(int type) { socket_ = zmq_socket(context_.instance(), type); }
+  explicit GenericSocket(int type) { socket_ = zmq_socket(context_.instance(), type); }
 
   void bind(const std::string& address)
   {
@@ -62,9 +61,9 @@ protected:
     }
   }
 
-  static void freeMsg(void*, void* hint)
+  static void freeMsg(void* /*unused*/, void* hint)
   {
-    if (hint)
+    if (hint != nullptr)
     {
       // Keep a copy of the message builder alive until the sending of the message is done.
       delete (static_cast<std::shared_ptr<flatbuffers::FlatBufferBuilder>*>(hint));
@@ -74,10 +73,10 @@ protected:
   bool sendMsg(uint8_t* msg, int msg_size, std::shared_ptr<flatbuffers::FlatBufferBuilder>* builder_pointer,
                const std::string& custom_error = "[SIMPLE Error] - ")
   {
-    zmq_msg_t topic;
+    zmq_msg_t topic = {};
     zmq_msg_init_data(&topic, const_cast<void*>(static_cast<const void*>(topic_)), topic_size_, freeMsg, NULL);
 
-    zmq_msg_t message;
+    zmq_msg_t message = {};
     zmq_msg_init_data(&message, msg, msg_size, freeMsg, builder_pointer);
 
     // Send the topic first and add the rest of the message after it.
@@ -98,7 +97,7 @@ protected:
     int data_past_topic{0};
     auto data_past_topic_size = sizeof(data_past_topic);
 
-    zmq_msg_t message;
+    zmq_msg_t message = {};
     zmq_msg_init(&message);
 
     int message_received = zmq_msg_recv(&message, socket_, 0);
@@ -108,7 +107,7 @@ protected:
       if (strncmp(static_cast<char*>(zmq_msg_data(&message)), topic_, topic_size_) == 0)
       {
         zmq_getsockopt(socket_, ZMQ_RCVMORE, &data_past_topic, &data_past_topic_size);
-        if (data_past_topic)
+        if (data_past_topic != 0)
         {
           message_received = zmq_msg_recv(&message, socket_, 0);
           if (message_received != -1 && zmq_msg_size(&message) != 0)
@@ -141,7 +140,7 @@ protected:
 
   void renewSocket(int type) { socket_ = zmq_socket(context_.instance(), type); }
 
-  void* socket_;
+  void* socket_{nullptr};
   const char* topic_{T::getTopic()};
   const size_t topic_size_{strlen(topic_)};
   std::string address_{""};
@@ -151,4 +150,4 @@ protected:
 
 }  // Namespace simple.
 
-#endif  // SIMPLE_GENERIC_SOCKET_H
+#endif  // SIMPLE_GENERIC_SOCKET_HPP

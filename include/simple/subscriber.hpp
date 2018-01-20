@@ -16,14 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SIMPLE_SUBSCRIBER_H
-#define SIMPLE_SUBSCRIBER_H
+#ifndef SIMPLE_SUBSCRIBER_HPP
+#define SIMPLE_SUBSCRIBER_HPP
 
-#include <zmq.h>
+#include "simple/generic_socket.hpp"
+#include <memory>
 #include <string>
 #include <thread>
-#include <memory>
-#include "simple/generic_socket.hpp"
+#include <zmq.h>
 
 namespace simple
 {
@@ -45,24 +45,20 @@ public:
     : GenericSocket<T>(ZMQ_SUB)
     , callback_(callback)
   {
-    GenericSocket<T>::connect(address);
-    GenericSocket<T>::filter();
-    GenericSocket<T>::setTimeout(timeout);
-
-    // Start the callback thread.
-    subscriber_thread_ = std::thread(&Subscriber::subscribe, this);
+    initSubscriber(address, timeout);
   }
 
   Subscriber(const Subscriber& other)
     : GenericSocket<T>(ZMQ_SUB)
     , callback_(other.callback_)
   {
-    GenericSocket<T>::connect(other.address_);
-    GenericSocket<T>::filter();
-    GenericSocket<T>::setTimeout(other.timeout_);
+    initSubscriber(other.address_, other.timeout_);
+  }
 
-    // Start the callback thread.
-    subscriber_thread_ = std::thread(&Subscriber::subscribe, this);
+  Subscriber& operator=(const Subscriber& other)
+  {
+    GenericSocket<T>::renewSocket(ZMQ_SUB);
+    initSubscriber(other.address_, other.timeout_);
   }
 
   ~Subscriber<T>()
@@ -75,6 +71,16 @@ public:
   }
 
 private:
+  void initSubscriber(const std::string& address, int timeout)
+  {
+    GenericSocket<T>::connect(address);
+    GenericSocket<T>::filter();
+    GenericSocket<T>::setTimeout(timeout);
+
+    // Start the callback thread.
+    subscriber_thread_ = std::thread(&Subscriber::subscribe, this);
+  }
+
   /**
    * @brief Waits for a message to be published to the connected port,
    * Calls the user callback with an instance of T obtained by a publisher.
@@ -97,4 +103,4 @@ private:
 };
 }  // Namespace simple.
 
-#endif  // SIMPLE_SUBSCRIBER_H
+#endif  // SIMPLE_SUBSCRIBER_HPP

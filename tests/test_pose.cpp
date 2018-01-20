@@ -19,12 +19,12 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include <iostream>
-#include "simple_msgs/pose.h"
 #include "simple_msgs/point.h"
+#include "simple_msgs/pose.h"
 #include "simple_msgs/quaternion.h"
-#include <time.h>
-#include <stdlib.h>
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
 
 // TEST FOR USING THE POSE MESSAGE WRAPPER
 

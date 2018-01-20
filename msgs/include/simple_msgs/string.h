@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SIMPLE_MSGS_STRING_S_H
-#define SIMPLE_MSGS_STRING_S_H
+#ifndef SIMPLE_MSGS_STRING_H
+#define SIMPLE_MSGS_STRING_H
 
 #include <ostream>
 
@@ -87,4 +87,4 @@ private:
 };
 }  // Namespace simple_msgs.
 
-#endif  // SIMPLE_MSGS_STRING_S_H
+#endif // SIMPLE_MSGS_STRING_H

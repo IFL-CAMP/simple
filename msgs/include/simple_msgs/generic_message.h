@@ -16,13 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SIMPLE_MSGS_GENERIC_H
-#define SIMPLE_MSGS_GENERIC_H
+#ifndef SIMPLE_MSGS_GENERIC_MESSAGE_H
+#define SIMPLE_MSGS_GENERIC_MESSAGE_H
 
-#include <mutex>
-#include <memory>
 #include <flatbuffers/flatbuffers.h>
 #include <iostream>
+#include <memory>
+#include <mutex>
 
 namespace simple_msgs
 {
@@ -60,4 +60,4 @@ protected:
 };
 }  // Namespace simple_msgs.
 
-#endif  // SIMPLE_MSGS_GENERIC_H
+#endif  // SIMPLE_MSGS_GENERIC_MESSAGE_H

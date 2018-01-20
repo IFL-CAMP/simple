@@ -39,8 +39,6 @@ void example_callback(const simple_msgs::Image<uint8_t>& i)
 
 int main()
 {
-  const int SLEEP_TIME = 60000;  //<  Milliseconds.
-
   cv::namedWindow(window_name);
 
   // Created a Subscriber that listens to Images sent by a Publisher on the IP address "localhost" on port 5555.

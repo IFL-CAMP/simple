@@ -16,15 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SIMPLE_MSGS_POINT_S_H
-#define SIMPLE_MSGS_POINT_S_H
+#ifndef SIMPLE_MSGS_POINT_STAMPED_H
+#define SIMPLE_MSGS_POINT_STAMPED_H
 
+#include "point.h"
+#include "generated/point_stamped_generated.h"
+#include "generic_message.h"
+#include "header.h"
 #include <array>
 #include <ostream>
-#include "point.h"
-#include "header.h"
-#include "generic_message.h"
-#include "generated/point_stamped_generated.h"
 
 namespace simple_msgs
 {
@@ -83,4 +83,4 @@ private:
 };
 }  // Namespace simple_msgs.
 
-#endif  // SIMPLE_MSGS_POINT_S_H
+#endif // SIMPLE_MSGS_POINT_STAMPED_H

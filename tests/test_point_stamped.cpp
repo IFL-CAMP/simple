@@ -19,12 +19,12 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include <iostream>
-#include "simple_msgs/point_stamped.h"
 #include "simple_msgs/header.h"
 #include "simple_msgs/point.h"
-#include <time.h>
-#include <stdlib.h>
+#include "simple_msgs/point_stamped.h"
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
 
 // TEST FOR USING THE STAMPED POINT MESSAGE WRAPPER
 

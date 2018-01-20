@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SIMPLE_CONTEXT_MANAGER_H
-#define SIMPLE_CONTEXT_MANAGER_H
+#ifndef SIMPLE_CONTEXT_MANAGER_HPP
+#define SIMPLE_CONTEXT_MANAGER_HPP
 
 #include <zmq.h>
 
@@ -28,6 +28,8 @@ public:
     : context_(zmq_ctx_new())
   {
   }
+  ContextManager(const ContextManager&) = delete;
+  ContextManager& operator=(const ContextManager&) = delete;
   ~ContextManager() { zmq_ctx_term(context_); }
   void* instance() const { return context_; }
 
@@ -35,4 +37,4 @@ private:
   void* context_;
 };
 
-#endif  // SIMPLE_CONTEXT_MANAGER_H
+#endif  // SIMPLE_CONTEXT_MANAGER_HPP

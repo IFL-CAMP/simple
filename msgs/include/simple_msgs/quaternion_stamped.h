@@ -16,16 +16,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SIMPLE_MSGS_QUATERNION_S_H
-#define SIMPLE_MSGS_QUATERNION_S_H
+#ifndef SIMPLE_MSGS_QUATERNION_STAMPED_H
+#define SIMPLE_MSGS_QUATERNION_STAMPED_H
 
 #include <array>
 #include <iostream>
 
 #include "generic_message.h"
-#include "quaternion.h"
-#include "header.h"
 #include "generated/quaternion_stamped_generated.h"
+#include "header.h"
+#include "quaternion.h"
 
 namespace simple_msgs
 {
@@ -87,4 +87,4 @@ private:
 };
 }  // Namespace simple_msgs.
 
-#endif  // SIMPLE_MSGS_QUATERNION_S_H
+#endif // SIMPLE_MSGS_QUATERNION_STAMPED_H
