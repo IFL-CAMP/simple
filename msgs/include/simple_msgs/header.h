@@ -32,14 +32,14 @@ namespace simple_msgs
 class Header : public GenericMessage
 {
 public:
-  Header();
-  Header(int, const std::string&, double);
+  Header() = default;
+  Header(int, std::string, double);
   Header(const uint8_t*);
   Header(const Header&);
-  Header(Header&&);
+  Header(Header&&) noexcept;
 
   Header& operator=(const Header&);
-  Header& operator=(Header&&);
+  Header& operator=(Header&&) noexcept;
   Header& operator=(const uint8_t*);
 
   inline bool operator==(const Header& rhs) const

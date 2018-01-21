@@ -19,10 +19,10 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include <iostream>
 #include "simple_msgs/int.h"
-#include <time.h>
-#include <stdlib.h>
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
 
 // TEST FOR USING THE INT MESSAGE WRAPPER
 
@@ -60,13 +60,13 @@ SCENARIO("Using a Int Message")
     }
     WHEN("I copy-construct a new Int")
     {
-      simple_msgs::Int copy_int(single_int);
+      const simple_msgs::Int& copy_int(single_int);
       THEN("The new Int is equal to the other") { REQUIRE(copy_int == single_int); }
     }
     WHEN("I move-construct a new Int")
     {
       simple_msgs::Int moved_int(std::move(single_int));
-      THEN("The new Int's value is equal to the previous' one") { REQUIRE(moved_int.get() == single_int.get()); }
+      THEN("The new Int's value is equal to the previous' one") { REQUIRE(moved_int.get() == int_1); }
     }
   }
 

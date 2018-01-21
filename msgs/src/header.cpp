@@ -1,41 +1,36 @@
 /**
-* S.I.M.P.L.E. - Smart Intra-operative Messaging Platform with Less Effort
-* Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Lesser Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU Lesser Public License for more details.
-*
-* You should have received a copy of the GNU Lesser Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * S.I.M.P.L.E. - Smart Intra-operative Messaging Platform with Less Effort
+ * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include <utility>
 
 #include "simple_msgs/header.h"
 
 namespace simple_msgs
 {
-Header::Header()
-  : GenericMessage()
-{
-}
-
-Header::Header(int seq_n, const std::string& frame_id, double timestamp)
-  : GenericMessage()
-  , seq_n_(seq_n)
-  , frame_id_(frame_id)
+Header::Header(int seq_n, std::string frame_id, double timestamp)
+  : seq_n_(seq_n)
+  , frame_id_(std::move(frame_id))
   , timestamp_(timestamp)
 {
 }
 
 Header::Header(const uint8_t* data)
-  : GenericMessage()
-  , seq_n_(GetHeaderFbs(data)->sequence_number())
+  : seq_n_(GetHeaderFbs(data)->sequence_number())
   , frame_id_(GetHeaderFbs(data)->frame_id()->c_str())
   , timestamp_(GetHeaderFbs(data)->timestamp())
 {
@@ -46,11 +41,10 @@ Header::Header(const Header& h)
 {
 }
 
-Header::Header(Header&& other)
-  : GenericMessage()
-  , seq_n_(std::move(other.seq_n_))
+Header::Header(Header&& other) noexcept
+  : seq_n_(other.seq_n_)
   , frame_id_(std::move(other.frame_id_))
-  , timestamp_(std::move(other.timestamp_))
+  , timestamp_(other.timestamp_)
 {
 }
 
@@ -67,13 +61,13 @@ Header& Header::operator=(const Header& other)
   return *this;
 }
 
-Header& Header::operator=(Header&& other)
+Header& Header::operator=(Header&& other) noexcept
 {
   if (this != std::addressof(other))
   {
-    seq_n_ = std::move(other.seq_n_);
+    seq_n_ = other.seq_n_;
     frame_id_ = std::move(other.frame_id_);
-    timestamp_ = std::move(other.timestamp_);
+    timestamp_ = other.timestamp_;
     modified_ = true;
   }
   return *this;
@@ -137,4 +131,4 @@ std::ostream& operator<<(std::ostream& out, const Header& h)
 
   return out;
 }
-}
+}  // namespace simple_msgs

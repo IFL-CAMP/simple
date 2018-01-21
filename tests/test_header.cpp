@@ -19,10 +19,10 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include <iostream>
 #include "simple_msgs/header.h"
-#include <time.h>
-#include <stdlib.h>
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
 
 // TEST FOR USING THE HEADER MESSAGE WRAPPER
 
@@ -41,7 +41,7 @@ SCENARIO("Using a Header Message")
       THEN("They have to be the default ones")
       {
         REQUIRE(empty_header.getSequenceNumber() == 0);
-        REQUIRE(empty_header.getFrameID() == "");
+        REQUIRE(empty_header.getFrameID().empty());
         REQUIRE(empty_header.getTimestamp() == 0.0);
       }
     }

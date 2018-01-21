@@ -1,40 +1,35 @@
 /**
-* S.I.M.P.L.E. - Smart Intra-operative Messaging Platform with Less Effort
-* Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Lesser Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU Lesser Public License for more details.
-*
-* You should have received a copy of the GNU Lesser Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * S.I.M.P.L.E. - Smart Intra-operative Messaging Platform with Less Effort
+ * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include <utility>
 
 #include "simple_msgs/pose_stamped.h"
 
 namespace simple_msgs
 {
-PoseStamped::PoseStamped()
-  : GenericMessage()
-{
-}
-
-PoseStamped::PoseStamped(const Header& header, const Pose& pose)
-  : GenericMessage()
-  , pose_(pose)
-  , header_(header)
+PoseStamped::PoseStamped(Header header, Pose pose)
+  : pose_(std::move(pose))
+  , header_(std::move(header))
 {
 }
 
 PoseStamped::PoseStamped(const uint8_t* data)
-  : GenericMessage()
-  , pose_(GetPoseStampedFbs(data)->pose()->data())
+  : pose_(GetPoseStampedFbs(data)->pose()->data())
   , header_(GetPoseStampedFbs(data)->header()->data())
 {
 }
@@ -44,8 +39,8 @@ PoseStamped::PoseStamped(const PoseStamped& other)
 {
 }
 
-PoseStamped::PoseStamped(PoseStamped&& other)
-  : PoseStamped(std::move(other.header_), std::move(other.pose_))
+PoseStamped::PoseStamped(PoseStamped&& other) noexcept
+  : PoseStamped(other.header_, other.pose_)
 {
 }
 
@@ -61,7 +56,7 @@ PoseStamped& PoseStamped::operator=(const PoseStamped& p)
   return *this;
 }
 
-PoseStamped& PoseStamped::operator=(PoseStamped&& p)
+PoseStamped& PoseStamped::operator=(PoseStamped&& p) noexcept
 {
   if (this != std::addressof(p))
   {
@@ -119,4 +114,4 @@ std::ostream& operator<<(std::ostream& out, const PoseStamped& p)
   out << p.header_ << p.pose_;
   return out;
 }
-}
+}  // namespace simple_msgs

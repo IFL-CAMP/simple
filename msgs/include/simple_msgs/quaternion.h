@@ -33,19 +33,19 @@ namespace simple_msgs
 class Quaternion : public GenericMessage
 {
 public:
-  Quaternion();
+  Quaternion() = default;
   Quaternion(double, double, double, double);
   Quaternion(const std::array<double, 4>&);
-  Quaternion(std::array<double, 4>&&);
+  Quaternion(std::array<double, 4>&&) noexcept;
   Quaternion(const uint8_t*);
   Quaternion(const Quaternion&);
-  Quaternion(Quaternion&&);
+  Quaternion(Quaternion&&) noexcept;
 
   Quaternion& operator=(const Quaternion&);
-  Quaternion& operator=(Quaternion&&);
+  Quaternion& operator=(Quaternion&&) noexcept;
   Quaternion& operator=(const uint8_t*);
   Quaternion& operator=(const std::array<double, 4>&);
-  Quaternion& operator=(std::array<double, 4>&&);
+  Quaternion& operator=(std::array<double, 4>&&) noexcept;
 
   inline bool operator==(const Quaternion& rhs) const { return data_ == rhs.data_; }
   inline bool operator!=(const Quaternion& rhs) const { return !(*this == rhs); }
@@ -104,7 +104,7 @@ public:
   static const char* getTopic() { return QuaternionFbsIdentifier(); }
 
 private:
-  std::array<double, 4> data_{{0, 0, 0, 0}};
+  std::array<double, 4> data_{{0, 0, 0, 1}};
 };
 }  // Namespace simple_msgs.
 

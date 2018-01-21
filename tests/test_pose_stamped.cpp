@@ -88,7 +88,7 @@ SCENARIO("Using a PoseStamped Message")
     simple_msgs::PoseStamped pose_stamped(random_header, random_pose);
     WHEN("I copy-construct a new PoseStamped")
     {
-      simple_msgs::PoseStamped copy_pose_stamped(pose_stamped);
+      const simple_msgs::PoseStamped& copy_pose_stamped(pose_stamped);
       THEN("The new PoseStamped is equal to the other") { REQUIRE(copy_pose_stamped == pose_stamped); }
     }
     WHEN("I move-construct a new PoseStamped")

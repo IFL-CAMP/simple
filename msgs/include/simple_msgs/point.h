@@ -33,20 +33,20 @@ namespace simple_msgs
 class Point : public GenericMessage
 {
 public:
-  Point();
+  Point() = default;
   Point(double);
   Point(double, double, double);
   Point(const std::array<double, 3>&);
-  Point(std::array<double, 3>&&);
+  Point(std::array<double, 3>&&) noexcept;
   Point(const uint8_t*);
   Point(const Point&);
-  Point(Point&&);
+  Point(Point&&) noexcept;
 
   Point& operator=(const Point&);
-  Point& operator=(Point&&);
+  Point& operator=(Point&&) noexcept;
   Point& operator=(const uint8_t*);
   Point& operator=(const std::array<double, 3>&);
-  Point& operator=(std::array<double, 3>&&);
+  Point& operator=(std::array<double, 3>&&) noexcept;
 
   inline bool operator==(const Point& rhs) const { return data_ == rhs.data_; }
   inline bool operator!=(const Point& rhs) const { return !(*this == rhs); }

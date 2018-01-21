@@ -30,17 +30,17 @@ class String : public GenericMessage
 {
 public:
   // Constructors,
-  String();
-  String(const std::string&);
+  String() = default;
+  String(std::string);
   String(std::string&&);
   String(const char*);
   String(const uint8_t*);
   String(const String&);
-  String(String&&);
+  String(String&&) noexcept;
 
   // Copy operations.
   String& operator=(const String&);
-  String& operator=(String&&);
+  String& operator=(String&&) noexcept;
   String& operator=(const uint8_t*);
 
   // Relational operators.
@@ -87,4 +87,4 @@ private:
 };
 }  // Namespace simple_msgs.
 
-#endif // SIMPLE_MSGS_STRING_H
+#endif  // SIMPLE_MSGS_STRING_H

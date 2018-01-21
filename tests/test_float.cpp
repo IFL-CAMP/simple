@@ -19,10 +19,10 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include <iostream>
 #include "simple_msgs/float.h"
-#include <time.h>
-#include <stdlib.h>
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
 
 // TEST FOR USING THE FLOAT MESSAGE WRAPPER
 
@@ -60,13 +60,13 @@ SCENARIO("Using a Float Message")
     }
     WHEN("I copy-construct a new Float")
     {
-      simple_msgs::Float copy_float(single_float);
+      const simple_msgs::Float& copy_float(single_float);
       THEN("The new Float is equal to the other") { REQUIRE(copy_float == single_float); }
     }
     WHEN("I move-construct a new Float")
     {
       simple_msgs::Float moved_float(std::move(single_float));
-      THEN("The new Float's value is equal to the previous' one") { REQUIRE(moved_float.get() == single_float.get()); }
+      THEN("The new Float's value is equal to the previous' one") { REQUIRE(moved_float.get() == float_1); }
     }
   }
 

@@ -92,7 +92,7 @@ SCENARIO("Using a RotationMatrixStamped Message")
     simple_msgs::RotationMatrixStamped rotation_matrix_stamped(random_header, random_rotation_matrix);
     WHEN("I copy-construct a new RotationMatrixStamped")
     {
-      simple_msgs::RotationMatrixStamped copy_rotation_matrix_stamped(rotation_matrix_stamped);
+      const simple_msgs::RotationMatrixStamped& copy_rotation_matrix_stamped(rotation_matrix_stamped);
       THEN("The new RotationMatrixStamped is equal to the other")
       {
         REQUIRE(copy_rotation_matrix_stamped == rotation_matrix_stamped);

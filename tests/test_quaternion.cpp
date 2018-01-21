@@ -81,7 +81,7 @@ SCENARIO("Using a Quaternion Message")
 
   GIVEN("A quaternion created from moving an array of doubles")
   {
-    simple_msgs::Quaternion moved_array_quaternion(std::move(double_array));
+    simple_msgs::Quaternion moved_array_quaternion(double_array);
     WHEN("We check the quaternion's elements")
     {
       THEN("They all have to be equal to the doubles")
@@ -105,7 +105,7 @@ SCENARIO("Using a Quaternion Message")
     }
     WHEN("I copy-construct a new quaternion")
     {
-      simple_msgs::Quaternion copy_quaternion(quaternion);
+      const simple_msgs::Quaternion& copy_quaternion(quaternion);
       THEN("The new quaternion is equal to the other") { REQUIRE(copy_quaternion == quaternion); }
     }
     WHEN("I move-construct a new quaternion")
@@ -167,7 +167,7 @@ SCENARIO("Using a Quaternion Message")
     WHEN("I move-assign from an array to that quaternion")
     {
       simple_msgs::Quaternion move_assined_array_quaternion;
-      move_assined_array_quaternion = std::move(double_array);
+      move_assined_array_quaternion = double_array;
       THEN("The quaternion's elements are the same as the array")
       {
         REQUIRE(move_assined_array_quaternion.getX() == double_1);

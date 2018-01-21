@@ -35,14 +35,14 @@ namespace simple_msgs
 class QuaternionStamped : public GenericMessage
 {
 public:
-  QuaternionStamped();
-  QuaternionStamped(const Header&, const Quaternion&);
+  QuaternionStamped() = default;
+  QuaternionStamped(Header, Quaternion);
   QuaternionStamped(const uint8_t*);
   QuaternionStamped(const QuaternionStamped&);
-  QuaternionStamped(QuaternionStamped&&);
+  QuaternionStamped(QuaternionStamped&&) noexcept;
 
   QuaternionStamped& operator=(const QuaternionStamped&);
-  QuaternionStamped& operator=(QuaternionStamped&&);
+  QuaternionStamped& operator=(QuaternionStamped&&) noexcept;
   QuaternionStamped& operator=(const uint8_t*);
 
   inline bool operator==(const QuaternionStamped& rhs) const
@@ -87,4 +87,4 @@ private:
 };
 }  // Namespace simple_msgs.
 
-#endif // SIMPLE_MSGS_QUATERNION_STAMPED_H
+#endif  // SIMPLE_MSGS_QUATERNION_STAMPED_H

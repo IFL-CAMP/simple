@@ -19,11 +19,11 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
+#include <ctime>
 #include <iostream>
-#include <time.h>
 
-#include "simple/server.hpp"
 #include "simple/client.hpp"
+#include "simple/server.hpp"
 #include "test_utils.hpp"
 
 // TEST FOR A CLIENT AND SERVER OF ALL DATA TYPES
