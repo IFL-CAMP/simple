@@ -30,14 +30,14 @@ namespace simple_msgs
 class Pose : public GenericMessage
 {
 public:
-  Pose();
-  Pose(const Point&, const Quaternion&);
+  Pose() = default;
+  Pose(Point, Quaternion);
   Pose(const uint8_t*);
   Pose(const Pose&);
-  Pose(Pose&&);
+  Pose(Pose&&) noexcept;
 
   Pose& operator=(const Pose&);
-  Pose& operator=(Pose&&);
+  Pose& operator=(Pose&&) noexcept;
   Pose& operator=(const uint8_t*);
 
   inline bool operator==(const Pose& rhs) const

@@ -92,7 +92,7 @@ SCENARIO("Using a Point Message")
 
   GIVEN("A point created from moving an array of a double")
   {
-    simple_msgs::Point moved_array_point(std::move(double_array));
+    simple_msgs::Point moved_array_point(double_array);
     WHEN("We check the points coordinates")
     {
       THEN("They all have to be equal to the array content")
@@ -115,7 +115,7 @@ SCENARIO("Using a Point Message")
     }
     WHEN("I copy-construct a new point")
     {
-      simple_msgs::Point copied_point(single_point);
+      const simple_msgs::Point& copied_point(single_point);
       THEN("The new point is equal to the other") { REQUIRE(copied_point == single_point); }
     }
     WHEN("I move-construct a new point")
@@ -163,7 +163,7 @@ SCENARIO("Using a Point Message")
     }
     WHEN("I move-assign from an array to that point")
     {
-      single_point = std::move(twisted_double_array);
+      single_point = twisted_double_array;
       THEN("The point coordinates are equal to the array")
       {
         REQUIRE(single_point.getX() == twisted_double_array[0]);

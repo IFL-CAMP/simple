@@ -34,14 +34,14 @@ namespace simple_msgs
 class PointStamped : public GenericMessage
 {
 public:
-  PointStamped();
-  PointStamped(const Header&, const Point&);
+  PointStamped() = default;
+  PointStamped(Header, Point);
   PointStamped(const uint8_t*);
   PointStamped(const PointStamped&);
-  PointStamped(PointStamped&&);
+  PointStamped(PointStamped&&) noexcept;
 
   PointStamped& operator=(const PointStamped&);
-  PointStamped& operator=(PointStamped&&);
+  PointStamped& operator=(PointStamped&&) noexcept;
   PointStamped& operator=(const uint8_t*);
 
   inline bool operator==(const PointStamped& rhs) const { return (point_ == rhs.point_ && header_ == rhs.header_); }
@@ -83,4 +83,4 @@ private:
 };
 }  // Namespace simple_msgs.
 
-#endif // SIMPLE_MSGS_POINT_STAMPED_H
+#endif  // SIMPLE_MSGS_POINT_STAMPED_H

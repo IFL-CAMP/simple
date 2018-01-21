@@ -86,7 +86,7 @@ SCENARIO("Using a QuaternionStamped Message")
     simple_msgs::QuaternionStamped quaternion_stamped(random_header, random_quaternion);
     WHEN("I copy-construct a new QuaternionStamped")
     {
-      simple_msgs::QuaternionStamped copy_quaternion_stamped(quaternion_stamped);
+      const simple_msgs::QuaternionStamped& copy_quaternion_stamped(quaternion_stamped);
       THEN("The new QuaternionStamped is equal to the other")
       {
         REQUIRE(copy_quaternion_stamped == quaternion_stamped);

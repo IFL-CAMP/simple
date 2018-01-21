@@ -1,56 +1,47 @@
 /**
-* S.I.M.P.L.E. - Smart Intra-operative Messaging Platform with Less Effort
-* Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Lesser Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU Lesser Public License for more details.
-*
-* You should have received a copy of the GNU Lesser Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * S.I.M.P.L.E. - Smart Intra-operative Messaging Platform with Less Effort
+ * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include "simple_msgs/point.h"
 
 namespace simple_msgs
 {
-	Point::Point()
-		: GenericMessage()
-	{
-	}
-
-	Point::Point(double value)
-		: GenericMessage()
-		, data_{{ value, value, value }}
+Point::Point(double value)
+  : data_{{value, value, value}}
 {
 }
 
 Point::Point(double x, double y, double z)
-: GenericMessage()
-, data_{ { x, y, z } }
+  : data_{{x, y, z}}
 {
 }
 
 Point::Point(const std::array<double, 3>& array)
-  : GenericMessage()
-  , data_(array)
+  : data_(array)
 {
 }
 
-Point::Point(std::array<double, 3>&& array)
-  : GenericMessage()
-  , data_(std::move(array))
+Point::Point(std::array<double, 3>&& array) noexcept
+  : data_(array)
 {
 }
 
 Point::Point(const uint8_t* data)
-  : GenericMessage()
+
 {
   auto p = GetPointFbs(data);
   data_[0] = p->x();
@@ -63,9 +54,8 @@ Point::Point(const Point& other)
 {
 }
 
-Point::Point(Point&& other)
-  : GenericMessage()
-  , data_(std::move(other.data_))
+Point::Point(Point&& other) noexcept
+  : data_(other.data_)
 {
 }
 
@@ -80,12 +70,12 @@ Point& Point::operator=(const Point& other)
   return *this;
 }
 
-Point& Point::operator=(Point&& other)
+Point& Point::operator=(Point&& other) noexcept
 {
   if (this != std::addressof(other))
   {
     std::lock_guard<std::mutex> lock(mutex_);
-    data_ = std::move(other.data_);
+    data_ = other.data_;
     modified_ = true;
   }
   return *this;
@@ -99,10 +89,10 @@ Point& Point::operator=(const std::array<double, 3>& array)
   return *this;
 }
 
-Point& Point::operator=(std::array<double, 3>&& array)
+Point& Point::operator=(std::array<double, 3>&& array) noexcept
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  data_ = std::move(array);
+  data_ = array;
   modified_ = true;
   return *this;
 }
@@ -221,4 +211,4 @@ std::ostream& operator<<(std::ostream& out, const Point& p)
 
   return out;
 }
-}
+}  // namespace simple_msgs

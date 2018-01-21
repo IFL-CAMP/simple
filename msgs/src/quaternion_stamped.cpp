@@ -1,40 +1,35 @@
 /**
-* S.I.M.P.L.E. - Smart Intra-operative Messaging Platform with Less Effort
-* Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Lesser Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU Lesser Public License for more details.
-*
-* You should have received a copy of the GNU Lesser Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * S.I.M.P.L.E. - Smart Intra-operative Messaging Platform with Less Effort
+ * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include <utility>
 
 #include "simple_msgs/quaternion_stamped.h"
 
 namespace simple_msgs
 {
-QuaternionStamped::QuaternionStamped()
-  : GenericMessage()
-{
-}
-
-QuaternionStamped::QuaternionStamped(const Header& header, const Quaternion& quaternion)
-  : GenericMessage()
-  , quaternion_(quaternion)
-  , header_(header)
+QuaternionStamped::QuaternionStamped(Header header, Quaternion quaternion)
+  : quaternion_(std::move(quaternion))
+  , header_(std::move(header))
 {
 }
 
 QuaternionStamped::QuaternionStamped(const uint8_t* data)
-  : GenericMessage()
-  , quaternion_(GetQuaternionStampedFbs(data)->quaternion()->data())
+  : quaternion_(GetQuaternionStampedFbs(data)->quaternion()->data())
   , header_(GetQuaternionStampedFbs(data)->header()->data())
 {
 }
@@ -44,8 +39,8 @@ QuaternionStamped::QuaternionStamped(const QuaternionStamped& other)
 {
 }
 
-QuaternionStamped::QuaternionStamped(QuaternionStamped&& other)
-  : QuaternionStamped(std::move(other.header_), std::move(other.quaternion_))
+QuaternionStamped::QuaternionStamped(QuaternionStamped&& other) noexcept
+  : QuaternionStamped(other.header_, other.quaternion_)
 {
 }
 
@@ -61,7 +56,7 @@ QuaternionStamped& QuaternionStamped::operator=(const QuaternionStamped& other)
   return *this;
 }
 
-QuaternionStamped& QuaternionStamped::operator=(QuaternionStamped&& other)
+QuaternionStamped& QuaternionStamped::operator=(QuaternionStamped&& other) noexcept
 {
   if (this != std::addressof(other))
   {

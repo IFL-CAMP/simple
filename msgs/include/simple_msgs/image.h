@@ -32,10 +32,7 @@ template <typename T>
 class Image : public GenericMessage
 {
 public:
-  Image()
-    : GenericMessage()
-  {
-  }
+  Image() = default;
 
   Image(const uint8_t* data);
 
@@ -56,7 +53,7 @@ public:
   {
   }
 
-  Image(Image&& other)
+  Image(Image&& other) noexcept
     : GenericMessage()
     , header_(std::move(other.header_))
     , origin_(std::move(other.origin_))
@@ -94,7 +91,7 @@ public:
     }
     return *this;
   }
-  Image& operator=(Image&& other)
+  Image& operator=(Image&& other) noexcept
   {
     if (this != std::addressof(other))
     {

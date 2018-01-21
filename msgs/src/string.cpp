@@ -1,54 +1,46 @@
 /**
-* S.I.M.P.L.E. - Smart Intra-operative Messaging Platform with Less Effort
-* Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Lesser Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU Lesser Public License for more details.
-*
-* You should have received a copy of the GNU Lesser Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * S.I.M.P.L.E. - Smart Intra-operative Messaging Platform with Less Effort
+ * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include <algorithm>
+#include <utility>
 
 #include "simple_msgs/string.h"
 
 namespace simple_msgs
 {
-String::String()
-  : GenericMessage()
-{
-}
-
-String::String(const std::string& data)
-  : GenericMessage()
-  , data_(data)
+String::String(std::string data)
+  : data_(std::move(data))
 {
 }
 
 String::String(std::string&& data)
-  : GenericMessage()
-  , data_(std::move(data))
+  : data_(std::move(data))
 {
   data.clear();
 }
 
 String::String(const char* data)
-  : GenericMessage()
-  , data_(data)
+  : data_(data)
 {
 }
 
 String::String(const uint8_t* data)
-  : GenericMessage()
-  , data_(GetStringFbs(data)->data()->c_str())
+  : data_(GetStringFbs(data)->data()->c_str())
 {
 }
 
@@ -57,9 +49,8 @@ String::String(const String& other)
 {
 }
 
-String::String(String&& other)
-  : GenericMessage()
-  , data_(std::move(other.data_))
+String::String(String&& other) noexcept
+  : data_(std::move(other.data_))
 {
   other.clear();
 }
@@ -75,7 +66,7 @@ String& String::operator=(const String& other)
   return *this;
 }
 
-String& String::operator=(String&& other)
+String& String::operator=(String&& other) noexcept
 {
   if (this != std::addressof(other))
   {

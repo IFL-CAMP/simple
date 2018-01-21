@@ -19,11 +19,11 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include <iostream>
 #include "simple_msgs/image.h"
 #include "test_utils.hpp"
-#include <time.h>
-#include <stdlib.h>
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
 
 // TEST FOR USING THE IMAGE MESSAGE WRAPPER
 
@@ -34,9 +34,9 @@ SCENARIO("Using an Image Message")
   double random_double_1 = static_cast<double>(rand()) / RAND_MAX;
   double random_double_2 = static_cast<double>(rand()) / RAND_MAX;
   double random_double_3 = static_cast<double>(rand()) / RAND_MAX;
-  int random_int_1 = static_cast<int>(rand() / 100);
-  int random_int_2 = static_cast<int>(rand() / 100);
-  int random_int_3 = static_cast<int>(rand() / 100);
+  auto random_int_1 = static_cast<int>(rand() / 100);
+  auto random_int_2 = static_cast<int>(rand() / 100);
+  auto random_int_3 = static_cast<int>(rand() / 100);
   std::string random_string = std::to_string(random_double_1);
   simple_msgs::Header random_header = createRandomHeader();
   simple_msgs::Pose random_pose = createRandomPose();
@@ -58,7 +58,7 @@ SCENARIO("Using an Image Message")
         REQUIRE(empty_image.getImageSize() == 0);
         REQUIRE(empty_image.getImageOrigin() == empty_pose);
         REQUIRE(empty_image.getHeader() == empty_header);
-        REQUIRE(empty_image.getImageEncoding() == "");
+        REQUIRE(empty_image.getImageEncoding().empty());
         // REQUIRE(empty_image.getImageData() == nullptr);
       }
     }
@@ -85,7 +85,7 @@ SCENARIO("Using an Image Message")
     }
     WHEN("I copy-construct a new image")
     {
-      simple_msgs::Image<uint8_t> copy_image(random_image);
+      const simple_msgs::Image<uint8_t>& copy_image(random_image);
       THEN("Both images are the same") { REQUIRE(copy_image == random_image); }
     }
     WHEN("I move-construct a new image")

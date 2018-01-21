@@ -87,7 +87,7 @@ SCENARIO("Using a Pose Message")
     simple_msgs::Pose pose(point_, quaternion_);
     WHEN("I copy-construct a new Pose")
     {
-      simple_msgs::Pose copy_pose(pose);
+      const simple_msgs::Pose& copy_pose(pose);
       THEN("The new Pose is equal to the other") { REQUIRE(copy_pose == pose); }
     }
     WHEN("I move-construct a new Pose")

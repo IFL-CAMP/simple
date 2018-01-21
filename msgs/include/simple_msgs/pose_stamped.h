@@ -30,14 +30,14 @@ namespace simple_msgs
 class PoseStamped : public GenericMessage
 {
 public:
-  PoseStamped();
-  PoseStamped(const Header&, const Pose&);
+  PoseStamped() = default;
+  PoseStamped(Header, Pose);
   PoseStamped(const uint8_t*);
   PoseStamped(const PoseStamped&);
-  PoseStamped(PoseStamped&&);
+  PoseStamped(PoseStamped&&) noexcept;
 
   PoseStamped& operator=(const PoseStamped&);
-  PoseStamped& operator=(PoseStamped&&);
+  PoseStamped& operator=(PoseStamped&&) noexcept;
   PoseStamped& operator=(const uint8_t*);
 
   inline bool operator==(const PoseStamped& rhs) const { return (pose_ == rhs.pose_ && header_ == rhs.header_); }
@@ -79,4 +79,4 @@ private:
 };
 }  // Namespace simple_msgs.
 
-#endif // SIMPLE_MSGS_POSE_STAMPED_H
+#endif  // SIMPLE_MSGS_POSE_STAMPED_H

@@ -82,7 +82,7 @@ SCENARIO("Using a PointStamped Message")
     simple_msgs::PointStamped point_stamped(random_header, random_point);
     WHEN("I copy-construct a new PointStamped")
     {
-      simple_msgs::PointStamped copy_point_stamped(point_stamped);
+      const simple_msgs::PointStamped& copy_point_stamped(point_stamped);
       THEN("The new PointStamped is equal to the other") { REQUIRE(copy_point_stamped == point_stamped); }
     }
     WHEN("I move-construct a new PointStamped")

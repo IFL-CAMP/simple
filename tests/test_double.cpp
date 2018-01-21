@@ -19,10 +19,10 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include <iostream>
 #include "simple_msgs/double.h"
-#include <time.h>
-#include <stdlib.h>
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
 
 // TEST FOR USING THE DOUBLE MESSAGE WRAPPER
 
@@ -60,16 +60,13 @@ SCENARIO("Using a Double Message")
     }
     WHEN("I copy-construct a new Double")
     {
-      simple_msgs::Double copy_double(single_double);
+      const simple_msgs::Double& copy_double(single_double);
       THEN("The new Double is equal to the other") { REQUIRE(copy_double == single_double); }
     }
     WHEN("I move-construct a new Double")
     {
       simple_msgs::Double moved_double(std::move(single_double));
-      THEN("The new Double's value is equal to the previous' one")
-      {
-        REQUIRE(moved_double.get() == single_double.get());
-      }
+      THEN("The new Double's value is equal to the previous' one") { REQUIRE(moved_double.get() == double_1); }
     }
   }
 

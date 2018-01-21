@@ -189,4 +189,4 @@ Image<float>::Image(const uint8_t* data)
 	  data_ = std::make_shared<const float*>(mydata);
   }
 }
-}
+}  // namespace simple_msgs

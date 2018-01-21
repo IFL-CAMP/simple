@@ -27,14 +27,14 @@ namespace simple_msgs
 class Bool : public GenericMessage
 {
 public:
-  Bool();
+  Bool() = default;
   Bool(bool);
   Bool(const uint8_t*);
   Bool(const Bool&);
-  Bool(Bool&&);
+  Bool(Bool&&) noexcept;
 
   Bool& operator=(const Bool&);
-  Bool& operator=(Bool&&);
+  Bool& operator=(Bool&&) noexcept;
   Bool& operator=(const uint8_t* data);
 
   inline bool operator==(const Bool& rhs) const { return (data_ == rhs.data_); }

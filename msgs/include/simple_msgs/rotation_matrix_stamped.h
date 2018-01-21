@@ -35,14 +35,14 @@ namespace simple_msgs
 class RotationMatrixStamped : public GenericMessage
 {
 public:
-  RotationMatrixStamped();
-  RotationMatrixStamped(const Header&, const RotationMatrix&);
+  RotationMatrixStamped() = default;
+  RotationMatrixStamped(Header, RotationMatrix);
   RotationMatrixStamped(const uint8_t*);
   RotationMatrixStamped(const RotationMatrixStamped&);
-  RotationMatrixStamped(RotationMatrixStamped&&);
+  RotationMatrixStamped(RotationMatrixStamped&&) noexcept;
 
   RotationMatrixStamped& operator=(const RotationMatrixStamped&);
-  RotationMatrixStamped& operator=(RotationMatrixStamped&&);
+  RotationMatrixStamped& operator=(RotationMatrixStamped&&) noexcept;
   RotationMatrixStamped& operator=(const uint8_t*);
 
   inline bool operator==(const RotationMatrixStamped& rhs) const
@@ -91,4 +91,4 @@ private:
 };
 }  // Namespace simple_msgs.
 
-#endif // SIMPLE_MSGS_ROTATION_MATRIX_STAMPED_H
+#endif  // SIMPLE_MSGS_ROTATION_MATRIX_STAMPED_H

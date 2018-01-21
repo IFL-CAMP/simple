@@ -32,14 +32,10 @@ class NumericType : public GenericMessage
 public:
   // Constructors.
 
-  NumericType()
-    : GenericMessage()
-  {
-  }
+  NumericType() = default;
 
   NumericType(T data)
-    : GenericMessage()
-    , data_(data)
+    : data_(data)
   {
   }
 
@@ -67,12 +63,12 @@ public:
 
   // Move operations.
 
-  NumericType(NumericType&& other)
+  NumericType(NumericType&& other) noexcept
     : NumericType(std::move(other.data_))
   {
   }
 
-  NumericType& operator=(NumericType&& rhs)
+  NumericType& operator=(NumericType&& rhs) noexcept
   {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = std::move(rhs.data_);
