@@ -30,17 +30,26 @@ Some common messages are already provided and live under *simple_msgs*:
 - Rotation Matrix
 - Image
 
-If one needs anotehr type of message, it can be defined - following the way *simple_msgs* are - and sent/received using the interface provided by *simple*.
+If one needs another type of message, it can be defined - following the way *simple_msgs* are defined - and sent/received using the interface provided by *simple*.
 
 ### Usage
 
 **Build and Install from source:** on [Windows](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/install:-windows) or [Linux/Mac OSX](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/install:-linux).       
-**Use in your C++ project:** via [CMake](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/home#cmake). We suggest Windows users to link to the static version of *simple*.        
-You have publisher/subscriber and request/reply.    
+**Use in your C++ project:** via [CMake](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/home#cmake). We suggest Windows users to link to the static version of *simple*.     
+
+#### Publisher / Subscriber 
+- A Publisher sends (publishes) data to any Subscriber that is listening to its IP address / port.
+- A Subscriber waits for new data from a Publisher and asynchrounsly elaborates it when it arrives.      
+An example of the implementation of a Publisher and a Subscriber in C++ is available [here](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/example:-pubsub).
+
+#### Request / Reply
+- A Client sends a request to a Server (knowing its IP address / port) and expects a reply from it.
+- A Server waits for requests and asynchrounsly elaborates a reply that is sent back to the Client.
+An example of the implementation of a Client and a Server in C++ is available [here](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/example:-reqrep).
 
 #### Ehi...it looks like ROS!
 
-Indeed! We are heavy (and happy) ROS users and we wanted to provide a very similar interface.     
+Indeed! We are heavy (and happy) ROS users and we want to provide a very similar interface.     
 ___
 
 ### Contacts
