@@ -1,5 +1,5 @@
 /**
- * S.I.M.P.L.E. - Smart Intra-operative Messaging Platform with Less Effort
+ * S.I.M.P.L.E. - Smart Intuitive Messaging Platform with Less Effort
  * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
  *
  * This program is free software: you can redistribute it and/or modify
