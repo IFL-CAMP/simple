@@ -43,13 +43,13 @@ If one needs another type of message, it can be defined - following the way *sim
 An example of the implementation of a Publisher and a Subscriber in C++ is available [here](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/example:-pubsub).
 
 #### Request / Reply
-- A Client sends a request to a Server (knowing its IP address / port) and expects a reply from it.
-- A Server waits for requests and asynchrounsly elaborates a reply that is sent back to the Client.
+- A Client sends a request to a Server (knowing its IP address / port) and expects a reply from it.           
+- A Server waits for requests and asynchrounsly elaborates a reply that is sent back to the Client.         
 An example of the implementation of a Client and a Server in C++ is available [here](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/example:-reqrep).
 
-#### Ehi...it looks like ROS!
+#### Inspiration from ROS
 
-Indeed! We are heavy (and happy) ROS users and we want to provide a very similar interface.     
+We are heavy (and happy) ROS users and we aim to provide a very similar interface to the one available in [ROS](http://www.ros.org/).     
 ___
 
 ### Contacts
