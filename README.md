@@ -34,9 +34,8 @@ If one needs anotehr type of message, it can be defined - following the way *sim
 
 ### Usage
 
-You can build it easily.      
-You can use it via CMake.              
-You have some messages already defined.          
+**Build and Install from source:** on [Windows](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/install:-windows) or [Linux/Mac OSX](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/install:-linux).       
+**Use in your C++ project:** via [CMake](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/home#cmake). We suggest Windows users to link to the static version of *simple*.        
 You have publisher/subscriber and request/reply.    
 
 #### Ehi...it looks like ROS!
