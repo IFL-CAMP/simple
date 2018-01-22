@@ -58,8 +58,8 @@ ___
 [Chair for Computer Aided Medical Procedures](http://campar.in.tum.de/)        
 [Technical University of Munich](www.tum.de), Germany.       
 
-Salvatore Virga : [salvo.virga@tum.de][salvo_email]  
-Fernanda Levy Langsch : [fernanda.langsch@tum.de][fernanda_email]
+**Salvatore Virga** : [salvo.virga@tum.de][salvo_email]  
+**Fernanda Levy Langsch** : [fernanda.langsch@tum.de][fernanda_email]
 
 [salvo_email]: salvo.virga@tum.de
 [fernanda_email]: fernanda.langsch@tum.de       
