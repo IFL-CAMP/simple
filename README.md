@@ -3,7 +3,7 @@
 [![Build Status](https://gitlab.lrz.de/CAMP_IFL/simple/badges/master/build.svg)](https://gitlab.lrz.de/CAMP_IFL/simple/commits/master)
 ___
 
-S.I.M.P.L.E. (or just *simple*) is a cross-platform C++ library to exchange data across a network, and to do it in an easy way.          
+S.I.M.P.L.E. (or just *simple*) is a cross-platform C++ library to exchange data across a network between C++ application, and to do it in an easy way.          
 It is built on top of [ZeroMQ](https://github.com/zeromq/libzmq) and uses custom defined [FlatBuffers](https://github.com/google/flatbuffers) messages.       
 It provides a clean interface to the classic **Publisher-Subscriber** and **Request-Reply** patterns.         
 
@@ -18,9 +18,21 @@ ___
 
 ___
 
-### Usage
+### What can I send/receive?
 
-To be written, messages to convey:      
+*simple* uses [FlatBuffers](https://github.com/google/flatbuffers) messages, plus a small interface on top of those.       
+Some common messages are already provided and live under *simple_msgs*:
+- Bool, Int, Float, Double, String
+- Header
+- Position
+- Quaternion
+- Pose
+- Rotation Matrix
+- Image
+
+If one needs anotehr type of message, it can be defined - following the way *simple_msgs* are - and sent/received using the interface provided by *simple*.
+
+### Usage
 
 You can build it easily.      
 You can use it via CMake.              
