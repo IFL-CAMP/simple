@@ -1,5 +1,5 @@
 ## S.I.M.P.L.E.
-**S**mart **I**ntra-operative **M**essaging **P**latform with **L**ess **E**ffort.         
+**S**mart **I**ntuitive **M**essaging **P**latform with **L**ess **E**ffort.         
 [![Build Status](https://gitlab.lrz.de/CAMP_IFL/simple/badges/master/build.svg)](https://gitlab.lrz.de/CAMP_IFL/simple/commits/master)
 ___
 
