@@ -1,5 +1,5 @@
 ## S.I.M.P.L.E.
-**S**mart **I**ntra-operative **M**essaging **P**latform with **L**ess **E**ffort.         
+**S**mart **I**ntuitive **M**essaging **P**latform with **L**ess **E**ffort.         
 [![Build Status](https://gitlab.lrz.de/CAMP_IFL/simple/badges/master/build.svg)](https://gitlab.lrz.de/CAMP_IFL/simple/commits/master)
 ___
 
@@ -30,7 +30,7 @@ Some common messages are already provided and live under *simple_msgs*:
 - Rotation Matrix
 - Image
 
-If one needs another type of message, it can be defined - following the way *simple_msgs* are defined - and sent/received using the interface provided by *simple*.
+Need another type of message? It can be defined - following the way *simple_msgs* are designed - and sent/received using the interface provided by *simple*.
 
 ### Usage
 
