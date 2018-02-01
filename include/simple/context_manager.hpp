@@ -34,7 +34,7 @@ public:
   void* instance() const { return context_; }
 
 private:
-  void* context_;
+  void* context_{nullptr};
 };
 
 #endif  // SIMPLE_CONTEXT_MANAGER_HPP
