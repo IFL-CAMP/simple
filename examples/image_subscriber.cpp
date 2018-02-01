@@ -23,6 +23,7 @@
 #include "simple_msgs/image.h"
 
 const std::string window_name("Received image");
+cv::Mat buffer;
 
 // Callback function for the Image Subscriber.
 // Every image that is received by the Subscriber is shown in a OpenCV window.
@@ -34,7 +35,11 @@ void example_callback(const simple_msgs::Image<uint8_t>& i)
   auto dimensions = i.getImageDimensions();
   // Build an OpenCV Mat from those.
   cv::Mat received_img(dimensions[0], dimensions[1], CV_8UC3, img);
-  cv::imshow(window_name, received_img);
+  received_img.copyTo(buffer);
+
+  cv::imshow(window_name, buffer);
+
+  std::cout << "Message received!" << std::endl;
 }
 
 int main()

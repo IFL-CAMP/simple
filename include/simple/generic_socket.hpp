@@ -91,13 +91,12 @@ protected:
     return true;
   }
 
-  bool receiveMsg(T& msg, const std::string& custom_error = "")
+  bool receiveMsg(T& msg, zmq_msg_t& message, const std::string& custom_error = "")
   {
     bool success{false};
     int data_past_topic{0};
     auto data_past_topic_size = sizeof(data_past_topic);
 
-    zmq_msg_t message = {};
     zmq_msg_init(&message);
 
     int message_received = zmq_msg_recv(&message, socket_, 0);
@@ -114,7 +113,6 @@ protected:
           {
             msg = static_cast<uint8_t*>(zmq_msg_data(&message));  //< Build a T object from the server reply.
             success = true;
-            zmq_msg_close(&message);
           }
           else
           {

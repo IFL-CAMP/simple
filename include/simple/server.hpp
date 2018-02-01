@@ -82,11 +82,13 @@ private:
   {
     while (alive_)
     {
+      zmq_msg_t message = {};
       T msg;
-      if (GenericSocket<T>::receiveMsg(msg, "[SIMPLE Server] - "))
+      if (GenericSocket<T>::receiveMsg(msg, message, "[SIMPLE Server] - "))
       {
         callback_(msg);
         reply(msg);
+        zmq_msg_close(&message);
       }
     }
   }
