@@ -7,3 +7,5 @@ tests/include/catch.hpp
 msgs/include/simple_msgs/generated/
 build2017/
 simpleConfigVersion.cmake
+
+*.kdev4
