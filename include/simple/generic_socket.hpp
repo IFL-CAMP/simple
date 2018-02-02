@@ -61,27 +61,12 @@ protected:
     }
   }
 
-  static void freeMsg(void* /*unused*/, void* hint)
+  bool sendMsg(uint8_t* msg, int msg_size, const std::string& custom_error = "[SIMPLE Error] - ")
   {
-    if (hint != nullptr)
-    {
-      // Keep a copy of the message builder alive until the sending of the message is done.
-      delete (static_cast<std::shared_ptr<flatbuffers::FlatBufferBuilder>*>(hint));
-    }
-  }
-
-  bool sendMsg(uint8_t* msg, int msg_size, std::shared_ptr<flatbuffers::FlatBufferBuilder>* builder_pointer,
-               const std::string& custom_error = "[SIMPLE Error] - ")
-  {
-    zmq_msg_t topic = {};
-    zmq_msg_init_data(&topic, const_cast<void*>(static_cast<const void*>(topic_)), topic_size_, freeMsg, NULL);
-
-    zmq_msg_t message = {};
-    zmq_msg_init_data(&message, msg, msg_size, freeMsg, builder_pointer);
 
     // Send the topic first and add the rest of the message after it.
-    auto topic_sent = zmq_sendmsg(socket_, &topic, ZMQ_SNDMORE);
-    auto message_sent = zmq_sendmsg(socket_, &message, 0);
+    auto topic_sent = zmq_send(socket_, const_cast<void*>(static_cast<const void*>(topic_)), topic_size_, ZMQ_SNDMORE);
+    auto message_sent = zmq_send(socket_, msg, msg_size, ZMQ_DONTWAIT);
 
     if (topic_sent == -1 || message_sent == -1)
     {
@@ -96,7 +81,7 @@ protected:
     bool success{false};
     int data_past_topic{0};
     auto data_past_topic_size = sizeof(data_past_topic);
-
+       
     zmq_msg_init(&message);
 
     int message_received = zmq_msg_recv(&message, socket_, 0);

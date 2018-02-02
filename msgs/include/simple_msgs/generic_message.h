@@ -45,12 +45,6 @@ public:
     return builder_->GetSize();
   }
 
-  std::shared_ptr<flatbuffers::FlatBufferBuilder>* getBuilderPointer() const
-  {
-    auto builderPointer = new std::shared_ptr<flatbuffers::FlatBufferBuilder>{builder_};
-    return builderPointer;
-  }
-
   inline bool isModified() const { return modified_; }
 
 protected:

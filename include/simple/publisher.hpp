@@ -65,8 +65,7 @@ public:
   {
     uint8_t* buffer = msg.getBufferData();
     int buffer_size = msg.getBufferSize();
-    std::shared_ptr<flatbuffers::FlatBufferBuilder>* builder_pointer = msg.getBuilderPointer();
-    publish(buffer, buffer_size, builder_pointer);
+    publish(buffer, buffer_size);
   }
 
   /**
@@ -74,9 +73,9 @@ public:
    * @param msg: buffer containing the data to be published.
    * @param size: size of the buffer to be publish.
    */
-  void publish(uint8_t* msg, const int msg_size, std::shared_ptr<flatbuffers::FlatBufferBuilder>* builder_pointer)
+  void publish(uint8_t* msg, const int msg_size)
   {
-    GenericSocket<T>::sendMsg(msg, msg_size, builder_pointer, "[Simple Publisher] - ");
+    GenericSocket<T>::sendMsg(msg, msg_size, "[Simple Publisher] - ");
   }
 };
 }  // Namespace simple.
