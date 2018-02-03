@@ -75,7 +75,7 @@ public:
   }
 
 private:
-  bool request(uint8_t* data, const int data_size, T& msg)
+  bool request(uint8_t* data, const size_t data_size, T& msg)
   {
     bool success{false};
 
