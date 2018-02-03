@@ -63,9 +63,8 @@ public:
    */
   void publish(const T& msg)
   {
-    uint8_t* buffer = msg.getBufferData();
-    int buffer_size = msg.getBufferSize();
-    publish(buffer, buffer_size);
+    auto buffer = msg.getBufferData();
+    publish(buffer.data(), buffer.size());
   }
 
   /**
@@ -73,10 +72,7 @@ public:
    * @param msg: buffer containing the data to be published.
    * @param size: size of the buffer to be publish.
    */
-  void publish(uint8_t* msg, const int msg_size)
-  {
-    GenericSocket<T>::sendMsg(msg, msg_size, "[Simple Publisher] - ");
-  }
+  void publish(uint8_t* msg, const int msg_size) { GenericSocket<T>::sendMsg(msg, msg_size, "[Simple Publisher] - "); }
 };
 }  // Namespace simple.
 

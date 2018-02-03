@@ -70,9 +70,8 @@ public:
    */
   bool request(T& msg)
   {
-    uint8_t* buffer = msg.getBufferData();
-    int buffer_size = msg.getBufferSize();
-    return request(buffer, buffer_size, msg);
+    auto buffer = msg.getBufferData();
+    return request(buffer.data(), buffer.size(), msg);
   }
 
 private:
@@ -82,7 +81,7 @@ private:
 
     if (GenericSocket<T>::sendMsg(data, data_size, "[SIMPLE Client] - "))
     {
-      zmq_msg_t message = {};
+      zmq_msg_t message{};
       if (GenericSocket<T>::receiveMsg(msg, message, "[SIMPLE Client] - "))
       {
         success = true;

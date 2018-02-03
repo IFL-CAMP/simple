@@ -82,7 +82,7 @@ private:
   {
     while (alive_)
     {
-      zmq_msg_t message = {};
+      zmq_msg_t message{};
       T msg;
       if (GenericSocket<T>::receiveMsg(msg, message, "[SIMPLE Server] - "))
       {
@@ -99,9 +99,8 @@ private:
    */
   void reply(const T& msg)
   {
-    uint8_t* buffer = msg.getBufferData();
-    int buffer_size = msg.getBufferSize();
-    GenericSocket<T>::sendMsg(buffer, buffer_size, "[SIMPLE Server] - ");
+    auto buffer = msg.getBufferData();
+    GenericSocket<T>::sendMsg(buffer.data(), buffer.size(), "[SIMPLE Server] - ");
   }
 
   std::thread server_thread_;

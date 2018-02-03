@@ -78,8 +78,8 @@ protected:
   {
     bool success{false};
     int data_past_topic{0};
-    auto data_past_topic_size = sizeof(data_past_topic);
-       
+    auto data_past_topic_size{sizeof(data_past_topic)};
+
     zmq_msg_init(&message);
 
     int message_received = zmq_msg_recv(&message, socket_, 0);
@@ -108,11 +108,6 @@ protected:
       {
         std::cerr << custom_error << "Received the wrong message type." << std::endl;
       }
-    }
-    else
-    {
-      std::cerr << custom_error << "Failed to receive the message. ZMQ Error: " << zmq_strerror(zmq_errno())
-                << std::endl;
     }
     return success;
   }

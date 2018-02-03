@@ -89,7 +89,7 @@ private:
   {
     while (alive_)
     {
-      zmq_msg_t message = {};
+      zmq_msg_t message{};
       T msg;
       if (GenericSocket<T>::receiveMsg(msg, message, "[SIMPLE Subscriber] - "))
       {
