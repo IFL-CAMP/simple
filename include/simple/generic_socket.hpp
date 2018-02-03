@@ -60,7 +60,7 @@ protected:
     }
   }
 
-  bool sendMsg(uint8_t* msg, int msg_size, const std::string& custom_error = "[SIMPLE Error] - ")
+  bool sendMsg(uint8_t* msg, size_t msg_size, const std::string& custom_error = "[SIMPLE Error] - ")
   {
     // Send the topic first and add the rest of the message after it.
     auto topic_sent = zmq_send(socket_, const_cast<void*>(static_cast<const void*>(topic_)), topic_size_, ZMQ_SNDMORE);
