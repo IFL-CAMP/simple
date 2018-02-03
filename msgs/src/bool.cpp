@@ -35,8 +35,7 @@ Bool::Bool(const Bool& other)
 {
 }
 
-Bool::Bool(Bool&& other) noexcept
-  : data_(other.data_)
+Bool::Bool(Bool&& other) noexcept : data_(other.data_)
 {
 }
 
@@ -71,18 +70,21 @@ Bool& Bool::operator=(const uint8_t* data)
   return *this;
 }
 
-uint8_t* Bool::getBufferData() const
+flatbuffers::DetachedBuffer Bool::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
   if (modified_)
   {
-    builder_->Clear();
+    if (builder_->GetSize() > 0)
+    {
+      builder_->Clear();
+    }
     BoolFbsBuilder tmp_builder(*builder_);
     tmp_builder.add_data(data_);
     FinishBoolFbsBuffer(*builder_, tmp_builder.Finish());
     modified_ = false;
   }
-  return builder_->GetBufferPointer();
+  return builder_->Release();
 }
 
 void Bool::set(bool data)

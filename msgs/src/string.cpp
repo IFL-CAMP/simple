@@ -49,8 +49,7 @@ String::String(const String& other)
 {
 }
 
-String::String(String&& other) noexcept
-  : data_(std::move(other.data_))
+String::String(String&& other) noexcept : data_(std::move(other.data_))
 {
   other.clear();
 }
@@ -102,19 +101,22 @@ String operator+(String lhs, const String& rhs)
   return lhs;
 }
 
-uint8_t* String::getBufferData() const
+flatbuffers::DetachedBuffer String::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
   if (modified_)
   {
-    builder_->Clear();
+    if (builder_->GetSize())
+    {
+      builder_->Clear();
+    }
     auto string_data = builder_->CreateString(data_);
     StringFbsBuilder tmp_builder(*builder_);
     tmp_builder.add_data(string_data);
     FinishStringFbsBuffer(*builder_, tmp_builder.Finish());
     modified_ = false;
   }
-  return builder_->GetBufferPointer();
+  return builder_->Release();
 }
 
 std::ostream& operator<<(std::ostream& out, const String& s)

@@ -38,7 +38,6 @@ public:
 protected:
   GenericSocket() = default;
   explicit GenericSocket(int type) { socket_ = zmq_socket(context_.instance(), type); }
-
   void bind(const std::string& address)
   {
     address_ = address;
@@ -46,7 +45,7 @@ protected:
     if (success != 0)
     {
       throw std::runtime_error("[SIMPLE Error] - Cannot bind to the given address/port. ZMQ Error: " +
-                               std::to_string(zmq_errno()));
+                               std::string(zmq_strerror(zmq_errno())));
     }
   }
 
@@ -57,20 +56,19 @@ protected:
     if (success != 0)
     {
       throw std::runtime_error("[SIMPLE Error] - Cannot bind to the given address/port. ZMQ Error: " +
-                               std::to_string(zmq_errno()));
+                               std::string(zmq_strerror(zmq_errno())));
     }
   }
 
   bool sendMsg(uint8_t* msg, int msg_size, const std::string& custom_error = "[SIMPLE Error] - ")
   {
-
     // Send the topic first and add the rest of the message after it.
     auto topic_sent = zmq_send(socket_, const_cast<void*>(static_cast<const void*>(topic_)), topic_size_, ZMQ_SNDMORE);
     auto message_sent = zmq_send(socket_, msg, msg_size, ZMQ_DONTWAIT);
 
     if (topic_sent == -1 || message_sent == -1)
     {
-      std::cerr << custom_error << "Failed to send the message. ZMQ Error: " + std::to_string(zmq_errno()) << std::endl;
+      std::cerr << custom_error << "Failed to send the message. ZMQ Error: " << zmq_strerror(zmq_errno()) << std::endl;
       return false;
     }
     return true;
@@ -101,7 +99,7 @@ protected:
           }
           else
           {
-            std::cerr << custom_error << "Failed to receive the message. ZMQ Error:" << std::to_string(zmq_errno())
+            std::cerr << custom_error << "Failed to receive the message. ZMQ Error: " << zmq_strerror(zmq_errno())
                       << std::endl;
           }
         }
@@ -110,6 +108,11 @@ protected:
       {
         std::cerr << custom_error << "Received the wrong message type." << std::endl;
       }
+    }
+    else
+    {
+      std::cerr << custom_error << "Failed to receive the message. ZMQ Error: " << zmq_strerror(zmq_errno())
+                << std::endl;
     }
     return success;
   }
@@ -122,7 +125,6 @@ protected:
   }
 
   void renewSocket(int type) { socket_ = zmq_socket(context_.instance(), type); }
-
   void* socket_{nullptr};
   const char* topic_{T::getTopic()};
   const size_t topic_size_{strlen(topic_)};

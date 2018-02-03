@@ -39,9 +39,8 @@ PointStamped::PointStamped(const PointStamped& other)
 {
 }
 
-PointStamped::PointStamped(PointStamped&& other) noexcept
-  : point_(std::move(other.point_))
-  , header_(std::move(other.header_))
+PointStamped::PointStamped(PointStamped&& other) noexcept : point_(std::move(other.point_)),
+                                                            header_(std::move(other.header_))
 {
 }
 
@@ -80,21 +79,28 @@ PointStamped& PointStamped::operator=(const uint8_t* data)
   return *this;
 }
 
-uint8_t* PointStamped::getBufferData() const
+flatbuffers::DetachedBuffer PointStamped::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
   if (modified_ || header_.isModified() || point_.isModified())
   {
-    builder_->Clear();
-    auto point_vector = builder_->CreateVector(point_.getBufferData(), point_.getBufferSize());
-    auto header_vector = builder_->CreateVector(header_.getBufferData(), header_.getBufferSize());
+    if (builder_->GetSize())
+    {
+      builder_->Clear();
+    }
+    auto point_data = point_.getBufferData();
+    auto point_vector = builder_->CreateVector(point_data.data(), point_data.size());
+
+    auto header_data = header_.getBufferData();
+    auto header_vector = builder_->CreateVector(header_data.data(), header_data.size());
+
     PointStampedFbsBuilder tmp_builder(*builder_);
     tmp_builder.add_point(point_vector);
     tmp_builder.add_header(header_vector);
     FinishPointStampedFbsBuffer(*builder_, tmp_builder.Finish());
     modified_ = false;
   }
-  return builder_->GetBufferPointer();
+  return builder_->Release();
 }
 
 void PointStamped::setHeader(const Header& h)

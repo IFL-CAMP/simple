@@ -44,18 +44,21 @@ NumericType<double>& NumericType<double>::operator=(const uint8_t* data)
 }
 
 template <>
-uint8_t* NumericType<double>::getBufferData() const
+flatbuffers::DetachedBuffer NumericType<double>::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
   if (modified_)
   {
-    builder_->Clear();
+    if (builder_->GetSize() > 0)
+    {
+      builder_->Clear();
+    }
     DoubleFbsBuilder tmp_builder(*builder_);
     tmp_builder.add_data(data_);
     FinishDoubleFbsBuffer(*builder_, tmp_builder.Finish());
     modified_ = false;
   }
-  return builder_->GetBufferPointer();
+  return builder_->Release();
 }
 
 template <>

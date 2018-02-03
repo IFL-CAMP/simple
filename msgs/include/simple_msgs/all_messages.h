@@ -25,7 +25,7 @@
 #include "float.h"
 #include "string.h"
 #include "header.h"
-#include "image.h"
+#include "image.hpp"
 #include "point.h"
 #include "point_stamped.h"
 #include "quaternion.h"

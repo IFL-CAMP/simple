@@ -16,7 +16,7 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "simple_msgs/image.h"
+#include "simple_msgs/image.hpp"
 
 namespace simple_msgs
 {
@@ -53,19 +53,19 @@ flatbuffers::Offset<void> Image<uint8_t>::getDataUnionElem() const
 template <>
 flatbuffers::Offset<void> Image<int16_t>::getDataUnionElem() const
 {
-	return Createint16_type(*builder_, builder_->CreateVector(static_cast<const int16_t*>(*data_), data_size_)).Union();
+  return Createint16_type(*builder_, builder_->CreateVector(static_cast<const int16_t*>(*data_), data_size_)).Union();
 }
 
 template <>
 flatbuffers::Offset<void> Image<float>::getDataUnionElem() const
 {
-	return Createfloat_type(*builder_, builder_->CreateVector(static_cast<const float*>(*data_), data_size_)).Union();
+  return Createfloat_type(*builder_, builder_->CreateVector(static_cast<const float*>(*data_), data_size_)).Union();
 }
 
 template <>
 flatbuffers::Offset<void> Image<double>::getDataUnionElem() const
 {
-	return Createdouble_type(*builder_, builder_->CreateVector(static_cast<const double*>(*data_), data_size_)).Union();
+  return Createdouble_type(*builder_, builder_->CreateVector(static_cast<const double*>(*data_), data_size_)).Union();
 }
 
 template <>
@@ -77,9 +77,10 @@ Image<uint8_t>& Image<uint8_t>::operator=(const uint8_t* data)
   Image<uint8_t>::fillPartialImage(image_data);
 
   // Set the Image data according to the right date type.
-  if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE)) {
-	  auto mydata = static_cast<const uint8_type*>(image_data->image())->raw()->data();
-	  data_ = std::make_shared<const uint8_t*>(mydata);
+  if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE))
+  {
+    auto mydata = static_cast<const uint8_type*>(image_data->image())->raw()->data();
+    data_ = std::make_shared<const uint8_t*>(mydata);
   }
   return *this;
 }
@@ -93,9 +94,10 @@ Image<int16_t>& Image<int16_t>::operator=(const uint8_t* data)
   Image<int16_t>::fillPartialImage(image_data);
 
   // Set the Image data according to the right date type.
-  if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE)) {
-	  auto mydata = static_cast<const int16_type*>(image_data->image())->raw()->data();
-	  data_ = std::make_shared<const int16_t*>(mydata);
+  if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE))
+  {
+    auto mydata = static_cast<const int16_type*>(image_data->image())->raw()->data();
+    data_ = std::make_shared<const int16_t*>(mydata);
   }
   return *this;
 }
@@ -109,9 +111,10 @@ Image<double>& Image<double>::operator=(const uint8_t* data)
   Image<double>::fillPartialImage(image_data);
 
   // Set the Image data according to the right date type.
-  if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE)) {
-	  auto mydata = static_cast<const double_type*>(image_data->image())->raw()->data();
-	  data_ = std::make_shared<const double*>(mydata);
+  if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE))
+  {
+    auto mydata = static_cast<const double_type*>(image_data->image())->raw()->data();
+    data_ = std::make_shared<const double*>(mydata);
   }
   return *this;
 }
@@ -125,9 +128,10 @@ Image<float>& Image<float>::operator=(const uint8_t* data)
   Image<float>::fillPartialImage(image_data);
 
   // Set the Image data according to the right date type.
-  if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE)) {
-	  auto mydata = static_cast<const float_type*>(image_data->image())->raw()->data();
-	  data_ = std::make_shared<const float*>(mydata);
+  if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE))
+  {
+    auto mydata = static_cast<const float_type*>(image_data->image())->raw()->data();
+    data_ = std::make_shared<const float*>(mydata);
   }
   return *this;
 }
@@ -140,12 +144,11 @@ Image<uint8_t>::Image(const uint8_t* data)
 
   Image<uint8_t>::fillPartialImage(image_data);
   // Set the Image data according to the right date type.
-  if (flatbuffers::IsFieldPresent(image_data,ImageFbs::VT_IMAGE))
+  if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE))
   {
-	auto mydata = static_cast<const uint8_type*>(image_data->image())->raw()->data();
-	data_ = std::make_shared<const uint8_t*>(mydata);
+    auto mydata = static_cast<const uint8_type*>(image_data->image())->raw()->data();
+    data_ = std::make_shared<const uint8_t*>(mydata);
   }
-  
 }
 
 template <>
@@ -156,9 +159,10 @@ Image<int16_t>::Image(const uint8_t* data)
 
   Image<int16_t>::fillPartialImage(image_data);
   // Set the Image data according to the right date type.
-  if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE)) {
-	  auto mydata = static_cast<const int16_type*>(image_data->image())->raw()->data();
-	  data_ = std::make_shared<const int16_t*>(mydata);
+  if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE))
+  {
+    auto mydata = static_cast<const int16_type*>(image_data->image())->raw()->data();
+    data_ = std::make_shared<const int16_t*>(mydata);
   }
 }
 
@@ -170,9 +174,10 @@ Image<double>::Image(const uint8_t* data)
 
   Image<double>::fillPartialImage(image_data);
   // Set the Image data according to the right date type.
-  if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE)) {
-	  auto mydata = static_cast<const double_type*>(image_data->image())->raw()->data();
-	  data_ = std::make_shared<const double*>(mydata);
+  if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE))
+  {
+    auto mydata = static_cast<const double_type*>(image_data->image())->raw()->data();
+    data_ = std::make_shared<const double*>(mydata);
   }
 }
 
@@ -184,9 +189,10 @@ Image<float>::Image(const uint8_t* data)
 
   Image<float>::fillPartialImage(image_data);
   // Set the Image data according to the right date type.
-  if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE)) {
-	  auto mydata = static_cast<const float_type*>(image_data->image())->raw()->data();
-	  data_ = std::make_shared<const float*>(mydata);
+  if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE))
+  {
+    auto mydata = static_cast<const float_type*>(image_data->image())->raw()->data();
+    data_ = std::make_shared<const float*>(mydata);
   }
 }
 }  // namespace simple_msgs

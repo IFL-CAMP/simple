@@ -30,8 +30,7 @@ Quaternion::Quaternion(const std::array<double, 4>& array)
 {
 }
 
-Quaternion::Quaternion(std::array<double, 4>&& array) noexcept
-  : data_(array)
+Quaternion::Quaternion(std::array<double, 4>&& array) noexcept : data_(array)
 {
 }
 
@@ -50,8 +49,7 @@ Quaternion::Quaternion(const Quaternion& other)
 {
 }
 
-Quaternion::Quaternion(Quaternion&& other) noexcept
-  : data_(other.data_)
+Quaternion::Quaternion(Quaternion&& other) noexcept : data_(other.data_)
 {
 }
 
@@ -106,12 +104,15 @@ Quaternion& Quaternion::operator=(const uint8_t* data)
   return *this;
 }
 
-uint8_t* Quaternion::getBufferData() const
+flatbuffers::DetachedBuffer Quaternion::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
   if (modified_)
   {
-    builder_->Clear();
+    if (builder_->GetSize())
+    {
+      builder_->Clear();
+    }
     QuaternionFbsBuilder tmp_builder(*builder_);
     tmp_builder.add_x(data_[0]);
     tmp_builder.add_y(data_[1]);
@@ -120,7 +121,7 @@ uint8_t* Quaternion::getBufferData() const
     FinishQuaternionFbsBuffer(*builder_, tmp_builder.Finish());
     modified_ = false;
   }
-  return builder_->GetBufferPointer();
+  return builder_->Release();
 }
 void Quaternion::setX(double x)
 {

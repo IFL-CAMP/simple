@@ -35,8 +35,7 @@ Point::Point(const std::array<double, 3>& array)
 {
 }
 
-Point::Point(std::array<double, 3>&& array) noexcept
-  : data_(array)
+Point::Point(std::array<double, 3>&& array) noexcept : data_(array)
 {
 }
 
@@ -54,8 +53,7 @@ Point::Point(const Point& other)
 {
 }
 
-Point::Point(Point&& other) noexcept
-  : data_(other.data_)
+Point::Point(Point&& other) noexcept : data_(other.data_)
 {
 }
 
@@ -166,12 +164,15 @@ Point operator/(Point lhs, const Point& rhs)
   return lhs;
 }
 
-uint8_t* Point::getBufferData() const
+flatbuffers::DetachedBuffer Point::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
   if (modified_)
   {
-    builder_->Clear();
+    if (builder_->GetSize())
+    {
+      builder_->Clear();
+    }
     PointFbsBuilder tmp_builder(*builder_);
     tmp_builder.add_x(data_[0]);
     tmp_builder.add_y(data_[1]);
@@ -179,7 +180,7 @@ uint8_t* Point::getBufferData() const
     FinishPointFbsBuffer(*builder_, tmp_builder.Finish());
     modified_ = false;
   }
-  return builder_->GetBufferPointer();
+  return builder_->Release();
 }
 
 void Point::setX(double x)

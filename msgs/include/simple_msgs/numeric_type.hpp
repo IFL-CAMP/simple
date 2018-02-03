@@ -63,11 +63,7 @@ public:
 
   // Move operations.
 
-  NumericType(NumericType&& other) noexcept
-    : NumericType(std::move(other.data_))
-  {
-  }
-
+  NumericType(NumericType&& other) noexcept : NumericType(std::move(other.data_)) {}
   NumericType& operator=(NumericType&& rhs) noexcept
   {
     std::lock_guard<std::mutex> lock(mutex_);
@@ -167,7 +163,7 @@ public:
    * @brief Builds and returns the buffer accordingly to the values currently stored.
    * @return the buffer data.
    */
-  uint8_t* getBufferData() const override;
+  flatbuffers::DetachedBuffer getBufferData() const override;
 
   /**
    * @brief Set the double value.

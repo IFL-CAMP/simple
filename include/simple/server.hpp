@@ -101,8 +101,7 @@ private:
   {
     uint8_t* buffer = msg.getBufferData();
     int buffer_size = msg.getBufferSize();
-    std::shared_ptr<flatbuffers::FlatBufferBuilder>* builder_pointer = msg.getBuilderPointer();
-    GenericSocket<T>::sendMsg(buffer, buffer_size, builder_pointer, "[SIMPLE Server] - ");
+    GenericSocket<T>::sendMsg(buffer, buffer_size, "[SIMPLE Server] - ");
   }
 
   std::thread server_thread_;

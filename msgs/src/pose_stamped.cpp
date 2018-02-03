@@ -39,8 +39,7 @@ PoseStamped::PoseStamped(const PoseStamped& other)
 {
 }
 
-PoseStamped::PoseStamped(PoseStamped&& other) noexcept
-  : PoseStamped(other.header_, other.pose_)
+PoseStamped::PoseStamped(PoseStamped&& other) noexcept : PoseStamped(other.header_, other.pose_)
 {
 }
 
@@ -78,21 +77,29 @@ PoseStamped& PoseStamped::operator=(const uint8_t* data)
   return *this;
 }
 
-uint8_t* PoseStamped::getBufferData() const
+flatbuffers::DetachedBuffer PoseStamped::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
   if (modified_ || pose_.isModified() || header_.isModified())
   {
-    builder_->Clear();
-    auto poseVec = builder_->CreateVector(pose_.getBufferData(), pose_.getBufferSize());
-    auto headerVec = builder_->CreateVector(header_.getBufferData(), header_.getBufferSize());
+    if (builder_->GetSize())
+    {
+      builder_->Clear();
+    }
+
+    auto pose_data = pose_.getBufferData();
+    auto poseVec = builder_->CreateVector(pose_data.data(), pose_data.size());
+
+    auto header_data = header_.getBufferData();
+    auto headerVec = builder_->CreateVector(header_data.data(), header_data.size());
+
     PoseStampedFbsBuilder tmp_builder(*builder_);
     tmp_builder.add_pose(poseVec);
     tmp_builder.add_header(headerVec);
     FinishPoseStampedFbsBuffer(*builder_, tmp_builder.Finish());
     modified_ = false;
   }
-  return builder_->GetBufferPointer();
+  return builder_->Release();
 }
 
 void PoseStamped::setPose(const Pose& pose)

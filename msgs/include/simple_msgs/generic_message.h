@@ -38,15 +38,9 @@ public:
   }
   virtual ~GenericMessage() = default;
 
-  virtual uint8_t* getBufferData() const = 0;
-  int getBufferSize() const
-  {
-    getBufferData();
-    return builder_->GetSize();
-  }
+  virtual flatbuffers::DetachedBuffer getBufferData() const = 0;
 
   inline bool isModified() const { return modified_; }
-
 protected:
   std::shared_ptr<flatbuffers::FlatBufferBuilder> builder_;
   mutable bool modified_{true};
