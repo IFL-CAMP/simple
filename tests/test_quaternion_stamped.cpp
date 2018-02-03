@@ -70,7 +70,7 @@ SCENARIO("Using a QuaternionStamped Message")
   GIVEN("A QuaternionStamped created from the serialized data of an existing QuaternionStamped")
   {
     simple_msgs::QuaternionStamped quaternion_stamped(random_header, random_quaternion);
-    simple_msgs::QuaternionStamped buffer_quaternion_stamped(quaternion_stamped.getBufferData());
+    simple_msgs::QuaternionStamped buffer_quaternion_stamped(quaternion_stamped.getBufferData().data());
     WHEN("I check the QuaternionStamped's elements")
     {
       THEN("The new QuaternionStamped has to be equal to the other")
@@ -110,7 +110,7 @@ SCENARIO("Using a QuaternionStamped Message")
     WHEN("I copy-assign from that QuaternionStamped's buffer")
     {
       simple_msgs::QuaternionStamped copy_assigned_buffer_quaternion_stamped;
-      copy_assigned_buffer_quaternion_stamped = quaternion_stamped.getBufferData();
+      copy_assigned_buffer_quaternion_stamped = quaternion_stamped.getBufferData().data();
       THEN("The new QuaternionStamped has to be same as the original")
       {
         REQUIRE(copy_assigned_buffer_quaternion_stamped == quaternion_stamped);

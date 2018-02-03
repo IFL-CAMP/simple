@@ -19,7 +19,7 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include "simple_msgs/image.h"
+#include "simple_msgs/image.hpp"
 #include "test_utils.hpp"
 #include <cstdlib>
 #include <ctime>
@@ -64,7 +64,7 @@ SCENARIO("Using an Image Message")
     }
     WHEN("I build another empty image from the buffer of the empty image")
     {
-      simple_msgs::Image<uint8_t> copy_empty_image(empty_image.getBufferData());
+      simple_msgs::Image<uint8_t> copy_empty_image(empty_image.getBufferData().data());
       THEN("All image fields have to match the default parameters") { REQUIRE(copy_empty_image == empty_image); }
     }
   }
@@ -80,7 +80,7 @@ SCENARIO("Using an Image Message")
     random_image.setOrigin(random_pose);
     WHEN("I copy construct a new image from the existing image's buffer")
     {
-      simple_msgs::Image<uint8_t> buffer_copy_image(random_image.getBufferData());
+      simple_msgs::Image<uint8_t> buffer_copy_image(random_image.getBufferData().data());
       THEN("The two images are the same") { REQUIRE(buffer_copy_image == random_image); }
     }
     WHEN("I copy-construct a new image")
@@ -121,7 +121,7 @@ SCENARIO("Using an Image Message")
     WHEN("I copy assign a new image from the existing image's buffer")
     {
       simple_msgs::Image<uint8_t> buffer_assigned_image;
-      buffer_assigned_image = random_image.getBufferData();
+      buffer_assigned_image = random_image.getBufferData().data();
       THEN("The two images are the same") { REQUIRE(buffer_assigned_image == random_image); }
     }
     WHEN("I copy-assign a new image")

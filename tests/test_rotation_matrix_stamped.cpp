@@ -76,7 +76,7 @@ SCENARIO("Using a RotationMatrixStamped Message")
   GIVEN("A RotationMatrixStamped created from the serialized data of an existing RotationMatrixStamped")
   {
     simple_msgs::RotationMatrixStamped rotation_matrix_stamped(random_header, random_rotation_matrix);
-    simple_msgs::RotationMatrixStamped buffer_rotation_matrix_stamped(rotation_matrix_stamped.getBufferData());
+    simple_msgs::RotationMatrixStamped buffer_rotation_matrix_stamped(rotation_matrix_stamped.getBufferData().data());
     WHEN("I check the RotationMatrixStamped's elements")
     {
       THEN("The new RotationMatrixStamped has to be equal to the other")
@@ -116,7 +116,7 @@ SCENARIO("Using a RotationMatrixStamped Message")
     WHEN("I copy-assign from that RotationMatrixStamped's buffer")
     {
       simple_msgs::RotationMatrixStamped copy_assigned_buffer_rotation_matrix_stamped;
-      copy_assigned_buffer_rotation_matrix_stamped = rotation_matrix_stamped.getBufferData();
+      copy_assigned_buffer_rotation_matrix_stamped = rotation_matrix_stamped.getBufferData().data();
       THEN("The new RotationMatrixStamped has to be same as the original")
       {
         REQUIRE(copy_assigned_buffer_rotation_matrix_stamped == rotation_matrix_stamped);

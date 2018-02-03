@@ -55,7 +55,7 @@ SCENARIO("Using a Float Message")
     simple_msgs::Float single_float(float_1);
     WHEN("I construct a new Float from the serialized data of the existing Float")
     {
-      simple_msgs::Float copy_buffer_float(single_float.getBufferData());
+      simple_msgs::Float copy_buffer_float(single_float.getBufferData().data());
       THEN("The new Float has to be equal to the other") { REQUIRE(copy_buffer_float == single_float); }
     }
     WHEN("I copy-construct a new Float")
@@ -77,7 +77,7 @@ SCENARIO("Using a Float Message")
     WHEN("I copy-assign from that Float's buffer")
     {
       simple_msgs::Float copy_assigned_buffer_float;
-      copy_assigned_buffer_float = single_float.getBufferData();
+      copy_assigned_buffer_float = single_float.getBufferData().data();
       THEN("The new Float has to be same as the original") { REQUIRE(copy_assigned_buffer_float == single_float); }
     }
     WHEN("I copy-assign from that Float")

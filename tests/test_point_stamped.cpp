@@ -69,7 +69,7 @@ SCENARIO("Using a PointStamped Message")
   GIVEN("A PointStamped created from the serialized data of an existing PointStamped")
   {
     simple_msgs::PointStamped point_stamped(random_header, random_point);
-    simple_msgs::PointStamped buffer_point_stamped(point_stamped.getBufferData());
+    simple_msgs::PointStamped buffer_point_stamped(point_stamped.getBufferData().data());
     WHEN("I check the PointStamped's elements")
     {
       THEN("The new PointStamped has to be equal to the other") { REQUIRE(buffer_point_stamped == point_stamped); }
@@ -103,7 +103,7 @@ SCENARIO("Using a PointStamped Message")
     WHEN("I copy-assign from that PointStamped's buffer")
     {
       simple_msgs::PointStamped copy_assigned_buffer_point_stamped;
-      copy_assigned_buffer_point_stamped = point_stamped.getBufferData();
+      copy_assigned_buffer_point_stamped = point_stamped.getBufferData().data();
       THEN("The new PointStamped has to be same as the original")
       {
         REQUIRE(copy_assigned_buffer_point_stamped == point_stamped);

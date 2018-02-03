@@ -67,7 +67,7 @@ SCENARIO("Using a Header Message")
     simple_msgs::Header normal_header(int_1, string_1, double_1);
     WHEN("I construct a new Header from the serialized data of the existing Header")
     {
-      simple_msgs::Header buffer_copy_header(normal_header.getBufferData());
+      simple_msgs::Header buffer_copy_header(normal_header.getBufferData().data());
       THEN("The new Header has to be equal to the other")
       {
         REQUIRE(buffer_copy_header.getSequenceNumber() == int_1);
@@ -104,7 +104,7 @@ SCENARIO("Using a Header Message")
     WHEN("I copy-assign from that Header's buffer")
     {
       simple_msgs::Header copy_assigned_buffer_header;
-      copy_assigned_buffer_header = normal_header.getBufferData();
+      copy_assigned_buffer_header = normal_header.getBufferData().data();
       THEN("The new Header has to be same as the original") { REQUIRE(copy_assigned_buffer_header == normal_header); }
     }
     WHEN("I copy-assign from that Header")

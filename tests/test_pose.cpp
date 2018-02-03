@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
@@ -74,7 +74,7 @@ SCENARIO("Using a Pose Message")
   GIVEN("A Pose created from the serialized data of an existing Pose")
   {
     simple_msgs::Pose pose(point_, quaternion_);
-    simple_msgs::Pose buffer_pose(pose.getBufferData());
+    simple_msgs::Pose buffer_pose(pose.getBufferData().data());
     WHEN("I check the Pose's elements")
     {
       THEN("The new Pose has to be equal to the other") { REQUIRE(buffer_pose == pose); }
@@ -108,7 +108,7 @@ SCENARIO("Using a Pose Message")
     WHEN("I copy-assign from that Pose's buffer")
     {
       simple_msgs::Pose copy_assigned_buffer_pose;
-      copy_assigned_buffer_pose = pose.getBufferData();
+      copy_assigned_buffer_pose = pose.getBufferData().data();
       THEN("The new Pose has to be same as the original") { REQUIRE(copy_assigned_buffer_pose == pose); }
     }
     WHEN("I copy-assign from that Pose")

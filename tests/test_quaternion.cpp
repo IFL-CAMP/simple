@@ -100,7 +100,7 @@ SCENARIO("Using a Quaternion Message")
     simple_msgs::Quaternion quaternion(double_array);
     WHEN("I construct a new quaternion from the serialized data of the existing quaternion")
     {
-      simple_msgs::Quaternion buffer_quaternion(quaternion.getBufferData());
+      simple_msgs::Quaternion buffer_quaternion(quaternion.getBufferData().data());
       THEN("The new quaternion has to be equal to the other") { REQUIRE(buffer_quaternion == quaternion); }
     }
     WHEN("I copy-construct a new quaternion")
@@ -128,7 +128,7 @@ SCENARIO("Using a Quaternion Message")
     WHEN("I copy-assign from that quaternion's buffer")
     {
       simple_msgs::Quaternion copy_assigned_buffer_quaternion;
-      copy_assigned_buffer_quaternion = quaternion.getBufferData();
+      copy_assigned_buffer_quaternion = quaternion.getBufferData().data();
       THEN("The new quaternion has to be same as the original")
       {
         REQUIRE(copy_assigned_buffer_quaternion == quaternion);

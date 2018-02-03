@@ -55,7 +55,7 @@ SCENARIO("Using a Int Message")
     simple_msgs::Int single_int(int_1);
     WHEN("I construct a new Int from the serialized data of the existing Int")
     {
-      simple_msgs::Int copy_buffer_int(single_int.getBufferData());
+      simple_msgs::Int copy_buffer_int(single_int.getBufferData().data());
       THEN("The new Int has to be equal to the other") { REQUIRE(copy_buffer_int == single_int); }
     }
     WHEN("I copy-construct a new Int")
@@ -77,7 +77,7 @@ SCENARIO("Using a Int Message")
     WHEN("I copy-assign from that Int's buffer")
     {
       simple_msgs::Int copy_assigned_buffer_int;
-      copy_assigned_buffer_int = single_int.getBufferData();
+      copy_assigned_buffer_int = single_int.getBufferData().data();
       THEN("The new Int has to be same as the original") { REQUIRE(copy_assigned_buffer_int == single_int); }
     }
     WHEN("I copy-assign from that Int")
