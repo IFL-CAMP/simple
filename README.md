@@ -1,6 +1,7 @@
 ## S.I.M.P.L.E.
 **S**mart **I**ntuitive **M**essaging **P**latform with **L**ess **E**ffort.         
 [![Build Status](https://gitlab.lrz.de/CAMP_IFL/simple/badges/master/build.svg)](https://gitlab.lrz.de/CAMP_IFL/simple/commits/master)
+[![coverage report](https://gitlab.lrz.de/CAMP_IFL/simple/badges/devel/coverage.svg)](https://gitlab.lrz.de/CAMP_IFL/simple/commits/devel)
 ___
 
 S.I.M.P.L.E. (or just *simple*) is a cross-platform C++ library to exchange data across a network between C++ application, and to do it in an easy way.          
