@@ -97,6 +97,7 @@ test_gcc:
     script:
       - cd simple_gcc
       - ctest -R simple_tests --output-on-failure
+      - gcovr -e 'tests/include/catch.hpp' -r ..
      
 test_clang:
     stage : test
