@@ -45,7 +45,6 @@ RotationMatrix::RotationMatrix(const uint8_t* data)
   auto r = GetRotationMatrixFbs(data);
   data_ =
       std::array<double, 9>{{r->r11(), r->r12(), r->r13(), r->r21(), r->r22(), r->r23(), r->r31(), r->r32(), r->r33()}};
-  modified_ = true;
 }
 
 RotationMatrix::RotationMatrix(const RotationMatrix& m)
@@ -63,7 +62,6 @@ RotationMatrix& RotationMatrix::operator=(const RotationMatrix& other)
   {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = other.data_;
-    modified_ = true;
   }
   return *this;
 }
@@ -74,7 +72,6 @@ RotationMatrix& RotationMatrix::operator=(RotationMatrix&& other) noexcept
   {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = other.data_;
-    modified_ = true;
   }
   return *this;
 }
@@ -83,7 +80,6 @@ RotationMatrix& RotationMatrix::operator=(const std::array<double, 9>& array)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   data_ = array;
-  modified_ = true;
   return *this;
 }
 
@@ -91,7 +87,6 @@ RotationMatrix& RotationMatrix::operator=(std::array<double, 9>&& array) noexcep
 {
   std::lock_guard<std::mutex> lock(mutex_);
   data_ = array;
-  modified_ = true;
   return *this;
 }
 
@@ -101,34 +96,27 @@ RotationMatrix& RotationMatrix::operator=(const uint8_t* data)
   auto matrix = GetRotationMatrixFbs(data);
   data_ = std::array<double, 9>{{matrix->r11(), matrix->r12(), matrix->r13(), matrix->r21(), matrix->r22(),
                                  matrix->r23(), matrix->r31(), matrix->r32(), matrix->r33()}};
-  modified_ = true;
-
   return *this;
 }
 
 flatbuffers::DetachedBuffer RotationMatrix::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (modified_)
-  {
-    if (builder_->GetSize() > 0)
-    {
-      builder_->Clear();
-    }
-    RotationMatrixFbsBuilder tmp_builder(*builder_);
-    tmp_builder.add_r11(data_[0]);
-    tmp_builder.add_r12(data_[1]);
-    tmp_builder.add_r13(data_[2]);
-    tmp_builder.add_r21(data_[3]);
-    tmp_builder.add_r22(data_[4]);
-    tmp_builder.add_r23(data_[5]);
-    tmp_builder.add_r31(data_[6]);
-    tmp_builder.add_r32(data_[7]);
-    tmp_builder.add_r33(data_[8]);
-    FinishRotationMatrixFbsBuffer(*builder_, tmp_builder.Finish());
-    modified_ = false;
-  }
-  return builder_->Release();
+  auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
+
+  RotationMatrixFbsBuilder tmp_builder(*builder);
+  tmp_builder.add_r11(data_[0]);
+  tmp_builder.add_r12(data_[1]);
+  tmp_builder.add_r13(data_[2]);
+  tmp_builder.add_r21(data_[3]);
+  tmp_builder.add_r22(data_[4]);
+  tmp_builder.add_r23(data_[5]);
+  tmp_builder.add_r31(data_[6]);
+  tmp_builder.add_r32(data_[7]);
+  tmp_builder.add_r33(data_[8]);
+  FinishRotationMatrixFbsBuffer(*builder, tmp_builder.Finish());
+
+  return builder->Release();
 }
 
 RotationMatrix RotationMatrix::getTranspose() const

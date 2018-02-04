@@ -38,8 +38,6 @@ NumericType<float>& NumericType<float>::operator=(const uint8_t* data)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   data_ = GetFloatFbs(data)->data();
-  modified_ = true;
-
   return *this;
 }
 
@@ -47,18 +45,13 @@ template <>
 flatbuffers::DetachedBuffer NumericType<float>::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (modified_)
-  {
-    if (builder_->GetSize() > 0)
-    {
-      builder_->Clear();
-    }
-    FloatFbsBuilder tmp_builder(*builder_);
-    tmp_builder.add_data(data_);
-    FinishFloatFbsBuffer(*builder_, tmp_builder.Finish());
-    modified_ = false;
-  }
-  return builder_->Release();
+  auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
+
+  FloatFbsBuilder tmp_builder(*builder);
+  tmp_builder.add_data(data_);
+  FinishFloatFbsBuffer(*builder, tmp_builder.Finish());
+
+  return builder->Release();
 }
 
 template <>

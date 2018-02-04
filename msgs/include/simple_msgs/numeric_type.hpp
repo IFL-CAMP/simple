@@ -55,7 +55,6 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = rhs.data_;
-    modified_ = true;
     return *this;
   }
 
@@ -68,7 +67,6 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = std::move(rhs.data_);
-    modified_ = true;
     return *this;
   }
 
@@ -172,7 +170,6 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = data;
-    modified_ = true;
   }
 
   /**

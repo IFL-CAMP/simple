@@ -32,18 +32,12 @@ namespace simple_msgs
 class GenericMessage
 {
 public:
-  GenericMessage()
-    : builder_(new flatbuffers::FlatBufferBuilder(1024))
-  {
-  }
+  GenericMessage() = default;
   virtual ~GenericMessage() = default;
 
   virtual flatbuffers::DetachedBuffer getBufferData() const = 0;
 
-  inline bool isModified() const { return modified_; }
 protected:
-  std::shared_ptr<flatbuffers::FlatBufferBuilder> builder_;
-  mutable bool modified_{true};
   mutable std::mutex mutex_;
 };
 }  // Namespace simple_msgs.

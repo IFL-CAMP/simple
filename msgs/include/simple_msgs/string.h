@@ -69,7 +69,6 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = data;
-    modified_ = true;
   }
 
   /**

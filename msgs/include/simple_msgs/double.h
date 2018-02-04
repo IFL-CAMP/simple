@@ -38,8 +38,6 @@ NumericType<double>& NumericType<double>::operator=(const uint8_t* data)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   data_ = GetDoubleFbs(data)->data();
-  modified_ = true;
-
   return *this;
 }
 
@@ -47,18 +45,12 @@ template <>
 flatbuffers::DetachedBuffer NumericType<double>::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (modified_)
-  {
-    if (builder_->GetSize() > 0)
-    {
-      builder_->Clear();
-    }
-    DoubleFbsBuilder tmp_builder(*builder_);
-    tmp_builder.add_data(data_);
-    FinishDoubleFbsBuffer(*builder_, tmp_builder.Finish());
-    modified_ = false;
-  }
-  return builder_->Release();
+  auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
+  DoubleFbsBuilder tmp_builder(*builder);
+  tmp_builder.add_data(data_);
+  FinishDoubleFbsBuffer(*builder, tmp_builder.Finish());
+
+  return builder->Release();
 }
 
 template <>

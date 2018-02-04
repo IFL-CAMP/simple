@@ -45,7 +45,6 @@ Bool& Bool::operator=(const Bool& other)
   {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = other.data_;
-    modified_ = true;
   }
   return *this;
 }
@@ -55,7 +54,6 @@ Bool& Bool::operator=(Bool&& other) noexcept
   if (this != std::addressof(other))
   {
     data_ = other.data_;
-    modified_ = true;
   }
   return *this;
 }
@@ -65,7 +63,6 @@ Bool& Bool::operator=(const uint8_t* data)
   std::lock_guard<std::mutex> lock(mutex_);
   auto b = GetBoolFbs(data);
   data_ = b->data();
-  modified_ = true;
 
   return *this;
 }
@@ -73,25 +70,19 @@ Bool& Bool::operator=(const uint8_t* data)
 flatbuffers::DetachedBuffer Bool::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (modified_)
-  {
-    if (builder_->GetSize() > 0)
-    {
-      builder_->Clear();
-    }
-    BoolFbsBuilder tmp_builder(*builder_);
-    tmp_builder.add_data(data_);
-    FinishBoolFbsBuffer(*builder_, tmp_builder.Finish());
-    modified_ = false;
-  }
-  return builder_->Release();
+  auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
+
+  BoolFbsBuilder tmp_builder(*builder);
+  tmp_builder.add_data(data_);
+  FinishBoolFbsBuffer(*builder, tmp_builder.Finish());
+
+  return builder->Release();
 }
 
 void Bool::set(bool data)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   data_ = data;
-  modified_ = true;
 }
 
 std::ostream& operator<<(std::ostream& out, const Bool& b)

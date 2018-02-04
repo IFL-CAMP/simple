@@ -52,7 +52,6 @@ Pose& Pose::operator=(const Pose& p)
     std::lock_guard<std::mutex> lock(mutex_);
     position_ = p.position_;
     quaternion_ = p.quaternion_;
-    modified_ = true;
   }
   return *this;
 }
@@ -64,7 +63,6 @@ Pose& Pose::operator=(Pose&& p) noexcept
     std::lock_guard<std::mutex> lock(mutex_);
     position_ = std::move(p.position_);
     quaternion_ = std::move(p.quaternion_);
-    modified_ = true;
   }
   return *this;
 }
@@ -74,47 +72,38 @@ Pose& Pose::operator=(const uint8_t* data)
   std::lock_guard<std::mutex> lock(mutex_);
   position_ = GetPoseFbs(data)->position()->data();
   quaternion_ = GetPoseFbs(data)->quaternion()->data();
-  modified_ = true;
-
   return *this;
 }
 
 flatbuffers::DetachedBuffer Pose::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (modified_ || position_.isModified() || quaternion_.isModified())
-  {
-    if (builder_->GetSize())
-    {
-      builder_->Clear();
-    }
-    auto position_data = position_.getBufferData();
-    auto position_vector = builder_->CreateVector(position_data.data(), position_data.size());
+  auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
 
-    auto quaternion_data = quaternion_.getBufferData();
-    auto quaternion_vector = builder_->CreateVector(quaternion_data.data(), quaternion_data.size());
+  auto position_data = position_.getBufferData();
+  auto position_vector = builder->CreateVector(position_data.data(), position_data.size());
 
-    PoseFbsBuilder tmp_builder(*builder_);
-    tmp_builder.add_position(position_vector);
-    tmp_builder.add_quaternion(quaternion_vector);
-    FinishPoseFbsBuffer(*builder_, tmp_builder.Finish());
-    modified_ = false;
-  }
-  return builder_->Release();
+  auto quaternion_data = quaternion_.getBufferData();
+  auto quaternion_vector = builder->CreateVector(quaternion_data.data(), quaternion_data.size());
+
+  PoseFbsBuilder tmp_builder(*builder);
+  tmp_builder.add_position(position_vector);
+  tmp_builder.add_quaternion(quaternion_vector);
+  FinishPoseFbsBuffer(*builder, tmp_builder.Finish());
+
+  return builder->Release();
 }
 
 void Pose::setQuaternion(const Quaternion& quaternion)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   quaternion_ = quaternion;
-  modified_ = true;
 }
 
 void Pose::setPosition(const Point& position)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   position_ = position;
-  modified_ = true;
 }
 
 std::ostream& operator<<(std::ostream& out, const Pose& p)
