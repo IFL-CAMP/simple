@@ -76,11 +76,9 @@ private:
 
     if (GenericSocket<T>::sendMsg(buffer, "[SIMPLE Client] - "))
     {
-      zmq_msg_t message{};
-      if (GenericSocket<T>::receiveMsg(msg, message, "[SIMPLE Client] - "))
+      if (GenericSocket<T>::receiveMsg(msg, "[SIMPLE Client] - "))
       {
         success = true;
-        zmq_msg_close(&message);
       }
       else
       {
