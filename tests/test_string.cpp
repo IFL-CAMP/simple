@@ -52,11 +52,11 @@ SCENARIO("Using a String Message")
 
   GIVEN("A String created from a const char*")
   {
-	  simple_msgs::String single_string(char_1);
-	  WHEN("We check the String's value")
-	  {
-		  THEN("It has to be equal to the params from the constructor") { REQUIRE(single_string.get() == char_1); }
-	  }
+    simple_msgs::String single_string(char_1);
+    WHEN("We check the String's value")
+    {
+      THEN("It has to be equal to the params from the constructor") { REQUIRE(single_string.get() == char_1); }
+    }
   }
 
   // Testing copy-constructors.
@@ -65,7 +65,7 @@ SCENARIO("Using a String Message")
     simple_msgs::String single_string(string_1);
     WHEN("I construct a new String from the serialized data of the existing String")
     {
-      simple_msgs::String copy_buffer_string(single_string.getBufferData());
+      simple_msgs::String copy_buffer_string(single_string.getBufferData()->data());
       THEN("The new String has to be equal to the other") { REQUIRE(copy_buffer_string == single_string); }
     }
     WHEN("I copy-construct a new String")
@@ -87,7 +87,7 @@ SCENARIO("Using a String Message")
     WHEN("I copy-assign from that String's buffer")
     {
       simple_msgs::String copy_assigned_buffer_string;
-      copy_assigned_buffer_string = single_string.getBufferData();
+      copy_assigned_buffer_string = single_string.getBufferData()->data();
       THEN("The new String has to be same as the original") { REQUIRE(copy_assigned_buffer_string == single_string); }
     }
     WHEN("I copy-assign from that String")
@@ -136,10 +136,10 @@ SCENARIO("Using a String Message")
   GIVEN("Two Strings")
   {
     simple_msgs::String single_string_1(string_1);
-	simple_msgs::String single_string_2(string_2);
+    simple_msgs::String single_string_2(string_2);
     WHEN("I append one String to the other")
     {
-      single_string_1+=single_string_2;
+      single_string_1 += single_string_2;
       THEN("The new value is correct") { REQUIRE(single_string_1.get() == string_1 + string_2); }
     }
     WHEN("I add both Strings to a new string")
