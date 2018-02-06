@@ -122,7 +122,7 @@ SCENARIO("Using a Bool Message")
       THEN("They have to be different") { REQUIRE(single_bool_1 != single_bool_2); }
     }
 	WHEN("I take the negative of one of the bools") {
-		THEN("They have to be different") { REQUIRE(!single_bool_1 != single_bool_2); }
+		THEN("They have to be different") { REQUIRE((!single_bool_1) != single_bool_2); }
 	}
   }
 
