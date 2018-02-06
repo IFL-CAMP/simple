@@ -124,7 +124,7 @@ public:
    * @brief getBufferData
    * @return
    */
-  std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const
+  std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const override
   {
     std::lock_guard<std::mutex> lock(mutex_);
     auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));

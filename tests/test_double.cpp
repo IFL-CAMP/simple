@@ -19,7 +19,7 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include "simple_msgs/double.h"
+#include "simple_msgs/double.hpp"
 #include <cstdlib>
 #include <ctime>
 #include <iostream>

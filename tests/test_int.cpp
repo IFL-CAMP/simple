@@ -19,7 +19,7 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include "simple_msgs/int.h"
+#include "simple_msgs/int.hpp"
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
