@@ -31,7 +31,6 @@ String::String(std::string data)
 String::String(std::string&& data)
   : data_(std::move(data))
 {
-  data.clear();
 }
 
 String::String(const char* data)
@@ -52,7 +51,6 @@ String::String(const String& other)
 String::String(String&& other) noexcept
   : data_(std::move(other.data_))
 {
-  other.clear();
 }
 
 String& String::operator=(const String& other)
