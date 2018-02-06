@@ -78,7 +78,7 @@ RotationMatrixStamped& RotationMatrixStamped::operator=(const uint8_t* data)
 std::shared_ptr<flatbuffers::DetachedBuffer> RotationMatrixStamped::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
+  auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
 
   auto matrix_data = rotation_matrix_.getBufferData();
   auto matrix_vector = builder->CreateVector(matrix_data->data(), matrix_data->size());

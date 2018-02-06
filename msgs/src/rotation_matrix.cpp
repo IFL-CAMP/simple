@@ -104,7 +104,7 @@ RotationMatrix& RotationMatrix::operator=(const uint8_t* data)
 std::shared_ptr<flatbuffers::DetachedBuffer> RotationMatrix::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
+  auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
 
   RotationMatrixFbsBuilder tmp_builder(*builder);
   tmp_builder.add_r11(data_[0]);
