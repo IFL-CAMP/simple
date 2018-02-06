@@ -65,7 +65,6 @@ Point& Point::operator=(const Point& other)
   {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = other.data_;
-    modified_ = true;
   }
   return *this;
 }
@@ -76,7 +75,6 @@ Point& Point::operator=(Point&& other) noexcept
   {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = other.data_;
-    modified_ = true;
   }
   return *this;
 }
@@ -85,7 +83,6 @@ Point& Point::operator=(const std::array<double, 3>& array)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   data_ = array;
-  modified_ = true;
   return *this;
 }
 
@@ -93,7 +90,6 @@ Point& Point::operator=(std::array<double, 3>&& array) noexcept
 {
   std::lock_guard<std::mutex> lock(mutex_);
   data_ = array;
-  modified_ = true;
   return *this;
 }
 
@@ -104,8 +100,6 @@ Point& Point::operator=(const uint8_t* data)
   data_[0] = p->x();
   data_[1] = p->y();
   data_[2] = p->z();
-  modified_ = true;
-
   return *this;
 }
 
@@ -113,7 +107,6 @@ Point& Point::operator+=(const Point& rhs)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   std::transform(std::begin(data_), std::end(data_), std::begin(rhs.data_), std::begin(data_), std::plus<double>());
-  modified_ = true;
   return *this;
 }
 
@@ -127,7 +120,6 @@ Point& Point::operator-=(const Point& rhs)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   std::transform(std::begin(data_), std::end(data_), std::begin(rhs.data_), std::begin(data_), std::minus<double>());
-  modified_ = true;
   return *this;
 }
 
@@ -142,7 +134,6 @@ Point& Point::operator*=(const Point& rhs)
   std::lock_guard<std::mutex> lock(mutex_);
   std::transform(std::begin(data_), std::end(data_), std::begin(rhs.data_), std::begin(data_),
                  std::multiplies<double>());
-  modified_ = true;
   return *this;
 }
 
@@ -156,7 +147,6 @@ Point& Point::operator/=(const Point& rhs)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   std::transform(std::begin(data_), std::end(data_), std::begin(rhs.data_), std::begin(data_), std::divides<double>());
-  modified_ = true;
   return *this;
 }
 
@@ -166,40 +156,34 @@ Point operator/(Point lhs, const Point& rhs)
   return lhs;
 }
 
-uint8_t* Point::getBufferData() const
+std::shared_ptr<flatbuffers::DetachedBuffer> Point::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (modified_)
-  {
-    builder_->Clear();
-    PointFbsBuilder tmp_builder(*builder_);
-    tmp_builder.add_x(data_[0]);
-    tmp_builder.add_y(data_[1]);
-    tmp_builder.add_z(data_[2]);
-    FinishPointFbsBuffer(*builder_, tmp_builder.Finish());
-    modified_ = false;
-  }
-  return builder_->GetBufferPointer();
+  auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
+  PointFbsBuilder tmp_builder(*builder);
+  tmp_builder.add_x(data_[0]);
+  tmp_builder.add_y(data_[1]);
+  tmp_builder.add_z(data_[2]);
+  FinishPointFbsBuffer(*builder, tmp_builder.Finish());
+
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
 void Point::setX(double x)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   data_[0] = x;
-  modified_ = true;
 }
 
 void Point::setY(double y)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   data_[1] = y;
-  modified_ = true;
 }
 void Point::setZ(double z)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   data_[2] = z;
-  modified_ = true;
 }
 
 std::ostream& operator<<(std::ostream& out, const Point& p)

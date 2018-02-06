@@ -52,7 +52,6 @@ PointStamped& PointStamped::operator=(const PointStamped& other)
     std::lock_guard<std::mutex> lock(mutex_);
     point_ = other.point_;
     header_ = other.header_;
-    modified_ = true;
   }
   return *this;
 }
@@ -64,7 +63,6 @@ PointStamped& PointStamped::operator=(PointStamped&& other) noexcept
     std::lock_guard<std::mutex> lock(mutex_);
     point_ = std::move(other.point_);
     header_ = std::move(other.header_);
-    modified_ = true;
   }
   return *this;
 }
@@ -75,40 +73,38 @@ PointStamped& PointStamped::operator=(const uint8_t* data)
   auto p = GetPointStampedFbs(data);
   point_ = p->point()->data();
   header_ = p->header()->data();
-  modified_ = true;
-
   return *this;
 }
 
-uint8_t* PointStamped::getBufferData() const
+std::shared_ptr<flatbuffers::DetachedBuffer> PointStamped::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (modified_ || header_.isModified() || point_.isModified())
-  {
-    builder_->Clear();
-    auto point_vector = builder_->CreateVector(point_.getBufferData(), point_.getBufferSize());
-    auto header_vector = builder_->CreateVector(header_.getBufferData(), header_.getBufferSize());
-    PointStampedFbsBuilder tmp_builder(*builder_);
-    tmp_builder.add_point(point_vector);
-    tmp_builder.add_header(header_vector);
-    FinishPointStampedFbsBuffer(*builder_, tmp_builder.Finish());
-    modified_ = false;
-  }
-  return builder_->GetBufferPointer();
+  auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
+
+  auto point_data = point_.getBufferData();
+  auto point_vector = builder->CreateVector(point_data->data(), point_data->size());
+
+  auto header_data = header_.getBufferData();
+  auto header_vector = builder->CreateVector(header_data->data(), header_data->size());
+
+  PointStampedFbsBuilder tmp_builder(*builder);
+  tmp_builder.add_point(point_vector);
+  tmp_builder.add_header(header_vector);
+  FinishPointStampedFbsBuffer(*builder, tmp_builder.Finish());
+
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
 void PointStamped::setHeader(const Header& h)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   header_ = h;
-  modified_ = true;
 }
 
 void PointStamped::setPoint(const Point& p)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   point_ = p;
-  modified_ = true;
 }
 
 std::ostream& operator<<(std::ostream& out, const PointStamped& p)

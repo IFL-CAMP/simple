@@ -75,7 +75,7 @@ SCENARIO("Using a PoseStamped Message")
   GIVEN("A PoseStamped created from the serialized data of an existing PoseStamped")
   {
     simple_msgs::PoseStamped pose_stamped(random_header, random_pose);
-    simple_msgs::PoseStamped buffer_pose_stamped(pose_stamped.getBufferData());
+    simple_msgs::PoseStamped buffer_pose_stamped(pose_stamped.getBufferData()->data());
     WHEN("I check the PoseStamped's elements")
     {
       THEN("The new PoseStamped has to be equal to the other") { REQUIRE(buffer_pose_stamped == pose_stamped); }
@@ -109,7 +109,7 @@ SCENARIO("Using a PoseStamped Message")
     WHEN("I copy-assign from that PoseStamped's buffer")
     {
       simple_msgs::PoseStamped copy_assigned_buffer_pose_stamped;
-      copy_assigned_buffer_pose_stamped = pose_stamped.getBufferData();
+      copy_assigned_buffer_pose_stamped = pose_stamped.getBufferData()->data();
       THEN("The new PoseStamped has to be same as the original")
       {
         REQUIRE(copy_assigned_buffer_pose_stamped == pose_stamped);

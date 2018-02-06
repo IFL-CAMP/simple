@@ -95,7 +95,7 @@ bool BoolStamped::operator!=(const BoolStamped& rhs) const
   return !(*this == rhs);
 }
 
-uint8_t* BoolStamped::getBufferData() const
+std::shared_ptr<flatbuffers::DetachedBuffer> BoolStamped::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
   if (modified_)
@@ -109,7 +109,8 @@ uint8_t* BoolStamped::getBufferData() const
     FinishBoolStampedFbsBuffer(*builder_, tmp_builder.Finish());
     modified_ = false;
   }
-  return builder_->GetBufferPointer();
+  auto buffer = std::shared_ptr<flatbuffers::DetachedBuffer>(new flatbuffers::DetachedBuffer(builder->Release()));    
+  return buffer;
 }
 
 std::ostream& operator<<(std::ostream& out, const BoolStamped& b)

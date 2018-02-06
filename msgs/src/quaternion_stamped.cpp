@@ -51,7 +51,6 @@ QuaternionStamped& QuaternionStamped::operator=(const QuaternionStamped& other)
     std::lock_guard<std::mutex> lock(mutex_);
     quaternion_ = other.quaternion_;
     header_ = other.header_;
-    modified_ = true;
   }
   return *this;
 }
@@ -63,7 +62,6 @@ QuaternionStamped& QuaternionStamped::operator=(QuaternionStamped&& other) noexc
     std::lock_guard<std::mutex> lock(mutex_);
     quaternion_ = std::move(other.quaternion_);
     header_ = std::move(other.header_);
-    modified_ = true;
   }
   return *this;
 }
@@ -74,40 +72,38 @@ QuaternionStamped& QuaternionStamped::operator=(const uint8_t* data)
   auto matrix = GetQuaternionStampedFbs(data);
   quaternion_ = Quaternion(matrix->quaternion()->data());
   header_ = Header(matrix->header()->data());
-  modified_ = true;
-
   return *this;
 }
 
-uint8_t* QuaternionStamped::getBufferData() const
+std::shared_ptr<flatbuffers::DetachedBuffer> QuaternionStamped::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (modified_ || header_.isModified() || quaternion_.isModified())
-  {
-    builder_->Clear();
-    auto quaternion_vector = builder_->CreateVector(quaternion_.getBufferData(), quaternion_.getBufferSize());
-    auto header_vector = builder_->CreateVector(header_.getBufferData(), header_.getBufferSize());
-    QuaternionStampedFbsBuilder tmp_builder(*builder_);
-    tmp_builder.add_quaternion(quaternion_vector);
-    tmp_builder.add_header(header_vector);
-    FinishQuaternionStampedFbsBuffer(*builder_, tmp_builder.Finish());
-    modified_ = false;
-  }
-  return builder_->GetBufferPointer();
+  auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
+
+  auto quaternion_data = quaternion_.getBufferData();
+  auto quaternion_vector = builder->CreateVector(quaternion_data->data(), quaternion_data->size());
+
+  auto header_data = header_.getBufferData();
+  auto header_vector = builder->CreateVector(header_data->data(), header_data->size());
+
+  QuaternionStampedFbsBuilder tmp_builder(*builder);
+  tmp_builder.add_quaternion(quaternion_vector);
+  tmp_builder.add_header(header_vector);
+  FinishQuaternionStampedFbsBuffer(*builder, tmp_builder.Finish());
+
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
 void QuaternionStamped::setQuaternion(const Quaternion& quaternion)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   quaternion_ = quaternion;
-  modified_ = true;
 }
 
 void QuaternionStamped::setHeader(const Header& header)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   header_ = header;
-  modified_ = true;
 }
 
 std::ostream& operator<<(std::ostream& out, const QuaternionStamped& q)

@@ -45,7 +45,6 @@ public:
   // Relational operators.
   inline bool operator==(const String& rhs) const { return (data_ == rhs.data_); }
   inline bool operator!=(const String& rhs) const { return !(*this == rhs); }
-
   // Binary arithmetic operators
   String& operator+=(const String&);
   friend String operator+(String, const String&);
@@ -56,7 +55,7 @@ public:
   /**
    * @brief Builds and returns the buffer accordingly to the values currently stored.
    */
-  uint8_t* getBufferData() const;
+  std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const override;
 
   /**
    * @brief Returns the string information contained in the message.
@@ -69,7 +68,6 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = data;
-    modified_ = true;
   }
 
   /**

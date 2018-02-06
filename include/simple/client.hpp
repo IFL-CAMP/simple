@@ -68,19 +68,13 @@ public:
    * @brief Sends the request to a server and waits for an answer.
    * @param msg: SIMPLE class wrapper for Flatbuffer messages.
    */
-  bool request(T& msg)
-  {
-    uint8_t* buffer = msg.getBufferData();
-    int buffer_size = msg.getBufferSize();
-    return request(buffer, buffer_size, msg);
-  }
-
+  bool request(T& msg) { return request(msg.getBufferData(), msg); }
 private:
-  bool request(uint8_t* data, const int data_size, T& msg)
+  bool request(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer, T& msg)
   {
     bool success{false};
 
-    if (GenericSocket<T>::sendMsg(data, data_size, msg.getBuilderPointer(), "[SIMPLE Client] - "))
+    if (GenericSocket<T>::sendMsg(buffer, "[SIMPLE Client] - "))
     {
       if (GenericSocket<T>::receiveMsg(msg, "[SIMPLE Client] - "))
       {

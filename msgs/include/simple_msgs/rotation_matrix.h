@@ -51,14 +51,13 @@ public:
 
   inline bool operator==(const RotationMatrix& rhs) const { return data_ == rhs.data_; }
   inline bool operator!=(const RotationMatrix& rhs) const { return !(*this == rhs); }
-
   friend std::ostream& operator<<(std::ostream&, const RotationMatrix&);
 
   /**
    * @brief Builds and returns the buffer accordingly to the values currently stored.
    * @return the buffer data.
    */
-  uint8_t* getBufferData() const override;
+  std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const override;
 
   /**
    * @brief Returns the rotation matrix as a linearized array.

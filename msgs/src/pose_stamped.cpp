@@ -51,7 +51,6 @@ PoseStamped& PoseStamped::operator=(const PoseStamped& p)
     std::lock_guard<std::mutex> lock(mutex_);
     pose_ = p.pose_;
     header_ = p.header_;
-    modified_ = true;
   }
   return *this;
 }
@@ -63,7 +62,6 @@ PoseStamped& PoseStamped::operator=(PoseStamped&& p) noexcept
     std::lock_guard<std::mutex> lock(mutex_);
     pose_ = std::move(p.pose_);
     header_ = std::move(p.header_);
-    modified_ = true;
   }
   return *this;
 }
@@ -74,39 +72,38 @@ PoseStamped& PoseStamped::operator=(const uint8_t* data)
   auto p = GetPoseStampedFbs(data);
   pose_ = Pose(p->pose()->data());
   header_ = Header(p->header()->data());
-  modified_ = true;
   return *this;
 }
 
-uint8_t* PoseStamped::getBufferData() const
+std::shared_ptr<flatbuffers::DetachedBuffer> PoseStamped::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (modified_ || pose_.isModified() || header_.isModified())
-  {
-    builder_->Clear();
-    auto poseVec = builder_->CreateVector(pose_.getBufferData(), pose_.getBufferSize());
-    auto headerVec = builder_->CreateVector(header_.getBufferData(), header_.getBufferSize());
-    PoseStampedFbsBuilder tmp_builder(*builder_);
-    tmp_builder.add_pose(poseVec);
-    tmp_builder.add_header(headerVec);
-    FinishPoseStampedFbsBuffer(*builder_, tmp_builder.Finish());
-    modified_ = false;
-  }
-  return builder_->GetBufferPointer();
+  auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
+
+  auto pose_data = pose_.getBufferData();
+  auto poseVec = builder->CreateVector(pose_data->data(), pose_data->size());
+
+  auto header_data = header_.getBufferData();
+  auto headerVec = builder->CreateVector(header_data->data(), header_data->size());
+
+  PoseStampedFbsBuilder tmp_builder(*builder);
+  tmp_builder.add_pose(poseVec);
+  tmp_builder.add_header(headerVec);
+  FinishPoseStampedFbsBuffer(*builder, tmp_builder.Finish());
+
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
 void PoseStamped::setPose(const Pose& pose)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   pose_ = pose;
-  modified_ = true;
 }
 
 void PoseStamped::setHeader(const Header& header)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   header_ = header;
-  modified_ = true;
 }
 
 std::ostream& operator<<(std::ostream& out, const PoseStamped& p)

@@ -95,14 +95,7 @@ private:
    * @brief Sends the message back to the client who requested it.
    * @param msg The message to be sent.
    */
-  void reply(const T& msg)
-  {
-    uint8_t* buffer = msg.getBufferData();
-    int buffer_size = msg.getBufferSize();
-    std::shared_ptr<flatbuffers::FlatBufferBuilder>* builder_pointer = msg.getBuilderPointer();
-    GenericSocket<T>::sendMsg(buffer, buffer_size, builder_pointer, "[SIMPLE Server] - ");
-  }
-
+  void reply(const T& msg) { GenericSocket<T>::sendMsg(msg.getBufferData(), "[SIMPLE Server] - "); }
   std::thread server_thread_;
   bool alive_{true};
   std::function<void(T&)> callback_;

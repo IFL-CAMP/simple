@@ -56,7 +56,6 @@ Header& Header::operator=(const Header& other)
     seq_n_ = other.seq_n_;
     frame_id_ = other.frame_id_;
     timestamp_ = other.timestamp_;
-    modified_ = true;
   }
   return *this;
 }
@@ -68,7 +67,6 @@ Header& Header::operator=(Header&& other) noexcept
     seq_n_ = other.seq_n_;
     frame_id_ = std::move(other.frame_id_);
     timestamp_ = other.timestamp_;
-    modified_ = true;
   }
   return *this;
 }
@@ -79,47 +77,40 @@ Header& Header::operator=(const uint8_t* data)
   seq_n_ = GetHeaderFbs(data)->sequence_number();
   frame_id_ = GetHeaderFbs(data)->frame_id()->c_str();
   timestamp_ = GetHeaderFbs(data)->timestamp();
-  modified_ = true;
-
   return *this;
 }
 
-uint8_t* Header::getBufferData() const
+std::shared_ptr<flatbuffers::DetachedBuffer> Header::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (modified_)
-  {
-    builder_->Clear();
-    auto frame_id_string = builder_->CreateString(frame_id_);
-    HeaderFbsBuilder tmp_builder(*builder_);
-    tmp_builder.add_frame_id(frame_id_string);
-    tmp_builder.add_sequence_number(seq_n_);
-    tmp_builder.add_timestamp(timestamp_);
-    FinishHeaderFbsBuffer(*builder_, tmp_builder.Finish());
-    modified_ = false;
-  }
-  return builder_->GetBufferPointer();
+  auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
+
+  auto frame_id_string = builder->CreateString(frame_id_);
+  HeaderFbsBuilder tmp_builder(*builder);
+  tmp_builder.add_frame_id(frame_id_string);
+  tmp_builder.add_sequence_number(seq_n_);
+  tmp_builder.add_timestamp(timestamp_);
+  FinishHeaderFbsBuffer(*builder, tmp_builder.Finish());
+
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
 void Header::setSequenceNumber(int seq_n)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   seq_n_ = seq_n;
-  modified_ = true;
 }
 
 void Header::setFrameID(const std::string& frame_id)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   frame_id_ = frame_id;
-  modified_ = true;
 }
 
 void Header::setTimestamp(double timestamp)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   timestamp_ = timestamp;
-  modified_ = true;
 }
 
 std::ostream& operator<<(std::ostream& out, const Header& h)

@@ -37,8 +37,7 @@ public:
   Image(const uint8_t* data);
 
   Image(const Image& other)
-    : GenericMessage()
-    , header_(other.header_)
+    : header_(other.header_)
     , origin_(other.origin_)
     , encoding_(other.encoding_)
     , resX_(other.resX_)
@@ -54,8 +53,7 @@ public:
   }
 
   Image(Image&& other) noexcept
-    : GenericMessage()
-    , header_(std::move(other.header_))
+    : header_(std::move(other.header_))
     , origin_(std::move(other.origin_))
     , encoding_(std::move(other.encoding_))
     , resX_(std::move(other.resX_))
@@ -87,7 +85,6 @@ public:
       data_ = other.data_;
       data_size_ = other.data_size_;
       num_channels_ = other.num_channels_;
-      modified_ = true;
     }
     return *this;
   }
@@ -108,7 +105,6 @@ public:
       data_ = std::move(other.data_);
       data_size_ = std::move(other.data_size_);
       num_channels_ = std::move(other.num_channels_);
-      modified_ = true;
     }
     return *this;
   }
@@ -124,49 +120,53 @@ public:
             (num_channels_ == rhs.num_channels_));
   }
   bool operator!=(const Image& rhs) const { return !(*this == rhs); }
-
   /**
    * @brief getBufferData
    * @return
    */
-  uint8_t* getBufferData() const
+  std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const override
   {
     std::lock_guard<std::mutex> lock(mutex_);
-    if (modified_ || header_.isModified() || origin_.isModified())
-    {
-      builder_->Clear();
-      auto encoding_data = builder_->CreateString(encoding_);
-      auto header_data = builder_->CreateVector(header_.getBufferData(), header_.getBufferSize());
-      auto origin_data = builder_->CreateVector(origin_.getBufferData(), origin_.getBufferSize());
-      auto type = getDataUnionType();
-      flatbuffers::Offset<void> elem;
-      if (data_)
-      {
-        elem = getDataUnionElem();
-      }
 
-      ImageFbsBuilder tmp_builder(*builder_);
-      // add the information
-      tmp_builder.add_encoding(encoding_data);
-      tmp_builder.add_header(header_data);
-      tmp_builder.add_origin(origin_data);
-      if (data_)
-      {
-        tmp_builder.add_image(elem);
-      }
-      tmp_builder.add_image_type(type);
-      tmp_builder.add_image_size(data_size_);
-      tmp_builder.add_resX(resX_);
-      tmp_builder.add_resY(resY_);
-      tmp_builder.add_resZ(resZ_);
-      tmp_builder.add_height(height_);
-      tmp_builder.add_width(width_);
-      tmp_builder.add_depth(depth_);
-      tmp_builder.add_num_channels(num_channels_);
-      FinishImageFbsBuffer(*builder_, tmp_builder.Finish());
-      modified_ = false;
+    auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
+    // auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
+
+    auto encoding_string = builder->CreateString(encoding_);
+
+    auto header_data = header_.getBufferData();
+    auto header_vector = builder->CreateVector(header_data->data(), header_data->size());
+
+    auto origin_data = origin_.getBufferData();
+    auto origin_vector = builder->CreateVector(origin_data->data(), origin_data->size());
+
+    auto type = getDataUnionType();
+    flatbuffers::Offset<void> elem;
+    if (data_)
+    {
+      elem = getDataUnionElem(builder);
     }
-    return Image::builder_->GetBufferPointer();
+
+    ImageFbsBuilder tmp_builder(*builder);
+    // add the information
+    tmp_builder.add_encoding(encoding_string);
+    tmp_builder.add_header(header_vector);
+    tmp_builder.add_origin(origin_vector);
+    if (data_)
+    {
+      tmp_builder.add_image(elem);
+    }
+    tmp_builder.add_image_type(type);
+    tmp_builder.add_image_size(data_size_);
+    tmp_builder.add_resX(resX_);
+    tmp_builder.add_resY(resY_);
+    tmp_builder.add_resZ(resZ_);
+    tmp_builder.add_height(height_);
+    tmp_builder.add_width(width_);
+    tmp_builder.add_depth(depth_);
+    tmp_builder.add_num_channels(num_channels_);
+    FinishImageFbsBuffer(*builder, tmp_builder.Finish());
+
+    return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
   }
 
   std::array<double, 3> getResolution() const { return std::array<double, 3>{{resX_, resY_, resZ_}}; }
@@ -183,7 +183,6 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     encoding_ = encoding;
-    modified_ = true;
   }
 
   void setImageResolution(double resX, double resY, double resZ)
@@ -192,7 +191,6 @@ public:
     resX_ = resX;
     resY_ = resY;
     resZ_ = resZ;
-    modified_ = true;
   }
 
   void setImageDimensions(int width, int height, int depth)
@@ -201,21 +199,18 @@ public:
     width_ = width;
     height_ = height;
     depth_ = depth;
-    modified_ = true;
   }
 
   void setHeader(const Header& header)
   {
     std::lock_guard<std::mutex> lock(mutex_);
     header_ = header;
-    modified_ = true;
   }
 
   void setOrigin(const Pose& origin_pose)
   {
     std::lock_guard<std::mutex> lock(mutex_);
     origin_ = origin_pose;
-    modified_ = true;
   }
 
   void setImageData(const T* data, int data_size, int num_channels = 1)
@@ -224,7 +219,6 @@ public:
     data_ = std::make_shared<const T*>(data);
     data_size_ = data_size;
     num_channels_ = num_channels;
-    modified_ = true;
   }
 
   /**
@@ -251,11 +245,10 @@ private:
     encoding_ = imageData->encoding()->c_str();
     data_size_ = imageData->image_size();
     num_channels_ = imageData->num_channels();
-    modified_ = true;
   }
 
   simple_msgs::data getDataUnionType() const;
-  flatbuffers::Offset<void> getDataUnionElem() const;
+  flatbuffers::Offset<void> getDataUnionElem(const std::unique_ptr<flatbuffers::FlatBufferBuilder>& builder) const;
 
   simple_msgs::Header header_;
   simple_msgs::Pose origin_;

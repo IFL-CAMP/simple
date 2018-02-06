@@ -61,7 +61,6 @@ Quaternion& Quaternion::operator=(const Quaternion& other)
   {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = other.data_;
-    modified_ = true;
   }
   return *this;
 }
@@ -72,7 +71,6 @@ Quaternion& Quaternion::operator=(Quaternion&& other) noexcept
   {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = other.data_;
-    modified_ = true;
   }
   return *this;
 }
@@ -81,7 +79,6 @@ Quaternion& Quaternion::operator=(const std::array<double, 4>& array)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   data_ = array;
-  modified_ = true;
   return *this;
 }
 
@@ -89,7 +86,6 @@ Quaternion& Quaternion::operator=(std::array<double, 4>&& array) noexcept
 {
   std::lock_guard<std::mutex> lock(mutex_);
   data_ = array;
-  modified_ = true;
   return *this;
 }
 
@@ -101,53 +97,46 @@ Quaternion& Quaternion::operator=(const uint8_t* data)
   data_[1] = q->y();
   data_[2] = q->z();
   data_[3] = q->w();
-  modified_ = true;
 
   return *this;
 }
 
-uint8_t* Quaternion::getBufferData() const
+std::shared_ptr<flatbuffers::DetachedBuffer> Quaternion::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (modified_)
-  {
-    builder_->Clear();
-    QuaternionFbsBuilder tmp_builder(*builder_);
-    tmp_builder.add_x(data_[0]);
-    tmp_builder.add_y(data_[1]);
-    tmp_builder.add_z(data_[2]);
-    tmp_builder.add_w(data_[3]);
-    FinishQuaternionFbsBuffer(*builder_, tmp_builder.Finish());
-    modified_ = false;
-  }
-  return builder_->GetBufferPointer();
+  auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
+
+  QuaternionFbsBuilder tmp_builder(*builder);
+  tmp_builder.add_x(data_[0]);
+  tmp_builder.add_y(data_[1]);
+  tmp_builder.add_z(data_[2]);
+  tmp_builder.add_w(data_[3]);
+  FinishQuaternionFbsBuffer(*builder, tmp_builder.Finish());
+
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 void Quaternion::setX(double x)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   data_[0] = x;
-  modified_ = true;
 }
 
 void Quaternion::setY(double y)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   data_[1] = y;
-  modified_ = true;
 }
 
 void Quaternion::setZ(double z)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   data_[2] = z;
-  modified_ = true;
 }
 
 void Quaternion::setW(double w)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   data_[3] = w;
-  modified_ = true;
 }
 
 std::ostream& operator<<(std::ostream& out, const Quaternion& q)

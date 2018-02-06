@@ -46,7 +46,6 @@ String::String(const String& other)
 String::String(String&& other) noexcept
   : data_(std::move(other.data_))
 {
-  other.clear();
 }
 
 String& String::operator=(const String& other)
@@ -55,7 +54,6 @@ String& String::operator=(const String& other)
   {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = other.data_;
-    modified_ = true;
   }
   return *this;
 }
@@ -66,7 +64,6 @@ String& String::operator=(String&& other) noexcept
   {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = std::move(other.data_);
-    modified_ = true;
     other.data_.clear();
   }
   return *this;
@@ -77,8 +74,6 @@ String& String::operator=(const uint8_t* data)
   std::lock_guard<std::mutex> lock(mutex_);
   auto s = GetStringFbs(data);
   data_ = s->data()->c_str();
-  modified_ = true;
-
   return *this;
 }
 
@@ -86,7 +81,6 @@ String& String::operator+=(const String& rhs)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   data_ += rhs.data_;
-  modified_ = true;
   return *this;
 }
 
@@ -96,19 +90,17 @@ String operator+(String lhs, const String& rhs)
   return lhs;
 }
 
-uint8_t* String::getBufferData() const
+std::shared_ptr<flatbuffers::DetachedBuffer> String::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (modified_)
-  {
-    builder_->Clear();
-    auto string_data = builder_->CreateString(data_);
-    StringFbsBuilder tmp_builder(*builder_);
-    tmp_builder.add_data(string_data);
-    FinishStringFbsBuffer(*builder_, tmp_builder.Finish());
-    modified_ = false;
-  }
-  return builder_->GetBufferPointer();
+  auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
+
+  auto string_data = builder->CreateString(data_);
+  StringFbsBuilder tmp_builder(*builder);
+  tmp_builder.add_data(string_data);
+  FinishStringFbsBuffer(*builder, tmp_builder.Finish());
+
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
 std::ostream& operator<<(std::ostream& out, const String& s)

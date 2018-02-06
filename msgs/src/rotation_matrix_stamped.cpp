@@ -51,7 +51,6 @@ RotationMatrixStamped& RotationMatrixStamped::operator=(const RotationMatrixStam
     std::lock_guard<std::mutex> lock(mutex_);
     rotation_matrix_ = other.rotation_matrix_;
     header_ = other.header_;
-    modified_ = true;
   }
   return *this;
 }
@@ -63,7 +62,6 @@ RotationMatrixStamped& RotationMatrixStamped::operator=(RotationMatrixStamped&& 
     std::lock_guard<std::mutex> lock(mutex_);
     rotation_matrix_ = std::move(other.rotation_matrix_);
     header_ = std::move(other.header_);
-    modified_ = true;
   }
   return *this;
 }
@@ -74,41 +72,38 @@ RotationMatrixStamped& RotationMatrixStamped::operator=(const uint8_t* data)
   auto matrix = GetRotationMatrixStampedFbs(data);
   rotation_matrix_ = RotationMatrix(matrix->rotation_matrix()->data());
   header_ = Header(matrix->header()->data());
-  modified_ = true;
-
   return *this;
 }
 
-uint8_t* RotationMatrixStamped::getBufferData() const
+std::shared_ptr<flatbuffers::DetachedBuffer> RotationMatrixStamped::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (modified_ || header_.isModified() || rotation_matrix_.isModified())
-  {
-    builder_->Clear();
-    auto rotation_matrix_vector =
-        builder_->CreateVector(rotation_matrix_.getBufferData(), rotation_matrix_.getBufferSize());
-    auto header_vector = builder_->CreateVector(header_.getBufferData(), header_.getBufferSize());
-    RotationMatrixStampedFbsBuilder tmp_builder(*builder_);
-    tmp_builder.add_rotation_matrix(rotation_matrix_vector);
-    tmp_builder.add_header(header_vector);
-    FinishRotationMatrixStampedFbsBuffer(*builder_, tmp_builder.Finish());
-    modified_ = false;
-  }
-  return builder_->GetBufferPointer();
+  auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
+
+  auto matrix_data = rotation_matrix_.getBufferData();
+  auto matrix_vector = builder->CreateVector(matrix_data->data(), matrix_data->size());
+
+  auto header_data = header_.getBufferData();
+  auto header_vector = builder->CreateVector(header_data->data(), header_data->size());
+
+  RotationMatrixStampedFbsBuilder tmp_builder(*builder);
+  tmp_builder.add_rotation_matrix(matrix_vector);
+  tmp_builder.add_header(header_vector);
+  FinishRotationMatrixStampedFbsBuffer(*builder, tmp_builder.Finish());
+
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
 void RotationMatrixStamped::setRotationMatrix(const RotationMatrix& rotation_matrix)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   rotation_matrix_ = rotation_matrix;
-  modified_ = true;
 }
 
 void RotationMatrixStamped::setHeader(const Header& header)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   header_ = header;
-  modified_ = true;
 }
 
 std::ostream& operator<<(std::ostream& out, const RotationMatrixStamped& q)

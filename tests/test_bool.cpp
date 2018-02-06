@@ -55,7 +55,7 @@ SCENARIO("Using a Bool Message")
     simple_msgs::Bool single_bool(bool_1);
     WHEN("I construct a new Bool from the serialized data of the existing Bool")
     {
-      simple_msgs::Bool copy_buffer_bool(single_bool.getBufferData());
+      simple_msgs::Bool copy_buffer_bool(single_bool.getBufferData()->data());
       THEN("The new Bool has to be equal to the other") { REQUIRE(copy_buffer_bool == single_bool); }
     }
     WHEN("I copy-construct a new Bool")
@@ -77,7 +77,7 @@ SCENARIO("Using a Bool Message")
     WHEN("I copy-assign from that Bool's buffer")
     {
       simple_msgs::Bool copy_assigned_buffer_bool;
-      copy_assigned_buffer_bool = single_bool.getBufferData();
+      copy_assigned_buffer_bool = single_bool.getBufferData()->data();
       THEN("The new Bool has to be same as the original") { REQUIRE(copy_assigned_buffer_bool == single_bool); }
     }
     WHEN("I copy-assign from that Bool")
@@ -121,15 +121,16 @@ SCENARIO("Using a Bool Message")
       single_bool_1.set(bool_2);
       THEN("They have to be different") { REQUIRE(single_bool_1 != single_bool_2); }
     }
-	WHEN("I take the negative of one of the bools") {
-		THEN("They have to be different") { REQUIRE((!single_bool_1) != single_bool_2); }
-	}
+    WHEN("I take the negative of one of the bools")
+    {
+      THEN("They have to be different") { REQUIRE((!single_bool_1) != single_bool_2); }
+    }
   }
 
   GIVEN("A Bool")
   {
     simple_msgs::Bool single_bool(bool_1);
-    
+
     WHEN("I get the message topic")
     {
       std::string topic_name = single_bool.getTopic();

@@ -108,9 +108,10 @@ SCENARIO("Using a Point Message")
   GIVEN("A point")
   {
     simple_msgs::Point single_point(double_array);
+    simple_msgs::Point reference_point(single_point);
     WHEN("I construct a new point from the serialized data of the existing point")
     {
-      simple_msgs::Point buffer_point(single_point.getBufferData());
+      simple_msgs::Point buffer_point(single_point.getBufferData()->data());
       THEN("The new point has to be equal to the other") { REQUIRE(buffer_point == single_point); }
     }
     WHEN("I copy-construct a new point")
@@ -123,9 +124,9 @@ SCENARIO("Using a Point Message")
       simple_msgs::Point moved_point(std::move(single_point));
       THEN("The new point's coordinates are equal to the previous' ones")
       {
-        REQUIRE(moved_point.getX() == single_point.getX());
-        REQUIRE(moved_point.getY() == single_point.getY());
-        REQUIRE(moved_point.getZ() == single_point.getZ());
+        REQUIRE(moved_point.getX() == reference_point.getX());
+        REQUIRE(moved_point.getY() == reference_point.getY());
+        REQUIRE(moved_point.getZ() == reference_point.getZ());
       }
     }
   }
@@ -134,6 +135,7 @@ SCENARIO("Using a Point Message")
   GIVEN("A point")
   {
     simple_msgs::Point single_point(double_1);
+    simple_msgs::Point reference_point(double_1);
     WHEN("I copy-assign from that point")
     {
       simple_msgs::Point copy_assign_point;
@@ -144,12 +146,12 @@ SCENARIO("Using a Point Message")
     {
       simple_msgs::Point move_assign_point;
       move_assign_point = std::move(single_point);
-      THEN("The new point has to be same as the original") { REQUIRE(move_assign_point == single_point); }
+      THEN("The new point has to be same as the original") { REQUIRE(move_assign_point == reference_point); }
     }
     WHEN("I copy-assign from that point's buffer")
     {
-      simple_msgs::Point copy_buffer_point = single_point.getBufferData();
-      THEN("The new point has to be same as the original") { REQUIRE(copy_buffer_point == single_point); }
+      simple_msgs::Point copy_buffer_point = reference_point.getBufferData()->data();
+      THEN("The new point has to be same as the original") { REQUIRE(copy_buffer_point == reference_point); }
     }
     WHEN("I copy-assign a double array to that point")
     {
