@@ -12,6 +12,14 @@ endif()
 include_directories(include)
 
 #TESTS FOR WRAPPERS
+add_executable(test_bool test_bool.cpp)
+target_link_libraries(test_bool simple-static ${coverage_lib})
+add_test(NAME simple_tests.bool COMMAND $<TARGET_FILE:test_bool>)
+
+add_executable(test_string test_string.cpp)
+target_link_libraries(test_string simple-static ${coverage_lib})
+add_test(NAME simple_tests.string COMMAND $<TARGET_FILE:test_string>)
+
 add_executable(test_double test_double.cpp)
 target_link_libraries(test_double simple-static ${coverage_lib})
 add_test(NAME simple_tests.double COMMAND $<TARGET_FILE:test_double>)
@@ -81,6 +89,8 @@ add_test(NAME simple_tests.req_rep COMMAND $<TARGET_FILE:test_req_rep>)
 
 install(
 TARGETS
+  test_bool
+  test_string
   test_double
   test_float
   test_int
