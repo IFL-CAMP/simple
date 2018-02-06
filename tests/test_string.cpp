@@ -59,16 +59,6 @@ SCENARIO("Using a String Message")
 	  }
   }
 
-  //Ask Salvo about this test
-  /*GIVEN("A String created from moving a string")
-  {
-	  simple_msgs::String moved_string(std::move(string_1));
-	  WHEN("We check the String's value")
-	  {
-		  THEN("It has to be equal to the params from the constructor") { REQUIRE(moved_string.get() == string_1); }
-	  }
-  }*/
-
   // Testing copy-constructors.
   GIVEN("A String")
   {
