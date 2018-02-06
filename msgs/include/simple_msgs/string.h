@@ -32,7 +32,6 @@ public:
   // Constructors,
   String() = default;
   String(std::string);
-  String(std::string&&);
   String(const char*);
   String(const uint8_t*);
   String(const String&);

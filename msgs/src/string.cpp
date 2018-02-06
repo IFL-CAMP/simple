@@ -28,12 +28,6 @@ String::String(std::string data)
 {
 }
 
-String::String(std::string&& data)
-  : data_(std::move(data))
-{
-  data.clear();
-}
-
 String::String(const char* data)
   : data_(data)
 {
