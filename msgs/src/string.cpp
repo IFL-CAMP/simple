@@ -23,8 +23,8 @@
 
 namespace simple_msgs
 {
-String::String(const std::string& data)
-  : data_(data)
+String::String(std::string data)
+  : data_(std::move(data))
 {
 }
 
