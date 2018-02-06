@@ -22,7 +22,7 @@
 #include <opencv2/opencv.hpp>
 
 #include "simple/publisher.hpp"
-#include "simple_msgs/image.h"
+#include "simple_msgs/image.hpp"
 
 const std::string data_dir = DATA_DIR;
 
@@ -51,7 +51,7 @@ std::vector<std::pair<cv::Mat, int>> readImage()
 int main()
 {
   const int N_RUN = 3000;
-  const int SLEEP_TIME = 250;  //<  Milliseconds.
+  const int SLEEP_TIME = 200;  //<  Milliseconds.
 
   // Obtain the images.
   auto images = readImage();
