@@ -39,8 +39,9 @@ PointStamped::PointStamped(const PointStamped& other)
 {
 }
 
-PointStamped::PointStamped(PointStamped&& other) noexcept : point_(std::move(other.point_)),
-                                                            header_(std::move(other.header_))
+PointStamped::PointStamped(PointStamped&& other) noexcept
+  : point_(std::move(other.point_))
+  , header_(std::move(other.header_))
 {
 }
 
@@ -91,8 +92,7 @@ std::shared_ptr<flatbuffers::DetachedBuffer> PointStamped::getBufferData() const
   tmp_builder.add_header(header_vector);
   FinishPointStampedFbsBuffer(*builder, tmp_builder.Finish());
 
-  auto buffer = std::shared_ptr<flatbuffers::DetachedBuffer>(new flatbuffers::DetachedBuffer(builder->Release()));    
-  return buffer;
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
 void PointStamped::setHeader(const Header& h)

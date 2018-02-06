@@ -31,7 +31,7 @@ class String : public GenericMessage
 public:
   // Constructors,
   String() = default;
-  String(std::string);
+  String(const std::string&);
   String(std::string&&);
   String(const char*);
   String(const uint8_t*);

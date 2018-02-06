@@ -40,7 +40,7 @@ QuaternionStamped::QuaternionStamped(const QuaternionStamped& other)
 }
 
 QuaternionStamped::QuaternionStamped(QuaternionStamped&& other) noexcept
-    : QuaternionStamped(other.header_, other.quaternion_)
+  : QuaternionStamped(other.header_, other.quaternion_)
 {
 }
 
@@ -91,8 +91,7 @@ std::shared_ptr<flatbuffers::DetachedBuffer> QuaternionStamped::getBufferData() 
   tmp_builder.add_header(header_vector);
   FinishQuaternionStampedFbsBuffer(*builder, tmp_builder.Finish());
 
-  auto buffer = std::shared_ptr<flatbuffers::DetachedBuffer>(new flatbuffers::DetachedBuffer(builder->Release()));    
-  return buffer;
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
 void QuaternionStamped::setQuaternion(const Quaternion& quaternion)

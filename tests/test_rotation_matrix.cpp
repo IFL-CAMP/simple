@@ -154,7 +154,7 @@ SCENARIO("Using a Rotation Matrix Message")
     simple_msgs::RotationMatrix array_rotation_matrix(doubles_array);
     WHEN("I construct a new Rotation Matrix from the serialized data of the existing Rotation Matrix")
     {
-      simple_msgs::RotationMatrix copy_buffer_rotation_matrix(array_rotation_matrix.getBufferData().data());
+      simple_msgs::RotationMatrix copy_buffer_rotation_matrix(array_rotation_matrix.getBufferData()->data());
       THEN("The new Rotation Matrix has to be equal to the other")
       {
         REQUIRE(copy_buffer_rotation_matrix == array_rotation_matrix);
@@ -190,7 +190,7 @@ SCENARIO("Using a Rotation Matrix Message")
     WHEN("I copy-assign from that Rotation Matrix's buffer")
     {
       simple_msgs::RotationMatrix copy_assigned_buffer_rotation_matrix;
-      copy_assigned_buffer_rotation_matrix = array_rotation_matrix.getBufferData().data();
+      copy_assigned_buffer_rotation_matrix = array_rotation_matrix.getBufferData()->data();
       THEN("The new Rotation Matrix has to be same as the original")
       {
         REQUIRE(copy_assigned_buffer_rotation_matrix == array_rotation_matrix);

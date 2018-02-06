@@ -35,7 +35,8 @@ Bool::Bool(const Bool& other)
 {
 }
 
-Bool::Bool(Bool&& other) noexcept : data_(other.data_)
+Bool::Bool(Bool&& other) noexcept
+  : data_(other.data_)
 {
 }
 
@@ -75,8 +76,7 @@ std::shared_ptr<flatbuffers::DetachedBuffer> Bool::getBufferData() const
   BoolFbsBuilder tmp_builder(*builder);
   tmp_builder.add_data(data_);
   FinishBoolFbsBuffer(*builder, tmp_builder.Finish());
-  auto buffer = std::shared_ptr<flatbuffers::DetachedBuffer>(new flatbuffers::DetachedBuffer(builder->Release()));    
-  return buffer;
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
 void Bool::set(bool data)

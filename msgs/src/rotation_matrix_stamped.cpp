@@ -40,7 +40,7 @@ RotationMatrixStamped::RotationMatrixStamped(const RotationMatrixStamped& m)
 }
 
 RotationMatrixStamped::RotationMatrixStamped(RotationMatrixStamped&& m) noexcept
-    : RotationMatrixStamped(m.header_, m.rotation_matrix_)
+  : RotationMatrixStamped(m.header_, m.rotation_matrix_)
 {
 }
 
@@ -91,8 +91,7 @@ std::shared_ptr<flatbuffers::DetachedBuffer> RotationMatrixStamped::getBufferDat
   tmp_builder.add_header(header_vector);
   FinishRotationMatrixStampedFbsBuffer(*builder, tmp_builder.Finish());
 
-  auto buffer = std::shared_ptr<flatbuffers::DetachedBuffer>(new flatbuffers::DetachedBuffer(builder->Release()));    
-  return buffer;
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
 void RotationMatrixStamped::setRotationMatrix(const RotationMatrix& rotation_matrix)

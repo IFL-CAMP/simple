@@ -41,7 +41,8 @@ Pose::Pose(const Pose& other)
 {
 }
 
-Pose::Pose(Pose&& other) noexcept : Pose(other.position_, other.quaternion_)
+Pose::Pose(Pose&& other) noexcept
+  : Pose(other.position_, other.quaternion_)
 {
 }
 
@@ -91,8 +92,7 @@ std::shared_ptr<flatbuffers::DetachedBuffer> Pose::getBufferData() const
   tmp_builder.add_quaternion(quaternion_vector);
   FinishPoseFbsBuffer(*builder, tmp_builder.Finish());
 
-  auto buffer = std::shared_ptr<flatbuffers::DetachedBuffer>(new flatbuffers::DetachedBuffer(builder->Release()));    
-  return buffer;
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
 void Pose::setQuaternion(const Quaternion& quaternion)

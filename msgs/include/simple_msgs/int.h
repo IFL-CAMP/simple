@@ -51,7 +51,7 @@ std::shared_ptr<flatbuffers::DetachedBuffer> NumericType<int>::getBufferData() c
   tmp_builder.add_data(data_);
   FinishIntFbsBuffer(*builder, tmp_builder.Finish());
 
-  return builder->Release();
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
 template <>

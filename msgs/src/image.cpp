@@ -46,28 +46,28 @@ data Image<double>::getDataUnionType() const
 
 template <>
 flatbuffers::Offset<void>
-Image<uint8_t>::getDataUnionElem(const std::shared_ptr<flatbuffers::FlatBufferBuilder> builder) const
+Image<uint8_t>::getDataUnionElem(const std::unique_ptr<flatbuffers::FlatBufferBuilder>& builder) const
 {
   return Createuint8_type(*builder, builder->CreateVector(static_cast<const uint8_t*>(*data_), data_size_)).Union();
 }
 
 template <>
 flatbuffers::Offset<void>
-Image<int16_t>::getDataUnionElem(const std::shared_ptr<flatbuffers::FlatBufferBuilder> builder) const
+Image<int16_t>::getDataUnionElem(const std::unique_ptr<flatbuffers::FlatBufferBuilder>& builder) const
 {
   return Createint16_type(*builder, builder->CreateVector(static_cast<const int16_t*>(*data_), data_size_)).Union();
 }
 
 template <>
 flatbuffers::Offset<void>
-Image<float>::getDataUnionElem(const std::shared_ptr<flatbuffers::FlatBufferBuilder> builder) const
+Image<float>::getDataUnionElem(const std::unique_ptr<flatbuffers::FlatBufferBuilder>& builder) const
 {
   return Createfloat_type(*builder, builder->CreateVector(static_cast<const float*>(*data_), data_size_)).Union();
 }
 
 template <>
 flatbuffers::Offset<void>
-Image<double>::getDataUnionElem(const std::shared_ptr<flatbuffers::FlatBufferBuilder> builder) const
+Image<double>::getDataUnionElem(const std::unique_ptr<flatbuffers::FlatBufferBuilder>& builder) const
 {
   return Createdouble_type(*builder, builder->CreateVector(static_cast<const double*>(*data_), data_size_)).Union();
 }

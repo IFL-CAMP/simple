@@ -30,7 +30,8 @@ Quaternion::Quaternion(const std::array<double, 4>& array)
 {
 }
 
-Quaternion::Quaternion(std::array<double, 4>&& array) noexcept : data_(array)
+Quaternion::Quaternion(std::array<double, 4>&& array) noexcept
+  : data_(array)
 {
 }
 
@@ -49,7 +50,8 @@ Quaternion::Quaternion(const Quaternion& other)
 {
 }
 
-Quaternion::Quaternion(Quaternion&& other) noexcept : data_(other.data_)
+Quaternion::Quaternion(Quaternion&& other) noexcept
+  : data_(other.data_)
 {
 }
 
@@ -111,9 +113,7 @@ std::shared_ptr<flatbuffers::DetachedBuffer> Quaternion::getBufferData() const
   tmp_builder.add_w(data_[3]);
   FinishQuaternionFbsBuffer(*builder, tmp_builder.Finish());
 
-  auto buffer = std::shared_ptr<flatbuffers::DetachedBuffer>(new flatbuffers::DetachedBuffer(builder->Release()));    
-  return buffer;
-  
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 void Quaternion::setX(double x)
 {

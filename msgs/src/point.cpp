@@ -35,7 +35,8 @@ Point::Point(const std::array<double, 3>& array)
 {
 }
 
-Point::Point(std::array<double, 3>&& array) noexcept : data_(array)
+Point::Point(std::array<double, 3>&& array) noexcept
+  : data_(array)
 {
 }
 
@@ -53,7 +54,8 @@ Point::Point(const Point& other)
 {
 }
 
-Point::Point(Point&& other) noexcept : data_(other.data_)
+Point::Point(Point&& other) noexcept
+  : data_(other.data_)
 {
 }
 
@@ -164,8 +166,7 @@ std::shared_ptr<flatbuffers::DetachedBuffer> Point::getBufferData() const
   tmp_builder.add_z(data_[2]);
   FinishPointFbsBuffer(*builder, tmp_builder.Finish());
 
-  auto buffer = std::shared_ptr<flatbuffers::DetachedBuffer>(new flatbuffers::DetachedBuffer(builder->Release()));    
-  return buffer;
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
 void Point::setX(double x)

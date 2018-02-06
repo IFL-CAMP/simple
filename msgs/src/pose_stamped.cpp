@@ -39,7 +39,8 @@ PoseStamped::PoseStamped(const PoseStamped& other)
 {
 }
 
-PoseStamped::PoseStamped(PoseStamped&& other) noexcept : PoseStamped(other.header_, other.pose_)
+PoseStamped::PoseStamped(PoseStamped&& other) noexcept
+  : PoseStamped(other.header_, other.pose_)
 {
 }
 
@@ -90,8 +91,7 @@ std::shared_ptr<flatbuffers::DetachedBuffer> PoseStamped::getBufferData() const
   tmp_builder.add_header(headerVec);
   FinishPoseStampedFbsBuffer(*builder, tmp_builder.Finish());
 
-  auto buffer = std::shared_ptr<flatbuffers::DetachedBuffer>(new flatbuffers::DetachedBuffer(builder->Release()));    
-  return buffer;
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
 void PoseStamped::setPose(const Pose& pose)

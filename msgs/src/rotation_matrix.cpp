@@ -36,7 +36,8 @@ RotationMatrix::RotationMatrix(const std::array<double, 9>& array)
 {
 }
 
-RotationMatrix::RotationMatrix(std::array<double, 9>&& array) noexcept : data_(array)
+RotationMatrix::RotationMatrix(std::array<double, 9>&& array) noexcept
+  : data_(array)
 {
 }
 
@@ -52,7 +53,8 @@ RotationMatrix::RotationMatrix(const RotationMatrix& m)
 {
 }
 
-RotationMatrix::RotationMatrix(RotationMatrix&& m) noexcept : RotationMatrix(m.data_)
+RotationMatrix::RotationMatrix(RotationMatrix&& m) noexcept
+  : RotationMatrix(m.data_)
 {
 }
 
@@ -116,8 +118,7 @@ std::shared_ptr<flatbuffers::DetachedBuffer> RotationMatrix::getBufferData() con
   tmp_builder.add_r33(data_[8]);
   FinishRotationMatrixFbsBuffer(*builder, tmp_builder.Finish());
 
-  auto buffer = std::shared_ptr<flatbuffers::DetachedBuffer>(new flatbuffers::DetachedBuffer(builder->Release()));    
-  return buffer;
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
 RotationMatrix RotationMatrix::getTranspose() const

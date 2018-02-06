@@ -50,7 +50,7 @@ std::shared_ptr<flatbuffers::DetachedBuffer> NumericType<double>::getBufferData(
   tmp_builder.add_data(data_);
   FinishDoubleFbsBuffer(*builder, tmp_builder.Finish());
 
-  return builder->Release();
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
 template <>

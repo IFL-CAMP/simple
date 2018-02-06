@@ -52,18 +52,19 @@ public:
   {
   }
 
-  Image(Image&& other) noexcept : header_(std::move(other.header_)),
-                                  origin_(std::move(other.origin_)),
-                                  encoding_(std::move(other.encoding_)),
-                                  resX_(std::move(other.resX_)),
-                                  resY_(std::move(other.resY_)),
-                                  resZ_(std::move(other.resZ_)),
-                                  width_(std::move(other.width_)),
-                                  height_(std::move(other.height_)),
-                                  depth_(std::move(other.depth_)),
-                                  data_(std::move(other.data_)),
-                                  data_size_(std::move(other.data_size_)),
-                                  num_channels_(other.num_channels_)
+  Image(Image&& other) noexcept
+    : header_(std::move(other.header_))
+    , origin_(std::move(other.origin_))
+    , encoding_(std::move(other.encoding_))
+    , resX_(std::move(other.resX_))
+    , resY_(std::move(other.resY_))
+    , resZ_(std::move(other.resZ_))
+    , width_(std::move(other.width_))
+    , height_(std::move(other.height_))
+    , depth_(std::move(other.depth_))
+    , data_(std::move(other.data_))
+    , data_size_(std::move(other.data_size_))
+    , num_channels_(other.num_channels_)
   {
   }
 
@@ -126,7 +127,7 @@ public:
   std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const
   {
     std::lock_guard<std::mutex> lock(mutex_);
-    auto builder = std::shared_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
+    auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
 
     auto encoding_string = builder->CreateString(encoding_);
 
@@ -163,8 +164,7 @@ public:
     tmp_builder.add_num_channels(num_channels_);
     FinishImageFbsBuffer(*builder, tmp_builder.Finish());
 
-      auto buffer = std::shared_ptr<flatbuffers::DetachedBuffer>(new flatbuffers::DetachedBuffer(builder->Release()));    
-  return buffer;
+    return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
   }
 
   std::array<double, 3> getResolution() const { return std::array<double, 3>{{resX_, resY_, resZ_}}; }
@@ -245,7 +245,7 @@ private:
   }
 
   simple_msgs::data getDataUnionType() const;
-  flatbuffers::Offset<void> getDataUnionElem(const std::shared_ptr<flatbuffers::FlatBufferBuilder> builder) const;
+  flatbuffers::Offset<void> getDataUnionElem(const std::unique_ptr<flatbuffers::FlatBufferBuilder>& builder) const;
 
   simple_msgs::Header header_;
   simple_msgs::Pose origin_;

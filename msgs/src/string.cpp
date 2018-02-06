@@ -23,8 +23,8 @@
 
 namespace simple_msgs
 {
-String::String(std::string data)
-  : data_(std::move(data))
+String::String(const std::string& data)
+  : data_(data)
 {
 }
 
@@ -49,7 +49,8 @@ String::String(const String& other)
 {
 }
 
-String::String(String&& other) noexcept : data_(std::move(other.data_))
+String::String(String&& other) noexcept
+  : data_(std::move(other.data_))
 {
   other.clear();
 }
@@ -106,8 +107,7 @@ std::shared_ptr<flatbuffers::DetachedBuffer> String::getBufferData() const
   tmp_builder.add_data(string_data);
   FinishStringFbsBuffer(*builder, tmp_builder.Finish());
 
-  auto buffer = std::shared_ptr<flatbuffers::DetachedBuffer>(new flatbuffers::DetachedBuffer(builder->Release()));    
-  return buffer;
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
 std::ostream& operator<<(std::ostream& out, const String& s)
