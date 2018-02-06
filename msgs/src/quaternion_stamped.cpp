@@ -78,7 +78,7 @@ QuaternionStamped& QuaternionStamped::operator=(const uint8_t* data)
 std::shared_ptr<flatbuffers::DetachedBuffer> QuaternionStamped::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
+  auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
 
   auto quaternion_data = quaternion_.getBufferData();
   auto quaternion_vector = builder->CreateVector(quaternion_data->data(), quaternion_data->size());

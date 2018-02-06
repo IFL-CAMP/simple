@@ -79,7 +79,7 @@ Pose& Pose::operator=(const uint8_t* data)
 std::shared_ptr<flatbuffers::DetachedBuffer> Pose::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
+  auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
 
   auto position_data = position_.getBufferData();
   auto position_vector = builder->CreateVector(position_data->data(), position_data->size());

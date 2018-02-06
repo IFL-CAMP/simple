@@ -104,7 +104,7 @@ Quaternion& Quaternion::operator=(const uint8_t* data)
 std::shared_ptr<flatbuffers::DetachedBuffer> Quaternion::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
+  auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
 
   QuaternionFbsBuilder tmp_builder(*builder);
   tmp_builder.add_x(data_[0]);

@@ -98,7 +98,7 @@ String operator+(String lhs, const String& rhs)
 std::shared_ptr<flatbuffers::DetachedBuffer> String::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
+  auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
 
   auto string_data = builder->CreateString(data_);
   StringFbsBuilder tmp_builder(*builder);

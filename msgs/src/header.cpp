@@ -83,7 +83,7 @@ Header& Header::operator=(const uint8_t* data)
 std::shared_ptr<flatbuffers::DetachedBuffer> Header::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
+  auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
 
   auto frame_id_string = builder->CreateString(frame_id_);
   HeaderFbsBuilder tmp_builder(*builder);

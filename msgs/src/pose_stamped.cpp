@@ -78,7 +78,7 @@ PoseStamped& PoseStamped::operator=(const uint8_t* data)
 std::shared_ptr<flatbuffers::DetachedBuffer> PoseStamped::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
+  auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
 
   auto pose_data = pose_.getBufferData();
   auto poseVec = builder->CreateVector(pose_data->data(), pose_data->size());
