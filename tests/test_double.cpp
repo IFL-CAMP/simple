@@ -19,7 +19,7 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include "simple_msgs/double.h"
+#include "simple_msgs/double.hpp"
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
@@ -55,7 +55,7 @@ SCENARIO("Using a Double Message")
     simple_msgs::Double single_double(double_1);
     WHEN("I construct a new Double from the serialized data of the existing Double")
     {
-      simple_msgs::Double copy_buffer_double(single_double.getBufferData().data());
+      simple_msgs::Double copy_buffer_double(single_double.getBufferData()->data());
       THEN("The new Double has to be equal to the other") { REQUIRE(copy_buffer_double == single_double); }
     }
     WHEN("I copy-construct a new Double")
@@ -77,7 +77,7 @@ SCENARIO("Using a Double Message")
     WHEN("I copy-assign from that Double's buffer")
     {
       simple_msgs::Double copy_assigned_buffer_double;
-      copy_assigned_buffer_double = single_double.getBufferData().data();
+      copy_assigned_buffer_double = single_double.getBufferData()->data();
       THEN("The new Double has to be same as the original") { REQUIRE(copy_assigned_buffer_double == single_double); }
     }
     WHEN("I copy-assign from that Double")

@@ -31,7 +31,7 @@ class String : public GenericMessage
 public:
   // Constructors,
   String() = default;
-  String(std::string);
+  String(const std::string&);
   String(std::string&&);
   String(const char*);
   String(const uint8_t*);
@@ -56,7 +56,7 @@ public:
   /**
    * @brief Builds and returns the buffer accordingly to the values currently stored.
    */
-  flatbuffers::DetachedBuffer getBufferData() const;
+  std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const override;
 
   /**
    * @brief Returns the string information contained in the message.

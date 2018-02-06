@@ -35,7 +35,8 @@ Point::Point(const std::array<double, 3>& array)
 {
 }
 
-Point::Point(std::array<double, 3>&& array) noexcept : data_(array)
+Point::Point(std::array<double, 3>&& array) noexcept
+  : data_(array)
 {
 }
 
@@ -53,7 +54,8 @@ Point::Point(const Point& other)
 {
 }
 
-Point::Point(Point&& other) noexcept : data_(other.data_)
+Point::Point(Point&& other) noexcept
+  : data_(other.data_)
 {
 }
 
@@ -154,7 +156,7 @@ Point operator/(Point lhs, const Point& rhs)
   return lhs;
 }
 
-flatbuffers::DetachedBuffer Point::getBufferData() const
+std::shared_ptr<flatbuffers::DetachedBuffer> Point::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
   auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
@@ -164,7 +166,7 @@ flatbuffers::DetachedBuffer Point::getBufferData() const
   tmp_builder.add_z(data_[2]);
   FinishPointFbsBuffer(*builder, tmp_builder.Finish());
 
-  return builder->Release();
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
 void Point::setX(double x)

@@ -16,48 +16,49 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SIMPLE_MSGS_DOUBLE_H
-#define SIMPLE_MSGS_DOUBLE_H
+#ifndef SIMPLE_MSGS_FLOAT_H
+#define SIMPLE_MSGS_FLOAT_H
 
 #include "numeric_type.hpp"
-#include "generated/double_generated.h"
+#include "generated/float_generated.h"
 
 namespace simple_msgs
 {
-using Double = NumericType<double>;
+using Float = NumericType<float>;
 
 template <>
-NumericType<double>::NumericType(const uint8_t* data)
+NumericType<float>::NumericType(const uint8_t* data)
   : GenericMessage()
-  , data_(GetDoubleFbs(data)->data())
+  , data_(GetFloatFbs(data)->data())
 {
 }
 
 template <>
-NumericType<double>& NumericType<double>::operator=(const uint8_t* data)
+NumericType<float>& NumericType<float>::operator=(const uint8_t* data)
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  data_ = GetDoubleFbs(data)->data();
+  data_ = GetFloatFbs(data)->data();
   return *this;
 }
 
 template <>
-flatbuffers::DetachedBuffer NumericType<double>::getBufferData() const
+std::shared_ptr<flatbuffers::DetachedBuffer> NumericType<float>::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
   auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
-  DoubleFbsBuilder tmp_builder(*builder);
-  tmp_builder.add_data(data_);
-  FinishDoubleFbsBuffer(*builder, tmp_builder.Finish());
 
-  return builder->Release();
+  FloatFbsBuilder tmp_builder(*builder);
+  tmp_builder.add_data(data_);
+  FinishFloatFbsBuffer(*builder, tmp_builder.Finish());
+
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
 template <>
-inline const char* NumericType<double>::getTopic()
+inline const char* NumericType<float>::getTopic()
 {
-  return DoubleFbsIdentifier();
+  return FloatFbsIdentifier();
 }
 }  // Namespace simple_msgs.
 
-#endif  // SIMPLE_MSGS_DOUBLE_H
+#endif  // SIMPLE_MSGS_FLOAT_H

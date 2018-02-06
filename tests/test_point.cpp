@@ -110,7 +110,7 @@ SCENARIO("Using a Point Message")
     simple_msgs::Point single_point(double_array);
     WHEN("I construct a new point from the serialized data of the existing point")
     {
-      simple_msgs::Point buffer_point(single_point.getBufferData().data());
+      simple_msgs::Point buffer_point(single_point.getBufferData()->data());
       THEN("The new point has to be equal to the other") { REQUIRE(buffer_point == single_point); }
     }
     WHEN("I copy-construct a new point")
@@ -148,7 +148,7 @@ SCENARIO("Using a Point Message")
     }
     WHEN("I copy-assign from that point's buffer")
     {
-      simple_msgs::Point copy_buffer_point = single_point.getBufferData().data();
+      simple_msgs::Point copy_buffer_point = single_point.getBufferData()->data();
       THEN("The new point has to be same as the original") { REQUIRE(copy_buffer_point == single_point); }
     }
     WHEN("I copy-assign a double array to that point")

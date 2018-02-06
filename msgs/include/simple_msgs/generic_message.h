@@ -35,7 +35,7 @@ public:
   GenericMessage() = default;
   virtual ~GenericMessage() = default;
 
-  virtual flatbuffers::DetachedBuffer getBufferData() const = 0;
+  virtual std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const = 0;
 
 protected:
   mutable std::mutex mutex_;

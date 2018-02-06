@@ -41,9 +41,10 @@ Header::Header(const Header& h)
 {
 }
 
-Header::Header(Header&& other) noexcept : seq_n_(other.seq_n_),
-                                          frame_id_(std::move(other.frame_id_)),
-                                          timestamp_(other.timestamp_)
+Header::Header(Header&& other) noexcept
+  : seq_n_(other.seq_n_)
+  , frame_id_(std::move(other.frame_id_))
+  , timestamp_(other.timestamp_)
 {
 }
 
@@ -79,7 +80,7 @@ Header& Header::operator=(const uint8_t* data)
   return *this;
 }
 
-flatbuffers::DetachedBuffer Header::getBufferData() const
+std::shared_ptr<flatbuffers::DetachedBuffer> Header::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
   auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
@@ -91,7 +92,7 @@ flatbuffers::DetachedBuffer Header::getBufferData() const
   tmp_builder.add_timestamp(timestamp_);
   FinishHeaderFbsBuffer(*builder, tmp_builder.Finish());
 
-  return builder->Release();
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
 void Header::setSequenceNumber(int seq_n)

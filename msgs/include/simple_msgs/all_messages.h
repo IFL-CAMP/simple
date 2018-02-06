@@ -20,9 +20,9 @@
 #define SIMPLE_MSGS_ALL_H
 
 #include "bool.h"
-#include "int.h"
-#include "double.h"
-#include "float.h"
+#include "int.hpp"
+#include "double.hpp"
+#include "float.hpp"
 #include "string.h"
 #include "header.h"
 #include "image.hpp"

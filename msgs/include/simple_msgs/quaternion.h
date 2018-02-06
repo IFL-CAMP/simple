@@ -54,7 +54,7 @@ public:
   /**
    * @brief Builds and returns the buffer accordingly to the values currently stored.
    */
-  flatbuffers::DetachedBuffer getBufferData() const override;
+  std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const override;
 
   /**
    * @brief Returns the quaternion as an array for 4 elements.

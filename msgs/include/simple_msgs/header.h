@@ -52,7 +52,7 @@ public:
   /**
    * @brief Builds and returns the buffer accordingly to the values currently stored.
    */
-  flatbuffers::DetachedBuffer getBufferData() const override;
+  std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const override;
 
   /**
    * @brief Returns the sequence number of the message.

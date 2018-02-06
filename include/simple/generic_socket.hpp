@@ -60,11 +60,32 @@ protected:
     }
   }
 
-  bool sendMsg(uint8_t* msg, const size_t msg_size, const std::string& custom_error = "[SIMPLE Error] - ")
+  /**
+   * @brief Keep a copy of the buffer alive until the message is sent.
+   */
+  static void freeBuffer(void* /*unused*/, void* hint)
+  {
+    if (hint != nullptr)
+    {
+      auto b = static_cast<std::shared_ptr<flatbuffers::DetachedBuffer>*>(hint);
+      delete b;
+    }
+  }
+
+  bool sendMsg(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer,
+               const std::string& custom_error = "[SIMPLE Error] - ")
   {
     // Send the topic first and add the rest of the message after it.
-    auto topic_sent = zmq_send(socket_, const_cast<void*>(static_cast<const void*>(topic_)), topic_size_, ZMQ_SNDMORE);
-    auto message_sent = zmq_send(socket_, msg, msg_size, ZMQ_DONTWAIT);
+    zmq_msg_t topic = {};
+    zmq_msg_init_data(&topic, const_cast<void*>(static_cast<const void*>(topic_)), topic_size_, nullptr, nullptr);
+
+    zmq_msg_t message = {};
+    auto buffer_pointer = new std::shared_ptr<flatbuffers::DetachedBuffer>{buffer};
+    zmq_msg_init_data(&message, buffer->data(), buffer->size(), freeBuffer, buffer_pointer);
+
+    // Send the topic first and add the rest of the message after it.
+    auto topic_sent = zmq_msg_send(&topic, socket_, ZMQ_SNDMORE);
+    auto message_sent = zmq_msg_send(&message, socket_, ZMQ_DONTWAIT);
 
     if (topic_sent == -1 || message_sent == -1)
     {

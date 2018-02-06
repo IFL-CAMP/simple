@@ -40,7 +40,7 @@ QuaternionStamped::QuaternionStamped(const QuaternionStamped& other)
 }
 
 QuaternionStamped::QuaternionStamped(QuaternionStamped&& other) noexcept
-    : QuaternionStamped(other.header_, other.quaternion_)
+  : QuaternionStamped(other.header_, other.quaternion_)
 {
 }
 
@@ -75,23 +75,23 @@ QuaternionStamped& QuaternionStamped::operator=(const uint8_t* data)
   return *this;
 }
 
-flatbuffers::DetachedBuffer QuaternionStamped::getBufferData() const
+std::shared_ptr<flatbuffers::DetachedBuffer> QuaternionStamped::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
   auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
 
   auto quaternion_data = quaternion_.getBufferData();
-  auto quaternion_vector = builder->CreateVector(quaternion_data.data(), quaternion_data.size());
+  auto quaternion_vector = builder->CreateVector(quaternion_data->data(), quaternion_data->size());
 
   auto header_data = header_.getBufferData();
-  auto header_vector = builder->CreateVector(header_data.data(), header_data.size());
+  auto header_vector = builder->CreateVector(header_data->data(), header_data->size());
 
   QuaternionStampedFbsBuilder tmp_builder(*builder);
   tmp_builder.add_quaternion(quaternion_vector);
   tmp_builder.add_header(header_vector);
   FinishQuaternionStampedFbsBuffer(*builder, tmp_builder.Finish());
 
-  return builder->Release();
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
 void QuaternionStamped::setQuaternion(const Quaternion& quaternion)

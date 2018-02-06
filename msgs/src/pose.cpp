@@ -41,7 +41,8 @@ Pose::Pose(const Pose& other)
 {
 }
 
-Pose::Pose(Pose&& other) noexcept : Pose(other.position_, other.quaternion_)
+Pose::Pose(Pose&& other) noexcept
+  : Pose(other.position_, other.quaternion_)
 {
 }
 
@@ -75,23 +76,23 @@ Pose& Pose::operator=(const uint8_t* data)
   return *this;
 }
 
-flatbuffers::DetachedBuffer Pose::getBufferData() const
+std::shared_ptr<flatbuffers::DetachedBuffer> Pose::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
   auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
 
   auto position_data = position_.getBufferData();
-  auto position_vector = builder->CreateVector(position_data.data(), position_data.size());
+  auto position_vector = builder->CreateVector(position_data->data(), position_data->size());
 
   auto quaternion_data = quaternion_.getBufferData();
-  auto quaternion_vector = builder->CreateVector(quaternion_data.data(), quaternion_data.size());
+  auto quaternion_vector = builder->CreateVector(quaternion_data->data(), quaternion_data->size());
 
   PoseFbsBuilder tmp_builder(*builder);
   tmp_builder.add_position(position_vector);
   tmp_builder.add_quaternion(quaternion_vector);
   FinishPoseFbsBuffer(*builder, tmp_builder.Finish());
 
-  return builder->Release();
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
 void Pose::setQuaternion(const Quaternion& quaternion)

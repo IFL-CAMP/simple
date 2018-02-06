@@ -40,7 +40,7 @@ RotationMatrixStamped::RotationMatrixStamped(const RotationMatrixStamped& m)
 }
 
 RotationMatrixStamped::RotationMatrixStamped(RotationMatrixStamped&& m) noexcept
-    : RotationMatrixStamped(m.header_, m.rotation_matrix_)
+  : RotationMatrixStamped(m.header_, m.rotation_matrix_)
 {
 }
 
@@ -75,23 +75,23 @@ RotationMatrixStamped& RotationMatrixStamped::operator=(const uint8_t* data)
   return *this;
 }
 
-flatbuffers::DetachedBuffer RotationMatrixStamped::getBufferData() const
+std::shared_ptr<flatbuffers::DetachedBuffer> RotationMatrixStamped::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
   auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
 
   auto matrix_data = rotation_matrix_.getBufferData();
-  auto matrix_vector = builder->CreateVector(matrix_data.data(), matrix_data.size());
+  auto matrix_vector = builder->CreateVector(matrix_data->data(), matrix_data->size());
 
   auto header_data = header_.getBufferData();
-  auto header_vector = builder->CreateVector(header_data.data(), header_data.size());
+  auto header_vector = builder->CreateVector(header_data->data(), header_data->size());
 
   RotationMatrixStampedFbsBuilder tmp_builder(*builder);
   tmp_builder.add_rotation_matrix(matrix_vector);
   tmp_builder.add_header(header_vector);
   FinishRotationMatrixStampedFbsBuffer(*builder, tmp_builder.Finish());
 
-  return builder->Release();
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
 void RotationMatrixStamped::setRotationMatrix(const RotationMatrix& rotation_matrix)
