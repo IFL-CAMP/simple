@@ -42,7 +42,7 @@ NumericType<int>& NumericType<int>::operator=(const uint8_t* data)
 }
 
 template <>
-flatbuffers::DetachedBuffer NumericType<int>::getBufferData() const
+std::shared_ptr<flatbuffers::DetachedBuffer> NumericType<int>::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
   auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));

@@ -51,7 +51,7 @@ public:
    * @brief Builds and returns the buffer accordingly to the values currently stored.
    * @return the buffer data.
    */
-  flatbuffers::DetachedBuffer getBufferData() const;
+  std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const;
 
   /**
    * @brief Set the boolean value.

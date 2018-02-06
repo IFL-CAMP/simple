@@ -23,6 +23,7 @@
 #include <memory>
 #include <string>
 #include <zmq.h>
+#include <iostream>
 
 namespace simple
 {
@@ -61,10 +62,12 @@ public:
    * @brief Publishes the message through the open socket.
    * @param msg: SIMPLE class wrapper for Flatbuffer messages.
    */
-  void publish(const T& msg)
+  void publish(const T& msg, int n = 0)
   {
     auto buffer = msg.getBufferData();
-    publish(buffer.data(), buffer.size());
+    publish(buffer);
+    std::cout << "Publishing #" << n << std::endl;
+    //publish(buffer.data(), buffer.size());
   }
 
   /**
@@ -72,9 +75,10 @@ public:
    * @param msg: buffer containing the data to be published.
    * @param size: size of the buffer to be publish.
    */
-  void publish(uint8_t* msg, const size_t msg_size)
+  void publish(std::shared_ptr<flatbuffers::DetachedBuffer> b)
   {
-    GenericSocket<T>::sendMsg(msg, msg_size, "[Simple Publisher] - ");
+    GenericSocket<T>::sendMsg(b, "[Simple Publisher] - ");
+    //GenericSocket<T>::sendMsg(msg, msg_size, "[Simple Publisher] - ");
   }
 };
 }  // Namespace simple.

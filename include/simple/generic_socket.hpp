@@ -59,12 +59,36 @@ protected:
                                std::string(zmq_strerror(zmq_errno())));
     }
   }
+  
+  static void freeMsg(void* /*unused*/, void* hint)
+  {
+    if (hint != nullptr)
+    {
+      // Keep a copy of the buffer alive until the sending of the message is done.
+      auto b = static_cast<std::shared_ptr<flatbuffers::DetachedBuffer>*>(hint);
+      delete b;
+    }
+  }
 
-  bool sendMsg(uint8_t* msg, const size_t msg_size, const std::string& custom_error = "[SIMPLE Error] - ")
+
+  bool sendMsg(std::shared_ptr<flatbuffers::DetachedBuffer> b, const std::string& custom_error = "[SIMPLE Error] - ")
   {
     // Send the topic first and add the rest of the message after it.
-    auto topic_sent = zmq_send(socket_, const_cast<void*>(static_cast<const void*>(topic_)), topic_size_, ZMQ_SNDMORE);
-    auto message_sent = zmq_send(socket_, msg, msg_size, ZMQ_DONTWAIT);
+    
+   auto buffer_pointer = new std::shared_ptr<flatbuffers::DetachedBuffer>{b};
+    
+   zmq_msg_t topic = {};
+   zmq_msg_init_data(&topic, const_cast<void*>(static_cast<const void*>(topic_)), topic_size_, nullptr, nullptr);
+
+   zmq_msg_t message = {};
+   zmq_msg_init_data(&message, b->data(), b->size(), freeMsg, buffer_pointer);
+
+   // Send the topic first and add the rest of the message after it.
+   auto topic_sent = zmq_msg_send(&topic, socket_, ZMQ_SNDMORE);
+   auto message_sent = zmq_msg_send(&message, socket_, ZMQ_DONTWAIT);
+    
+    //auto topic_sent = zmq_send(socket_, const_cast<void*>(static_cast<const void*>(topic_)), topic_size_, ZMQ_SNDMORE);
+    //auto message_sent = zmq_send(socket_, msg, msg_size, ZMQ_DONTWAIT);
 
     if (topic_sent == -1 || message_sent == -1)
     {
@@ -99,8 +123,7 @@ protected:
           }
           else
           {
-            std::cerr << custom_error << "Failed to receive the message. ZMQ Error: " << zmq_strerror(zmq_errno())
-                      << std::endl;
+            std::cerr << custom_error << "Failed to receive the message. ZMQ Error: " << zmq_strerror(zmq_errno()) << std::endl;
           }
         }
       }

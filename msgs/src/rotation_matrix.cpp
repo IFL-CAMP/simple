@@ -99,7 +99,7 @@ RotationMatrix& RotationMatrix::operator=(const uint8_t* data)
   return *this;
 }
 
-flatbuffers::DetachedBuffer RotationMatrix::getBufferData() const
+std::shared_ptr<flatbuffers::DetachedBuffer> RotationMatrix::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
   auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
@@ -116,7 +116,8 @@ flatbuffers::DetachedBuffer RotationMatrix::getBufferData() const
   tmp_builder.add_r33(data_[8]);
   FinishRotationMatrixFbsBuffer(*builder, tmp_builder.Finish());
 
-  return builder->Release();
+  auto buffer = std::shared_ptr<flatbuffers::DetachedBuffer>(new flatbuffers::DetachedBuffer(builder->Release()));    
+  return buffer;
 }
 
 RotationMatrix RotationMatrix::getTranspose() const

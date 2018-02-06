@@ -96,7 +96,7 @@ String operator+(String lhs, const String& rhs)
   return lhs;
 }
 
-flatbuffers::DetachedBuffer String::getBufferData() const
+std::shared_ptr<flatbuffers::DetachedBuffer> String::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
   auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
@@ -106,7 +106,8 @@ flatbuffers::DetachedBuffer String::getBufferData() const
   tmp_builder.add_data(string_data);
   FinishStringFbsBuffer(*builder, tmp_builder.Finish());
 
-  return builder->Release();
+  auto buffer = std::shared_ptr<flatbuffers::DetachedBuffer>(new flatbuffers::DetachedBuffer(builder->Release()));    
+  return buffer;
 }
 
 std::ostream& operator<<(std::ostream& out, const String& s)

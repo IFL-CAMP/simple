@@ -99,7 +99,7 @@ Quaternion& Quaternion::operator=(const uint8_t* data)
   return *this;
 }
 
-flatbuffers::DetachedBuffer Quaternion::getBufferData() const
+std::shared_ptr<flatbuffers::DetachedBuffer> Quaternion::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
   auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
@@ -111,7 +111,9 @@ flatbuffers::DetachedBuffer Quaternion::getBufferData() const
   tmp_builder.add_w(data_[3]);
   FinishQuaternionFbsBuffer(*builder, tmp_builder.Finish());
 
-  return builder->Release();
+  auto buffer = std::shared_ptr<flatbuffers::DetachedBuffer>(new flatbuffers::DetachedBuffer(builder->Release()));    
+  return buffer;
+  
 }
 void Quaternion::setX(double x)
 {

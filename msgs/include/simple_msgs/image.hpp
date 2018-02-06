@@ -123,7 +123,7 @@ public:
    * @brief getBufferData
    * @return
    */
-  flatbuffers::DetachedBuffer getBufferData() const
+  std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const
   {
     std::lock_guard<std::mutex> lock(mutex_);
     auto builder = std::shared_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
@@ -131,10 +131,10 @@ public:
     auto encoding_string = builder->CreateString(encoding_);
 
     auto header_data = header_.getBufferData();
-    auto header_vector = builder->CreateVector(header_data.data(), header_data.size());
+    auto header_vector = builder->CreateVector(header_data->data(), header_data->size());
 
     auto origin_data = origin_.getBufferData();
-    auto origin_vector = builder->CreateVector(origin_data.data(), origin_data.size());
+    auto origin_vector = builder->CreateVector(origin_data->data(), origin_data->size());
 
     auto type = getDataUnionType();
     flatbuffers::Offset<void> elem;
@@ -163,7 +163,8 @@ public:
     tmp_builder.add_num_channels(num_channels_);
     FinishImageFbsBuffer(*builder, tmp_builder.Finish());
 
-    return builder->Release();
+      auto buffer = std::shared_ptr<flatbuffers::DetachedBuffer>(new flatbuffers::DetachedBuffer(builder->Release()));    
+  return buffer;
   }
 
   std::array<double, 3> getResolution() const { return std::array<double, 3>{{resX_, resY_, resZ_}}; }
