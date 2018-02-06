@@ -3,7 +3,7 @@ project(simple)
 
 # Set the project version
 set(PROJECT_VER_PATCH 0)
-set(PROJECT_VER_MINOR 1)
+set(PROJECT_VER_MINOR 0)
 set(PROJECT_VER_MAJOR 1)
 set(simple_VERSION "${PROJECT_VER_MAJOR}.${PROJECT_VER_MINOR}.${PROJECT_VER_PATCH}")
 
@@ -23,18 +23,34 @@ endif(WIN32)
 set(CMAKE_DEBUG_POSTFIX "-d")
 
 if(MSVC)
-	add_compile_options(/W4 /w44640 /WX)
-	if (MSVC_VERSION GREATER 1900)
-		add_compile_options(/permissive-)
-	endif()
+  add_compile_options(/W4 /w44640 /WX)
+  if (MSVC_VERSION GREATER 1900)
+    add_compile_options(/permissive-)
+  endif()
 else()
-	add_compile_options(-Werror -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic)
+  add_compile_options(-Werror -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic)
 endif()
 
-###### OPTIONS
+###### OPTIONAL BUILDS
 
 option(BUILD_EXAMPLES "Build SIMPLE Examples" FALSE)
 option(BUILD_TESTS "Build SIMPLE Tests" FALSE)
+
+# Examples
+if (${BUILD_EXAMPLES})
+  add_subdirectory(examples)
+endif()
+
+# Tests
+if (${BUILD_TESTS})
+  include(CTest)
+  if (CMAKE_CXX_COMPILER_ID MATCHES "GNU") # Coverage flags for GCC
+    add_compile_options(-fprofile-arcs -ftest-coverage)
+    set(coverage_lib gcov)
+  endif()
+  enable_testing()
+  add_subdirectory(tests)
+endif()
 
 ###### BUILD SIMPLE MSGS
 
@@ -59,7 +75,7 @@ target_include_directories(${PROJECT_NAME} INTERFACE
   $<INSTALL_INTERFACE:include>)
 
 target_link_libraries(${PROJECT_NAME} INTERFACE
-  libzmq ${CMAKE_THREAD_LIBS_INIT} simple_msgs)
+  libzmq ${CMAKE_THREAD_LIBS_INIT} simple_msgs ${coverage_lib})
 
 add_library(${PROJECT_NAME}-static INTERFACE)
 
@@ -70,7 +86,7 @@ target_include_directories(${PROJECT_NAME}-static INTERFACE
   $<INSTALL_INTERFACE:include>)
 
 target_link_libraries(${PROJECT_NAME}-static INTERFACE
-  libzmq-static ${CMAKE_THREAD_LIBS_INIT} simple_msgs)
+  libzmq-static ${CMAKE_THREAD_LIBS_INIT} simple_msgs ${coverage_lib})
 
 ###### INSTALLATION
 
@@ -97,16 +113,3 @@ install(EXPORT simpleTargets
   FILE simpleTargets.cmake
   NAMESPACE simple::
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/simple)
-
-###### EXAMPLES
-
-if (${BUILD_EXAMPLES})
-  add_subdirectory(examples)
-endif()
-
-###### TESTS
-
-if (${BUILD_TESTS})
-  enable_testing()
-  add_subdirectory(tests)
-endif()

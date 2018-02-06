@@ -97,6 +97,7 @@ test_gcc:
     script:
       - cd simple_gcc
       - ctest -R simple_tests --output-on-failure
+      - gcovr -e 'tests/include/*' -e 'msgs/include/simple_msgs/generated/*' -r ..
      
 test_clang:
     stage : test

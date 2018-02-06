@@ -3,7 +3,7 @@ build
 msgs/generated_include
 *.autosave
 tests/include/catch.hpp
-
+*.kdev4
 msgs/include/simple_msgs/generated/
 build2017/
 simpleConfigVersion.cmake
