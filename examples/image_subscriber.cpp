@@ -20,7 +20,7 @@
 #include <opencv2/opencv.hpp>
 
 #include "simple/subscriber.hpp"
-#include "simple_msgs/image.h"
+#include "simple_msgs/image.hpp"
 
 const std::string window_name("Received image");
 cv::Mat buffer;
