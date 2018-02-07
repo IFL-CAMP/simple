@@ -92,7 +92,7 @@ SCENARIO("Using a RotationMatrixStamped Message")
     simple_msgs::RotationMatrixStamped rotation_matrix_stamped(random_header, random_rotation_matrix);
     WHEN("I copy-construct a new RotationMatrixStamped")
     {
-      const simple_msgs::RotationMatrixStamped& copy_rotation_matrix_stamped(rotation_matrix_stamped);
+      const simple_msgs::RotationMatrixStamped copy_rotation_matrix_stamped(rotation_matrix_stamped);
       THEN("The new RotationMatrixStamped is equal to the other")
       {
         REQUIRE(copy_rotation_matrix_stamped == rotation_matrix_stamped);
@@ -178,14 +178,31 @@ SCENARIO("Using a RotationMatrixStamped Message")
     }
   }
 
-  // Testing Topic
-  GIVEN("A point")
+  // Testing Topic and ostream
+  GIVEN("A Rotation Matrix Stamped")
   {
-    simple_msgs::RotationMatrixStamped rotation_matrix_stamped;
+    simple_msgs::RotationMatrixStamped rotation_matrix_stamped(random_header,random_rotation_matrix);
     WHEN("I get the message topic")
     {
       std::string topic_name = rotation_matrix_stamped.getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "RMST"); }
+    }
+    WHEN("I print the RotatioMatrixStamped")
+    {
+      std::ostringstream out;
+      out << rotation_matrix_stamped;
+      THEN("The output is correct")
+      {
+        std::string correct =
+            "Header\n \tseq_n: " + std::to_string(rotation_matrix_stamped.getHeader().getSequenceNumber()) +
+            "\n \tframe_id: " + rotation_matrix_stamped.getHeader().getFrameID() + "\n \t" +
+            "timestamp: " + std::to_string(rotation_matrix_stamped.getHeader().getTimestamp()) + "\n" +
+            "RotationMatrix \n \t" + std::to_string(double_1) + " " + std::to_string(double_2) + " " +
+            std::to_string(double_3) + "\n \t" + std::to_string(double_4) + " " + std::to_string(double_5) + " " +
+            std::to_string(double_6) + "\n \t" + std::to_string(double_7) + " " + std::to_string(double_8) + " " +
+            std::to_string(double_9) + "\n";
+        REQUIRE(out.str() == correct);
+      }
     }
   }
 }
