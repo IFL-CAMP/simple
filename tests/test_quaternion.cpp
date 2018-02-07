@@ -81,7 +81,7 @@ SCENARIO("Using a Quaternion Message")
 
   GIVEN("A quaternion created from moving an array of doubles")
   {
-    simple_msgs::Quaternion moved_array_quaternion(double_array);
+    simple_msgs::Quaternion moved_array_quaternion(std::move(double_array));
     WHEN("We check the quaternion's elements")
     {
       THEN("They all have to be equal to the doubles")
@@ -167,7 +167,7 @@ SCENARIO("Using a Quaternion Message")
     WHEN("I move-assign from an array to that quaternion")
     {
       simple_msgs::Quaternion move_assined_array_quaternion;
-      move_assined_array_quaternion = double_array;
+      move_assined_array_quaternion = std::move(double_array);
       THEN("The quaternion's elements are the same as the array")
       {
         REQUIRE(move_assined_array_quaternion.getX() == double_1);
@@ -208,6 +208,18 @@ SCENARIO("Using a Quaternion Message")
       std::string topic_name = quaternion_1.getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "QUAT"); }
     }
+	WHEN("I print the Quaternion")
+	{
+		std::ostringstream out;
+		out << quaternion_1;
+		THEN("The output is correct")
+		{
+			REQUIRE(out.str() == "Quaternion \n \tx: " + std::to_string(quaternion_1.getX()) +
+				"\n \ty: " + std::to_string(quaternion_1.getY()) +
+				"\n \tz: " + std::to_string(quaternion_1.getZ()) +
+				"\n \tw: " + std::to_string(quaternion_1.getW()) + "\n");
+		}
+	}
   }
 
   // Testing coordinates setters/getters.
