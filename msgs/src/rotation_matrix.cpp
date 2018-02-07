@@ -164,8 +164,8 @@ void RotationMatrix::setColumn(int column_index, const std::array<double, 3>& va
 
 std::ostream& operator<<(std::ostream& out, const RotationMatrix& q)
 {
-  out << "RotationMatrix \n \t" << q.data_[0] << " " << q.data_[1] << " " << q.data_[2] << "\n \t" << q.data_[3] << " "
-      << q.data_[4] << " " << q.data_[5] << "\n \t" << q.data_[6] << " " << q.data_[7] << " " << q.data_[8] << "\n";
+  out << "RotationMatrix \n \t" << std::to_string(q.data_[0]) << " " << std::to_string(q.data_[1]) << " " << std::to_string(q.data_[2]) << "\n \t" << std::to_string(q.data_[3]) << " "
+      << std::to_string(q.data_[4]) << " " << std::to_string(q.data_[5]) << "\n \t" << std::to_string(q.data_[6]) << " " << std::to_string(q.data_[7]) << " " << std::to_string(q.data_[8]) << "\n";
 
   return out;
 }
