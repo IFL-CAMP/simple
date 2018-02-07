@@ -40,6 +40,19 @@ SCENARIO("Using an Image Message")
   std::string random_string = std::to_string(random_double_1);
   simple_msgs::Header random_header = createRandomHeader();
   simple_msgs::Pose random_pose = createRandomPose();
+  //uint8_t data
+  int size_uint8 = 10;
+  uint8_t* uint8_data = new uint8_t[size_uint8];
+  //int16_t data
+  int size_int16 = 10;
+  int16_t* int16_data = new int16_t[size_int16];
+  //float data
+  int size_float = 10;
+  float* float_data = new float[size_float];
+  //double data
+  int size_double = 10;
+  double* double_data = new double[size_double];
+
   // Testing constructor.
   GIVEN("A uint8_t Image created from an empty constructor")
   {
@@ -223,4 +236,9 @@ SCENARIO("Using an Image Message")
       THEN("I get the correct one") { REQUIRE(topic_name == "IMAG"); }
     }
   }
+  //clean up
+  delete[] uint8_data;
+  delete[] int16_data;
+  delete[] float_data;
+  delete[] double_data;
 }

@@ -116,9 +116,9 @@ void Header::setTimestamp(double timestamp)
 std::ostream& operator<<(std::ostream& out, const Header& h)
 {
   out << "Header\n \t"
-      << "seq_n: " << h.seq_n_ << "\n \t"
+      << "seq_n: " << std::to_string(h.seq_n_) << "\n \t"
       << "frame_id: " << h.frame_id_ << "\n \t"
-      << "timestamp: " << h.timestamp_ << "\n";
+      << "timestamp: " << std::to_string(h.timestamp_) << "\n";
 
   return out;
 }
