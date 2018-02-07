@@ -60,7 +60,7 @@ SCENARIO("Using a Bool Message")
     }
     WHEN("I copy-construct a new Bool")
     {
-      const simple_msgs::Bool& copy_bool(single_bool);
+      const simple_msgs::Bool copy_bool(single_bool);
       THEN("The new Bool is equal to the other") { REQUIRE(copy_bool == single_bool); }
     }
     WHEN("I move-construct a new Bool")
@@ -136,5 +136,12 @@ SCENARIO("Using a Bool Message")
       std::string topic_name = single_bool.getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "BOOL"); }
     }
+	WHEN("I print the Bool") {
+		std::ostringstream out;
+		out << single_bool;
+		THEN("The ostream is correct") {
+			REQUIRE(out.str() == "1");
+		}
+	}
   }
 }
