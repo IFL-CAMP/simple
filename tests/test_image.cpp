@@ -123,6 +123,7 @@ SCENARIO("Using an uint8 Image Message")
     random_image.setImageEncoding(random_string);
     random_image.setHeader(random_header);
     random_image.setOrigin(random_pose);
+	random_image.setImageData(uint8_data, size_uint8);
     WHEN("I copy assign a new image from the existing image's buffer")
     {
       simple_msgs::Image<uint8_t> buffer_assigned_image;
@@ -148,11 +149,11 @@ SCENARIO("Using an uint8 Image Message")
         REQUIRE(move_assigned_image.getImageDimensions()[0] == random_int_1);
         REQUIRE(move_assigned_image.getImageDimensions()[1] == random_int_2);
         REQUIRE(move_assigned_image.getImageDimensions()[2] == random_int_3);
-        REQUIRE(move_assigned_image.getImageSize() == 0);
+        REQUIRE(move_assigned_image.getImageSize() == size_uint8);
         REQUIRE(move_assigned_image.getImageOrigin() == random_pose);
         REQUIRE(move_assigned_image.getHeader() == random_header);
         REQUIRE(move_assigned_image.getImageEncoding() == random_string);
-        // REQUIRE(move_assigned_image.getImageData() == nullptr);
+        REQUIRE(*(move_assigned_image.getImageData()) == *uint8_data);
       }
     }
   }
@@ -326,6 +327,7 @@ SCENARIO("Using an int16 Image Message")
 		random_image.setImageEncoding(random_string);
 		random_image.setHeader(random_header);
 		random_image.setOrigin(random_pose);
+		random_image.setImageData(int16_data, size_int16);
 		WHEN("I copy assign a new image from the existing image's buffer")
 		{
 			simple_msgs::Image<int16_t> buffer_assigned_image;
@@ -351,11 +353,11 @@ SCENARIO("Using an int16 Image Message")
 				REQUIRE(move_assigned_image.getImageDimensions()[0] == random_int_1);
 				REQUIRE(move_assigned_image.getImageDimensions()[1] == random_int_2);
 				REQUIRE(move_assigned_image.getImageDimensions()[2] == random_int_3);
-				REQUIRE(move_assigned_image.getImageSize() == 0);
+				REQUIRE(move_assigned_image.getImageSize() == size_int16);
 				REQUIRE(move_assigned_image.getImageOrigin() == random_pose);
 				REQUIRE(move_assigned_image.getHeader() == random_header);
 				REQUIRE(move_assigned_image.getImageEncoding() == random_string);
-				// REQUIRE(move_assigned_image.getImageData() == nullptr);
+				REQUIRE(*(move_assigned_image.getImageData()) == *int16_data);
 			}
 		}
 	}
@@ -529,6 +531,7 @@ SCENARIO("Using a float Image Message")
 		random_image.setImageEncoding(random_string);
 		random_image.setHeader(random_header);
 		random_image.setOrigin(random_pose);
+		random_image.setImageData(float_data, size_float);
 		WHEN("I copy assign a new image from the existing image's buffer")
 		{
 			simple_msgs::Image<float> buffer_assigned_image;
@@ -554,11 +557,11 @@ SCENARIO("Using a float Image Message")
 				REQUIRE(move_assigned_image.getImageDimensions()[0] == random_int_1);
 				REQUIRE(move_assigned_image.getImageDimensions()[1] == random_int_2);
 				REQUIRE(move_assigned_image.getImageDimensions()[2] == random_int_3);
-				REQUIRE(move_assigned_image.getImageSize() == 0);
+				REQUIRE(move_assigned_image.getImageSize() == size_float);
 				REQUIRE(move_assigned_image.getImageOrigin() == random_pose);
 				REQUIRE(move_assigned_image.getHeader() == random_header);
 				REQUIRE(move_assigned_image.getImageEncoding() == random_string);
-				// REQUIRE(move_assigned_image.getImageData() == nullptr);
+				REQUIRE(*(move_assigned_image.getImageData()) == *float_data);
 			}
 		}
 	}
@@ -732,6 +735,7 @@ SCENARIO("Using a double Image Message")
 		random_image.setImageEncoding(random_string);
 		random_image.setHeader(random_header);
 		random_image.setOrigin(random_pose);
+		random_image.setImageData(double_data, size_double);
 		WHEN("I copy assign a new image from the existing image's buffer")
 		{
 			simple_msgs::Image<double> buffer_assigned_image;
@@ -757,11 +761,11 @@ SCENARIO("Using a double Image Message")
 				REQUIRE(move_assigned_image.getImageDimensions()[0] == random_int_1);
 				REQUIRE(move_assigned_image.getImageDimensions()[1] == random_int_2);
 				REQUIRE(move_assigned_image.getImageDimensions()[2] == random_int_3);
-				REQUIRE(move_assigned_image.getImageSize() == 0);
+				REQUIRE(move_assigned_image.getImageSize() == size_double);
 				REQUIRE(move_assigned_image.getImageOrigin() == random_pose);
 				REQUIRE(move_assigned_image.getHeader() == random_header);
 				REQUIRE(move_assigned_image.getImageEncoding() == random_string);
-				// REQUIRE(move_assigned_image.getImageData() == nullptr);
+				REQUIRE(*(move_assigned_image.getImageData()) == *double_data);
 			}
 		}
 	}
