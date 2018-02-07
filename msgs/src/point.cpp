@@ -189,9 +189,9 @@ void Point::setZ(double z)
 std::ostream& operator<<(std::ostream& out, const Point& p)
 {
   out << "Point \n \t"
-      << "x: " << p.data_[0] << "\n \t"
-      << "y: " << p.data_[1] << "\n \t"
-      << "z: " << p.data_[2] << "\n";
+      << "x: " << std::to_string(p.data_[0]) << "\n \t"
+      << "y: " << std::to_string(p.data_[1]) << "\n \t"
+      << "z: " << std::to_string(p.data_[2]) << "\n";
 
   return out;
 }

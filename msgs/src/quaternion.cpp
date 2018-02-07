@@ -142,10 +142,10 @@ void Quaternion::setW(double w)
 std::ostream& operator<<(std::ostream& out, const Quaternion& q)
 {
   out << "Quaternion \n \t"
-      << "x: " << q.data_[0] << "\n \t"
-      << "y: " << q.data_[1] << "\n \t"
-      << "z: " << q.data_[2] << "\n \t"
-      << "w: " << q.data_[3] << "\n";
+      << "x: " << std::to_string(q.data_[0]) << "\n \t"
+      << "y: " << std::to_string(q.data_[1]) << "\n \t"
+      << "z: " << std::to_string(q.data_[2]) << "\n \t"
+      << "w: " << std::to_string(q.data_[3]) << "\n";
 
   return out;
 }
