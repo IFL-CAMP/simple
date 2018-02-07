@@ -41,17 +41,17 @@ SCENARIO("Using an Image Message")
   simple_msgs::Header random_header = createRandomHeader();
   simple_msgs::Pose random_pose = createRandomPose();
   //uint8_t data
-  int size_uint8 = 10;
-  uint8_t* uint8_data = new uint8_t[size_uint8];
+  int size_uint8 = 1;
+  uint8_t* uint8_data = new uint8_t[1]{ static_cast<uint8_t>(rand() % 256) };
   //int16_t data
-  int size_int16 = 10;
-  int16_t* int16_data = new int16_t[size_int16];
+  /*int size_int16 = 1;
+  int16_t int16_data[1] = { static_cast<int16_t>(rand() % 65536) };
   //float data
-  int size_float = 10;
-  float* float_data = new float[size_float];
+  int size_float = 1;
+  float float_data[1] = { static_cast<float>(rand()/RAND_MAX) };
   //double data
-  int size_double = 10;
-  double* double_data = new double[size_double];
+  int size_double = 1;
+  double double_data[1] = { static_cast<double>(rand()/RAND_MAX) };*/
 
   // Testing constructor.
   GIVEN("A uint8_t Image created from an empty constructor")
@@ -72,7 +72,7 @@ SCENARIO("Using an Image Message")
         REQUIRE(empty_image.getImageOrigin() == empty_pose);
         REQUIRE(empty_image.getHeader() == empty_header);
         REQUIRE(empty_image.getImageEncoding().empty());
-        // REQUIRE(empty_image.getImageData() == nullptr);
+        //REQUIRE(empty_image.getImageData() == nullptr);
       }
     }
     WHEN("I build another empty image from the buffer of the empty image")
@@ -91,6 +91,7 @@ SCENARIO("Using an Image Message")
     random_image.setImageEncoding(random_string);
     random_image.setHeader(random_header);
     random_image.setOrigin(random_pose);
+	random_image.setImageData(uint8_data, size_uint8);
     WHEN("I copy construct a new image from the existing image's buffer")
     {
       simple_msgs::Image<uint8_t> buffer_copy_image(random_image.getBufferData()->data());
@@ -113,11 +114,11 @@ SCENARIO("Using an Image Message")
         REQUIRE(move_image.getImageDimensions()[0] == random_int_1);
         REQUIRE(move_image.getImageDimensions()[1] == random_int_2);
         REQUIRE(move_image.getImageDimensions()[2] == random_int_3);
-        REQUIRE(move_image.getImageSize() == 0);
+        REQUIRE(move_image.getImageSize() == size_uint8);
         REQUIRE(move_image.getImageOrigin() == random_pose);
         REQUIRE(move_image.getHeader() == random_header);
         REQUIRE(move_image.getImageEncoding() == random_string);
-        // REQUIRE(move_image.getImageData() == nullptr);
+        REQUIRE(*(move_image.getImageData()) == *uint8_data);
       }
     }
   }
@@ -236,9 +237,4 @@ SCENARIO("Using an Image Message")
       THEN("I get the correct one") { REQUIRE(topic_name == "IMAG"); }
     }
   }
-  //clean up
-  delete[] uint8_data;
-  delete[] int16_data;
-  delete[] float_data;
-  delete[] double_data;
 }
