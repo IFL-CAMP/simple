@@ -356,6 +356,16 @@ SCENARIO("Using a Rotation Matrix Message")
 			REQUIRE_THROWS(empty_rotation_matrix.getColumn(3));
 		}
 	}
+	WHEN("I give a row index out of range") {
+		THEN("I throw an exception") {
+			REQUIRE_THROWS(empty_rotation_matrix.setRow(3, row0_array));
+		}
+	}
+	WHEN("I give a column index out of range") {
+		THEN("I throw an exception") {
+			REQUIRE_THROWS(empty_rotation_matrix.setColumn(3, column0_array));
+		}
+	}
   }
 
   GIVEN("A Rotation Matrix")

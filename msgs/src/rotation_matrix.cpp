@@ -148,18 +148,32 @@ std::array<double, 3> RotationMatrix::getColumn(int column_index) const
 }
 void RotationMatrix::setRow(int row_index, const std::array<double, 3>& values)
 {
-  for (size_t i = 0; i < values.size(); ++i)
-  {
-    data_.at(row_index * 3 + i) = values.at(i);
-  }
+	if (0<=row_index && row_index<=2)
+	{
+		for (size_t i = 0; i < values.size(); ++i)
+		{
+			data_.at(row_index * 3 + i) = values.at(i);
+		}
+	}
+	else
+	{
+		throw std::out_of_range("Index out of range [0,2]");
+	}
 }
 
 void RotationMatrix::setColumn(int column_index, const std::array<double, 3>& values)
 {
-  for (size_t i = 0; i < values.size(); ++i)
-  {
-    data_.at(3 * i + column_index) = values.at(i);
-  }
+	if (0<=column_index && column_index<=2)
+	{
+		for (size_t i = 0; i < values.size(); ++i)
+		{
+			data_.at(3 * i + column_index) = values.at(i);
+		}
+	}
+	else
+	{
+		throw std::out_of_range("Index out of range [0,2]");
+	}
 }
 
 std::ostream& operator<<(std::ostream& out, const RotationMatrix& q)
