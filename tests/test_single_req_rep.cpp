@@ -52,6 +52,20 @@ SCENARIO("Client-Server to a Point message.")
   }
 }
 
+SCENARIO("Client requests a non-existing server")
+{
+  GIVEN("A Client to a Point")
+  {
+    simple::Client<simple_msgs::Point> client("tcp://localhost:5555",3000,3000);
+    WHEN("The client sends a request")
+    {
+      auto p = createRandomPoint();
+      auto sentPoint = p;
+      THEN("The timeout is reached and no reply is received") { REQUIRE(client.request(p) == false); }
+    }
+  }
+}
+
 SCENARIO("Client-Server to a Pose message.")
 {
   GIVEN("An instance of a server.")

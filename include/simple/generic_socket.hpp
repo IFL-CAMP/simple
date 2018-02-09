@@ -138,6 +138,10 @@ protected:
     zmq_setsockopt(socket_, ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
     timeout_ = timeout;
   }
+  void setLinger(int linger) {
+	  zmq_setsockopt(socket_, ZMQ_LINGER, &linger, sizeof(linger));
+	  linger_ = linger;
+  }
 
   void renewSocket(int type) { socket_ = zmq_socket(context_.instance(), type); }
   void* socket_{nullptr};
@@ -145,8 +149,12 @@ protected:
   const size_t topic_size_{strlen(topic_)};
   std::string address_{""};
   int timeout_{0};
-  ContextManager context_;
+  int linger_{ -1 };
+  static ContextManager context_;
 };
+
+template<typename T>
+ContextManager GenericSocket<T>::context_;
 
 }  // Namespace simple.
 
