@@ -49,12 +49,13 @@ public:
 
   /**
    * @brief Copy constructor for Client.
-   * Opens a new socket of the same type, connected to the same address, with the same timeout.
+   * Opens a new socket of the same type, connected to the same address, with the same timeout and linger.
    */
   Client(const Client& other)
     : GenericSocket<T>(ZMQ_REQ)
   {
     GenericSocket<T>::setTimeout(other.timeout_);
+	GenericSocket<T>::setLinger(other.linger_);
     GenericSocket<T>::connect(other.address_);
   }
 
@@ -62,6 +63,7 @@ public:
   {
     GenericSocket<T>::renewSocket(ZMQ_REQ);
     GenericSocket<T>::setTimeout(other.timeout_);
+	GenericSocket<T>::setLinger(other.linger_);
     GenericSocket<T>::connect(other.address_);
   }
 

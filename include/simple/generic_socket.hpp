@@ -55,7 +55,7 @@ protected:
     auto success = zmq_connect(socket_, address.c_str());
     if (success != 0)
     {
-      throw std::runtime_error("[SIMPLE Error] - Cannot bind to the given address/port. ZMQ Error: " +
+      throw std::runtime_error("[SIMPLE Error] - Cannot connect to the given address/port. ZMQ Error: " +
                                std::string(zmq_strerror(zmq_errno())));
     }
   }

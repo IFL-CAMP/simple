@@ -66,6 +66,27 @@ SCENARIO("Client requests a non-existing server")
   }
 }
 
+SCENARIO("Two Servers binding to the same address") {
+	GIVEN("A server") {
+		simple::Server<simple_msgs::Point> server_1("tcp://*:5555", callbackFunctionPoint);
+		WHEN("Another server tries to bind to the same address") {
+			THEN("An exception is thrown") {
+				REQUIRE_THROWS(simple::Server<simple_msgs::Point>("tcp://*:5555", callbackFunctionPoint));
+			}
+		}
+	}
+}
+
+SCENARIO("A Client connecting to a false address") {
+	GIVEN("A client") {
+		WHEN("The address provided is wrong") {
+			THEN("An exception is thrown") {
+				REQUIRE_THROWS(simple::Client<simple_msgs::Point>("tcp://*:5555"));
+			}
+		}
+	}
+}
+
 SCENARIO("Client-Server to a Pose message.")
 {
   GIVEN("An instance of a server.")
