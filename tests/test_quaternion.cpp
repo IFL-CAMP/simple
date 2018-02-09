@@ -208,18 +208,18 @@ SCENARIO("Using a Quaternion Message")
       std::string topic_name = quaternion_1.getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "QUAT"); }
     }
-	WHEN("I print the Quaternion")
-	{
-		std::ostringstream out;
-		out << quaternion_1;
-		THEN("The output is correct")
-		{
-			REQUIRE(out.str() == "Quaternion \n \tx: " + std::to_string(quaternion_1.getX()) +
-				"\n \ty: " + std::to_string(quaternion_1.getY()) +
-				"\n \tz: " + std::to_string(quaternion_1.getZ()) +
-				"\n \tw: " + std::to_string(quaternion_1.getW()) + "\n");
-		}
-	}
+    WHEN("I print the Quaternion")
+    {
+      std::ostringstream out;
+      out << quaternion_1;
+      THEN("The output is correct")
+      {
+        REQUIRE(out.str() == "Quaternion \n \tx: " + std::to_string(quaternion_1.getX()) +
+                                 "\n \ty: " + std::to_string(quaternion_1.getY()) +
+                                 "\n \tz: " + std::to_string(quaternion_1.getZ()) +
+                                 "\n \tw: " + std::to_string(quaternion_1.getW()) + "\n");
+      }
+    }
   }
 
   // Testing coordinates setters/getters.

@@ -177,23 +177,24 @@ SCENARIO("Using a PoseStamped Message")
       std::string topic_name = pose_stamped.getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "POST"); }
     }
-	WHEN("I print the PoseStamped")
-	{
-		std::ostringstream out;
-		out << pose_stamped;
-		THEN("The output is correct")
-		{
-			REQUIRE(out.str() == "Header\n \tseq_n: " + std::to_string(pose_stamped.getHeader().getSequenceNumber()) +
-				"\n \tframe_id: " + pose_stamped.getHeader().getFrameID() +
-				"\n \ttimestamp: " + std::to_string(pose_stamped.getHeader().getTimestamp()) +
-				"\nPose \n \tPoint \n \tx: " + std::to_string(pose_stamped.getPose().getPosition().getX()) +
-				"\n \ty: " + std::to_string(pose_stamped.getPose().getPosition().getY()) +
-				"\n \tz: " + std::to_string(pose_stamped.getPose().getPosition().getZ()) +
-				"\nQuaternion \n \tx: " + std::to_string(pose_stamped.getPose().getQuaternion().getX()) +
-				"\n \ty: " + std::to_string(pose_stamped.getPose().getQuaternion().getY()) +
-				"\n \tz: " + std::to_string(pose_stamped.getPose().getQuaternion().getZ()) +
-				"\n \tw: " + std::to_string(pose_stamped.getPose().getQuaternion().getW()) + "\n");
-		}
-	}
+    WHEN("I print the PoseStamped")
+    {
+      std::ostringstream out;
+      out << pose_stamped;
+      THEN("The output is correct")
+      {
+        REQUIRE(out.str() ==
+                "Header\n \tseq_n: " + std::to_string(pose_stamped.getHeader().getSequenceNumber()) +
+                    "\n \tframe_id: " + pose_stamped.getHeader().getFrameID() +
+                    "\n \ttimestamp: " + std::to_string(pose_stamped.getHeader().getTimestamp()) +
+                    "\nPose \n \tPoint \n \tx: " + std::to_string(pose_stamped.getPose().getPosition().getX()) +
+                    "\n \ty: " + std::to_string(pose_stamped.getPose().getPosition().getY()) +
+                    "\n \tz: " + std::to_string(pose_stamped.getPose().getPosition().getZ()) +
+                    "\nQuaternion \n \tx: " + std::to_string(pose_stamped.getPose().getQuaternion().getX()) +
+                    "\n \ty: " + std::to_string(pose_stamped.getPose().getQuaternion().getY()) +
+                    "\n \tz: " + std::to_string(pose_stamped.getPose().getQuaternion().getZ()) +
+                    "\n \tw: " + std::to_string(pose_stamped.getPose().getQuaternion().getW()) + "\n");
+      }
+    }
   }
 }

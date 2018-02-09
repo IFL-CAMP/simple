@@ -43,7 +43,7 @@ public:
     : GenericSocket<T>(ZMQ_REQ)
   {
     GenericSocket<T>::setTimeout(timeout);
-	GenericSocket<T>::setLinger(linger);
+    GenericSocket<T>::setLinger(linger);
     GenericSocket<T>::connect(address);
   }
 
@@ -55,7 +55,7 @@ public:
     : GenericSocket<T>(ZMQ_REQ)
   {
     GenericSocket<T>::setTimeout(other.timeout_);
-	GenericSocket<T>::setLinger(other.linger_);
+    GenericSocket<T>::setLinger(other.linger_);
     GenericSocket<T>::connect(other.address_);
   }
 
@@ -63,7 +63,7 @@ public:
   {
     GenericSocket<T>::renewSocket(ZMQ_REQ);
     GenericSocket<T>::setTimeout(other.timeout_);
-	GenericSocket<T>::setLinger(other.linger_);
+    GenericSocket<T>::setLinger(other.linger_);
     GenericSocket<T>::connect(other.address_);
   }
 
@@ -73,6 +73,7 @@ public:
    * @param msg: SIMPLE class wrapper for Flatbuffer messages.
    */
   bool request(T& msg) { return request(msg.getBufferData(), msg); }
+
 private:
   bool request(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer, T& msg)
   {
@@ -91,7 +92,7 @@ private:
         zmq_close(GenericSocket<T>::socket_);
         GenericSocket<T>::renewSocket(ZMQ_REQ);
         GenericSocket<T>::setTimeout(GenericSocket<T>::timeout_);
-		GenericSocket<T>::setLinger(GenericSocket<T>::linger_);
+        GenericSocket<T>::setLinger(GenericSocket<T>::linger_);
         GenericSocket<T>::connect(GenericSocket<T>::address_);
       }
     }

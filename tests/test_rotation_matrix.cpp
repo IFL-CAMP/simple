@@ -222,23 +222,23 @@ SCENARIO("Using a Rotation Matrix Message")
         REQUIRE(move_assigned_rotation_matrix.getRow(2)[2] == double_9);
       }
     }
-	WHEN("I move-assign from an array")
-	{
-		simple_msgs::RotationMatrix move_assigned_array_rotation_matrix;
-		move_assigned_array_rotation_matrix = std::move(doubles_array);
-		THEN("The new Rotation Matrix has to be same as the array")
-		{
-			REQUIRE(move_assigned_array_rotation_matrix.getRow(0)[0] == double_1);
-			REQUIRE(move_assigned_array_rotation_matrix.getRow(0)[1] == double_2);
-			REQUIRE(move_assigned_array_rotation_matrix.getRow(0)[2] == double_3);
-			REQUIRE(move_assigned_array_rotation_matrix.getRow(1)[0] == double_4);
-			REQUIRE(move_assigned_array_rotation_matrix.getRow(1)[1] == double_5);
-			REQUIRE(move_assigned_array_rotation_matrix.getRow(1)[2] == double_6);
-			REQUIRE(move_assigned_array_rotation_matrix.getRow(2)[0] == double_7);
-			REQUIRE(move_assigned_array_rotation_matrix.getRow(2)[1] == double_8);
-			REQUIRE(move_assigned_array_rotation_matrix.getRow(2)[2] == double_9);
-		}
-	}
+    WHEN("I move-assign from an array")
+    {
+      simple_msgs::RotationMatrix move_assigned_array_rotation_matrix;
+      move_assigned_array_rotation_matrix = std::move(doubles_array);
+      THEN("The new Rotation Matrix has to be same as the array")
+      {
+        REQUIRE(move_assigned_array_rotation_matrix.getRow(0)[0] == double_1);
+        REQUIRE(move_assigned_array_rotation_matrix.getRow(0)[1] == double_2);
+        REQUIRE(move_assigned_array_rotation_matrix.getRow(0)[2] == double_3);
+        REQUIRE(move_assigned_array_rotation_matrix.getRow(1)[0] == double_4);
+        REQUIRE(move_assigned_array_rotation_matrix.getRow(1)[1] == double_5);
+        REQUIRE(move_assigned_array_rotation_matrix.getRow(1)[2] == double_6);
+        REQUIRE(move_assigned_array_rotation_matrix.getRow(2)[0] == double_7);
+        REQUIRE(move_assigned_array_rotation_matrix.getRow(2)[1] == double_8);
+        REQUIRE(move_assigned_array_rotation_matrix.getRow(2)[2] == double_9);
+      }
+    }
   }
 
   GIVEN("A Rotation Matrix")
@@ -346,26 +346,22 @@ SCENARIO("Using a Rotation Matrix Message")
         REQUIRE(empty_rotation_matrix.getColumn(2) == column2_array);
       }
     }
-	WHEN("I give a row index out of range") {
-		THEN("I throw an exception") {
-			REQUIRE_THROWS(empty_rotation_matrix.getRow(3));
-		}
-	}
-	WHEN("I give a column index out of range") {
-		THEN("I throw an exception") {
-			REQUIRE_THROWS(empty_rotation_matrix.getColumn(3));
-		}
-	}
-	WHEN("I give a row index out of range") {
-		THEN("I throw an exception") {
-			REQUIRE_THROWS(empty_rotation_matrix.setRow(3, row0_array));
-		}
-	}
-	WHEN("I give a column index out of range") {
-		THEN("I throw an exception") {
-			REQUIRE_THROWS(empty_rotation_matrix.setColumn(3, column0_array));
-		}
-	}
+    WHEN("I give a row index out of range")
+    {
+      THEN("I throw an exception") { REQUIRE_THROWS(empty_rotation_matrix.getRow(3)); }
+    }
+    WHEN("I give a column index out of range")
+    {
+      THEN("I throw an exception") { REQUIRE_THROWS(empty_rotation_matrix.getColumn(3)); }
+    }
+    WHEN("I give a row index out of range")
+    {
+      THEN("I throw an exception") { REQUIRE_THROWS(empty_rotation_matrix.setRow(3, row0_array)); }
+    }
+    WHEN("I give a column index out of range")
+    {
+      THEN("I throw an exception") { REQUIRE_THROWS(empty_rotation_matrix.setColumn(3, column0_array)); }
+    }
   }
 
   GIVEN("A Rotation Matrix")
@@ -408,14 +404,19 @@ SCENARIO("Using a Rotation Matrix Message")
       std::string topic_name = rotation_matrix.getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "RMAT"); }
     }
-	WHEN("I print the RotatioMatrix") {
-		std::ostringstream out;
-		out << rotation_matrix;
-		THEN("The output is correct") {
-			std::string correct = "RotationMatrix \n \t" + std::to_string(double_1) + " " + std::to_string(double_2) + " " + std::to_string(double_3) + "\n \t" + std::to_string(double_4) + " "
-				+ std::to_string(double_5) + " " + std::to_string(double_6) + "\n \t" + std::to_string(double_7) + " " + std::to_string(double_8) + " " + std::to_string(double_9) + "\n";
-			REQUIRE(out.str()==correct);
-		}
-	}
+    WHEN("I print the RotatioMatrix")
+    {
+      std::ostringstream out;
+      out << rotation_matrix;
+      THEN("The output is correct")
+      {
+        std::string correct = "RotationMatrix \n \t" + std::to_string(double_1) + " " + std::to_string(double_2) + " " +
+                              std::to_string(double_3) + "\n \t" + std::to_string(double_4) + " " +
+                              std::to_string(double_5) + " " + std::to_string(double_6) + "\n \t" +
+                              std::to_string(double_7) + " " + std::to_string(double_8) + " " +
+                              std::to_string(double_9) + "\n";
+        REQUIRE(out.str() == correct);
+      }
+    }
   }
 }

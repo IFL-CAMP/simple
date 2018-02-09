@@ -136,12 +136,11 @@ SCENARIO("Using a Bool Message")
       std::string topic_name = single_bool.getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "BOOL"); }
     }
-	WHEN("I print the Bool") {
-		std::ostringstream out;
-		out << single_bool;
-		THEN("The ostream is correct") {
-			REQUIRE(out.str() == "1");
-		}
-	}
+    WHEN("I print the Bool")
+    {
+      std::ostringstream out;
+      out << single_bool;
+      THEN("The ostream is correct") { REQUIRE(out.str() == "1"); }
+    }
   }
 }

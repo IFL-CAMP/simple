@@ -214,7 +214,7 @@ public:
   }
 
   /**
-   * @brief 
+   * @brief
    * @param data Pointer to the beginning of the data
    * @param data_size Total length of the data (already contemplating the number of channels)
    * @param num_channels Number of channels in the image

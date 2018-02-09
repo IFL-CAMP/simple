@@ -314,14 +314,16 @@ SCENARIO("Using a Point Message")
       std::string topic_name = single_point.getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "POIT"); }
     }
-	WHEN("I print the Point") {
-		std::ostringstream out;
-		out << single_point;
-		THEN("The output is correct") {
-			REQUIRE(out.str()=="Point \n \tx: " + std::to_string(single_point.getX()) + "\n \t"
-				+ "y: " + std::to_string(single_point.getY()) + "\n \t"
-				+ "z: " + std::to_string(single_point.getZ()) + "\n");
-		}
-	}
+    WHEN("I print the Point")
+    {
+      std::ostringstream out;
+      out << single_point;
+      THEN("The output is correct")
+      {
+        REQUIRE(out.str() == "Point \n \tx: " + std::to_string(single_point.getX()) + "\n \t" +
+                                 "y: " + std::to_string(single_point.getY()) + "\n \t" +
+                                 "z: " + std::to_string(single_point.getZ()) + "\n");
+      }
+    }
   }
 }

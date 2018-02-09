@@ -181,7 +181,7 @@ SCENARIO("Using a RotationMatrixStamped Message")
   // Testing Topic and ostream
   GIVEN("A Rotation Matrix Stamped")
   {
-    simple_msgs::RotationMatrixStamped rotation_matrix_stamped(random_header,random_rotation_matrix);
+    simple_msgs::RotationMatrixStamped rotation_matrix_stamped(random_header, random_rotation_matrix);
     WHEN("I get the message topic")
     {
       std::string topic_name = rotation_matrix_stamped.getTopic();

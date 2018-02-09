@@ -98,7 +98,7 @@ protected:
     bool success{false};
     int data_past_topic{0};
     auto data_past_topic_size{sizeof(data_past_topic)};
-    
+
     zmq_msg_t message{};
     zmq_msg_init(&message);
 
@@ -119,7 +119,8 @@ protected:
           }
           else
           {
-            std::cerr << custom_error << "Failed to receive the message. ZMQ Error: " << zmq_strerror(zmq_errno()) << std::endl;
+            std::cerr << custom_error << "Failed to receive the message. ZMQ Error: " << zmq_strerror(zmq_errno())
+                      << std::endl;
           }
         }
       }
@@ -138,9 +139,10 @@ protected:
     zmq_setsockopt(socket_, ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
     timeout_ = timeout;
   }
-  void setLinger(int linger) {
-	  zmq_setsockopt(socket_, ZMQ_LINGER, &linger, sizeof(linger));
-	  linger_ = linger;
+  void setLinger(int linger)
+  {
+    zmq_setsockopt(socket_, ZMQ_LINGER, &linger, sizeof(linger));
+    linger_ = linger;
   }
 
   void renewSocket(int type) { socket_ = zmq_socket(context_.instance(), type); }
@@ -149,11 +151,11 @@ protected:
   const size_t topic_size_{strlen(topic_)};
   std::string address_{""};
   int timeout_{0};
-  int linger_{ -1 };
+  int linger_{-1};
   static ContextManager context_;
 };
 
-template<typename T>
+template <typename T>
 ContextManager GenericSocket<T>::context_;
 
 }  // Namespace simple.
