@@ -21,6 +21,8 @@
 
 #include <zmq.h>
 
+namespace simple
+{
 class ContextManager
 {
 public:
@@ -36,5 +38,6 @@ public:
 private:
   void* context_{nullptr};
 };
+}  // Namespace simple.
 
 #endif  // SIMPLE_CONTEXT_MANAGER_HPP
