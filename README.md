@@ -1,5 +1,7 @@
 ## S.I.M.P.L.E.
-**S**mart **I**ntuitive **M**essaging **P**latform with **L**ess **E**ffort.         
+**S**mart **I**ntuitive **M**essaging **P**latform with **L**ess **E**ffort.   
+
+[![Build Status](https://travis-ci.org/IFL-CAMP/simple.svg?branch=master)](https://travis-ci.org/IFL-CAMP/simple)      
 ___
 
 S.I.M.P.L.E. (or just *simple*) is a cross-platform C++ library to **easily** exchange data across a network.          
@@ -11,7 +13,7 @@ ___
 ### Dependencies
 
 - A C++11 compiler (tested on **gcc**, **clang**, **msvc14** and **msvc15**.)
-- CMake 3.5+
+- CMake 3.3+
 - [ZeroMQ](https://github.com/zeromq/libzmq)
 - [FlatBuffers](https://github.com/google/flatbuffers)
 
