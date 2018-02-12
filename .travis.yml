@@ -1,5 +1,5 @@
 language: cpp
-sudo: false
+sudo: true
 
 matrix:
   include:
@@ -40,14 +40,14 @@ install:
       which cmake || brew install cmake
     fi
   - git clone https://github.com/google/flatbuffers.git # Pull Flatbuffers (currently from master) and build it
-  - cd flatbuffers && mkdir build && cd build
+  - cd flatbuffers && mkdir -p build && cd build
   - cmake -DCMAKE_BUILD_TYPE=Release ..
-  - make -j8 install # This might require sudo.
+  - sudo make -j8 install # This might require sudo.
   - cd ..
   - git clone https://github.com/zeromq/libzmq.git # Pull libzmq (currently from master) and build it
-  - cd libzmq && mkdir build && cd build
+  - cd libzmq && mkdir -p build && cd build
   - cmake -DCMAKE_BUILD_TYPE=Release ..
-  - make -j8 install # This might require sudo.
+  - sudo make -j8 install # This might require sudo.
 
 before_script:
   - export CXX=${COMPILER}
