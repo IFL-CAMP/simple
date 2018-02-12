@@ -22,23 +22,23 @@ ___
 ### What can I send/receive?
 
 *simple* offers a light interface to [FlatBuffers](https://github.com/google/flatbuffers) messages.          
-[Common messages are provided and live under *simple_msgs*](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/home#simple_msgs)        
+[Common messages are provided and live under *simple_msgs*](https://github.com/IFL-CAMP/simple/wiki#simple_msgs)        
 New messages can be defined - in the *simple_msgs* format - and sent/received using the same interface.
 
 ### Usage
 
-**Build and Install from source:** on [Windows](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/install:-windows) or [Linux/Mac OSX](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/install:-linux).       
-**Use in your C++ project:** [via CMake](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/home#cmake). We suggest Windows users to link to the static version of *simple*.     
+**Build and Install from source:** on [Windows](https://github.com/IFL-CAMP/simple/wiki/install:-windows) or [Linux/Mac OSX](https://github.com/IFL-CAMP/simple/wiki/install:-linux).       
+**Use in your C++ project:** [via CMake](https://github.com/IFL-CAMP/simple/wiki#cmake). We suggest Windows users to link to the static version of *simple*.     
 
 #### Publisher / Subscriber 
 - A Publisher sends (publishes) data to any Subscriber that is listening to its IP address/port.
 - A Subscriber waits for new data from a Publisher and asynchrounsly receives it.      
-An example of the Publisher/Subscriber pattern in C++ is available [here](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/example:-pubsub).
+An example of the Publisher/Subscriber pattern in C++ is available [here](https://github.com/IFL-CAMP/simple/wiki/example:-pubsub).
 
 #### Request / Reply
 - A Client sends a request to an IP address/port of a Server and expects a reply from it.           
 - A Server waits for requests and asynchrounsly replies to a Client.         
-An example of the Client/Server pattern in C++ is available [here](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/example:-reqrep).
+An example of the Client/Server pattern in C++ is available [here](https://github.com/IFL-CAMP/simple/wiki/example:-reqrep).
 
 #### Inspiration from ROS
 
