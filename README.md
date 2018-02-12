@@ -1,7 +1,5 @@
 ## S.I.M.P.L.E.
 **S**mart **I**ntuitive **M**essaging **P**latform with **L**ess **E**ffort.         
-[![Build Status]()]()
-[![coverage report]()]()
 ___
 
 S.I.M.P.L.E. (or just *simple*) is a cross-platform C++ library to **easily** exchange data across a network.          
