@@ -1,0 +1,61 @@
+language: cpp
+sudo: false
+
+matrix:
+  include:
+
+    # Linux C++11 GCC build
+    - os: linux
+      compiler: gcc
+      addons: &gcc6
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-6', 'gcovr']
+      env: COMPILER='g++-6' BUILD_TYPE='Release'
+
+    # Linux C++11 Clang build
+    - os: linux
+      compiler: clang
+      addons: &clang38
+        apt:
+          sources: ['llvm-toolchain-precise-3.8', 'ubuntu-toolchain-r-test']
+          packages: ['clang-3.8']
+      env: COMPILER='clang++-3.8' BUILD_TYPE='Release'
+
+    # OSX C++11 Clang Builds
+    - os: osx
+      osx_image: xcode8.3
+      compiler: clang
+      env: COMPILER='clang++' BUILD_TYPE='Release'
+
+install:
+  - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
+  - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
+  - |
+    if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+      CMAKE_URL="http://www.cmake.org/files/v3.3/cmake-3.3.2-Linux-x86_64.tar.gz"
+      mkdir cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
+      export PATH=${DEPS_DIR}/cmake/bin:${PATH}
+    elif [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+      which cmake || brew install cmake
+    fi
+  - git clone https://github.com/google/flatbuffers.git # Pull Flatbuffers (currently from master) and build it
+  - cd flatbuffers && mkdir build && cd build
+  - cmake -DCMAKE_BUILD_TYPE=Release ..
+  - make -j8 install # This might require sudo.
+  - cd ..
+  - git clone https://github.com/zeromq/libzmq.git # Pull libzmq (currently from master) and build it
+  - cd libzmq && mkdir build && cd build
+  - cmake -DCMAKE_BUILD_TYPE=Release ..
+  - make -j8 install # This might require sudo.
+
+before_script:
+  - export CXX=${COMPILER}
+  - cd ${TRAVIS_BUILD_DIR}
+  - cmake -H. -BBuild -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBUILD_TESTS=ON -DBUILD_EXAMPLES=ON -Wdev
+  - cd Build
+
+script:
+  - make -j4
+  - ctest -R simple_tests -C Release --output-on-failure
+  - gcovr -e 'tests/include/*' -e 'msgs/include/simple_msgs/generated/*' -r ..
