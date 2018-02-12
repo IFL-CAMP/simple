@@ -222,5 +222,20 @@ SCENARIO("Using a Pose Message")
       std::string topic_name = pose.getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "POSE"); }
     }
+    WHEN("I print the Pose")
+    {
+      std::ostringstream out;
+      out << pose;
+      THEN("The output is correct")
+      {
+        REQUIRE(out.str() == "Pose \n \tPoint \n \tx: " + std::to_string(pose.getPosition().getX()) +
+                                 "\n \ty: " + std::to_string(pose.getPosition().getY()) +
+                                 "\n \tz: " + std::to_string(pose.getPosition().getZ()) +
+                                 "\nQuaternion \n \tx: " + std::to_string(pose.getQuaternion().getX()) +
+                                 "\n \ty: " + std::to_string(pose.getQuaternion().getY()) +
+                                 "\n \tz: " + std::to_string(pose.getQuaternion().getZ()) +
+                                 "\n \tw: " + std::to_string(pose.getQuaternion().getW()) + "\n");
+      }
+    }
   }
 }

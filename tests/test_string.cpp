@@ -152,5 +152,11 @@ SCENARIO("Using a String Message")
       std::string topic_name = single_string_1.getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "STRG"); }
     }
+    WHEN("I print the String")
+    {
+      std::ostringstream out;
+      out << single_string_1;
+      THEN("The output is correct") { REQUIRE(out.str() == single_string_1.get()); }
+    }
   }
 }

@@ -182,5 +182,12 @@ SCENARIO("Using a Double Message")
       std::string topic_name = single_double.getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "DOBL"); }
     }
+    WHEN("I print the double")
+    {
+      std::ostringstream out_msg, out_check;
+      out_msg << single_double;
+      out_check << double_1;
+      THEN("The output is correct") { REQUIRE(out_msg.str() == out_check.str()); }
+    }
   }
 }

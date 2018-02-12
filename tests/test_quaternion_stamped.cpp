@@ -178,5 +178,20 @@ SCENARIO("Using a QuaternionStamped Message")
       std::string topic_name = quaternion_stamped.getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "QTST"); }
     }
+    WHEN("I print the QuaternionStamped")
+    {
+      std::ostringstream out;
+      out << quaternion_stamped;
+      THEN("The output is correct")
+      {
+        REQUIRE(out.str() == "Header\n \tseq_n: " + std::to_string(quaternion_stamped.getHeader().getSequenceNumber()) +
+                                 "\n \tframe_id: " + quaternion_stamped.getHeader().getFrameID() +
+                                 "\n \ttimestamp: " + std::to_string(quaternion_stamped.getHeader().getTimestamp()) +
+                                 "\nQuaternion \n \tx: " + std::to_string(quaternion_stamped.getQuaternion().getX()) +
+                                 "\n \ty: " + std::to_string(quaternion_stamped.getQuaternion().getY()) +
+                                 "\n \tz: " + std::to_string(quaternion_stamped.getQuaternion().getZ()) +
+                                 "\n \tw: " + std::to_string(quaternion_stamped.getQuaternion().getW()) + "\n");
+      }
+    }
   }
 }

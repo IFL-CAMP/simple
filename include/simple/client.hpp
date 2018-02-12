@@ -37,22 +37,25 @@ public:
    * @brief Default constructor for a socket of type Client.
    * @param address where the client connects to, in the form: tcp://HOSTNAME:PORT. e.g tcp://localhost:5555.
    * @param timeout Time, in msec, the client shall wait for a reply. Default 30 seconds.
+   * @param linger Time, in msec, unsent messages linger in memory after socket is closed. Default -1 (infinite).
    */
-  explicit Client(const std::string& address, int timeout = 30000)
+  explicit Client(const std::string& address, int timeout = 30000, int linger = -1)
     : GenericSocket<T>(ZMQ_REQ)
   {
     GenericSocket<T>::setTimeout(timeout);
+    GenericSocket<T>::setLinger(linger);
     GenericSocket<T>::connect(address);
   }
 
   /**
    * @brief Copy constructor for Client.
-   * Opens a new socket of the same type, connected to the same address, with the same timeout.
+   * Opens a new socket of the same type, connected to the same address, with the same timeout and linger.
    */
   Client(const Client& other)
     : GenericSocket<T>(ZMQ_REQ)
   {
     GenericSocket<T>::setTimeout(other.timeout_);
+    GenericSocket<T>::setLinger(other.linger_);
     GenericSocket<T>::connect(other.address_);
   }
 
@@ -60,6 +63,7 @@ public:
   {
     GenericSocket<T>::renewSocket(ZMQ_REQ);
     GenericSocket<T>::setTimeout(other.timeout_);
+    GenericSocket<T>::setLinger(other.linger_);
     GenericSocket<T>::connect(other.address_);
   }
 
@@ -69,6 +73,7 @@ public:
    * @param msg: SIMPLE class wrapper for Flatbuffer messages.
    */
   bool request(T& msg) { return request(msg.getBufferData(), msg); }
+
 private:
   bool request(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer, T& msg)
   {
@@ -87,6 +92,7 @@ private:
         zmq_close(GenericSocket<T>::socket_);
         GenericSocket<T>::renewSocket(ZMQ_REQ);
         GenericSocket<T>::setTimeout(GenericSocket<T>::timeout_);
+        GenericSocket<T>::setLinger(GenericSocket<T>::linger_);
         GenericSocket<T>::connect(GenericSocket<T>::address_);
       }
     }

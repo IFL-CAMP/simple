@@ -92,7 +92,7 @@ SCENARIO("Using a Point Message")
 
   GIVEN("A point created from moving an array of a double")
   {
-    simple_msgs::Point moved_array_point(double_array);
+    simple_msgs::Point moved_array_point(std::move(double_array));
     WHEN("We check the points coordinates")
     {
       THEN("They all have to be equal to the array content")
@@ -165,7 +165,7 @@ SCENARIO("Using a Point Message")
     }
     WHEN("I move-assign from an array to that point")
     {
-      single_point = twisted_double_array;
+      single_point = std::move(twisted_double_array);
       THEN("The point coordinates are equal to the array")
       {
         REQUIRE(single_point.getX() == twisted_double_array[0]);
@@ -313,6 +313,17 @@ SCENARIO("Using a Point Message")
     {
       std::string topic_name = single_point.getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "POIT"); }
+    }
+    WHEN("I print the Point")
+    {
+      std::ostringstream out;
+      out << single_point;
+      THEN("The output is correct")
+      {
+        REQUIRE(out.str() == "Point \n \tx: " + std::to_string(single_point.getX()) + "\n \t" +
+                                 "y: " + std::to_string(single_point.getY()) + "\n \t" +
+                                 "z: " + std::to_string(single_point.getZ()) + "\n");
+      }
     }
   }
 }

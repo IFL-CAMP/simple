@@ -37,25 +37,30 @@ public:
   /**
    * @brief Creates a reply socket. Opens a socket of type REP and connects it to the port. The user defined callback
    * function is responsible for taking the received request and filling it with the reply data
+   * @param address where the server binds to, in the form: tcp://HOSTNAME:PORT. e.g tcp://localhost:5555.
+   * @param callback function that deals with the received request in the desired manner.
+   * @param timeout Time, in msec, the server shall wait for a request before restarting the awaitRequest loop. Default
+   * 100 miliseconds.
+   * @param linger Time, in msec, unsent messages linger in memory after socket is closed. Default -1 (infinite).
    */
-  Server(const std::string& address, const std::function<void(T&)>& callback, int timeout = 100)
+  Server(const std::string& address, const std::function<void(T&)>& callback, int timeout = 100, int linger = -1)
     : GenericSocket<T>(ZMQ_REP)
     , callback_(callback)
   {
-    initServer(address, timeout);
+    initServer(address, timeout, linger);
   }
 
   Server(const Server& other)
     : GenericSocket<T>(ZMQ_REP)
     , callback_(other.callback_)
   {
-    initServer(other.address_, other.timeout_);
+    initServer(other.address_, other.timeout_, other.linger_);
   }
 
   Server& operator=(const Server& other)
   {
     GenericSocket<T>::renewSocket(ZMQ_REP);
-    initServer(other.address_, other.timeout_);
+    initServer(other.address_, other.timeout_, other.linger_);
   }
 
   ~Server()
@@ -65,11 +70,12 @@ public:
   }
 
 private:
-  void initServer(const std::string& address, int timeout)
+  void initServer(const std::string& address, int timeout, int linger)
   {
     GenericSocket<T>::bind(address);
     GenericSocket<T>::filter();
     GenericSocket<T>::setTimeout(timeout);
+    GenericSocket<T>::setLinger(linger);
 
     // Start the thread of the server: wait for requests on the dedicated thread.
     server_thread_ = std::thread(&Server::awaitRequest, this);

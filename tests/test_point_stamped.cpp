@@ -162,7 +162,7 @@ SCENARIO("Using a PointStamped Message")
     }
   }
 
-  // Testing Topic
+  // Testing Topic and ostream
   GIVEN("A point")
   {
     simple_msgs::PointStamped point_stamped;
@@ -170,6 +170,20 @@ SCENARIO("Using a PointStamped Message")
     {
       std::string topic_name = point_stamped.getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "PTST"); }
+    }
+    WHEN("I print the PointStamped")
+    {
+      std::ostringstream out;
+      out << point_stamped;
+      THEN("The output is correct")
+      {
+        REQUIRE(out.str() == "Header\n \tseq_n: " + std::to_string(point_stamped.getHeader().getSequenceNumber()) +
+                                 "\n \tframe_id: " + point_stamped.getHeader().getFrameID() +
+                                 "\n \ttimestamp: " + std::to_string(point_stamped.getHeader().getTimestamp()) +
+                                 "\nPoint \n \tx: " + std::to_string(point_stamped.getPoint().getX()) +
+                                 "\n \ty: " + std::to_string(point_stamped.getPoint().getY()) +
+                                 "\n \tz: " + std::to_string(point_stamped.getPoint().getZ()) + "\n");
+      }
     }
   }
 }
