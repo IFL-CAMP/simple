@@ -10,7 +10,7 @@ matrix:
       addons: &gcc6
         apt:
           sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-6', 'gcovr']
+          packages: ['g++-6']
       env: COMPILER='g++-6' BUILD_TYPE='Release'
 
     # Linux C++11 Clang build
@@ -58,4 +58,3 @@ before_script:
 script:
   - make -j4
   - ctest -R simple_tests -C Release --output-on-failure
-  - gcovr -e 'tests/include/*' -e 'msgs/include/simple_msgs/generated/*' -r ..
