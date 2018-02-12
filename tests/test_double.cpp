@@ -184,13 +184,10 @@ SCENARIO("Using a Double Message")
     }
     WHEN("I print the double")
     {
-      std::ostringstream out;
-      out << single_double;
-      THEN("The output is correct")
-      {
-        std::string correct = std::to_string(single_double.get());
-        REQUIRE(out.str() == correct);
-      }
+      std::ostringstream out_msg, out_check;
+      out_msg << single_double;
+      out_check << double_1;
+      THEN("The output is correct") { REQUIRE(out_msg.str() == out_check.str()); }
     }
   }
 }
