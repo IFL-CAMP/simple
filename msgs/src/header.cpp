@@ -32,7 +32,7 @@ Header::Header(int seq_n, std::string frame_id, long timestamp)
 Header::Header(const uint8_t* data)
   : seq_n_(GetHeaderFbs(data)->sequence_number())
   , frame_id_(GetHeaderFbs(data)->frame_id()->c_str())
-  , timestamp_(GetHeaderFbs(data)->timestamp())
+  , timestamp_(static_cast<long>(GetHeaderFbs(data)->timestamp()))
 {
 }
 
@@ -76,7 +76,7 @@ Header& Header::operator=(const uint8_t* data)
   std::lock_guard<std::mutex> lock(mutex_);
   seq_n_ = GetHeaderFbs(data)->sequence_number();
   frame_id_ = GetHeaderFbs(data)->frame_id()->c_str();
-  timestamp_ = GetHeaderFbs(data)->timestamp();
+  timestamp_ = static_cast<long>(GetHeaderFbs(data)->timestamp());
   return *this;
 }
 
