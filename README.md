@@ -22,18 +22,8 @@ ___
 ### What can I send/receive?
 
 *simple* uses [FlatBuffers](https://github.com/google/flatbuffers) messages, plus a small interface on top of those.       
-Some common messages are already provided and live under *simple_msgs*:
-- Bool, Int, Float, Double, String
-- Header
-- Position, PositionStamped
-- Quaternion, QuaternionStamped
-- Pose, PoseStamped
-- RotationMatrix, RotationMatrixStamped
-- Image (2D or 3D)
-
-Stamped messages contain the base data plus a Header.
-
-Need another type of message? It can be defined - following the way *simple_msgs* are designed - and sent/received using the same interface.
+[Some common messages are already provided and live under *simple_msgs*](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/home#simple_msgs
+New messages can be defined - following the way *simple_msgs* are designed - and sent/received using the same interface.
 
 ### Usage
 
