@@ -31,18 +31,18 @@ New messages can be defined - in the *simple_msgs* format - and sent/received us
 **Use in your C++ project:** [via CMake](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/home#cmake). We suggest Windows users to link to the static version of *simple*.     
 
 #### Publisher / Subscriber 
-- A Publisher sends (publishes) data to any Subscriber that is listening to its IP address / port.
-- A Subscriber waits for new data from a Publisher and asynchrounsly elaborates it when it arrives.      
-An example of the implementation of a Publisher and a Subscriber in C++ is available [here](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/example:-pubsub).
+- A Publisher sends (publishes) data to any Subscriber that is listening to its IP address/port.
+- A Subscriber waits for new data from a Publisher and asynchrounsly receives it.      
+An example of the Publisher/Subscriber pattern in C++ is available [here](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/example:-pubsub).
 
 #### Request / Reply
-- A Client sends a request to a Server (knowing its IP address / port) and expects a reply from it.           
-- A Server waits for requests and asynchrounsly elaborates a reply that is sent back to the Client.         
-An example of the implementation of a Client and a Server in C++ is available [here](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/example:-reqrep).
+- A Client sends a request to an IP address/port of a Server and expects a reply from it.           
+- A Server waits for requests and asynchrounsly replies to a Client.         
+An example of the Client/Server pattern in C++ is available [here](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/example:-reqrep).
 
 #### Inspiration from ROS
 
-We are heavy (and happy) ROS users and we aim to provide a very similar interface to the one available in [ROS](http://www.ros.org/).     
+We are heavy (and happy) [ROS](http://www.ros.org/) users and we aim to provide a very similar interface.     
 ___
 
 ### Contacts
