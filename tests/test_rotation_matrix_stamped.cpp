@@ -39,13 +39,14 @@ SCENARIO("Using a RotationMatrixStamped Message")
   double double_7 = static_cast<double>(rand()) / RAND_MAX;
   double double_8 = static_cast<double>(rand()) / RAND_MAX;
   double double_9 = static_cast<double>(rand()) / RAND_MAX;
+  long time = static_cast<long>(rand());
   int random_int = rand() / 100;
   std::string random_string = std::to_string(double_1);
   simple_msgs::RotationMatrix random_rotation_matrix(double_1, double_2, double_3, double_4, double_5, double_6,
                                                      double_7, double_8, double_9);
   simple_msgs::RotationMatrix empty_rotation_matrix;
   simple_msgs::Header empty_header;
-  simple_msgs::Header random_header(random_int, random_string, double_1);
+  simple_msgs::Header random_header(random_int, random_string, time);
   // Test the constructors.
   GIVEN("A RotationMatrixStamped created from an empty constructor")
   {

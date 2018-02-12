@@ -29,7 +29,7 @@ simple_msgs::Header createRandomHeader()
   int x = rand() % 100;
   std::string y("Header string:");
   y.append(std::to_string(rand() % 100));
-  double z = static_cast<double>(rand()) / RAND_MAX;
+  long z = static_cast<long>(rand());
   return simple_msgs::Header(x, y, z);
 }
 
@@ -128,7 +128,7 @@ void callbackFunctionHeader(simple_msgs::Header&  h)
 {
   h.setFrameID("ID");
   h.setSequenceNumber(1);
-  h.setTimestamp(1.0);
+  h.setTimestamp(10);
 }
 
 void callbackFunctionPose(simple_msgs::Pose&  p)
