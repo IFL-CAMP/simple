@@ -1,22 +1,23 @@
 /**
-* S.I.M.P.L.E. - Smart Intra-operative Messaging Platform with Less Effort
-* Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Lesser Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU Lesser Public License for more details.
-*
-* You should have received a copy of the GNU Lesser Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * S.I.M.P.L.E. - Smart Intuitive Messaging Platform with Less Effort
+ * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-#pragma once
+#ifndef SIMPLE_MSGS_NUMERIC_TYPE_HPP
+#define SIMPLE_MSGS_NUMERIC_TYPE_HPP
 
 #include <algorithm>
 #include <ostream>
@@ -31,21 +32,17 @@ class NumericType : public GenericMessage
 public:
   // Constructors.
 
-  NumericType()
-    : GenericMessage()
-  {
-  }
+  NumericType() = default;
 
   NumericType(T data)
-    : GenericMessage()
-    , data_(data)
+    : data_(data)
   {
   }
 
   /**
    * @brief Constructor from the buffer data, implementation is specific to the template specialization.
    */
-  NumericType(const uint8_t* data);
+  explicit NumericType(const uint8_t* data);
 
   // Copy operations.
 
@@ -58,7 +55,6 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = rhs.data_;
-    modified_ = true;
     return *this;
   }
 
@@ -66,26 +62,26 @@ public:
 
   // Move operations.
 
-  NumericType(NumericType&& other)
+  NumericType(NumericType&& other) noexcept
     : NumericType(std::move(other.data_))
   {
   }
-
-  NumericType& operator=(NumericType&& rhs)
+  NumericType& operator=(NumericType&& rhs) noexcept
   {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = std::move(rhs.data_);
-    modified_ = true;
     return *this;
   }
 
+  ~NumericType() = default;
+
   // Relational operators.
-  inline bool operator==(const NumericType& rhs) { return data_ == rhs.data_; }
-  inline bool operator!=(const NumericType& rhs) { return !(*this == rhs); }
-  inline bool operator<(const NumericType& rhs) { return data_ < rhs.data_; }
-  inline bool operator>(const NumericType& rhs) { return rhs < *this; }
-  inline bool operator<=(const NumericType& rhs) { return !(*this > rhs); }
-  inline bool operator>=(const NumericType& rhs) { return !(*this < rhs); }
+  inline bool operator==(const NumericType& rhs) const { return data_ == rhs.data_; }
+  inline bool operator!=(const NumericType& rhs) const { return !(*this == rhs); }
+  inline bool operator<(const NumericType& rhs) const { return data_ < rhs.data_; }
+  inline bool operator>(const NumericType& rhs) const { return rhs < *this; }
+  inline bool operator<=(const NumericType& rhs) const { return !(*this > rhs); }
+  inline bool operator>=(const NumericType& rhs) const { return !(*this < rhs); }
   // Increment and decrement operators.
 
   NumericType& operator--()
@@ -94,7 +90,7 @@ public:
     return *this;
   }
 
-  NumericType operator--(int)
+  const NumericType operator--(int)
   {
     const NumericType old(*this);
     --(*this);
@@ -107,7 +103,7 @@ public:
     return *this;
   }
 
-  NumericType operator++(int)
+  const NumericType operator++(int)
   {
     const NumericType old(*this);
     ++(*this);
@@ -168,7 +164,7 @@ public:
    * @brief Builds and returns the buffer accordingly to the values currently stored.
    * @return the buffer data.
    */
-  uint8_t* getBufferData() const override;
+  std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const override;
 
   /**
    * @brief Set the double value.
@@ -177,7 +173,6 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = data;
-    modified_ = true;
   }
 
   /**
@@ -204,3 +199,5 @@ std::ostream& operator<<(std::ostream& out, const NumericType<T>& obj)
   return out;
 }
 }  // Namespace simple_msgs.
+
+#endif  // SIMPLE_MSGS_NUMERIC_TYPE_HPP

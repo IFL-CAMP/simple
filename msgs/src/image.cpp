@@ -1,22 +1,22 @@
 /**
-* S.I.M.P.L.E. - Smart Intra-operative Messaging Platform with Less Effort
-* Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Lesser Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU Lesser Public License for more details.
-*
-* You should have received a copy of the GNU Lesser Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * S.I.M.P.L.E. - Smart Intuitive Messaging Platform with Less Effort
+ * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-#include "simple_msgs/image.h"
+#include "simple_msgs/image.hpp"
 
 namespace simple_msgs
 {
@@ -45,27 +45,31 @@ data Image<double>::getDataUnionType() const
 }
 
 template <>
-flatbuffers::Offset<void> Image<uint8_t>::getDataUnionElem() const
+flatbuffers::Offset<void>
+Image<uint8_t>::getDataUnionElem(const std::unique_ptr<flatbuffers::FlatBufferBuilder>& builder) const
 {
-  return Createuint8_type(*builder_, builder_->CreateVector(static_cast<const uint8_t*>(*data_), data_size_)).Union();
+  return Createuint8_type(*builder, builder->CreateVector(data_.get(), data_size_)).Union();
 }
 
 template <>
-flatbuffers::Offset<void> Image<int16_t>::getDataUnionElem() const
+flatbuffers::Offset<void>
+Image<int16_t>::getDataUnionElem(const std::unique_ptr<flatbuffers::FlatBufferBuilder>& builder) const
 {
-	return Createint16_type(*builder_, builder_->CreateVector(static_cast<const int16_t*>(*data_), data_size_)).Union();
+  return Createint16_type(*builder, builder->CreateVector(data_.get(), data_size_)).Union();
 }
 
 template <>
-flatbuffers::Offset<void> Image<float>::getDataUnionElem() const
+flatbuffers::Offset<void>
+Image<float>::getDataUnionElem(const std::unique_ptr<flatbuffers::FlatBufferBuilder>& builder) const
 {
-	return Createfloat_type(*builder_, builder_->CreateVector(static_cast<const float*>(*data_), data_size_)).Union();
+  return Createfloat_type(*builder, builder->CreateVector(data_.get(), data_size_)).Union();
 }
 
 template <>
-flatbuffers::Offset<void> Image<double>::getDataUnionElem() const
+flatbuffers::Offset<void>
+Image<double>::getDataUnionElem(const std::unique_ptr<flatbuffers::FlatBufferBuilder>& builder) const
 {
-	return Createdouble_type(*builder_, builder_->CreateVector(static_cast<const double*>(*data_), data_size_)).Union();
+  return Createdouble_type(*builder, builder->CreateVector(data_.get(), data_size_)).Union();
 }
 
 template <>
@@ -77,9 +81,11 @@ Image<uint8_t>& Image<uint8_t>::operator=(const uint8_t* data)
   Image<uint8_t>::fillPartialImage(image_data);
 
   // Set the Image data according to the right date type.
-  // PROBLEM IS HERE
-  auto mydata = static_cast<const uint8_type*>(image_data->image())->raw()->data();
-  data_ = std::make_shared<const uint8_t*>(mydata);
+  if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE))
+  {
+    auto my_data = static_cast<const uint8_type*>(image_data->image())->raw()->data();
+    data_ = std::make_shared<const uint8_t>(*my_data);
+  }
   return *this;
 }
 
@@ -92,8 +98,11 @@ Image<int16_t>& Image<int16_t>::operator=(const uint8_t* data)
   Image<int16_t>::fillPartialImage(image_data);
 
   // Set the Image data according to the right date type.
-  auto mydata = static_cast<const int16_type*>(image_data->image())->raw()->data();
-  data_ = std::make_shared<const int16_t*>(mydata);
+  if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE))
+  {
+    auto my_data = static_cast<const int16_type*>(image_data->image())->raw()->data();
+    data_ = std::make_shared<const int16_t>(*my_data);
+  }
   return *this;
 }
 
@@ -106,8 +115,11 @@ Image<double>& Image<double>::operator=(const uint8_t* data)
   Image<double>::fillPartialImage(image_data);
 
   // Set the Image data according to the right date type.
-  auto mydata = static_cast<const double_type*>(image_data->image())->raw()->data();
-  data_ = std::make_shared<const double*>(mydata);
+  if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE))
+  {
+    auto my_data = static_cast<const double_type*>(image_data->image())->raw()->data();
+    data_ = std::make_shared<const double>(*my_data);
+  }
   return *this;
 }
 
@@ -120,9 +132,11 @@ Image<float>& Image<float>::operator=(const uint8_t* data)
   Image<float>::fillPartialImage(image_data);
 
   // Set the Image data according to the right date type.
-  auto mydata = static_cast<const float_type*>(image_data->image())->raw()->data();
-  
-  data_ = std::make_shared<const float*>(mydata);
+  if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE))
+  {
+    auto my_data = static_cast<const float_type*>(image_data->image())->raw()->data();
+    data_ = std::make_shared<const float>(*my_data);
+  }
   return *this;
 }
 
@@ -134,8 +148,11 @@ Image<uint8_t>::Image(const uint8_t* data)
 
   Image<uint8_t>::fillPartialImage(image_data);
   // Set the Image data according to the right date type.
-  auto mydata = static_cast<const uint8_type*>(image_data->image())->raw()->data();
-  data_ = std::make_shared<const uint8_t*>(mydata);
+  if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE))
+  {
+    auto my_data = static_cast<const uint8_type*>(image_data->image())->raw()->data();
+    data_ = std::make_shared<const uint8_t>(*my_data);
+  }
 }
 
 template <>
@@ -146,9 +163,11 @@ Image<int16_t>::Image(const uint8_t* data)
 
   Image<int16_t>::fillPartialImage(image_data);
   // Set the Image data according to the right date type.
-  auto mydata = static_cast<const int16_type*>(image_data->image())->raw()->data();
-  
-  data_ = std::make_shared<const int16_t*>(mydata);
+  if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE))
+  {
+    auto my_data = static_cast<const int16_type*>(image_data->image())->raw()->data();
+    data_ = std::make_shared<const int16_t>(*my_data);
+  }
 }
 
 template <>
@@ -159,9 +178,11 @@ Image<double>::Image(const uint8_t* data)
 
   Image<double>::fillPartialImage(image_data);
   // Set the Image data according to the right date type.
-  auto mydata = static_cast<const double_type*>(image_data->image())->raw()->data();
-  
-  data_ = std::make_shared<const double*>(mydata);
+  if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE))
+  {
+    auto my_data = static_cast<const double_type*>(image_data->image())->raw()->data();
+    data_ = std::make_shared<const double>(*my_data);
+  }
 }
 
 template <>
@@ -172,8 +193,10 @@ Image<float>::Image(const uint8_t* data)
 
   Image<float>::fillPartialImage(image_data);
   // Set the Image data according to the right date type.
-  auto mydata = static_cast<const float_type*>(image_data->image())->raw()->data();
-  data_ = std::make_shared<const float*>(mydata);
-  
+  if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE))
+  {
+    auto my_data = static_cast<const float_type*>(image_data->image())->raw()->data();
+    data_ = std::make_shared<const float>(*my_data);
+  }
 }
-}
+}  // namespace simple_msgs

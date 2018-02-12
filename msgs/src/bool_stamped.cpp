@@ -1,5 +1,5 @@
 /**
-* S.I.M.P.L.E. - Smart Intra-operative Messaging Platform with Less Effort
+* S.I.M.P.L.E. - Smart Intuitive Messaging Platform with Less Effort
 * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
 *
 * This program is free software: you can redistribute it and/or modify
@@ -95,7 +95,7 @@ bool BoolStamped::operator!=(const BoolStamped& rhs) const
   return !(*this == rhs);
 }
 
-uint8_t* BoolStamped::getBufferData() const
+std::shared_ptr<flatbuffers::DetachedBuffer> BoolStamped::getBufferData() const
 {
   std::lock_guard<std::mutex> lock(mutex_);
   if (modified_)
@@ -109,7 +109,8 @@ uint8_t* BoolStamped::getBufferData() const
     FinishBoolStampedFbsBuffer(*builder_, tmp_builder.Finish());
     modified_ = false;
   }
-  return builder_->GetBufferPointer();
+  auto buffer = std::shared_ptr<flatbuffers::DetachedBuffer>(new flatbuffers::DetachedBuffer(builder->Release()));    
+  return buffer;
 }
 
 std::ostream& operator<<(std::ostream& out, const BoolStamped& b)

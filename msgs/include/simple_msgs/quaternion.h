@@ -1,22 +1,23 @@
 /**
-* S.I.M.P.L.E. - Smart Intra-operative Messaging Platform with Less Effort
-* Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Lesser Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU Lesser Public License for more details.
-*
-* You should have received a copy of the GNU Lesser Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * S.I.M.P.L.E. - Smart Intuitive Messaging Platform with Less Effort
+ * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-#pragma once
+#ifndef SIMPLE_MSGS_QUATERNION_H
+#define SIMPLE_MSGS_QUATERNION_H
 
 #include <array>
 #include <iostream>
@@ -32,29 +33,28 @@ namespace simple_msgs
 class Quaternion : public GenericMessage
 {
 public:
-  Quaternion();
+  Quaternion() = default;
   Quaternion(double, double, double, double);
   Quaternion(const std::array<double, 4>&);
-  Quaternion(std::array<double, 4>&&);
+  Quaternion(std::array<double, 4>&&) noexcept;
   Quaternion(const uint8_t*);
   Quaternion(const Quaternion&);
-  Quaternion(Quaternion&&);
+  Quaternion(Quaternion&&) noexcept;
 
   Quaternion& operator=(const Quaternion&);
-  Quaternion& operator=(Quaternion&&);
+  Quaternion& operator=(Quaternion&&) noexcept;
   Quaternion& operator=(const uint8_t*);
   Quaternion& operator=(const std::array<double, 4>&);
-  Quaternion& operator=(std::array<double, 4>&&);
+  Quaternion& operator=(std::array<double, 4>&&) noexcept;
 
   inline bool operator==(const Quaternion& rhs) const { return data_ == rhs.data_; }
   inline bool operator!=(const Quaternion& rhs) const { return !(*this == rhs); }
-
   friend std::ostream& operator<<(std::ostream&, const Quaternion&);
 
   /**
    * @brief Builds and returns the buffer accordingly to the values currently stored.
    */
-  uint8_t* getBufferData() const override;
+  std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const override;
 
   /**
    * @brief Returns the quaternion as an array for 4 elements.
@@ -103,6 +103,8 @@ public:
   static const char* getTopic() { return QuaternionFbsIdentifier(); }
 
 private:
-  std::array<double, 4> data_{{0, 0, 0, 0}};
+  std::array<double, 4> data_{{0, 0, 0, 1}};
 };
 }  // Namespace simple_msgs.
+
+#endif  // SIMPLE_MSGS_QUATERNION_H
