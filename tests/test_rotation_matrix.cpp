@@ -294,6 +294,27 @@ SCENARIO("Using a Rotation Matrix Message")
     }
   }
 
+  // Testing identity matrix.
+  GIVEN("An Identity Rotation Matrix")
+  {
+    auto identity = simple_msgs::RotationMatrix::Identity();
+    WHEN("Its values are checked")
+    {
+      THEN("They are correct")
+      {
+        REQUIRE(identity.getRow(0)[0] == 1);
+        REQUIRE(identity.getRow(0)[1] == 0);
+        REQUIRE(identity.getRow(0)[2] == 0);
+        REQUIRE(identity.getRow(1)[0] == 0);
+        REQUIRE(identity.getRow(1)[1] == 1);
+        REQUIRE(identity.getRow(1)[2] == 0);
+        REQUIRE(identity.getRow(2)[0] == 0);
+        REQUIRE(identity.getRow(2)[1] == 0);
+        REQUIRE(identity.getRow(2)[2] == 1);
+      }
+    }
+  }
+
   // Testing elements getters-setters.
   GIVEN("An empty rotation matrix")
   {
