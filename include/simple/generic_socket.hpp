@@ -152,12 +152,8 @@ protected:
   std::string address_{""};
   int timeout_{0};
   int linger_{-1};
-  static ContextManager context_;
+  ContextManager context_;
 };
-
-template <typename T>
-ContextManager GenericSocket<T>::context_;
-
 }  // Namespace simple.
 
 #endif  // SIMPLE_GENERIC_SOCKET_HPP
