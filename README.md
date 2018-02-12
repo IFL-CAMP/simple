@@ -4,8 +4,8 @@
 [![coverage report](https://gitlab.lrz.de/CAMP_IFL/simple/badges/master/coverage.svg)](https://gitlab.lrz.de/CAMP_IFL/simple/commits/master)
 ___
 
-S.I.M.P.L.E. (or just *simple*) is a cross-platform C++ library to exchange data across a network, and to do it in an easy way.          
-It is built on top of [ZeroMQ](https://github.com/zeromq/libzmq) and uses custom defined [FlatBuffers](https://github.com/google/flatbuffers) messages.       
+S.I.M.P.L.E. (or just *simple*) is a cross-platform C++ library to **easily** exchange data across a network.          
+It is built on top of [ZeroMQ](https://github.com/zeromq/libzmq) and uses custom [FlatBuffers](https://github.com/google/flatbuffers) messages.       
 It provides a clean interface to the classic **Publisher-Subscriber** and **Request-Reply** patterns.         
 
 *simple* can be used on **Windows**, **Linux** and **OSX**. 
@@ -21,14 +21,14 @@ ___
 
 ### What can I send/receive?
 
-*simple* uses [FlatBuffers](https://github.com/google/flatbuffers) messages, plus a small interface on top of those.          
-[Some common messages are already provided and live under *simple_msgs*](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/home#simple_msgs)        
-New messages can be defined - following the way *simple_msgs* are designed - and sent/received using the same interface.
+*simple* offers a light interface to [FlatBuffers](https://github.com/google/flatbuffers) messages.          
+[Common messages are provided and live under *simple_msgs*](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/home#simple_msgs)        
+New messages can be defined - in the *simple_msgs* format - and sent/received using the same interface.
 
 ### Usage
 
 **Build and Install from source:** on [Windows](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/install:-windows) or [Linux/Mac OSX](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/install:-linux).       
-**Use in your C++ project:** via [CMake](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/home#cmake). We suggest Windows users to link to the static version of *simple*.     
+**Use in your C++ project:** [via CMake](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/home#cmake). We suggest Windows users to link to the static version of *simple*.     
 
 #### Publisher / Subscriber 
 - A Publisher sends (publishes) data to any Subscriber that is listening to its IP address / port.
