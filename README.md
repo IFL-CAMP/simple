@@ -33,8 +33,7 @@ Some common messages are already provided and live under *simple_msgs*:
 
 Stamped messages contain the base data plus a Header.
 
-Need another type of message? It can be defined - following the way *simple_msgs* are designed - and sent/received using the interface provided by *simple*.
-Feel free to request one message type if needed!
+Need another type of message? It can be defined - following the way *simple_msgs* are designed - and sent/received using the same interface.
 
 ### Usage
 
