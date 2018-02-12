@@ -29,7 +29,7 @@ Some common messages are already provided and live under *simple_msgs*:
 - Quaternion, QuaternionStamped
 - Pose, PoseStamped
 - RotationMatrix, RotationMatrixStamped
-- Image
+- Image (2D or 3D)
 
 Stamped messages contain the base data plus a Header.
 
