@@ -22,7 +22,7 @@
 
 namespace simple_msgs
 {
-Header::Header(int seq_n, std::string frame_id, double timestamp)
+Header::Header(int seq_n, std::string frame_id, long timestamp)
   : seq_n_(seq_n)
   , frame_id_(std::move(frame_id))
   , timestamp_(timestamp)
@@ -107,7 +107,7 @@ void Header::setFrameID(const std::string& frame_id)
   frame_id_ = frame_id;
 }
 
-void Header::setTimestamp(double timestamp)
+void Header::setTimestamp(long timestamp)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   timestamp_ = timestamp;

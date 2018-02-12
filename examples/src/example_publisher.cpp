@@ -23,10 +23,10 @@
 #include "simple_msgs/pose_stamped.h"
 
 // Helper function to get the current time as a double.
-double getTimeNow()
+long getTimeNow()
 {
   auto now = std::chrono::system_clock::now();
-  return static_cast<double>(std::chrono::time_point_cast<std::chrono::milliseconds>(now).time_since_epoch().count());
+  return std::chrono::time_point_cast<std::chrono::nanoseconds>(now).time_since_epoch().count();
 }
 
 int main()
@@ -59,6 +59,7 @@ int main()
     my_pose_stamped.getHeader().setSequenceNumber(sequence_num + 1);
     my_pose_stamped.getHeader().setTimestamp(getTimeNow() - beginning);
 
+    std::cout << "Time: " << my_pose_stamped.getHeader().getTimestamp() << std::endl;
     std::cout << "Message #" << (my_pose_stamped.getHeader().getSequenceNumber()) << " has been published."
               << std::endl;
     std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_TIME));

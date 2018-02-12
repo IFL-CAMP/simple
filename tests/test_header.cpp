@@ -28,10 +28,10 @@
 
 SCENARIO("Using a Header Message")
 {
-  int int_1 = static_cast<int>(rand()) / RAND_MAX;
-  double double_1 = static_cast<double>(rand()) / RAND_MAX;
-  double double_2 = static_cast<double>(rand()) / RAND_MAX;
-  std::string string_1 = std::to_string(double_1);
+  int int_1 = static_cast<int>(rand());
+  long long_1 = static_cast<long>(rand());
+  long long_2 = static_cast<long>(rand());
+  std::string string_1 = std::to_string(long_1);
   // Testing constructors.
   GIVEN("A Header created from an empty constructor")
   {
@@ -42,21 +42,21 @@ SCENARIO("Using a Header Message")
       {
         REQUIRE(empty_header.getSequenceNumber() == 0);
         REQUIRE(empty_header.getFrameID().empty());
-        REQUIRE(empty_header.getTimestamp() == 0.0);
+        REQUIRE(empty_header.getTimestamp() == 0);
       }
     }
   }
 
-  GIVEN("A Header created from a int, a string and a double")
+  GIVEN("A Header created from a int, a string and a long")
   {
-    simple_msgs::Header normal_header(int_1, string_1, double_1);
+    simple_msgs::Header normal_header(int_1, string_1, long_1);
     WHEN("We check the Header's fields")
     {
       THEN("It has to be equal to the params from the constructor")
       {
         REQUIRE(normal_header.getSequenceNumber() == int_1);
         REQUIRE(normal_header.getFrameID() == string_1);
-        REQUIRE(normal_header.getTimestamp() == double_1);
+        REQUIRE(normal_header.getTimestamp() == long_1);
       }
     }
   }
@@ -64,7 +64,7 @@ SCENARIO("Using a Header Message")
   // Testing copy-constructors.
   GIVEN("A header")
   {
-    simple_msgs::Header normal_header(int_1, string_1, double_1);
+    simple_msgs::Header normal_header(int_1, string_1, long_1);
     WHEN("I construct a new Header from the serialized data of the existing Header")
     {
       simple_msgs::Header buffer_copy_header(normal_header.getBufferData()->data());
@@ -72,7 +72,7 @@ SCENARIO("Using a Header Message")
       {
         REQUIRE(buffer_copy_header.getSequenceNumber() == int_1);
         REQUIRE(buffer_copy_header.getFrameID() == string_1);
-        REQUIRE(buffer_copy_header.getTimestamp() == double_1);
+        REQUIRE(buffer_copy_header.getTimestamp() == long_1);
       }
     }
     WHEN("I copy-construct a new Header")
@@ -82,7 +82,7 @@ SCENARIO("Using a Header Message")
       {
         REQUIRE(copy_header.getSequenceNumber() == int_1);
         REQUIRE(copy_header.getFrameID() == string_1);
-        REQUIRE(copy_header.getTimestamp() == double_1);
+        REQUIRE(copy_header.getTimestamp() == long_1);
       }
     }
     WHEN("I move-construct a new Header")
@@ -92,7 +92,7 @@ SCENARIO("Using a Header Message")
       {
         REQUIRE(moved_header.getSequenceNumber() == int_1);
         REQUIRE(moved_header.getFrameID() == string_1);
-        REQUIRE(moved_header.getTimestamp() == double_1);
+        REQUIRE(moved_header.getTimestamp() == long_1);
       }
     }
   }
@@ -100,7 +100,7 @@ SCENARIO("Using a Header Message")
   // Testing copy-assignments.
   GIVEN("A Header")
   {
-    simple_msgs::Header normal_header(int_1, string_1, double_1);
+    simple_msgs::Header normal_header(int_1, string_1, long_1);
     WHEN("I copy-assign from that Header's buffer")
     {
       simple_msgs::Header copy_assigned_buffer_header;
@@ -121,7 +121,7 @@ SCENARIO("Using a Header Message")
       {
         REQUIRE(move_assigned_header.getSequenceNumber() == int_1);
         REQUIRE(move_assigned_header.getFrameID() == string_1);
-        REQUIRE(move_assigned_header.getTimestamp() == double_1);
+        REQUIRE(move_assigned_header.getTimestamp() == long_1);
       }
     }
   }
@@ -133,8 +133,8 @@ SCENARIO("Using a Header Message")
 
     WHEN("I set the time stamp of the Header")
     {
-      empty_header.setTimestamp(double_1);
-      THEN("The Header's time stamp is correct") { REQUIRE(empty_header.getTimestamp() == double_1); }
+      empty_header.setTimestamp(long_1);
+      THEN("The Header's time stamp is correct") { REQUIRE(empty_header.getTimestamp() == long_1); }
     }
     WHEN("I set the frame id of the Header")
     {
@@ -151,15 +151,15 @@ SCENARIO("Using a Header Message")
   // Testing operations.
   GIVEN("Two identical Headers")
   {
-    simple_msgs::Header header1(int_1, string_1, double_1);
-    simple_msgs::Header header2(int_1, string_1, double_1);
+    simple_msgs::Header header1(int_1, string_1, long_1);
+    simple_msgs::Header header2(int_1, string_1, long_1);
     WHEN("I compare these Headers")
     {
       THEN("They have to be equal") { REQUIRE(header1 == header2); }
     }
     WHEN("I change something in the first header")
     {
-      header1.setTimestamp(double_2);
+      header1.setTimestamp(long_2);
       THEN("They have to be different") { REQUIRE(header1 != header2); }
     }
     WHEN("I get the message topic")

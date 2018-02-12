@@ -5,7 +5,7 @@ namespace simple_msgs;
 table HeaderFbs {
 	sequence_number:int;
 	frame_id:string;
-	timestamp:double;
+	timestamp:long;
 }
 
 root_type HeaderFbs;
