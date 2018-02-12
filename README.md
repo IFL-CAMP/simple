@@ -1,10 +1,10 @@
 ## S.I.M.P.L.E.
 **S**mart **I**ntuitive **M**essaging **P**latform with **L**ess **E**ffort.         
 [![Build Status](https://gitlab.lrz.de/CAMP_IFL/simple/badges/master/build.svg)](https://gitlab.lrz.de/CAMP_IFL/simple/commits/master)
-[![coverage report](https://gitlab.lrz.de/CAMP_IFL/simple/badges/devel/coverage.svg)](https://gitlab.lrz.de/CAMP_IFL/simple/commits/devel)
+[![coverage report](https://gitlab.lrz.de/CAMP_IFL/simple/badges/master/coverage.svg)](https://gitlab.lrz.de/CAMP_IFL/simple/commits/master)
 ___
 
-S.I.M.P.L.E. (or just *simple*) is a cross-platform C++ library to exchange data across a network between C++ application, and to do it in an easy way.          
+S.I.M.P.L.E. (or just *simple*) is a cross-platform C++ library to exchange data across a network, and to do it in an easy way.          
 It is built on top of [ZeroMQ](https://github.com/zeromq/libzmq) and uses custom defined [FlatBuffers](https://github.com/google/flatbuffers) messages.       
 It provides a clean interface to the classic **Publisher-Subscriber** and **Request-Reply** patterns.         
 
@@ -25,13 +25,16 @@ ___
 Some common messages are already provided and live under *simple_msgs*:
 - Bool, Int, Float, Double, String
 - Header
-- Position
-- Quaternion
-- Pose
-- Rotation Matrix
+- Position, PositionStamped
+- Quaternion, QuaternionStamped
+- Pose, PoseStamped
+- RotationMatrix, RotationMatrixStamped
 - Image
 
+Stamped messages contain the base data plus a Header.
+
 Need another type of message? It can be defined - following the way *simple_msgs* are designed - and sent/received using the interface provided by *simple*.
+Feel free to request one message type if needed!
 
 ### Usage
 
