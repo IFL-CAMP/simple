@@ -274,7 +274,7 @@ SCENARIO("Client-Server to a Header message.")
       {
         REQUIRE(p.getFrameID() == "ID");
         REQUIRE(p.getSequenceNumber() == 1);
-        REQUIRE(p.getTimestamp() == 1.0);
+        REQUIRE(p.getTimestamp() == 10);
       }
     }
   }
@@ -302,7 +302,7 @@ SCENARIO("Client-Server to a Stamped Point message.")
         REQUIRE(p.getPoint().getZ() == Approx(sentPoint.getPoint().getZ() + 1.0));
         REQUIRE(p.getHeader().getFrameID() == "ID");
         REQUIRE(p.getHeader().getSequenceNumber() == 1);
-        REQUIRE(p.getHeader().getTimestamp() == 1.0);
+        REQUIRE(p.getHeader().getTimestamp() == 10);
       }
     }
   }
@@ -333,7 +333,7 @@ SCENARIO("Client-Server to a Stamped Pose message.")
         REQUIRE(p.getPose().getQuaternion().getZ() == Approx(sentPose.getPose().getQuaternion().getZ() + 1.0));
         REQUIRE(p.getHeader().getFrameID() == "ID");
         REQUIRE(p.getHeader().getSequenceNumber() == 1);
-        REQUIRE(p.getHeader().getTimestamp() == 1.0);
+        REQUIRE(p.getHeader().getTimestamp() == 10);
       }
     }
   }
@@ -360,7 +360,7 @@ SCENARIO("Client-Server to a Stamped Quaternion message.")
         REQUIRE(q.getQuaternion().getZ() == Approx(sentQ.getQuaternion().getZ() + 1.0));
         REQUIRE(q.getHeader().getFrameID() == "ID");
         REQUIRE(q.getHeader().getSequenceNumber() == 1);
-        REQUIRE(q.getHeader().getTimestamp() == 1.0);
+        REQUIRE(q.getHeader().getTimestamp() == 10);
       }
     }
   }
@@ -383,7 +383,7 @@ SCENARIO("Client-Server to a Stamped Rotation Matrix message.")
         REQUIRE(r.getRotationMatrix() == simple_msgs::RotationMatrix());
         REQUIRE(r.getHeader().getFrameID() == "ID");
         REQUIRE(r.getHeader().getSequenceNumber() == 1);
-        REQUIRE(r.getHeader().getTimestamp() == 1.0);
+        REQUIRE(r.getHeader().getTimestamp() == 10);
       }
     }
   }
