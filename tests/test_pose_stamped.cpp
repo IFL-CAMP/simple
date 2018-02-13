@@ -37,7 +37,7 @@ SCENARIO("Using a PoseStamped Message")
   double double_5 = static_cast<double>(rand()) / RAND_MAX;
   double double_6 = static_cast<double>(rand()) / RAND_MAX;
   double double_7 = static_cast<double>(rand()) / RAND_MAX;
-  long time = static_cast<long>(rand());
+  long long time = rand();
   int random_int = rand() / 100;
   std::string random_string = std::to_string(double_1);
   simple_msgs::Point random_point(double_1, double_2, double_3);
