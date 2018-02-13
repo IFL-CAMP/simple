@@ -34,6 +34,7 @@ template <typename T>
 class Subscriber : public GenericSocket<T>
 {
 public:
+  Subscriber() = default;
   /**
    * @brief Creates a ZMQ_SUB socket and connects it to the given address.
    * The given callback runs on a dedicated thread.s
@@ -59,6 +60,7 @@ public:
   {
     GenericSocket<T>::renewSocket(ZMQ_SUB);
     initSubscriber(other.address_, other.timeout_);
+    return *this;
   }
 
   ~Subscriber<T>()
