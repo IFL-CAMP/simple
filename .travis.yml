@@ -49,8 +49,7 @@ install:
       gem install coveralls-lcov
     fi
   # Install Flatbuffers
-  - git clone https://github.com/google/flatbuffers.git
-  - git checkout tags/v1.8.0 # Checkout the latest release
+  - git clone --branch v1.8.0 https://github.com/google/flatbuffers.git # Checkout the latest release
   - cd flatbuffers && mkdir -p flatbuffer_build && cd flatbuffer_build
   - cmake -DCMAKE_BUILD_TYPE=Release ..
   - sudo make -j8 install # This might require sudo.
