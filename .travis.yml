@@ -72,6 +72,7 @@ script:
   - ctest -R simple_tests -C Release --output-on-failure
   - |
     if [[ "${COMPILER}" == "g++-6" ]]; then
+      find -name *.gcda
       lcov --directory ${TRAVIS_BUILD_DIR}/Build --capture --output-file coverage.info
       lcov --remove coverage.info 'tests/*' 'msgs/include/simple_msgs/generated/*' '/usr/*' --output-file coverage.info
       lcov --list coverage.info
