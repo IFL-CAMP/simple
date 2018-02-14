@@ -70,13 +70,10 @@ before_script:
 script:
   - make -j8
   - ctest -R simple_tests -C Release --output-on-failure
-  
-after_success:
-- |
-  if [[ "${COMPILER}" == "g++-6" ]]; then
-    cd ${TRAVIS_BUILD_DIR}/Build
-    lcov --directory . --capture --output-file coverage.info
-    lcov --remove coverage.info 'tests/*' 'msgs/include/simple_msgs/generated/*' '/usr/*' --output-file coverage.info
-    lcov --list coverage.info
-    coveralls-lcov --repo-token ${COVERALLS_TOKEN} coverage.info
-  fi
+  - |
+    if [[ "${COMPILER}" == "g++-6" ]]; then
+      lcov --directory . --capture --output-file coverage.info
+      lcov --remove coverage.info 'tests/*' 'msgs/include/simple_msgs/generated/*' '/usr/*' --output-file coverage.info
+      lcov --list coverage.info
+      coveralls-lcov --repo-token ${COVERALLS_TOKEN} coverage.info
+    fi
