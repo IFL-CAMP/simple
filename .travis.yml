@@ -43,9 +43,7 @@ install:
   - |
     if [[ "${COMPILER}" == "g++-6" ]]; then
       # Install LCOV
-      LCOV_URL ="http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.11.orig.tar.gz"
-      travis_retry wget --no-check-certificate --quiet -O - ${LCOV_URL} | tar xf lcov_1.11.orig.tar.gz
-      sudo make -C lcov-1.11/ install
+      sudo apt-get install lcov
       gem install coveralls-lcov
     fi
   # Install Flatbuffers
@@ -62,7 +60,10 @@ install:
 before_script:
   - export CXX=${COMPILER}
   - cd ${TRAVIS_BUILD_DIR}
-  - lcov --directory . --zerocounters
+  - |
+    if [[ "${COMPILER}" == "g++-6" ]]; then
+      lcov --directory . --zerocounters
+    fi
   - cmake -H. -BBuild -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBUILD_TESTS=ON -DBUILD_EXAMPLES=ON -Wdev
   - cd Build
 
