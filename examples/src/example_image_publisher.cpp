@@ -50,8 +50,8 @@ std::vector<std::pair<cv::Mat, int>> readImage()
 
 int main()
 {
-  const int N_RUN = 3000;
-  const int SLEEP_TIME = 2000;  //<  Milliseconds.
+  const int N_RUN = 300;
+  const int SLEEP_TIME = 200;  //<  Milliseconds.
 
   // Obtain the images.
   auto images = readImage();

@@ -113,11 +113,20 @@ public:
 
   bool operator==(const Image& rhs) const
   {
-    return ((header_ == rhs.header_) && (origin_ == rhs.origin_) && (encoding_ == rhs.encoding_) &&
-            (resX_ == rhs.resX_) && (resY_ == rhs.resY_) && (resZ_ == rhs.resZ_) && (width_ == rhs.width_) &&
-            (height_ == rhs.height_) && (depth_ == rhs.depth_) &&
-            (memcmp(*data_, *(rhs.data_), data_size_) == 0) && (data_size_ == rhs.data_size_) &&
-            (num_channels_ == rhs.num_channels_));
+    if (data_ && rhs.data_)
+    {
+      return ((header_ == rhs.header_) && (origin_ == rhs.origin_) && (encoding_ == rhs.encoding_) &&
+              (resX_ == rhs.resX_) && (resY_ == rhs.resY_) && (resZ_ == rhs.resZ_) && (width_ == rhs.width_) &&
+              (height_ == rhs.height_) && (depth_ == rhs.depth_) && (memcmp(*data_, *(rhs.data_), data_size_) == 0) &&
+              (data_size_ == rhs.data_size_) && (num_channels_ == rhs.num_channels_));
+    }
+    else
+    {
+      return ((header_ == rhs.header_) && (origin_ == rhs.origin_) && (encoding_ == rhs.encoding_) &&
+              (resX_ == rhs.resX_) && (resY_ == rhs.resY_) && (resZ_ == rhs.resZ_) && (width_ == rhs.width_) &&
+              (height_ == rhs.height_) && (depth_ == rhs.depth_) && (data_size_ == rhs.data_size_) &&
+              (num_channels_ == rhs.num_channels_));
+    }
   }
   bool operator!=(const Image& rhs) const { return !(*this == rhs); }
   /**
@@ -141,7 +150,7 @@ public:
 
     auto type = getDataUnionType();
     flatbuffers::Offset<void> elem;
-    if (*data_)
+    if (data_)
     {
       elem = getDataUnionElem(builder);
     }
@@ -151,7 +160,7 @@ public:
     tmp_builder.add_encoding(encoding_string);
     tmp_builder.add_header(header_vector);
     tmp_builder.add_origin(origin_vector);
-    if (*data_)
+    if (data_)
     {
       tmp_builder.add_image(elem);
     }
@@ -223,7 +232,7 @@ public:
   {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = std::make_shared<const T*>(data);
-	data_size_ = data_size;
+    data_size_ = data_size;
     num_channels_ = num_channels;
   }
 
