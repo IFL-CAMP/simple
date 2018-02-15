@@ -24,29 +24,27 @@
 
 const std::string window_name("Received image");
 cv::Mat buffer;
-simple_msgs::Image<uint8_t> saved_msg;
 
 // Callback function for the Image Subscriber.
 // Every image that is received by the Subscriber is shown in a OpenCV window.
 void example_callback(const simple_msgs::Image<uint8_t>& i)
 {
   // Get the image raw data.
-  //uint8_t* img = const_cast<uint8_t*>(i.getImageData());
+  uint8_t* img = const_cast<uint8_t*>(i.getImageData());
   // Get the image dimensions, e.g. 512x512x1.
-  //auto dimensions = i.getImageDimensions();
+  auto dimensions = i.getImageDimensions();
   // Build an OpenCV Mat from those.
-  //cv::Mat received_img(dimensions[0], dimensions[1], CV_8UC3, img);
-  //received_img.copyTo(buffer);
+  cv::Mat received_img(dimensions[0], dimensions[1], CV_8UC3, img);
+  received_img.copyTo(buffer);
 
-  //cv::imshow(window_name, buffer);
+  cv::imshow(window_name, buffer);
 
   std::cout << "Message received!" << std::endl;
-  saved_msg = i;
 }
 
 int main()
 {
-  //cv::namedWindow(window_name);
+  cv::namedWindow(window_name);
 
   //Inner scope to watch the subscriber die.
   {
@@ -55,13 +53,10 @@ int main()
 	  simple::Subscriber<simple_msgs::Image<uint8_t>> sub("tcp://localhost:5555", example_callback);
 	  std::this_thread::sleep_for(std::chrono::seconds(30));
   }
-  //cv::waitKey(0);
+  cv::waitKey(0);
 
   std::cout << "Subscribing ended." << std::endl;
 
-  //check validity of saved image
-  std::cout << saved_msg.getHeader() << saved_msg.getImageSize() << std::endl;
-
-  //cv::destroyAllWindows();
+  cv::destroyAllWindows();
   return 0;
 }

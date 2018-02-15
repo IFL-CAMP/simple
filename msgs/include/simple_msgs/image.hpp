@@ -109,6 +109,8 @@ public:
     return *this;
   }
 
+  Image& operator=(const uint8_t* data);
+
   bool operator==(const Image& rhs) const
   {
     if (data_ && rhs.data_)
@@ -240,18 +242,7 @@ public:
   static const char* getTopic() { return ImageFbsIdentifier(); }
 
 protected:
-  /**
-   * @brief Moves the content of the zmq_message received to the local zmq_message.
-   */
-  void setMessage(const zmq_msg_t* src_message) override
-  {
-    std::lock_guard<std::mutex> lock(mutex_);
-    zmq_msg_move(&message_, src_message);
-    auto image_data = GetImageFbs(zmq_msg_data(&message_));
-
-	fillPartialImage(image_data);
-	setDataPointer(image_data);
-  }
+  
   void fillPartialImage(const simple_msgs::ImageFbs* imageData)
   {
     // Set Header.
@@ -272,7 +263,6 @@ protected:
     num_channels_ = imageData->num_channels();
 
   }
-  void setDataPointer(const simple_msgs::ImageFbs* image_data);
 
   simple_msgs::data getDataUnionType() const;
   flatbuffers::Offset<void> getDataUnionElem(const std::unique_ptr<flatbuffers::FlatBufferBuilder>& builder) const;

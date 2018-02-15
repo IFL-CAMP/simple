@@ -73,47 +73,71 @@ Image<double>::getDataUnionElem(const std::unique_ptr<flatbuffers::FlatBufferBui
 }
 
 template <>
-void Image<uint8_t>::setDataPointer(const simple_msgs::ImageFbs* image_data)
+Image<uint8_t>& Image<uint8_t>::operator=(const uint8_t* data)
 {
-	// Set the Image data according to the right date type.
-	if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE))
-	{
-		auto local_data = static_cast<const uint8_type*>(image_data->image())->raw()->data();
-		data_ = std::make_shared<const uint8_t*>(local_data);
-	}
+  std::lock_guard<std::mutex> lock(mutex_);
+  auto image_data = GetImageFbs(data);
+
+  Image<uint8_t>::fillPartialImage(image_data);
+
+  // Set the Image data according to the right date type.
+  if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE))
+  {
+    auto local_data = static_cast<const uint8_type*>(image_data->image())->raw()->data();
+    data_ = std::make_shared<const uint8_t*>(local_data);
+  }
+  return *this;
 }
 
 template <>
-void Image<int16_t>::setDataPointer(const simple_msgs::ImageFbs* image_data)
+Image<int16_t>& Image<int16_t>::operator=(const uint8_t* data)
 {
+  std::lock_guard<std::mutex> lock(mutex_);
+  auto image_data = GetImageFbs(data);
+
+  Image<int16_t>::fillPartialImage(image_data);
+
   // Set the Image data according to the right date type.
   if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE))
   {
     auto local_data = static_cast<const int16_type*>(image_data->image())->raw()->data();
     data_ = std::make_shared<const int16_t*>(local_data);
   }
+  return *this;
 }
 
 template <>
-void Image<double>::setDataPointer(const simple_msgs::ImageFbs* image_data)
+Image<double>& Image<double>::operator=(const uint8_t* data)
 {
-	// Set the Image data according to the right date type.
-	if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE))
-	{
-		auto local_data = static_cast<const double_type*>(image_data->image())->raw()->data();
-		data_ = std::make_shared<const double*>(local_data);
-	}
+  std::lock_guard<std::mutex> lock(mutex_);
+  auto image_data = GetImageFbs(data);
+
+  Image<double>::fillPartialImage(image_data);
+
+  // Set the Image data according to the right date type.
+  if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE))
+  {
+    auto local_data = static_cast<const double_type*>(image_data->image())->raw()->data();
+    data_ = std::make_shared<const double*>(local_data);
+  }
+  return *this;
 }
 
 template <>
-void Image<float>::setDataPointer(const simple_msgs::ImageFbs* image_data)
+Image<float>& Image<float>::operator=(const uint8_t* data)
 {
-	// Set the Image data according to the right date type.
-	if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE))
-	{
-		auto local_data = static_cast<const float_type*>(image_data->image())->raw()->data();
-		data_ = std::make_shared<const float*>(local_data);
-	}
+  std::lock_guard<std::mutex> lock(mutex_);
+  auto image_data = GetImageFbs(data);
+
+  Image<float>::fillPartialImage(image_data);
+
+  // Set the Image data according to the right date type.
+  if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE))
+  {
+    auto local_data = static_cast<const float_type*>(image_data->image())->raw()->data();
+    data_ = std::make_shared<const float*>(local_data);
+  }
+  return *this;
 }
 
 template <>
@@ -157,7 +181,7 @@ Image<double>::Image(const uint8_t* data)
   if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE))
   {
     auto local_data = static_cast<const double_type*>(image_data->image())->raw()->data();
-	data_ = std::make_shared<const double*>(local_data);
+    data_ = std::make_shared<const double*>(local_data);
   }
 }
 
@@ -172,7 +196,7 @@ Image<float>::Image(const uint8_t* data)
   if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE))
   {
     auto local_data = static_cast<const float_type*>(image_data->image())->raw()->data();
-	data_ = std::make_shared<const float*>(local_data);
+    data_ = std::make_shared<const float*>(local_data);
   }
 }
 }  // namespace simple_msgs

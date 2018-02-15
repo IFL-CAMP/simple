@@ -31,7 +31,11 @@ template <typename T>
 class GenericSocket
 {
 public:
-  virtual ~GenericSocket() { zmq_close(socket_); }
+  virtual ~GenericSocket()
+  {
+    zmq_msg_close(&recv_message_);
+    zmq_close(socket_);
+  }
   GenericSocket(const GenericSocket&) = delete;
   GenericSocket& operator=(const GenericSocket&) = delete;
 
@@ -88,6 +92,9 @@ protected:
 
     if (topic_sent == -1 || message_sent == -1)
     {
+      // If send is not successful, close the message.
+      zmq_msg_close(&message);
+      zmq_msg_close(&topic);
       std::cerr << custom_error << "Failed to send the message. ZMQ Error: " << zmq_strerror(zmq_errno()) << std::endl;
       return false;
     }
@@ -99,8 +106,9 @@ protected:
     bool success{false};
     int data_past_topic{0};
     auto data_past_topic_size{sizeof(data_past_topic)};
+    // Close the previously received message and initialize a new one.
+    zmq_msg_close(&recv_message_);
 
-    zmq_msg_t recv_message_{};
     zmq_msg_init(&recv_message_);
 
     int message_received = zmq_msg_recv(&recv_message_, socket_, 0);
@@ -115,7 +123,7 @@ protected:
           message_received = zmq_msg_recv(&recv_message_, socket_, 0);
           if (message_received != -1 && zmq_msg_size(&recv_message_) != 0)
           {
-            msg.setMessage(&recv_message_);  //< Move received message to T object.
+            msg = static_cast<uint8_t*>(zmq_msg_data(&recv_message_));  //< Build a T object from the server reply.
             success = true;
           }
           else
@@ -130,7 +138,6 @@ protected:
         std::cerr << custom_error << "Received the wrong message type." << std::endl;
       }
     }
-    zmq_msg_close(&recv_message_);
     return success;
   }
 
@@ -154,6 +161,7 @@ protected:
   int timeout_{0};
   int linger_{-1};
   ContextManager context_;
+  zmq_msg_t recv_message_{};
 };
 }  // Namespace simple.
 

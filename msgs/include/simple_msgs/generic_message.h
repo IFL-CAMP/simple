@@ -23,7 +23,6 @@
 #include <iostream>
 #include <memory>
 #include <mutex>
-#include <zmq.h>
 
 // Custom make_unique method since supporting C++11
 template <typename T, typename... Args>
@@ -41,14 +40,12 @@ class GenericMessage
 {
 public:
   GenericMessage() = default;
-  virtual ~GenericMessage() { zmq_msg_close(&message_); }
+  virtual ~GenericMessage() = default;
 
   virtual std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const = 0;
 
 protected:
-	virtual void setMessage(const zmq_msg_t* src_message) = 0;
   mutable std::mutex mutex_;
-  zmq_msg_t message_{};
 };
 }  // Namespace simple_msgs.
 
