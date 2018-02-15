@@ -48,7 +48,7 @@ if (${BUILD_TESTS})
     message(STATUS "Building SIMPLE tests with coverage.")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0") # debug, no optimisation
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage") # enabling coverage
-    set(coverage_lib)
+    set(coverage_lib gcov)
   endif()
   enable_testing()
   add_subdirectory(tests)
