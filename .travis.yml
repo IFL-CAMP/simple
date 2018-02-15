@@ -79,7 +79,7 @@ script:
   
 after_success:
   - |
-      if [ "${GENERATE_COVERAGE}" ]; then
+      if [ "${COMPILER}" == "g++-6" ]; then
         # Generate code coverage information & send to Coveralls
         lcov --directory . --capture --output-file coverage.info
         lcov --remove coverage.info 'tests/*' 'msgs/include/simple_msgs/generated/*' '/usr/*' --output-file coverage.info
