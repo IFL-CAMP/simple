@@ -46,8 +46,9 @@ if (${BUILD_TESTS})
   include(CTest)
   if (CMAKE_CXX_COMPILER_ID MATCHES "GNU") # Coverage flags for GCC
     message(STATUS "Building SIMPLE tests with coverage.")
-    SET(CMAKE_CXX_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage")    
-    set(coverage_lib gcov --coverage)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0") # debug, no optimisation
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage") # enabling coverage
+    set(coverage_lib)
   endif()
   enable_testing()
   add_subdirectory(tests)
