@@ -46,13 +46,12 @@ int main()
 {
   cv::namedWindow(window_name);
 
-  //Inner scope to watch the subscriber die.
-  {
-	  // Created a Subscriber that listens to Images sent by a Publisher on the IP address "localhost" on port 5555.
-	  std::cout << "Creating a subscriber for Image messages." << std::endl;
-	  simple::Subscriber<simple_msgs::Image<uint8_t>> sub("tcp://localhost:5555", example_callback);
-	  std::this_thread::sleep_for(std::chrono::seconds(30));
-  }
+  // Inner scope to watch the subscriber die.
+
+  // Created a Subscriber that listens to Images sent by a Publisher on the IP address "localhost" on port 5555.
+  std::cout << "Creating a subscriber for Image messages." << std::endl;
+  simple::Subscriber<simple_msgs::Image<uint8_t>> sub("tcp://localhost:5555", example_callback);
+
   cv::waitKey(0);
 
   std::cout << "Subscribing ended." << std::endl;
