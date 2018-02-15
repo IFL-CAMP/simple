@@ -59,6 +59,7 @@ public:
   Subscriber& operator=(const Subscriber& other)
   {
     GenericSocket<T>::renewSocket(ZMQ_SUB);
+	callback_ = other.callback_;
     initSubscriber(other.address_, other.timeout_);
     return *this;
   }
