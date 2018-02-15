@@ -31,7 +31,10 @@ template <typename T>
 class GenericSocket
 {
 public:
-  virtual ~GenericSocket() { zmq_close(socket_); }
+  virtual ~GenericSocket() { 
+	  zmq_msg_close(&recv_message_);
+	  zmq_close(socket_); 
+  }
   GenericSocket(const GenericSocket&) = delete;
   GenericSocket& operator=(const GenericSocket&) = delete;
 
@@ -98,23 +101,24 @@ protected:
     bool success{false};
     int data_past_topic{0};
     auto data_past_topic_size{sizeof(data_past_topic)};
+	//Close the previously received message and initialize a new one.
+	zmq_msg_close(&recv_message_);
+	
+    zmq_msg_init(&recv_message_);
 
-    zmq_msg_t message{};
-    zmq_msg_init(&message);
-
-    int message_received = zmq_msg_recv(&message, socket_, 0);
+    int message_received = zmq_msg_recv(&recv_message_, socket_, 0);
 
     if (message_received != -1)
     {
-      if (strncmp(static_cast<char*>(zmq_msg_data(&message)), topic_, topic_size_) == 0)
+      if (strncmp(static_cast<char*>(zmq_msg_data(&recv_message_)), topic_, topic_size_) == 0)
       {
         zmq_getsockopt(socket_, ZMQ_RCVMORE, &data_past_topic, &data_past_topic_size);
         if (data_past_topic != 0)
         {
-          message_received = zmq_msg_recv(&message, socket_, 0);
-          if (message_received != -1 && zmq_msg_size(&message) != 0)
+          message_received = zmq_msg_recv(&recv_message_, socket_, 0);
+          if (message_received != -1 && zmq_msg_size(&recv_message_) != 0)
           {
-            msg = static_cast<uint8_t*>(zmq_msg_data(&message));  //< Build a T object from the server reply.
+            msg = static_cast<uint8_t*>(zmq_msg_data(&recv_message_));  //< Build a T object from the server reply.
             success = true;
           }
           else
@@ -129,7 +133,7 @@ protected:
         std::cerr << custom_error << "Received the wrong message type." << std::endl;
       }
     }
-    zmq_msg_close(&message);
+   
     return success;
   }
 
@@ -153,6 +157,7 @@ protected:
   int timeout_{0};
   int linger_{-1};
   ContextManager context_;
+  zmq_msg_t recv_message_{};
 };
 }  // Namespace simple.
 
