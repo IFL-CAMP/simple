@@ -76,12 +76,7 @@ before_script:
 script:
   - make -j8
   - ctest -R simple_tests -C Release --output-on-failure
+  
+after_success:
+  - cd ${TRAVIS_BUILD_DIR}
   - find -name *.gcda
-  - |
-    if [[ "${COMPILER}" == "g++-6" ]]; then
-      find -name *.gcda
-      lcov --directory ${TRAVIS_BUILD_DIR}/Build --capture --output-file coverage.info
-      lcov --remove coverage.info 'tests/*' 'msgs/include/simple_msgs/generated/*' '/usr/*' --output-file coverage.info
-      lcov --list coverage.info
-      coveralls-lcov --repo-token ${COVERALLS_TOKEN} coverage.info
-    fi
