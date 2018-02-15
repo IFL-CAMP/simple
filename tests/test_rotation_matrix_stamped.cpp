@@ -39,7 +39,7 @@ SCENARIO("Using a RotationMatrixStamped Message")
   double double_7 = static_cast<double>(rand()) / RAND_MAX;
   double double_8 = static_cast<double>(rand()) / RAND_MAX;
   double double_9 = static_cast<double>(rand()) / RAND_MAX;
-  long time = static_cast<long>(rand());
+  long long time = rand();
   int random_int = rand() / 100;
   std::string random_string = std::to_string(double_1);
   simple_msgs::RotationMatrix random_rotation_matrix(double_1, double_2, double_3, double_4, double_5, double_6,
