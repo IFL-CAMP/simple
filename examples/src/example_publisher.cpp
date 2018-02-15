@@ -23,7 +23,7 @@
 #include "simple_msgs/pose_stamped.h"
 
 // Helper function to get the current time as a double.
-long getTimeNow()
+long long getTimeNow()
 {
   auto now = std::chrono::system_clock::now();
   return std::chrono::time_point_cast<std::chrono::nanoseconds>(now).time_since_epoch().count();
