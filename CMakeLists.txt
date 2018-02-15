@@ -46,8 +46,11 @@ if (${BUILD_TESTS})
   include(CTest)
   if (CMAKE_CXX_COMPILER_ID MATCHES "GNU") # Coverage flags for GCC
     message(STATUS "Building SIMPLE tests with coverage.")
-    add_compile_options(-g -O0 -fprofile-arcs -ftest-coverage)
-    set(coverage_lib gcov)
+    SET(GCC_COVERAGE_COMPILE_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage")
+    SET(GCC_COVERAGE_LINK_FLAGS    "-lgcov")
+    SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}" )
+    SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
+    set(coverage_lib)
   endif()
   enable_testing()
   add_subdirectory(tests)
@@ -76,7 +79,7 @@ target_include_directories(${PROJECT_NAME} INTERFACE
   $<INSTALL_INTERFACE:include>)
 
 target_link_libraries(${PROJECT_NAME} INTERFACE
-  libzmq ${CMAKE_THREAD_LIBS_INIT} simple_msgs ${coverage_lib})
+  libzmq ${CMAKE_THREAD_LIBS_INIT} simple_msgs ${GCC_COVERAGE_LINK_FLAGS})
 
 add_library(${PROJECT_NAME}-static INTERFACE)
 
@@ -87,7 +90,7 @@ target_include_directories(${PROJECT_NAME}-static INTERFACE
   $<INSTALL_INTERFACE:include>)
 
 target_link_libraries(${PROJECT_NAME}-static INTERFACE
-  libzmq-static ${CMAKE_THREAD_LIBS_INIT} simple_msgs ${coverage_lib})
+  libzmq-static ${CMAKE_THREAD_LIBS_INIT} simple_msgs ${GCC_COVERAGE_LINK_FLAGS})
 
 ###### INSTALLATION
 
