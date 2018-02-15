@@ -45,6 +45,7 @@ install:
       # Install LCOV
       sudo apt-get install lcov
       gem install coveralls-lcov
+      lcov --version
     fi
   # Install Flatbuffers
   - git clone --branch v1.8.0 https://github.com/google/flatbuffers.git # Checkout the latest release
@@ -70,6 +71,7 @@ before_script:
 script:
   - make -j8
   - ctest -R simple_tests -C Release --output-on-failure
+  - find -name *.gcda
   - |
     if [[ "${COMPILER}" == "g++-6" ]]; then
       find -name *.gcda
