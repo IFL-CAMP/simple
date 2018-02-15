@@ -80,6 +80,8 @@ script:
 after_success:
   - |
       if [ "${COMPILER}" == "g++-6" ]; then
+        cd ${TRAVIS_BUILD_DIR}/build/tests/CMakeFiles/test_bool.dir
+        ls
         # Generate code coverage information & send to Coveralls
         lcov --directory ${TRAVIS_BUILD_DIR}/build --capture --output-file coverage.info
         lcov --remove coverage.info 'tests/*' 'msgs/include/simple_msgs/generated/*' '/usr/*' --output-file coverage.info
