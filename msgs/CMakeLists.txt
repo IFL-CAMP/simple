@@ -44,6 +44,8 @@ set(SIMPLE_MSGS_SRCS
 # Generate the Flatbuffers headers
 flatbuffers_generate_c_headers(simple_msgs ${PROJECT_SOURCE_DIR}/fbs ${PROJECT_SOURCE_DIR}/include/simple_msgs/generated)
 
+message(STATUS Flatbuffer found at: ${Flatbuffers_DIR})
+
 add_library(${PROJECT_NAME} STATIC ${SIMPLE_MSGS_SRCS})
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
