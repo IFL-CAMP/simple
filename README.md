@@ -22,7 +22,7 @@ ___
 ### What can I send/receive?
 
 *simple* offers a light interface to [FlatBuffers](https://github.com/google/flatbuffers) messages.          
-[Common messages are provided and live under *simple_msgs*](https://github.com/IFL-CAMP/simple/wiki#simple_msgs)        
+[Common messages are provided and live under *simple_msgs*](https://github.com/IFL-CAMP/simple/wiki#simple_msgs).     
 New messages can be defined - in the *simple_msgs* format - and sent/received using the same interface.
 
 ### Usage
