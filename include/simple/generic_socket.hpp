@@ -41,7 +41,11 @@ public:
 
 protected:
   GenericSocket() = default;
-  explicit GenericSocket(int type) { socket_ = zmq_socket(context_.instance(), type); }
+  explicit GenericSocket(int type)
+  {
+    socket_ = zmq_socket(context_.instance(), type);
+    zmq_msg_init(&recv_message_);
+  }
   void bind(const std::string& address)
   {
     address_ = address;
@@ -74,8 +78,9 @@ protected:
     }
   }
 
-  bool sendMsg(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer,
-               const std::string& custom_error = "[SIMPLE Error] - ")
+  bool sendMsg(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer, const std::string& custom_error = "[SIMPLE "
+                                                                                                             "Error] "
+                                                                                                             "- ")
   {
     // Send the topic first and add the rest of the message after it.
     zmq_msg_t topic = {};
@@ -106,34 +111,53 @@ protected:
     int data_past_topic{0};
     auto data_past_topic_size{sizeof(data_past_topic)};
 
-    zmq_msg_init(&recv_message_);
+    // Start local zmq_message.
+    zmq_msg_t local_message{};
 
-    int message_received = zmq_msg_recv(&recv_message_, socket_, 0);
+    zmq_msg_init(&local_message);
+
+    int message_received = zmq_msg_recv(&local_message, socket_, 0);
 
     if (message_received != -1)
     {
-      if (strncmp(static_cast<char*>(zmq_msg_data(&recv_message_)), topic_, topic_size_) == 0)
+      if (strncmp(static_cast<char*>(zmq_msg_data(&local_message)), topic_, topic_size_) == 0)
       {
         zmq_getsockopt(socket_, ZMQ_RCVMORE, &data_past_topic, &data_past_topic_size);
         if (data_past_topic != 0)
         {
-          message_received = zmq_msg_recv(&recv_message_, socket_, 0);
-          if (message_received != -1 && zmq_msg_size(&recv_message_) != 0)
+          message_received = zmq_msg_recv(&local_message, socket_, 0);
+          if (message_received != -1 && zmq_msg_size(&local_message) != 0)
           {
+            // If message was received, move it to member message.
+            zmq_msg_move(&recv_message_, &local_message);
             msg = static_cast<uint8_t*>(zmq_msg_data(&recv_message_));  //< Build a T object from the server reply.
             success = true;
           }
           else
           {
+            // If receive failed, close the local message.
+            zmq_msg_close(&local_message);
             std::cerr << custom_error << "Failed to receive the message. ZMQ Error: " << zmq_strerror(zmq_errno())
                       << std::endl;
           }
         }
+        else
+        {
+          // If receive failed, close the local message.
+          zmq_msg_close(&local_message);
+        }
       }
       else
       {
+        // If receive failed, close the local message.
+        zmq_msg_close(&local_message);
         std::cerr << custom_error << "Received the wrong message type." << std::endl;
       }
+    }
+    else
+    {
+      // If receive failed, close the local message.
+      zmq_msg_close(&local_message);
     }
     return success;
   }
