@@ -9,8 +9,8 @@ matrix:
       compiler: g++
       addons: &g++5
         apt:
-          sources: ubuntu-toolchain-r-test
-          packages: g++-5
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-5']
       env:
          - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5" BUILD_TYPE='Release'
 
