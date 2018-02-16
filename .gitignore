@@ -9,3 +9,5 @@ build2017/
 simpleConfigVersion.cmake
 
 *.kdev4
+
+\.\.bfg-report/

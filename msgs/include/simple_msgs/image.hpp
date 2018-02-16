@@ -113,12 +113,21 @@ public:
 
   bool operator==(const Image& rhs) const
   {
-    return ((header_ == rhs.header_) && (origin_ == rhs.origin_) && (encoding_ == rhs.encoding_) &&
-            (resX_ == rhs.resX_) && (resY_ == rhs.resY_) && (resZ_ == rhs.resZ_) && (width_ == rhs.width_) &&
-            (height_ == rhs.height_) && (depth_ == rhs.depth_) &&
-            (memcmp(data_.get(), rhs.data_.get(), data_size_) == 0) && (data_size_ == rhs.data_size_) &&
-            (num_channels_ == rhs.num_channels_));
+    bool compare =
+        ((header_ == rhs.header_) && (origin_ == rhs.origin_) && (encoding_ == rhs.encoding_) && (resX_ == rhs.resX_) &&
+         (resY_ == rhs.resY_) && (resZ_ == rhs.resZ_) && (width_ == rhs.width_) && (height_ == rhs.height_) &&
+         (depth_ == rhs.depth_) && (data_size_ == rhs.data_size_) && (num_channels_ == rhs.num_channels_));
+
+    if (data_ && rhs.data_)
+    {
+      return (compare && (memcmp(*data_, *(rhs.data_), data_size_) == 0));
+    }
+    else
+    {
+      return compare;
+    }
   }
+
   bool operator!=(const Image& rhs) const { return !(*this == rhs); }
   /**
    * @brief getBufferData
@@ -171,7 +180,7 @@ public:
 
   std::array<double, 3> getResolution() const { return std::array<double, 3>{{resX_, resY_, resZ_}}; }
   std::array<int, 3> getImageDimensions() const { return std::array<int, 3>{{width_, height_, depth_}}; }
-  const T* getImageData() const { return data_.get(); }
+  const T* getImageData() const { return *data_; }
   int getImageSize() const { return data_size_; }
   const Header& getHeader() const { return header_; }
   Header& getHeader() { return header_; }
@@ -222,7 +231,7 @@ public:
   void setImageData(const T* data, int data_size, int num_channels = 1)
   {
     std::lock_guard<std::mutex> lock(mutex_);
-    data_ = std::make_shared<const T>(*data);
+    data_ = std::make_shared<const T*>(data);
     data_size_ = data_size;
     num_channels_ = num_channels;
   }
@@ -262,8 +271,7 @@ private:
 
   double resX_{0.0}, resY_{0.0}, resZ_{0.0};
   int width_{0}, height_{0}, depth_{0};
-
-  std::shared_ptr<const T> data_{};
+  std::shared_ptr<const T*> data_{};
   int data_size_{0};
   int num_channels_{1};
 };
