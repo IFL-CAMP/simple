@@ -82,5 +82,8 @@ after_success:
   - |
       if [ "${CXX}" == "g++-5" ]; then
         # Generate code coverage information & send to Coveralls
-        coveralls --exclude tests --exclude msgs/include/simple_msgs/generated --exclude /usr --gcov gcov-5
+        lcov --gcov-tool gcov-5 --directory ${TRAVIS_BUILD_DIR}/build --capture --output-file coverage.info
+        lcov --remove coverage.info 'tests/*' 'msgs/include/simple_msgs/generated/*' '/usr/*' --output-file coverage.info
+        lcov --list coverage.info
+        bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
         fi
