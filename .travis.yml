@@ -27,7 +27,10 @@ matrix:
       osx_image: xcode8.3
       compiler: clang
       env: MATRIX_EVAL="CXX=clang++" BUILD_TYPE='Release'
-
+      
+before_install:
+  - eval "${MATRIX_EVAL}"
+  
 install:
   - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
   - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
@@ -41,7 +44,7 @@ install:
       which cmake || brew install cmake
     fi
   - |
-    if [[ "${COMPILER}" == "g++-6" ]]; then
+    if [[ "${CXX}" == "g++-5" ]]; then
       # Install LCOV
       cd ${DEPS_DIR}
       wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.11.orig.tar.gz
@@ -64,10 +67,9 @@ install:
   - sudo make -j8 install
 
 before_script:
-  - eval "${MATRIX_EVAL}"
   - cd ${TRAVIS_BUILD_DIR}
   - |
-    if [[ "${COMPILER}" == "g++-6" ]]; then
+    if [[ "${CXX}" == "g++-5" ]]; then
       lcov --directory . --zerocounters
     fi
   - mkdir -p build && cd build
@@ -79,7 +81,7 @@ script:
   
 after_success:
   - |
-      if [ "${COMPILER}" == "g++-6" ]; then
+      if [ "${CXX}" == "g++-5" ]; then
         # Generate code coverage information & send to Coveralls
         lcov --directory ${TRAVIS_BUILD_DIR}/build --capture --output-file coverage.info
         lcov --remove coverage.info 'tests/*' 'msgs/include/simple_msgs/generated/*' '/usr/*' --output-file coverage.info
