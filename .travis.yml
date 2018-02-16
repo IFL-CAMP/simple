@@ -51,8 +51,6 @@ install:
       tar xf lcov_1.11.orig.tar.gz
       sudo make -C lcov-1.11/ install
       gem install coveralls-lcov
-      lcov --version
-      g++-5 --version
     fi
   # Install Flatbuffers
   - cd ${DEPS_DIR}
@@ -87,5 +85,5 @@ after_success:
         lcov --gcov-tool gcov-5 --directory ${TRAVIS_BUILD_DIR}/build --capture --output-file coverage.info
         lcov --remove coverage.info 'tests/*' 'msgs/include/simple_msgs/generated/*' '/usr/*' --output-file coverage.info
         lcov --list coverage.info
-        coveralls-lcov --repo-token ${COVERALLS_TOKEN} coverage.info
+        coveralls-lcov --repo-token=${COVERALLS_TOKEN} coverage.info
         fi
