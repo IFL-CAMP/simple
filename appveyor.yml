@@ -1,0 +1,50 @@
+# version string format -- This will be overwritten later anyway
+version: "{build}"
+
+os:
+  - Visual Studio 2017
+
+skip_tags: true
+
+configuration:
+  - Release
+
+environment:
+  matrix:
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      CMAKE_GENERATOR: Visual Studio 14 2015
+      VISUAL_STUDIO_INTERNAL_VERSION: 140
+      VISUAL_STUDIO_VERSION: 14.0
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      CMAKE_GENERATOR: Visual Studio 15 2017
+      VISUAL_STUDIO_INTERNAL_VERSION: 141
+      VISUAL_STUDIO_VERSION: 14.1
+
+install:
+  - mkdir deps && cd deps
+  - git clone --branch v1.8.0 https://github.com/google/flatbuffers.git # Checkout the latest release
+  - cd flatbuffers && mkdir flatbuffer_build && cd flatbuffer_build
+  - cmake -G "$($env:CMAKE_GENERATOR) Win64" -DCMAKE_BUILD_TYPE=$env:CONFIGURATION ..
+  - cmake --build . --clean-first --config Release --target install
+  - cd %APPVEYOR_BUILD_FOLDER%/deps
+  - git clone https://github.com/zeromq/libzmq.git
+  - cd libzmq && mkdir libzmq_build && cd libzmq_build
+  - cmake -G "$($env:CMAKE_GENERATOR) Win64" -DCMAKE_BUILD_TYPE=$env:CONFIGURATION -DZMQ_BUILD_TESTS=OFF ..
+  - cmake --build . --clean-first --config Release --target install
+
+
+before_build:
+  - cd %APPVEYOR_BUILD_FOLDER%
+  - mkdir build && cd build
+  - cmake .. -DCMAKE_BUILD_TYPE=$env:CONFIGURATION -DBUILD_TESTS=ON -DBUILD_EXAMPLES=ON
+
+# build with MSBuild
+build:
+  project: build\simple.sln        
+  parallel: true                   
+  verbosity: minimal        
+
+test_script:
+  - cd build
+  - ctest -R simple_tests -C $env:CONFIGURATION --output-on-failure
+
