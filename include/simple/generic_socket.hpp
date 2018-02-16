@@ -74,9 +74,8 @@ protected:
     }
   }
 
-  bool sendMsg(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer, const std::string& custom_error = "[SIMPLE "
-                                                                                                             "Error] "
-                                                                                                             "- ")
+  bool sendMsg(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer,
+               const std::string& custom_error = "[SIMPLE Error] - ")
   {
     // Send the topic first and add the rest of the message after it.
     zmq_msg_t topic = {};
@@ -106,8 +105,6 @@ protected:
     bool success{false};
     int data_past_topic{0};
     auto data_past_topic_size{sizeof(data_past_topic)};
-    // Close the previously received message and initialize a new one.
-    zmq_msg_close(&recv_message_);
 
     zmq_msg_init(&recv_message_);
 
@@ -159,7 +156,7 @@ protected:
   const size_t topic_size_{strlen(topic_)};
   std::string address_{""};
   int timeout_{0};
-  int linger_{-1};
+  int linger_{30000};
   ContextManager context_;
   zmq_msg_t recv_message_{};
 };
