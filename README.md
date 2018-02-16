@@ -1,7 +1,7 @@
 ## S.I.M.P.L.E.
 **S**mart **I**ntuitive **M**essaging **P**latform with **L**ess **E**ffort.   
 
-[![Build Status](https://travis-ci.org/IFL-CAMP/simple.svg?branch=master)](https://travis-ci.org/IFL-CAMP/simple)      
+[![Build Status](https://travis-ci.org/IFL-CAMP/simple.svg?branch=master)](https://travis-ci.org/IFL-CAMP/simple) [![codecov](https://codecov.io/gh/IFL-CAMP/simple/branch/master/graph/badge.svg)](https://codecov.io/gh/IFL-CAMP/simple)
 ___
 
 S.I.M.P.L.E. (or just *simple*) is a cross-platform C++ library to **easily** exchange data across a network.          
@@ -12,7 +12,7 @@ It provides a clean interface to the classic **Publisher-Subscriber** and **Requ
 ___
 ### Dependencies
 
-- A C++11 compiler (tested on **gcc**, **clang**, **msvc14** and **msvc15**.)
+- A C++11 compiler (tested on **gcc-5**, **clang-3.8**, **msvc14** and **msvc15**.)
 - CMake 3.3+
 - [ZeroMQ](https://github.com/zeromq/libzmq)
 - [FlatBuffers](https://github.com/google/flatbuffers)
@@ -22,7 +22,7 @@ ___
 ### What can I send/receive?
 
 *simple* offers a light interface to [FlatBuffers](https://github.com/google/flatbuffers) messages.          
-[Common messages are provided and live under *simple_msgs*](https://github.com/IFL-CAMP/simple/wiki#simple_msgs)        
+[Common messages are provided and live under *simple_msgs*](https://github.com/IFL-CAMP/simple/wiki#simple_msgs).     
 New messages can be defined - in the *simple_msgs* format - and sent/received using the same interface.
 
 ### Usage
