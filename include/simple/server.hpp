@@ -61,6 +61,7 @@ public:
   Server& operator=(const Server& other)
   {
     GenericSocket<T>::renewSocket(ZMQ_REP);
+	callback_ = other.callback_;
     initServer(other.address_, other.timeout_, other.linger_);
     return *this;
   }

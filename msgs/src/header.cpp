@@ -22,7 +22,7 @@
 
 namespace simple_msgs
 {
-Header::Header(int seq_n, std::string frame_id, long timestamp)
+Header::Header(int seq_n, std::string frame_id, long long timestamp)
   : seq_n_(seq_n)
   , frame_id_(std::move(frame_id))
   , timestamp_(timestamp)
@@ -32,7 +32,7 @@ Header::Header(int seq_n, std::string frame_id, long timestamp)
 Header::Header(const uint8_t* data)
   : seq_n_(GetHeaderFbs(data)->sequence_number())
   , frame_id_(GetHeaderFbs(data)->frame_id()->c_str())
-  , timestamp_(static_cast<long>(GetHeaderFbs(data)->timestamp()))
+  , timestamp_(static_cast<long long>(GetHeaderFbs(data)->timestamp()))
 {
 }
 
@@ -76,7 +76,7 @@ Header& Header::operator=(const uint8_t* data)
   std::lock_guard<std::mutex> lock(mutex_);
   seq_n_ = GetHeaderFbs(data)->sequence_number();
   frame_id_ = GetHeaderFbs(data)->frame_id()->c_str();
-  timestamp_ = static_cast<long>(GetHeaderFbs(data)->timestamp());
+  timestamp_ = static_cast<long long>(GetHeaderFbs(data)->timestamp());
   return *this;
 }
 
@@ -107,7 +107,7 @@ void Header::setFrameID(const std::string& frame_id)
   frame_id_ = frame_id;
 }
 
-void Header::setTimestamp(long timestamp)
+void Header::setTimestamp(long long timestamp)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   timestamp_ = timestamp;
