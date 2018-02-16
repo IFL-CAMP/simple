@@ -6,12 +6,15 @@ matrix:
 
     # Linux C++11 GCC build
     - os: linux
-      compiler: gcc
-      addons: &gcc48
+      compiler: g++
+      addons: &g++5
         apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['gcc-5','g++-5']
-      env: CCOMPILER='gcc-5' CXXCOMPILER='g++-5' BUILD_TYPE='Release'
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      env:
+         - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5" BUILD_TYPE='Release'
 
     # Linux C++11 Clang build
     - os: linux
@@ -20,13 +23,13 @@ matrix:
         apt:
           sources: ['llvm-toolchain-precise-3.3', 'ubuntu-toolchain-r-test']
           packages: ['clang-3.3']
-      env: CXXCOMPILER='clang++-3.3' BUILD_TYPE='Release'
+      env: MATRIX_EVAL="CXX=clang++-3.3" BUILD_TYPE='Release'
 
     # OSX C++11 Clang Builds
     - os: osx
       osx_image: xcode8.3
       compiler: clang
-      env: CXXCOMPILER='clang++' BUILD_TYPE='Release'
+      env: MATRIX_EVAL="CXX=clang++" BUILD_TYPE='Release'
 
 install:
   - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
@@ -50,11 +53,7 @@ install:
   - sudo make -j8 install # This might require sudo.
 
 before_script:
-  - export CXX=${CXXCOMPILER}
-  - |
-      if [ "${CXXCOMPILER}" == "g++-5" ]; then
-        export CC=${CCOMPILER}
-      fi
+  - eval "${MATRIX_EVAL}"
   - cd ${TRAVIS_BUILD_DIR}
   - cmake -H. -BBuild -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBUILD_TESTS=ON -DBUILD_EXAMPLES=ON -Wdev
   - cd Build
