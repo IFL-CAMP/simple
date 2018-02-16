@@ -75,7 +75,7 @@ target_include_directories(${PROJECT_NAME} INTERFACE
   $<INSTALL_INTERFACE:include>)
 
 target_link_libraries(${PROJECT_NAME} INTERFACE
-  libzmq ${CMAKE_THREAD_LIBS_INIT} simple_msgs ${GCC_COVERAGE_LINK_FLAGS})
+  libzmq ${CMAKE_THREAD_LIBS_INIT} simple_msgs ${coverage_lib})
 
 add_library(${PROJECT_NAME}-static INTERFACE)
 
@@ -86,7 +86,7 @@ target_include_directories(${PROJECT_NAME}-static INTERFACE
   $<INSTALL_INTERFACE:include>)
 
 target_link_libraries(${PROJECT_NAME}-static INTERFACE
-  libzmq-static ${CMAKE_THREAD_LIBS_INIT} simple_msgs ${GCC_COVERAGE_LINK_FLAGS})
+  libzmq-static ${CMAKE_THREAD_LIBS_INIT} simple_msgs ${coverage_lib})
 
 ###### INSTALLATION
 
