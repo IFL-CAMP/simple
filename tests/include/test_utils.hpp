@@ -29,7 +29,7 @@ simple_msgs::Header createRandomHeader()
   int x = rand() % 100;
   std::string y("Header string:");
   y.append(std::to_string(rand() % 100));
-  long z = static_cast<long>(rand());
+  long long z = rand();
   return simple_msgs::Header(x, y, z);
 }
 

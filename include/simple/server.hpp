@@ -34,6 +34,7 @@ template <typename T>
 class Server : public GenericSocket<T>
 {
 public:
+  Server() = default;
   /**
    * @brief Creates a reply socket. Opens a socket of type REP and connects it to the port. The user defined callback
    * function is responsible for taking the received request and filling it with the reply data
@@ -60,7 +61,9 @@ public:
   Server& operator=(const Server& other)
   {
     GenericSocket<T>::renewSocket(ZMQ_REP);
+	callback_ = other.callback_;
     initServer(other.address_, other.timeout_, other.linger_);
+    return *this;
   }
 
   ~Server()

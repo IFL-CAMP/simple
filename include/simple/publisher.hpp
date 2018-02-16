@@ -33,6 +33,7 @@ template <typename T>
 class Publisher : public GenericSocket<T>
 {
 public:
+  Publisher() = default;
   /**
    * @brief Class constructor. Creates a ZMQ_PUB socket and binds it to the port.
    * @param port string for the connection port.
@@ -53,6 +54,7 @@ public:
   {
     GenericSocket<T>::renewSocket(ZMQ_PUB);
     GenericSocket<T>::bind(other.address_);
+    return *this;
   }
 
   ~Publisher() = default;

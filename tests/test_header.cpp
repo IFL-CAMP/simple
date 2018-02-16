@@ -29,8 +29,8 @@
 SCENARIO("Using a Header Message")
 {
   int int_1 = static_cast<int>(rand());
-  long long_1 = static_cast<long>(rand());
-  long long_2 = static_cast<long>(rand());
+  long long long_1 = rand();
+  long long long_2 = rand();
   std::string string_1 = std::to_string(long_1);
   // Testing constructors.
   GIVEN("A Header created from an empty constructor")
