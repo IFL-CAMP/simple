@@ -34,7 +34,7 @@ SCENARIO("Using a QuaternionStamped Message")
   double double_2 = static_cast<double>(rand()) / RAND_MAX;
   double double_3 = static_cast<double>(rand()) / RAND_MAX;
   double double_4 = static_cast<double>(rand()) / RAND_MAX;
-  long time = static_cast<long>(rand());
+  long long time = rand();
   int random_int = rand() / 100;
   std::string random_string = std::to_string(double_1);
   simple_msgs::Quaternion random_quaternion(double_1, double_2, double_3, double_4);

@@ -33,6 +33,7 @@ template <typename T>
 class Client : public GenericSocket<T>
 {
 public:
+  Client() = default;
   /**
    * @brief Default constructor for a socket of type Client.
    * @param address where the client connects to, in the form: tcp://HOSTNAME:PORT. e.g tcp://localhost:5555.
@@ -65,6 +66,7 @@ public:
     GenericSocket<T>::setTimeout(other.timeout_);
     GenericSocket<T>::setLinger(other.linger_);
     GenericSocket<T>::connect(other.address_);
+    return *this;
   }
 
   ~Client() = default;

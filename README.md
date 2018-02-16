@@ -1,7 +1,7 @@
 ## S.I.M.P.L.E.
-**S**mart **I**ntuitive **M**essaging **P**latform with **L**ess **E**ffort.         
-[![Build Status](https://gitlab.lrz.de/CAMP_IFL/simple/badges/master/build.svg)](https://gitlab.lrz.de/CAMP_IFL/simple/commits/master)
-[![coverage report](https://gitlab.lrz.de/CAMP_IFL/simple/badges/master/coverage.svg)](https://gitlab.lrz.de/CAMP_IFL/simple/commits/master)
+**S**mart **I**ntuitive **M**essaging **P**latform with **L**ess **E**ffort.   
+
+[![Build Status](https://travis-ci.org/IFL-CAMP/simple.svg?branch=master)](https://travis-ci.org/IFL-CAMP/simple)      
 ___
 
 S.I.M.P.L.E. (or just *simple*) is a cross-platform C++ library to **easily** exchange data across a network.          
@@ -13,7 +13,7 @@ ___
 ### Dependencies
 
 - A C++11 compiler (tested on **gcc**, **clang**, **msvc14** and **msvc15**.)
-- CMake 3.5+
+- CMake 3.3+
 - [ZeroMQ](https://github.com/zeromq/libzmq)
 - [FlatBuffers](https://github.com/google/flatbuffers)
 
@@ -22,23 +22,23 @@ ___
 ### What can I send/receive?
 
 *simple* offers a light interface to [FlatBuffers](https://github.com/google/flatbuffers) messages.          
-[Common messages are provided and live under *simple_msgs*](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/home#simple_msgs)        
+[Common messages are provided and live under *simple_msgs*](https://github.com/IFL-CAMP/simple/wiki#simple_msgs)        
 New messages can be defined - in the *simple_msgs* format - and sent/received using the same interface.
 
 ### Usage
 
-**Build and Install from source:** on [Windows](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/install:-windows) or [Linux/Mac OSX](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/install:-linux).       
-**Use in your C++ project:** [via CMake](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/home#cmake). We suggest Windows users to link to the static version of *simple*.     
+**Build and Install from source:** on [Windows](https://github.com/IFL-CAMP/simple/wiki/install:-windows) or [Linux/Mac OSX](https://github.com/IFL-CAMP/simple/wiki/install:-linux).       
+**Use in your C++ project:** [via CMake](https://github.com/IFL-CAMP/simple/wiki#cmake). We suggest Windows users to link to the static version of *simple*.     
 
 #### Publisher / Subscriber 
 - A Publisher sends (publishes) data to any Subscriber that is listening to its IP address/port.
 - A Subscriber waits for new data from a Publisher and asynchrounsly receives it.      
-An example of the Publisher/Subscriber pattern in C++ is available [here](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/example:-pubsub).
+An example of the Publisher/Subscriber pattern in C++ is available [here](https://github.com/IFL-CAMP/simple/wiki/example:-pubsub).
 
 #### Request / Reply
 - A Client sends a request to an IP address/port of a Server and expects a reply from it.           
 - A Server waits for requests and asynchrounsly replies to a Client.         
-An example of the Client/Server pattern in C++ is available [here](https://gitlab.lrz.de/CAMP_IFL/simple/wikis/example:-reqrep).
+An example of the Client/Server pattern in C++ is available [here](https://github.com/IFL-CAMP/simple/wiki/example:-reqrep).
 
 #### Inspiration from ROS
 
