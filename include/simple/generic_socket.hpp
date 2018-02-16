@@ -78,9 +78,8 @@ protected:
     }
   }
 
-  bool sendMsg(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer, const std::string& custom_error = "[SIMPLE "
-                                                                                                             "Error] "
-                                                                                                             "- ")
+  bool sendMsg(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer,
+               const std::string& custom_error = "[SIMPLE Error] - ")
   {
     // Send the topic first and add the rest of the message after it.
     zmq_msg_t topic = {};
