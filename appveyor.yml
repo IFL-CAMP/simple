@@ -39,10 +39,8 @@ before_build:
 
 # build with MSBuild
 build:
-  project: build\simple.sln        
-  parallel: true                   
-  verbosity: minimal        
-
+  - cmake --build . --clean-first --config Release
+  
 test_script:
   - cd build
   - ctest -R simple_tests -C %CONFIGURATION% --output-on-failure
