@@ -45,5 +45,4 @@ build_script:
   - cmake --build . --config Release -- /verbosity:minimal
 
 test_script:
-  - cd build
   - ctest -R simple_tests -C %CONFIGURATION% --output-on-failure
