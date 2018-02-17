@@ -29,6 +29,7 @@ matrix:
       env: MATRIX_EVAL="CXX='clang++'" BUILD_TYPE='Release'
       
 before_install:
+  - sudo apt-get update --option Acquire::Retries=100 --option Acquire::http::Timeout="60" # Hopefully preventing Travis to fail when installing from apt
   - eval "${MATRIX_EVAL}"
   
 install:
