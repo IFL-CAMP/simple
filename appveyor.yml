@@ -19,7 +19,7 @@ environment:
       CMAKE_GENERATOR: Visual Studio 15 2017
       VISUAL_STUDIO_INTERNAL_VERSION: 141
       VISUAL_STUDIO_VERSION: 14.1
-      
+
 matrix:
   fast_finish: true
 
@@ -43,9 +43,10 @@ before_build:
 
 # build with MSBuild
 build_script:
+  - dir
+  - dir ../msgs/include/simple_msgs/generated/
   - cmake --build . --config Release -- /verbosity:minimal
-  
+
 test_script:
   - cd build
   - ctest -R simple_tests -C %CONFIGURATION% --output-on-failure
-
