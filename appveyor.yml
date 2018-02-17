@@ -44,7 +44,7 @@ before_build:
 # build with MSBuild
 build_script:
   - dir
-  - dir ../msgs/include/simple_msgs/generated/
+  - dir "../msgs/include/simple_msgs/generated/"
   - cmake --build . --config Release -- /verbosity:minimal
 
 test_script:
