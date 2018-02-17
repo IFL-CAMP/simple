@@ -18,7 +18,6 @@ function(flatbuffers_generate_c_headers NAME FBS_DIR OUTPUT_DIR)
     get_filename_component(FLATC_OUTPUT ${FILE} NAME_WE)
     set(FLATC_OUTPUT "${OUTPUT_DIR}/${FLATC_OUTPUT}_generated.h")
     list(APPEND FLATC_OUTPUTS ${FLATC_OUTPUT})
-    message(STATUS Flatc: ${FLATBUFFERS_FLATC_EXECUTABLE})
     set(EXECUTE_COMMAND ${FLATBUFFERS_FLATC_EXECUTABLE} -c -o ${OUTPUT_DIR} ${FILE})
     execute_process(COMMAND ${EXECUTE_COMMAND})
   endforeach()
@@ -45,8 +44,6 @@ set(SIMPLE_MSGS_SRCS
 
 # Generate the Flatbuffers headers
 flatbuffers_generate_c_headers(simple_msgs ${PROJECT_SOURCE_DIR}/fbs ${PROJECT_SOURCE_DIR}/include/simple_msgs/generated)
-
-message(STATUS Flatbuffer found at: ${Flatbuffers_DIR})
 
 add_library(${PROJECT_NAME} STATIC ${SIMPLE_MSGS_SRCS})
 target_include_directories(${PROJECT_NAME} PUBLIC
