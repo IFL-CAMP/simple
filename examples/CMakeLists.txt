@@ -24,10 +24,12 @@ add_executable(example_publisher src/example_publisher.cpp)
 add_executable(example_subscriber src/example_subscriber.cpp)
 add_executable(example_client src/example_client.cpp)
 add_executable(example_server src/example_server.cpp)
+add_executable(example_subscriber_class src/example_subscriber_class.cpp)
 
 target_link_libraries(example_publisher ${LIBRARIES})
 target_link_libraries(example_subscriber ${LIBRARIES})
 target_link_libraries(example_client ${LIBRARIES})
 target_link_libraries(example_server ${LIBRARIES})
+target_link_libraries(example_subscriber_class ${LIBRARIES})
 
 install(TARGETS example_publisher example_subscriber example_client example_server DESTINATION ${CMAKE_INSTALL_BINDIR})
