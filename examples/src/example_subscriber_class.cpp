@@ -48,6 +48,8 @@ public:
     bool is_new{false};
     T message{};
   };
+
+  DataContainer() = default;
   /**
    * @brief DataContainer ctor.
    * Initializes the iternal subscriber with the given address.
