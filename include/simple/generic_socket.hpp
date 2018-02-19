@@ -173,7 +173,11 @@ protected:
     linger_ = linger;
   }
 
-  void renewSocket(int type) { socket_ = zmq_socket(context_.instance(), type); }
+  void renewSocket(int type)
+  {
+	  socket_ = zmq_socket(context_.instance(), type);
+	  zmq_msg_init(&recv_message_);
+  }
   void* socket_{nullptr};
   const char* topic_{T::getTopic()};
   const size_t topic_size_{strlen(topic_)};
