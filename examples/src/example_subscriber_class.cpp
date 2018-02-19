@@ -71,6 +71,11 @@ public:
         simple::Subscriber<T>(address, std::bind(&DataContainer::memberCallback, this, std::placeholders::_1));
   }
 
+  DataContainer& operator=(const DataContainer& other)
+  {
+    data_subscriber_ = other.data_subscriber_;
+    return *this;
+  }
   /**
    * @brief memberCallback: member function to use as callback of the subscriber.
    * @param msg: message that is received from a Publisher.
