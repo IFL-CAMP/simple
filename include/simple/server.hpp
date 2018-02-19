@@ -80,8 +80,10 @@ private:
     GenericSocket<T>::setTimeout(timeout);
     GenericSocket<T>::setLinger(linger);
 
-    // Start the thread of the server: wait for requests on the dedicated thread.
-    server_thread_ = std::thread(&Server::awaitRequest, this);
+    // Start the thread of the server if not yet done: wait for requests on the dedicated thread.
+	if (!server_thread_.joinable()) {
+		server_thread_ = std::thread(&Server::awaitRequest, this);
+	}
   }
 
   /**
