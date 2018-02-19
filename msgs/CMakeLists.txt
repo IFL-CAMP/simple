@@ -8,6 +8,7 @@ find_program(FLATBUFFERS_FLATC_EXECUTABLE flatc
   /usr/local/bin
   /usr/bin
   "$ENV{PROGRAMFILES}/FlatBuffers/bin"
+  "${Flatbuffers_DIR}/../../../bin"
   NO_DEFAULT_PATH)
 
 function(flatbuffers_generate_c_headers NAME FBS_DIR OUTPUT_DIR)

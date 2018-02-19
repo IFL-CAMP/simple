@@ -1,7 +1,8 @@
 ## S.I.M.P.L.E.
 **S**mart **I**ntuitive **M**essaging **P**latform with **L**ess **E**ffort.   
 
-[![Build Status](https://travis-ci.org/IFL-CAMP/simple.svg?branch=master)](https://travis-ci.org/IFL-CAMP/simple) [![codecov](https://codecov.io/gh/IFL-CAMP/simple/branch/master/graph/badge.svg)](https://codecov.io/gh/IFL-CAMP/simple)
+[![Build Status](https://travis-ci.org/IFL-CAMP/simple.svg?branch=master)](https://travis-ci.org/IFL-CAMP/simple) [![Build status](https://ci.appveyor.com/api/projects/status/vgwego8e0mddmf6k/branch/master?svg=true)](https://ci.appveyor.com/project/SalvoVirga/simple/branch/master)
+ [![codecov](https://codecov.io/gh/IFL-CAMP/simple/branch/master/graph/badge.svg)](https://codecov.io/gh/IFL-CAMP/simple)
 ___
 
 S.I.M.P.L.E. (or just *simple*) is a cross-platform C++ library to **easily** exchange data across a network.          
