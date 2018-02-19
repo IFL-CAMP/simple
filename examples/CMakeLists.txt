@@ -32,4 +32,4 @@ target_link_libraries(example_client ${LIBRARIES})
 target_link_libraries(example_server ${LIBRARIES})
 target_link_libraries(example_subscriber_class ${LIBRARIES})
 
-install(TARGETS example_publisher example_subscriber example_client example_server DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS example_publisher example_subscriber example_client example_server example_subscriber_class DESTINATION ${CMAKE_INSTALL_BINDIR})

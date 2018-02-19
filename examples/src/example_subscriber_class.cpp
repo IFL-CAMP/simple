@@ -67,13 +67,15 @@ public:
   DataContainer(std::string address)
   {
     // std::bind is used to pass the member function as the callback of the subscriber.
+    address_ = address;
     data_subscriber_ =
         simple::Subscriber<T>(address, std::bind(&DataContainer::memberCallback, this, std::placeholders::_1));
   }
 
   DataContainer& operator=(const DataContainer& other)
   {
-    data_subscriber_ = other.data_subscriber_;
+    data_subscriber_ =
+        simple::Subscriber<T>(other.address_, std::bind(&DataContainer::memberCallback, this, std::placeholders::_1));
     return *this;
   }
   /**
@@ -101,6 +103,7 @@ public:
   }
 
 private:
+  std::string address_;
   mutable Data data_;
   simple::Subscriber<T> data_subscriber_{};  //< The subscriber.
   mutable std::mutex data_mutex_{};          //< Used to avoid race-condition between method accessing the stored data.
@@ -110,11 +113,13 @@ int main()
 {
   DataContainer<simple_msgs::PoseStamped> container("tcp://127.0.0.1:5555");
   std::cout << "Starting subscribing." << std::endl;
+  DataContainer<simple_msgs::PoseStamped> container2;
+  container2 = container;
 
   while (true)
   {
-    auto current_data = container.getData();  //< Obtain the most recent data from the container.
-    if (current_data.is_new)                  //< Continue only if it is a new message.
+    auto current_data = container2.getData();  //< Obtain the most recent data from the container.
+    if (current_data.is_new)                   //< Continue only if it is a new message.
     {
       // Get the sequence number of the current data and print it.
       std::cout << "Data #" << current_data.message.getHeader().getSequenceNumber() << std::endl;
