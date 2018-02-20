@@ -61,7 +61,7 @@ public:
   Server& operator=(const Server& other)
   {
     GenericSocket<T>::renewSocket(ZMQ_REP);
-	callback_ = other.callback_;
+    callback_ = other.callback_;
     initServer(other.address_, other.timeout_, other.linger_);
     return *this;
   }
@@ -81,9 +81,10 @@ private:
     GenericSocket<T>::setLinger(linger);
 
     // Start the thread of the server if not yet done: wait for requests on the dedicated thread.
-	if (!server_thread_.joinable()) {
-		server_thread_ = std::thread(&Server::awaitRequest, this);
-	}
+    if (!server_thread_.joinable())
+    {
+      server_thread_ = std::thread(&Server::awaitRequest, this);
+    }
   }
 
   /**

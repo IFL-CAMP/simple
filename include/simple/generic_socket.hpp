@@ -41,11 +41,13 @@ public:
 
 protected:
   GenericSocket() = default;
+
   explicit GenericSocket(int type)
   {
     socket_ = zmq_socket(context_.instance(), type);
     zmq_msg_init(&recv_message_);
   }
+
   void bind(const std::string& address)
   {
     address_ = address;
@@ -167,6 +169,7 @@ protected:
     zmq_setsockopt(socket_, ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
     timeout_ = timeout;
   }
+
   void setLinger(int linger)
   {
     zmq_setsockopt(socket_, ZMQ_LINGER, &linger, sizeof(linger));
@@ -175,9 +178,10 @@ protected:
 
   void renewSocket(int type)
   {
-	  socket_ = zmq_socket(context_.instance(), type);
-	  zmq_msg_init(&recv_message_);
+    socket_ = zmq_socket(context_.instance(), type);
+    zmq_msg_init(&recv_message_);
   }
+
   void* socket_{nullptr};
   const char* topic_{T::getTopic()};
   const size_t topic_size_{strlen(topic_)};

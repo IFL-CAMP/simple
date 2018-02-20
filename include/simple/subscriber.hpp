@@ -59,7 +59,7 @@ public:
   Subscriber& operator=(const Subscriber& other)
   {
     GenericSocket<T>::renewSocket(ZMQ_SUB);
-	callback_ = other.callback_;
+    callback_ = other.callback_;
     initSubscriber(other.address_, other.timeout_);
     return *this;
   }
@@ -80,10 +80,11 @@ private:
     GenericSocket<T>::filter();
     GenericSocket<T>::setTimeout(timeout);
 
-	// Start the callback thread if not yet done.
-	if (!subscriber_thread_.joinable()) {
-		subscriber_thread_ = std::thread(&Subscriber::subscribe, this);
-	}
+    // Start the callback thread if not yet done.
+    if (!subscriber_thread_.joinable())
+    {
+      subscriber_thread_ = std::thread(&Subscriber::subscribe, this);
+    }
   }
 
   /**
