@@ -24,6 +24,7 @@
 #include <flatbuffers/flatbuffers.h>
 #include <string>
 #include <zmq.h>
+#include <iostream>
 
 namespace simple
 {
