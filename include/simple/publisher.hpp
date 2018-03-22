@@ -62,15 +62,17 @@ public:
   /**
    * @brief Publishes the message through the open socket.
    * @param msg: SIMPLE class wrapper for Flatbuffer messages.
+   * @return size of the message, in bytes, published. Returns -1 if send fails.
    */
-  void publish(const T& msg) { publish(msg.getBufferData()); }
+  int publish(const T& msg) { return publish(msg.getBufferData()); }
   /**
    * @brief Publishes the message through the open socket.
    * @param buffer: buffer containing the data to be published.
+   * @return size of the message, in bytes, published. Returns -1 if send fails.
    */
-  void publish(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer)
+  int publish(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer)
   {
-    GenericSocket<T>::sendMsg(buffer, "[Simple Publisher] - ");
+    return GenericSocket<T>::sendMsg(buffer, "[Simple Publisher] - ");
   }
 };
 }  // Namespace simple.
