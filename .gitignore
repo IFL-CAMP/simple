@@ -11,3 +11,11 @@ simpleConfigVersion.cmake
 *.kdev4
 
 \.\.bfg-report/
+
+*.config
+
+*.creator
+
+*.files
+
+*.includes

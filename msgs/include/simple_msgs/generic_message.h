@@ -24,6 +24,8 @@
 #include <memory>
 #include <mutex>
 
+namespace simple_msgs
+{
 // Custom make_unique method since supporting C++11
 template <typename T, typename... Args>
 std::unique_ptr<T> make_unique(Args&&... args)
@@ -31,8 +33,6 @@ std::unique_ptr<T> make_unique(Args&&... args)
   return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
 }
 
-namespace simple_msgs
-{
 /**
  * @brief GenericMessageBase: base class for SIMPLE wrappers around flatbuffers messages.
  */
