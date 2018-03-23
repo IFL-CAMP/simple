@@ -81,7 +81,7 @@ protected:
     }
   }
 
-  bool sendMsg(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer,
+  int sendMsg(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer,
                const std::string& custom_error = "[SIMPLE Error] - ")
   {
     // Send the topic first and add the rest of the message after it.
@@ -102,14 +102,13 @@ protected:
       zmq_msg_close(&message);
       zmq_msg_close(&topic);
       std::cerr << custom_error << "Failed to send the message. ZMQ Error: " << zmq_strerror(zmq_errno()) << std::endl;
-      return false;
+
     }
-    return true;
+    return message_sent;
   }
 
-  bool receiveMsg(T& msg, const std::string& custom_error = "")
+  int receiveMsg(T& msg, const std::string& custom_error = "")
   {
-    bool success{false};
     int data_past_topic{0};
     auto data_past_topic_size{sizeof(data_past_topic)};
 
@@ -133,7 +132,6 @@ protected:
             // If message was received, move it to member message.
             zmq_msg_move(&recv_message_, &local_message);
             msg = static_cast<uint8_t*>(zmq_msg_data(&recv_message_));  //< Build a T object from the server reply.
-            success = true;
           }
           else
           {
@@ -145,8 +143,9 @@ protected:
         }
         else
         {
-          // If receive failed, close the local message.
+          // If no data past topic, close the local message.
           zmq_msg_close(&local_message);
+          std::cerr << custom_error << "No data inside message." << std::endl;
         }
       }
       else
@@ -161,7 +160,7 @@ protected:
       // If receive failed, close the local message.
       zmq_msg_close(&local_message);
     }
-    return success;
+    return message_received;
   }
 
   void filter() { zmq_setsockopt(socket_, ZMQ_SUBSCRIBE, topic_, topic_size_); }

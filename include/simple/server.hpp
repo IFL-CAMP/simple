@@ -95,7 +95,7 @@ private:
     while (alive_)
     {
       T msg;
-      if (GenericSocket<T>::receiveMsg(msg, "[SIMPLE Server] - "))
+      if (GenericSocket<T>::receiveMsg(msg, "[SIMPLE Server] - ") != -1)
       {
         callback_(msg);
         reply(msg);

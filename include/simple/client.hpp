@@ -81,9 +81,9 @@ private:
   {
     bool success{false};
 
-    if (GenericSocket<T>::sendMsg(buffer, "[SIMPLE Client] - "))
+    if (GenericSocket<T>::sendMsg(buffer, "[SIMPLE Client] - ") != -1)
     {
-      if (GenericSocket<T>::receiveMsg(msg, "[SIMPLE Client] - "))
+      if (GenericSocket<T>::receiveMsg(msg, "[SIMPLE Client] - ") != -1)
       {
         success = true;
       }
