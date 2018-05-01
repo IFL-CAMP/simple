@@ -27,7 +27,6 @@
 #include "simple/generic_socket.hpp"
 
 namespace simple {
-namespace beppe {
 /**
  *@brief Creates a subscriber socket for a specific type of message.
  */
@@ -93,7 +92,6 @@ private:
   bool alive_{true};
   std::function<void(const T&)> callback_;
 };
-}  // namespace beppe
 }  // Namespace simple.
 
 #endif  // SIMPLE_SUBSCRIBER_HPP
