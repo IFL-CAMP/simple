@@ -22,18 +22,16 @@
 #include <array>
 #include <iostream>
 
-#include "generic_message.h"
 #include "generated/quaternion_stamped_generated.h"
+#include "generic_message.h"
 #include "header.h"
 #include "quaternion.h"
 
-namespace simple_msgs
-{
+namespace simple_msgs {
 /**
  * @brief Quaternion: wrapper class around the QuaternionFbs generated code from flatbuffers.
  */
-class QuaternionStamped : public GenericMessage
-{
+class QuaternionStamped : public GenericMessage {
 public:
   QuaternionStamped() = default;
   QuaternionStamped(Header, Quaternion);
@@ -45,8 +43,7 @@ public:
   QuaternionStamped& operator=(QuaternionStamped&&) noexcept;
   QuaternionStamped& operator=(const uint8_t*);
 
-  inline bool operator==(const QuaternionStamped& rhs) const
-  {
+  inline bool operator==(const QuaternionStamped& rhs) const {
     return (quaternion_ == rhs.quaternion_ && header_ == rhs.header_);
   }
   inline bool operator!=(const QuaternionStamped& rhs) const { return !(*this == rhs); }

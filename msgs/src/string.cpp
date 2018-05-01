@@ -21,47 +21,27 @@
 
 #include "simple_msgs/string.h"
 
-namespace simple_msgs
-{
-String::String(std::string data)
-  : data_(std::move(data))
-{
-}
+namespace simple_msgs {
+String::String(std::string data) : data_(std::move(data)) {}
 
-String::String(const char* data)
-  : data_(data)
-{
-}
+String::String(const char* data) : data_(data) {}
 
-String::String(const uint8_t* data)
-  : data_(GetStringFbs(data)->data()->c_str())
-{
-}
+String::String(const uint8_t* data) : data_(GetStringFbs(data)->data()->c_str()) {}
 
-String::String(const String& other)
-  : String(other.data_)
-{
-}
+String::String(const String& other) : String(other.data_) {}
 
-String::String(String&& other) noexcept
-  : data_(std::move(other.data_))
-{
-}
+String::String(String&& other) noexcept : data_(std::move(other.data_)) {}
 
-String& String::operator=(const String& other)
-{
-  if (this != std::addressof(other))
-  {
+String& String::operator=(const String& other) {
+  if (this != std::addressof(other)) {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = other.data_;
   }
   return *this;
 }
 
-String& String::operator=(String&& other) noexcept
-{
-  if (this != std::addressof(other))
-  {
+String& String::operator=(String&& other) noexcept {
+  if (this != std::addressof(other)) {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = std::move(other.data_);
     other.data_.clear();
@@ -69,29 +49,25 @@ String& String::operator=(String&& other) noexcept
   return *this;
 }
 
-String& String::operator=(const uint8_t* data)
-{
+String& String::operator=(const uint8_t* data) {
   std::lock_guard<std::mutex> lock(mutex_);
   auto s = GetStringFbs(data);
   data_ = s->data()->c_str();
   return *this;
 }
 
-String& String::operator+=(const String& rhs)
-{
+String& String::operator+=(const String& rhs) {
   std::lock_guard<std::mutex> lock(mutex_);
   data_ += rhs.data_;
   return *this;
 }
 
-String operator+(String lhs, const String& rhs)
-{
+String operator+(String lhs, const String& rhs) {
   lhs += rhs;
   return lhs;
 }
 
-std::shared_ptr<flatbuffers::DetachedBuffer> String::getBufferData() const
-{
+std::shared_ptr<flatbuffers::DetachedBuffer> String::getBufferData() const {
   std::lock_guard<std::mutex> lock(mutex_);
   auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
 
@@ -103,8 +79,7 @@ std::shared_ptr<flatbuffers::DetachedBuffer> String::getBufferData() const
   return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
-std::ostream& operator<<(std::ostream& out, const String& s)
-{
+std::ostream& operator<<(std::ostream& out, const String& s) {
   out << s.data_;
   return out;
 }

@@ -23,14 +23,12 @@
 #include "simple_msgs/pose_stamped.h"
 
 // Helper function to get the current time as a double.
-long long getTimeNow()
-{
+long long getTimeNow() {
   auto now = std::chrono::system_clock::now();
   return std::chrono::time_point_cast<std::chrono::nanoseconds>(now).time_since_epoch().count();
 }
 
-int main()
-{
+int main() {
   const int N_RUN = 30000;
   const int SLEEP_TIME = 1;  //<  Milliseconds.
   int sequence_num = 1;
@@ -49,8 +47,7 @@ int main()
   std::cout << "Starting publishing " << N_RUN << " messages." << std::endl;
 
   // Publishing message for N_RUN times every SLEEP_TIME milliseconds.
-  for (; sequence_num <= N_RUN; ++sequence_num)
-  {
+  for (; sequence_num <= N_RUN; ++sequence_num) {
     publisher.publish(my_pose_stamped);  // Publish the current PoseStamped message.
 
     // Modify the pose at each iteration.

@@ -1,6 +1,7 @@
 /**
  * S.I.M.P.L.E. - Smart Intuitive Messaging Platform with Less Effort
- * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
+ * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy
+ * Langsch - fernanda.langsch@tum.de
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser Public License as published by
@@ -21,15 +22,11 @@
 
 #include <zmq.h>
 
-namespace simple
-{
-class ContextManager
-{
+namespace simple {
+class ContextManager {
 public:
-  ContextManager()
-    : context_(zmq_ctx_new())
-  {
-  }
+  ContextManager() : context_(zmq_ctx_new()) {}
+
   ContextManager(const ContextManager&) = delete;
   ContextManager& operator=(const ContextManager&) = delete;
   ~ContextManager() { zmq_ctx_term(context_); }

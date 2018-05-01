@@ -24,20 +24,15 @@
 
 #include "generic_message.h"
 
-namespace simple_msgs
-{
+namespace simple_msgs {
 template <typename T>
-class NumericType : public GenericMessage
-{
+class NumericType : public GenericMessage {
 public:
   // Constructors.
 
   NumericType() = default;
 
-  NumericType(T data)
-    : data_(data)
-  {
-  }
+  NumericType(T data) : data_(data) {}
 
   /**
    * @brief Constructor from the buffer data, implementation is specific to the template specialization.
@@ -46,13 +41,9 @@ public:
 
   // Copy operations.
 
-  NumericType(const NumericType& other)
-    : NumericType(other.data_)
-  {
-  }
+  NumericType(const NumericType& other) : NumericType(other.data_) {}
 
-  NumericType& operator=(const NumericType& rhs)
-  {
+  NumericType& operator=(const NumericType& rhs) {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = rhs.data_;
     return *this;
@@ -62,12 +53,8 @@ public:
 
   // Move operations.
 
-  NumericType(NumericType&& other) noexcept
-    : NumericType(std::move(other.data_))
-  {
-  }
-  NumericType& operator=(NumericType&& rhs) noexcept
-  {
+  NumericType(NumericType&& other) noexcept : NumericType(std::move(other.data_)) {}
+  NumericType& operator=(NumericType&& rhs) noexcept {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = std::move(rhs.data_);
     return *this;
@@ -84,27 +71,23 @@ public:
   inline bool operator>=(const NumericType& rhs) const { return !(*this < rhs); }
   // Increment and decrement operators.
 
-  NumericType& operator--()
-  {
+  NumericType& operator--() {
     --data_;
     return *this;
   }
 
-  const NumericType operator--(int)
-  {
+  const NumericType operator--(int) {
     const NumericType old(*this);
     --(*this);
     return old;
   }
 
-  NumericType& operator++()
-  {
+  NumericType& operator++() {
     ++data_;
     return *this;
   }
 
-  const NumericType operator++(int)
-  {
+  const NumericType operator++(int) {
     const NumericType old(*this);
     ++(*this);
     return old;
@@ -112,50 +95,42 @@ public:
 
   // Binary arithmetic operatorss
 
-  NumericType& operator+=(const NumericType& rhs)
-  {
+  NumericType& operator+=(const NumericType& rhs) {
     data_ += rhs.data_;
     return *this;
   }
 
-  friend NumericType operator+(NumericType lhs, const NumericType& rhs)
-  {
+  friend NumericType operator+(NumericType lhs, const NumericType& rhs) {
     lhs += rhs;
     return lhs;
   }
 
-  NumericType& operator-=(const NumericType& rhs)
-  {
+  NumericType& operator-=(const NumericType& rhs) {
     data_ -= rhs.data_;
     return *this;
   }
 
-  friend NumericType operator-(NumericType lhs, const NumericType& rhs)
-  {
+  friend NumericType operator-(NumericType lhs, const NumericType& rhs) {
     lhs -= rhs;
     return lhs;
   }
 
-  NumericType& operator*=(const NumericType& rhs)
-  {
+  NumericType& operator*=(const NumericType& rhs) {
     data_ *= rhs.data_;
     return *this;
   }
 
-  friend NumericType operator*(NumericType lhs, const NumericType& rhs)
-  {
+  friend NumericType operator*(NumericType lhs, const NumericType& rhs) {
     lhs *= rhs;
     return lhs;
   }
 
-  NumericType& operator/=(const NumericType& rhs)
-  {
+  NumericType& operator/=(const NumericType& rhs) {
     data_ /= rhs.data_;
     return *this;
   }
 
-  friend NumericType operator/(NumericType lhs, const NumericType& rhs)
-  {
+  friend NumericType operator/(NumericType lhs, const NumericType& rhs) {
     lhs /= rhs;
     return lhs;
   }
@@ -169,8 +144,7 @@ public:
   /**
    * @brief Set the double value.
    */
-  inline void set(T data)
-  {
+  inline void set(T data) {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = data;
   }
@@ -193,8 +167,7 @@ private:
 };
 
 template <typename T>
-std::ostream& operator<<(std::ostream& out, const NumericType<T>& obj)
-{
+std::ostream& operator<<(std::ostream& out, const NumericType<T>& obj) {
   out << obj.data_;
   return out;
 }

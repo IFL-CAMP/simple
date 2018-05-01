@@ -1,6 +1,7 @@
 /**
  * S.I.M.P.L.E. - Smart Intuitive Messaging Platform with Less Effort
- * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
+ * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy
+ * Langsch - fernanda.langsch@tum.de
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser Public License as published by
@@ -27,23 +28,18 @@
 
 // Test: Publish and Subscribe to all data types.
 
-SCENARIO("Publish and subscribe to a Bool message.")
-{
-  GIVEN("An instance of a subscriber.")
-  {
+SCENARIO("Publish and subscribe to a Bool message.") {
+  GIVEN("An instance of a subscriber.") {
     simple::Publisher<simple_msgs::Bool> pub("tcp://*:5555");
     simple::Subscriber<simple_msgs::Bool> sub("tcp://localhost:5555", callbackFunctionConstBool);
     std::this_thread::sleep_for(std::chrono::seconds(2));
-    WHEN("A publisher publishes data")
-    {
-      for (int i = 0; i < 10; ++i)
-      {
+    WHEN("A publisher publishes data") {
+      for (int i = 0; i < 10; ++i) {
         auto p = createRandomBool();
         pub.publish(p);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-        if (running_bool)
-        {
+        if (running_bool) {
           THEN("The data received is the same as the one sent") { REQUIRE(p == received_bool); }
         }
       }
@@ -52,23 +48,18 @@ SCENARIO("Publish and subscribe to a Bool message.")
   }
 }
 
-SCENARIO("Publish and subscribe to a Int message.")
-{
-  GIVEN("An instance of a subscriber.")
-  {
+SCENARIO("Publish and subscribe to a Int message.") {
+  GIVEN("An instance of a subscriber.") {
     simple::Publisher<simple_msgs::Int> pub("tcp://*:5555");
     simple::Subscriber<simple_msgs::Int> sub("tcp://localhost:5555", callbackFunctionConstInt);
     std::this_thread::sleep_for(std::chrono::seconds(2));
-    WHEN("A publisher publishes data")
-    {
-      for (int i = 0; i < 10; ++i)
-      {
+    WHEN("A publisher publishes data") {
+      for (int i = 0; i < 10; ++i) {
         auto p = createRandomInt();
         pub.publish(p);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-        if (running_int)
-        {
+        if (running_int) {
           THEN("The data received is the same as the one sent") { REQUIRE(p == received_int); }
         }
       }
@@ -77,23 +68,18 @@ SCENARIO("Publish and subscribe to a Int message.")
   }
 }
 
-SCENARIO("Publish and subscribe to a Float message.")
-{
-  GIVEN("An instance of a subscriber.")
-  {
+SCENARIO("Publish and subscribe to a Float message.") {
+  GIVEN("An instance of a subscriber.") {
     simple::Publisher<simple_msgs::Float> pub("tcp://*:5555");
     simple::Subscriber<simple_msgs::Float> sub("tcp://localhost:5555", callbackFunctionConstFloat);
     std::this_thread::sleep_for(std::chrono::seconds(2));
-    WHEN("A publisher publishes data")
-    {
-      for (int i = 0; i < 10; ++i)
-      {
+    WHEN("A publisher publishes data") {
+      for (int i = 0; i < 10; ++i) {
         auto p = createRandomFloat();
         pub.publish(p);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-        if (running_float)
-        {
+        if (running_float) {
           THEN("The data received is the same as the one sent") { REQUIRE(p == received_float); }
         }
       }
@@ -102,23 +88,18 @@ SCENARIO("Publish and subscribe to a Float message.")
   }
 }
 
-SCENARIO("Publish and subscribe to a Double message.")
-{
-  GIVEN("An instance of a subscriber.")
-  {
+SCENARIO("Publish and subscribe to a Double message.") {
+  GIVEN("An instance of a subscriber.") {
     simple::Publisher<simple_msgs::Double> pub("tcp://*:5555");
     simple::Subscriber<simple_msgs::Double> sub("tcp://localhost:5555", callbackFunctionConstDouble);
     std::this_thread::sleep_for(std::chrono::seconds(2));
-    WHEN("A publisher publishes data")
-    {
-      for (int i = 0; i < 10; ++i)
-      {
+    WHEN("A publisher publishes data") {
+      for (int i = 0; i < 10; ++i) {
         auto p = createRandomDouble();
         pub.publish(p);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-        if (running_double)
-        {
+        if (running_double) {
           THEN("The data received is the same as the one sent") { REQUIRE(p == received_double); }
         }
       }
@@ -127,23 +108,18 @@ SCENARIO("Publish and subscribe to a Double message.")
   }
 }
 
-SCENARIO("Publish and subscribe to a String message.")
-{
-  GIVEN("An instance of a subscriber.")
-  {
+SCENARIO("Publish and subscribe to a String message.") {
+  GIVEN("An instance of a subscriber.") {
     simple::Publisher<simple_msgs::String> pub("tcp://*:5555");
     simple::Subscriber<simple_msgs::String> sub("tcp://localhost:5555", callbackFunctionConstString);
     std::this_thread::sleep_for(std::chrono::seconds(2));
-    WHEN("A publisher publishes data")
-    {
-      for (int i = 0; i < 10; ++i)
-      {
+    WHEN("A publisher publishes data") {
+      for (int i = 0; i < 10; ++i) {
         auto p = createRandomString();
         pub.publish(p);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-        if (running_string)
-        {
+        if (running_string) {
           THEN("The data received is the same as the one sent") { REQUIRE(p == received_string); }
         }
       }
@@ -152,23 +128,18 @@ SCENARIO("Publish and subscribe to a String message.")
   }
 }
 
-SCENARIO("Publish and subscribe to a Header message.")
-{
-  GIVEN("An instance of a subscriber.")
-  {
+SCENARIO("Publish and subscribe to a Header message.") {
+  GIVEN("An instance of a subscriber.") {
     simple::Publisher<simple_msgs::Header> pub("tcp://*:5555");
     simple::Subscriber<simple_msgs::Header> sub("tcp://localhost:5555", callbackFunctionConstHeader);
     std::this_thread::sleep_for(std::chrono::seconds(2));
-    WHEN("A publisher publishes data")
-    {
-      for (int i = 0; i < 10; ++i)
-      {
+    WHEN("A publisher publishes data") {
+      for (int i = 0; i < 10; ++i) {
         auto p = createRandomHeader();
         pub.publish(p);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-        if (running_header)
-        {
+        if (running_header) {
           THEN("The data received is the same as the one sent") { REQUIRE(p == received_header); }
         }
       }
@@ -177,23 +148,18 @@ SCENARIO("Publish and subscribe to a Header message.")
   }
 }
 
-SCENARIO("Publish and subscribe to a Point message.")
-{
-  GIVEN("An instance of a subscriber.")
-  {
+SCENARIO("Publish and subscribe to a Point message.") {
+  GIVEN("An instance of a subscriber.") {
     simple::Publisher<simple_msgs::Point> pub("tcp://*:5555");
     simple::Subscriber<simple_msgs::Point> sub("tcp://localhost:5555", callbackFunctionConstPoint);
     std::this_thread::sleep_for(std::chrono::seconds(2));
-    WHEN("A publisher publishes data")
-    {
-      for (int i = 0; i < 10; ++i)
-      {
+    WHEN("A publisher publishes data") {
+      for (int i = 0; i < 10; ++i) {
         auto p = createRandomPoint();
         pub.publish(p);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-        if (running_point)
-        {
+        if (running_point) {
           THEN("The data received is the same as the one sent") { REQUIRE(p == received_point); }
         }
       }
@@ -202,23 +168,18 @@ SCENARIO("Publish and subscribe to a Point message.")
   }
 }
 
-SCENARIO("Publish and subscribe to a Quaternion message.")
-{
-  GIVEN("An instance of a subscriber.")
-  {
+SCENARIO("Publish and subscribe to a Quaternion message.") {
+  GIVEN("An instance of a subscriber.") {
     simple::Publisher<simple_msgs::Quaternion> pub("tcp://*:5555");
     simple::Subscriber<simple_msgs::Quaternion> sub("tcp://localhost:5555", callbackFunctionConstQuaternion);
     std::this_thread::sleep_for(std::chrono::seconds(2));
-    WHEN("A publisher publishes data")
-    {
-      for (int i = 0; i < 10; ++i)
-      {
+    WHEN("A publisher publishes data") {
+      for (int i = 0; i < 10; ++i) {
         auto p = createRandomQuaternion();
         pub.publish(p);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-        if (running_quaternion)
-        {
+        if (running_quaternion) {
           THEN("The data received is the same as the one sent") { REQUIRE(p == received_quaternion); }
         }
       }
@@ -227,23 +188,18 @@ SCENARIO("Publish and subscribe to a Quaternion message.")
   }
 }
 
-SCENARIO("Publish and subscribe to a Pose message.")
-{
-  GIVEN("An instance of a subscriber.")
-  {
+SCENARIO("Publish and subscribe to a Pose message.") {
+  GIVEN("An instance of a subscriber.") {
     simple::Publisher<simple_msgs::Pose> pub("tcp://*:5555");
     simple::Subscriber<simple_msgs::Pose> sub("tcp://localhost:5555", callbackFunctionConstPose);
     std::this_thread::sleep_for(std::chrono::seconds(2));
-    WHEN("A publisher publishes data")
-    {
-      for (int i = 0; i < 10; ++i)
-      {
+    WHEN("A publisher publishes data") {
+      for (int i = 0; i < 10; ++i) {
         auto p = createRandomPose();
         pub.publish(p);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-        if (running_pose)
-        {
+        if (running_pose) {
           THEN("The data received is the same as the one sent") { REQUIRE(p == received_pose); }
         }
       }
@@ -252,23 +208,18 @@ SCENARIO("Publish and subscribe to a Pose message.")
   }
 }
 
-SCENARIO("Publish and subscribe to a Rotation Matrix message.")
-{
-  GIVEN("An instance of a subscriber.")
-  {
+SCENARIO("Publish and subscribe to a Rotation Matrix message.") {
+  GIVEN("An instance of a subscriber.") {
     simple::Publisher<simple_msgs::RotationMatrix> pub("tcp://*:5555");
     simple::Subscriber<simple_msgs::RotationMatrix> sub("tcp://localhost:5555", callbackFunctionConstRotationMatrix);
     std::this_thread::sleep_for(std::chrono::seconds(2));
-    WHEN("A publisher publishes data")
-    {
-      for (int i = 0; i < 10; ++i)
-      {
+    WHEN("A publisher publishes data") {
+      for (int i = 0; i < 10; ++i) {
         auto p = createRandomRotationMatrix();
         pub.publish(p);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-        if (running_rotation_matrix)
-        {
+        if (running_rotation_matrix) {
           THEN("The data received is the same as the one sent") { REQUIRE(p == received_rotation_matrix); }
         }
       }
@@ -277,23 +228,18 @@ SCENARIO("Publish and subscribe to a Rotation Matrix message.")
   }
 }
 
-SCENARIO("Publish and subscribe to a PointStamped message.")
-{
-  GIVEN("An instance of a subscriber.")
-  {
+SCENARIO("Publish and subscribe to a PointStamped message.") {
+  GIVEN("An instance of a subscriber.") {
     simple::Publisher<simple_msgs::PointStamped> pub("tcp://*:5555");
     simple::Subscriber<simple_msgs::PointStamped> sub("tcp://localhost:5555", callbackFunctionConstPointStamped);
     std::this_thread::sleep_for(std::chrono::seconds(2));
-    WHEN("A publisher publishes data")
-    {
-      for (int i = 0; i < 10; ++i)
-      {
+    WHEN("A publisher publishes data") {
+      for (int i = 0; i < 10; ++i) {
         auto p = createRandomPointStamped();
         pub.publish(p);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-        if (running_point_stamped)
-        {
+        if (running_point_stamped) {
           THEN("The data received is the same as the one sent") { REQUIRE(p == received_point_stamped); }
         }
       }
@@ -302,24 +248,19 @@ SCENARIO("Publish and subscribe to a PointStamped message.")
   }
 }
 
-SCENARIO("Publish and subscribe to a QuaternionStamped message.")
-{
-  GIVEN("An instance of a subscriber.")
-  {
+SCENARIO("Publish and subscribe to a QuaternionStamped message.") {
+  GIVEN("An instance of a subscriber.") {
     simple::Publisher<simple_msgs::QuaternionStamped> pub("tcp://*:5555");
     simple::Subscriber<simple_msgs::QuaternionStamped> sub("tcp://localhost:5555",
                                                            callbackFunctionConstQuaternionStamped);
     std::this_thread::sleep_for(std::chrono::seconds(2));
-    WHEN("A publisher publishes data")
-    {
-      for (int i = 0; i < 10; ++i)
-      {
+    WHEN("A publisher publishes data") {
+      for (int i = 0; i < 10; ++i) {
         auto p = createRandomQuaternionStamped();
         pub.publish(p);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-        if (running_quaternion_stamped)
-        {
+        if (running_quaternion_stamped) {
           THEN("The data received is the same as the one sent") { REQUIRE(p == received_quaternion_stamped); }
         }
       }
@@ -328,23 +269,18 @@ SCENARIO("Publish and subscribe to a QuaternionStamped message.")
   }
 }
 
-SCENARIO("Publish and subscribe to a PoseStamped message.")
-{
-  GIVEN("An instance of a subscriber.")
-  {
+SCENARIO("Publish and subscribe to a PoseStamped message.") {
+  GIVEN("An instance of a subscriber.") {
     simple::Publisher<simple_msgs::PoseStamped> pub("tcp://*:5555");
     simple::Subscriber<simple_msgs::PoseStamped> sub("tcp://localhost:5555", callbackFunctionConstPoseStamped);
     std::this_thread::sleep_for(std::chrono::seconds(2));
-    WHEN("A publisher publishes data")
-    {
-      for (int i = 0; i < 10; ++i)
-      {
+    WHEN("A publisher publishes data") {
+      for (int i = 0; i < 10; ++i) {
         auto p = createRandomPoseStamped();
         pub.publish(p);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-        if (running_pose_stamped)
-        {
+        if (running_pose_stamped) {
           THEN("The data received is the same as the one sent") { REQUIRE(p == received_pose_stamped); }
         }
       }
@@ -353,24 +289,19 @@ SCENARIO("Publish and subscribe to a PoseStamped message.")
   }
 }
 
-SCENARIO("Publish and subscribe to a RotationMatrixStamped message.")
-{
-  GIVEN("An instance of a subscriber.")
-  {
+SCENARIO("Publish and subscribe to a RotationMatrixStamped message.") {
+  GIVEN("An instance of a subscriber.") {
     simple::Publisher<simple_msgs::RotationMatrixStamped> pub("tcp://*:5555");
     simple::Subscriber<simple_msgs::RotationMatrixStamped> sub("tcp://localhost:5555",
                                                                callbackFunctionConstRotationMatrixStamped);
     std::this_thread::sleep_for(std::chrono::seconds(2));
-    WHEN("A publisher publishes data")
-    {
-      for (int i = 0; i < 10; ++i)
-      {
+    WHEN("A publisher publishes data") {
+      for (int i = 0; i < 10; ++i) {
         auto p = createRandomRotationMatrixStamped();
         pub.publish(p);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-        if (running_rotation_matrix_stamped)
-        {
+        if (running_rotation_matrix_stamped) {
           THEN("The data received is the same as the one sent") { REQUIRE(p == received_rotation_matrix_stamped); }
         }
       }

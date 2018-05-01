@@ -19,13 +19,11 @@
 #ifndef SIMPLE_MSGS_BOOL_H
 #define SIMPLE_MSGS_BOOL_H
 
-#include "generic_message.h"
 #include "generated/bool_generated.h"
+#include "generic_message.h"
 
-namespace simple_msgs
-{
-class Bool : public GenericMessage
-{
+namespace simple_msgs {
+class Bool : public GenericMessage {
 public:
   Bool() = default;
   Bool(bool);
@@ -39,8 +37,7 @@ public:
 
   inline bool operator==(const Bool& rhs) const { return (data_ == rhs.data_); }
   inline bool operator!=(const Bool& rhs) const { return !(*this == rhs); }
-  inline Bool& operator!()
-  {
+  inline Bool& operator!() {
     data_ = !data_;
     return *this;
   }

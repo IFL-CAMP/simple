@@ -22,17 +22,15 @@
 #include <array>
 #include <iostream>
 
-#include "generic_message.h"
 #include "generated/rotation_matrix_generated.h"
+#include "generic_message.h"
 
-namespace simple_msgs
-{
+namespace simple_msgs {
 /**
  * @brief RotationMatrix: wrapper class around the RotationMatrixFbs generated code from flatbuffers.
  * The matrix is stored row-wise
  */
-class RotationMatrix : public GenericMessage
-{
+class RotationMatrix : public GenericMessage {
 public:
   RotationMatrix() = default;
   RotationMatrix(double);

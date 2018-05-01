@@ -19,20 +19,18 @@
 #ifndef SIMPLE_MSGS_POINT_STAMPED_H
 #define SIMPLE_MSGS_POINT_STAMPED_H
 
-#include "point.h"
+#include <array>
+#include <ostream>
 #include "generated/point_stamped_generated.h"
 #include "generic_message.h"
 #include "header.h"
-#include <array>
-#include <ostream>
+#include "point.h"
 
-namespace simple_msgs
-{
+namespace simple_msgs {
 /**
  * @brief Point: wrapper class around the PointFbs generated code from flatbuffers.
  */
-class PointStamped : public GenericMessage
-{
+class PointStamped : public GenericMessage {
 public:
   PointStamped() = default;
   PointStamped(Header, Point);

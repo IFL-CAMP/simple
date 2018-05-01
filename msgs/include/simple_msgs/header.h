@@ -21,16 +21,14 @@
 
 #include <ostream>
 
-#include "generic_message.h"
 #include "generated/header_generated.h"
+#include "generic_message.h"
 
-namespace simple_msgs
-{
+namespace simple_msgs {
 /**
  * @brief Header: wrapper class around the HeaderFbs generated code from flatbuffers.
  */
-class Header : public GenericMessage
-{
+class Header : public GenericMessage {
 public:
   Header() = default;
   Header(int, std::string, long long);
@@ -42,8 +40,7 @@ public:
   Header& operator=(Header&&) noexcept;
   Header& operator=(const uint8_t*);
 
-  inline bool operator==(const Header& rhs) const
-  {
+  inline bool operator==(const Header& rhs) const {
     return (seq_n_ == rhs.seq_n_ && frame_id_ == rhs.frame_id_ && timestamp_ == rhs.timestamp_);
   }
   inline bool operator!=(const Header& rhs) const { return !(*this == rhs); }

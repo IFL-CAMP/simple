@@ -27,18 +27,14 @@
 
 // Test: connecting a subscriber to a wrong type of publisher.
 
-SCENARIO("Publish a Pose and subscribe to a Point message")
-{
-  GIVEN("An instance of a subscriber")
-  {
+SCENARIO("Publish a Pose and subscribe to a Point message") {
+  GIVEN("An instance of a subscriber") {
     simple::Publisher<simple_msgs::Pose> pub("tcp://*:5555");
     simple::Subscriber<simple_msgs::Point> sub("tcp://localhost:5555", callbackFunctionConstPoint);
 
     std::this_thread::sleep_for(std::chrono::seconds(1));
-    WHEN("A publisher publishes data")
-    {
-      for (int i = 0; i < 10; ++i)
-      {
+    WHEN("A publisher publishes data") {
+      for (int i = 0; i < 10; ++i) {
         auto p = createRandomPose();
         pub.publish(p);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));

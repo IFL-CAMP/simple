@@ -20,34 +20,22 @@
 
 #include "simple_msgs/quaternion_stamped.h"
 
-namespace simple_msgs
-{
+namespace simple_msgs {
 QuaternionStamped::QuaternionStamped(Header header, Quaternion quaternion)
-  : quaternion_(std::move(quaternion))
-  , header_(std::move(header))
-{
-}
+  : quaternion_(std::move(quaternion)), header_(std::move(header)) {}
 
 QuaternionStamped::QuaternionStamped(const uint8_t* data)
   : quaternion_(GetQuaternionStampedFbs(data)->quaternion()->data())
-  , header_(GetQuaternionStampedFbs(data)->header()->data())
-{
-}
+  , header_(GetQuaternionStampedFbs(data)->header()->data()) {}
 
 QuaternionStamped::QuaternionStamped(const QuaternionStamped& other)
-  : QuaternionStamped(other.header_, other.quaternion_)
-{
-}
+  : QuaternionStamped(other.header_, other.quaternion_) {}
 
 QuaternionStamped::QuaternionStamped(QuaternionStamped&& other) noexcept
-  : QuaternionStamped(other.header_, other.quaternion_)
-{
-}
+  : QuaternionStamped(other.header_, other.quaternion_) {}
 
-QuaternionStamped& QuaternionStamped::operator=(const QuaternionStamped& other)
-{
-  if (this != std::addressof(other))
-  {
+QuaternionStamped& QuaternionStamped::operator=(const QuaternionStamped& other) {
+  if (this != std::addressof(other)) {
     std::lock_guard<std::mutex> lock(mutex_);
     quaternion_ = other.quaternion_;
     header_ = other.header_;
@@ -55,10 +43,8 @@ QuaternionStamped& QuaternionStamped::operator=(const QuaternionStamped& other)
   return *this;
 }
 
-QuaternionStamped& QuaternionStamped::operator=(QuaternionStamped&& other) noexcept
-{
-  if (this != std::addressof(other))
-  {
+QuaternionStamped& QuaternionStamped::operator=(QuaternionStamped&& other) noexcept {
+  if (this != std::addressof(other)) {
     std::lock_guard<std::mutex> lock(mutex_);
     quaternion_ = std::move(other.quaternion_);
     header_ = std::move(other.header_);
@@ -66,8 +52,7 @@ QuaternionStamped& QuaternionStamped::operator=(QuaternionStamped&& other) noexc
   return *this;
 }
 
-QuaternionStamped& QuaternionStamped::operator=(const uint8_t* data)
-{
+QuaternionStamped& QuaternionStamped::operator=(const uint8_t* data) {
   std::lock_guard<std::mutex> lock(mutex_);
   auto matrix = GetQuaternionStampedFbs(data);
   quaternion_ = Quaternion(matrix->quaternion()->data());
@@ -75,8 +60,7 @@ QuaternionStamped& QuaternionStamped::operator=(const uint8_t* data)
   return *this;
 }
 
-std::shared_ptr<flatbuffers::DetachedBuffer> QuaternionStamped::getBufferData() const
-{
+std::shared_ptr<flatbuffers::DetachedBuffer> QuaternionStamped::getBufferData() const {
   std::lock_guard<std::mutex> lock(mutex_);
   auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
 
@@ -94,20 +78,17 @@ std::shared_ptr<flatbuffers::DetachedBuffer> QuaternionStamped::getBufferData() 
   return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
-void QuaternionStamped::setQuaternion(const Quaternion& quaternion)
-{
+void QuaternionStamped::setQuaternion(const Quaternion& quaternion) {
   std::lock_guard<std::mutex> lock(mutex_);
   quaternion_ = quaternion;
 }
 
-void QuaternionStamped::setHeader(const Header& header)
-{
+void QuaternionStamped::setHeader(const Header& header) {
   std::lock_guard<std::mutex> lock(mutex_);
   header_ = header;
 }
 
-std::ostream& operator<<(std::ostream& out, const QuaternionStamped& q)
-{
+std::ostream& operator<<(std::ostream& out, const QuaternionStamped& q) {
   out << q.header_ << q.quaternion_;
 
   return out;

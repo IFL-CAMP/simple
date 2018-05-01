@@ -21,13 +21,11 @@
 
 #include <ostream>
 
-#include "generic_message.h"
 #include "generated/string_generated.h"
+#include "generic_message.h"
 
-namespace simple_msgs
-{
-class String : public GenericMessage
-{
+namespace simple_msgs {
+class String : public GenericMessage {
 public:
   // Constructors,
   String() = default;
@@ -64,8 +62,7 @@ public:
   /**
    * @brief Modifies the string information contained in the message.
    */
-  inline void set(const std::string& data)
-  {
+  inline void set(const std::string& data) {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = data;
   }

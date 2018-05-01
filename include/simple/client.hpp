@@ -19,19 +19,17 @@
 #ifndef SIMPLE_CLIENT_HPP
 #define SIMPLE_CLIENT_HPP
 
-#include "simple/generic_socket.hpp"
+#include <zmq.h>
 #include <memory>
 #include <string>
-#include <zmq.h>
+#include "simple/generic_socket.hpp"
 
-namespace simple
-{
+namespace simple {
 /**
  * @brief Creates a Client socket for a specific type of message.
  */
 template <typename T>
-class Client : public GenericSocket<T>
-{
+class Client : public GenericSocket<T> {
 public:
   Client() = default;
   /**
@@ -40,9 +38,7 @@ public:
    * @param timeout Time, in msec, the client shall wait for a reply. Default 30 seconds.
    * @param linger Time, in msec, unsent messages linger in memory after socket is closed. Default -1 (infinite).
    */
-  explicit Client(const std::string& address, int timeout = 30000, int linger = -1)
-    : GenericSocket<T>(ZMQ_REQ)
-  {
+  explicit Client(const std::string& address, int timeout = 30000, int linger = -1) : GenericSocket<T>(ZMQ_REQ) {
     GenericSocket<T>::setTimeout(timeout);
     GenericSocket<T>::setLinger(linger);
     GenericSocket<T>::connect(address);
@@ -52,16 +48,13 @@ public:
    * @brief Copy constructor for Client.
    * Opens a new socket of the same type, connected to the same address, with the same timeout and linger.
    */
-  Client(const Client& other)
-    : GenericSocket<T>(ZMQ_REQ)
-  {
+  Client(const Client& other) : GenericSocket<T>(ZMQ_REQ) {
     GenericSocket<T>::setTimeout(other.timeout_);
     GenericSocket<T>::setLinger(other.linger_);
     GenericSocket<T>::connect(other.address_);
   }
 
-  Client& operator=(const Client& other)
-  {
+  Client& operator=(const Client& other) {
     GenericSocket<T>::renewSocket(ZMQ_REQ);
     GenericSocket<T>::setTimeout(other.timeout_);
     GenericSocket<T>::setLinger(other.linger_);
@@ -77,18 +70,14 @@ public:
   bool request(T& msg) { return request(msg.getBufferData(), msg); }
 
 private:
-  bool request(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer, T& msg)
-  {
+  bool request(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer, T& msg) {
     bool success{false};
 
-    if (GenericSocket<T>::sendMsg(buffer, "[SIMPLE Client] - ") != -1)
-    {
-      if (GenericSocket<T>::receiveMsg(msg, "[SIMPLE Client] - ") != -1)
-      {
+    if (GenericSocket<T>::sendMsg(buffer, "[SIMPLE Client] - ") != -1) {
+      if (GenericSocket<T>::receiveMsg(msg, "[SIMPLE Client] - ") != -1) {
         success = true;
-      }
-      else
-      {
+
+      } else {
         std::cerr << "[SIMPLE Client] - No reply received. Aborting this request." << std::endl;
         // Delete the existing socket and create a new one.
         zmq_close(GenericSocket<T>::socket_);

@@ -20,35 +20,19 @@
 
 #include "simple_msgs/point_stamped.h"
 
-namespace simple_msgs
-{
-PointStamped::PointStamped(Header header, Point point)
-  : point_(std::move(point))
-  , header_(std::move(header))
-{
-}
+namespace simple_msgs {
+PointStamped::PointStamped(Header header, Point point) : point_(std::move(point)), header_(std::move(header)) {}
 
 PointStamped::PointStamped(const uint8_t* data)
-  : point_(GetPointStampedFbs(data)->point()->data())
-  , header_(GetPointStampedFbs(data)->header()->data())
-{
-}
+  : point_(GetPointStampedFbs(data)->point()->data()), header_(GetPointStampedFbs(data)->header()->data()) {}
 
-PointStamped::PointStamped(const PointStamped& other)
-  : PointStamped(other.header_, other.point_)
-{
-}
+PointStamped::PointStamped(const PointStamped& other) : PointStamped(other.header_, other.point_) {}
 
 PointStamped::PointStamped(PointStamped&& other) noexcept
-  : point_(std::move(other.point_))
-  , header_(std::move(other.header_))
-{
-}
+  : point_(std::move(other.point_)), header_(std::move(other.header_)) {}
 
-PointStamped& PointStamped::operator=(const PointStamped& other)
-{
-  if (this != std::addressof(other))
-  {
+PointStamped& PointStamped::operator=(const PointStamped& other) {
+  if (this != std::addressof(other)) {
     std::lock_guard<std::mutex> lock(mutex_);
     point_ = other.point_;
     header_ = other.header_;
@@ -56,10 +40,8 @@ PointStamped& PointStamped::operator=(const PointStamped& other)
   return *this;
 }
 
-PointStamped& PointStamped::operator=(PointStamped&& other) noexcept
-{
-  if (this != std::addressof(other))
-  {
+PointStamped& PointStamped::operator=(PointStamped&& other) noexcept {
+  if (this != std::addressof(other)) {
     std::lock_guard<std::mutex> lock(mutex_);
     point_ = std::move(other.point_);
     header_ = std::move(other.header_);
@@ -67,8 +49,7 @@ PointStamped& PointStamped::operator=(PointStamped&& other) noexcept
   return *this;
 }
 
-PointStamped& PointStamped::operator=(const uint8_t* data)
-{
+PointStamped& PointStamped::operator=(const uint8_t* data) {
   std::lock_guard<std::mutex> lock(mutex_);
   auto p = GetPointStampedFbs(data);
   point_ = p->point()->data();
@@ -76,8 +57,7 @@ PointStamped& PointStamped::operator=(const uint8_t* data)
   return *this;
 }
 
-std::shared_ptr<flatbuffers::DetachedBuffer> PointStamped::getBufferData() const
-{
+std::shared_ptr<flatbuffers::DetachedBuffer> PointStamped::getBufferData() const {
   std::lock_guard<std::mutex> lock(mutex_);
   auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
 
@@ -95,20 +75,17 @@ std::shared_ptr<flatbuffers::DetachedBuffer> PointStamped::getBufferData() const
   return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
-void PointStamped::setHeader(const Header& h)
-{
+void PointStamped::setHeader(const Header& h) {
   std::lock_guard<std::mutex> lock(mutex_);
   header_ = h;
 }
 
-void PointStamped::setPoint(const Point& p)
-{
+void PointStamped::setPoint(const Point& p) {
   std::lock_guard<std::mutex> lock(mutex_);
   point_ = p;
 }
 
-std::ostream& operator<<(std::ostream& out, const PointStamped& p)
-{
+std::ostream& operator<<(std::ostream& out, const PointStamped& p) {
   out << p.header_ << p.point_;
 
   return out;

@@ -19,21 +19,19 @@
 #ifndef SIMPLE_MSGS_ROTATION_MATRIX_STAMPED_H
 #define SIMPLE_MSGS_ROTATION_MATRIX_STAMPED_H
 
-#include "rotation_matrix.h"
+#include <array>
+#include <iostream>
 #include "generated/rotation_matrix_stamped_generated.h"
 #include "generic_message.h"
 #include "header.h"
-#include <array>
-#include <iostream>
+#include "rotation_matrix.h"
 
-namespace simple_msgs
-{
+namespace simple_msgs {
 /**
  * @brief RotationMatrix: wrapper class arounf the RotationMatrixFbs generated code from flatbuffers.
  * The matrix is stored colo
  */
-class RotationMatrixStamped : public GenericMessage
-{
+class RotationMatrixStamped : public GenericMessage {
 public:
   RotationMatrixStamped() = default;
   RotationMatrixStamped(Header, RotationMatrix);
@@ -45,8 +43,7 @@ public:
   RotationMatrixStamped& operator=(RotationMatrixStamped&&) noexcept;
   RotationMatrixStamped& operator=(const uint8_t*);
 
-  inline bool operator==(const RotationMatrixStamped& rhs) const
-  {
+  inline bool operator==(const RotationMatrixStamped& rhs) const {
     return (rotation_matrix_ == rhs.rotation_matrix_ && header_ == rhs.header_);
   }
   inline bool operator!=(const RotationMatrixStamped& rhs) const { return !(*this == rhs); }

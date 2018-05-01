@@ -27,8 +27,7 @@ cv::Mat buffer;
 
 // Callback function for the Image Subscriber.
 // Every image that is received by the Subscriber is shown in a OpenCV window.
-void example_callback(const simple_msgs::Image<uint8_t>& i)
-{
+void example_callback(const simple_msgs::Image<uint8_t>& i) {
   // Get the image raw data.
   uint8_t* img = const_cast<uint8_t*>(i.getImageData());
   // Get the image dimensions, e.g. 512x512x1.
@@ -42,8 +41,7 @@ void example_callback(const simple_msgs::Image<uint8_t>& i)
   std::cout << "Message received!" << std::endl;
 }
 
-int main()
-{
+int main() {
   cv::namedWindow(window_name);
 
   // Created a Subscriber that listens to Images sent by a Publisher on the IP address "localhost" on port 5555.

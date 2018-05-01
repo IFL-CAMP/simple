@@ -20,38 +20,22 @@
 
 #include "simple_msgs/header.h"
 
-namespace simple_msgs
-{
+namespace simple_msgs {
 Header::Header(int seq_n, std::string frame_id, long long timestamp)
-  : seq_n_(seq_n)
-  , frame_id_(std::move(frame_id))
-  , timestamp_(timestamp)
-{
-}
+  : seq_n_(seq_n), frame_id_(std::move(frame_id)), timestamp_(timestamp) {}
 
 Header::Header(const uint8_t* data)
   : seq_n_(GetHeaderFbs(data)->sequence_number())
   , frame_id_(GetHeaderFbs(data)->frame_id()->c_str())
-  , timestamp_(static_cast<long long>(GetHeaderFbs(data)->timestamp()))
-{
-}
+  , timestamp_(static_cast<long long>(GetHeaderFbs(data)->timestamp())) {}
 
-Header::Header(const Header& h)
-  : Header(h.seq_n_, h.frame_id_, h.timestamp_)
-{
-}
+Header::Header(const Header& h) : Header(h.seq_n_, h.frame_id_, h.timestamp_) {}
 
 Header::Header(Header&& other) noexcept
-  : seq_n_(other.seq_n_)
-  , frame_id_(std::move(other.frame_id_))
-  , timestamp_(other.timestamp_)
-{
-}
+  : seq_n_(other.seq_n_), frame_id_(std::move(other.frame_id_)), timestamp_(other.timestamp_) {}
 
-Header& Header::operator=(const Header& other)
-{
-  if (this != std::addressof(other))
-  {
+Header& Header::operator=(const Header& other) {
+  if (this != std::addressof(other)) {
     std::lock_guard<std::mutex> lock(mutex_);
     seq_n_ = other.seq_n_;
     frame_id_ = other.frame_id_;
@@ -60,10 +44,8 @@ Header& Header::operator=(const Header& other)
   return *this;
 }
 
-Header& Header::operator=(Header&& other) noexcept
-{
-  if (this != std::addressof(other))
-  {
+Header& Header::operator=(Header&& other) noexcept {
+  if (this != std::addressof(other)) {
     seq_n_ = other.seq_n_;
     frame_id_ = std::move(other.frame_id_);
     timestamp_ = other.timestamp_;
@@ -71,8 +53,7 @@ Header& Header::operator=(Header&& other) noexcept
   return *this;
 }
 
-Header& Header::operator=(const uint8_t* data)
-{
+Header& Header::operator=(const uint8_t* data) {
   std::lock_guard<std::mutex> lock(mutex_);
   seq_n_ = GetHeaderFbs(data)->sequence_number();
   frame_id_ = GetHeaderFbs(data)->frame_id()->c_str();
@@ -80,8 +61,7 @@ Header& Header::operator=(const uint8_t* data)
   return *this;
 }
 
-std::shared_ptr<flatbuffers::DetachedBuffer> Header::getBufferData() const
-{
+std::shared_ptr<flatbuffers::DetachedBuffer> Header::getBufferData() const {
   std::lock_guard<std::mutex> lock(mutex_);
   auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
 
@@ -95,26 +75,22 @@ std::shared_ptr<flatbuffers::DetachedBuffer> Header::getBufferData() const
   return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
-void Header::setSequenceNumber(int seq_n)
-{
+void Header::setSequenceNumber(int seq_n) {
   std::lock_guard<std::mutex> lock(mutex_);
   seq_n_ = seq_n;
 }
 
-void Header::setFrameID(const std::string& frame_id)
-{
+void Header::setFrameID(const std::string& frame_id) {
   std::lock_guard<std::mutex> lock(mutex_);
   frame_id_ = frame_id;
 }
 
-void Header::setTimestamp(long long timestamp)
-{
+void Header::setTimestamp(long long timestamp) {
   std::lock_guard<std::mutex> lock(mutex_);
   timestamp_ = timestamp;
 }
 
-std::ostream& operator<<(std::ostream& out, const Header& h)
-{
+std::ostream& operator<<(std::ostream& out, const Header& h) {
   out << "Header\n \t"
       << "seq_n: " << std::to_string(h.seq_n_) << "\n \t"
       << "frame_id: " << h.frame_id_ << "\n \t"

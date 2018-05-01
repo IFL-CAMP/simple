@@ -22,16 +22,14 @@
 #include <array>
 #include <ostream>
 
-#include "generic_message.h"
 #include "generated/point_generated.h"
+#include "generic_message.h"
 
-namespace simple_msgs
-{
+namespace simple_msgs {
 /**
  * @brief Point: wrapper class around the PointFbs generated code from flatbuffers.
  */
-class Point : public GenericMessage
-{
+class Point : public GenericMessage {
 public:
   Point() = default;
   Point(double);

@@ -19,31 +19,24 @@
 #ifndef SIMPLE_MSGS_FLOAT_H
 #define SIMPLE_MSGS_FLOAT_H
 
-#include "numeric_type.hpp"
 #include "generated/float_generated.h"
+#include "numeric_type.hpp"
 
-namespace simple_msgs
-{
+namespace simple_msgs {
 using Float = NumericType<float>;
 
 template <>
-NumericType<float>::NumericType(const uint8_t* data)
-  : GenericMessage()
-  , data_(GetFloatFbs(data)->data())
-{
-}
+NumericType<float>::NumericType(const uint8_t* data) : GenericMessage(), data_(GetFloatFbs(data)->data()) {}
 
 template <>
-NumericType<float>& NumericType<float>::operator=(const uint8_t* data)
-{
+NumericType<float>& NumericType<float>::operator=(const uint8_t* data) {
   std::lock_guard<std::mutex> lock(mutex_);
   data_ = GetFloatFbs(data)->data();
   return *this;
 }
 
 template <>
-std::shared_ptr<flatbuffers::DetachedBuffer> NumericType<float>::getBufferData() const
-{
+std::shared_ptr<flatbuffers::DetachedBuffer> NumericType<float>::getBufferData() const {
   std::lock_guard<std::mutex> lock(mutex_);
   auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
 
@@ -55,8 +48,7 @@ std::shared_ptr<flatbuffers::DetachedBuffer> NumericType<float>::getBufferData()
 }
 
 template <>
-inline const char* NumericType<float>::getTopic()
-{
+inline const char* NumericType<float>::getTopic() {
   return FloatFbsIdentifier();
 }
 }  // Namespace simple_msgs.

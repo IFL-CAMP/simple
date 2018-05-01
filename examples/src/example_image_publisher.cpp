@@ -17,9 +17,9 @@
  */
 
 #include <iostream>
+#include <opencv2/opencv.hpp>
 #include <string>
 #include <thread>
-#include <opencv2/opencv.hpp>
 
 #include "simple/publisher.hpp"
 #include "simple_msgs/image.hpp"
@@ -27,8 +27,7 @@
 const std::string data_dir = DATA_DIR;
 
 // Create a vector containing OpenCV images.
-std::vector<std::pair<cv::Mat, int>> readImage()
-{
+std::vector<std::pair<cv::Mat, int>> readImage() {
   const std::string lena_path = data_dir + "lena.ascii.pgm";
   const std::string barbara_path = data_dir + "barbara.ascii.pgm";
   const std::string baboon_path = data_dir + "baboon.ascii.pgm";
@@ -48,8 +47,7 @@ std::vector<std::pair<cv::Mat, int>> readImage()
   return return_vector;
 }
 
-int main()
-{
+int main() {
   const int N_RUN = 3000;
   const int SLEEP_TIME = 200;  //<  Milliseconds.
 
@@ -68,8 +66,7 @@ int main()
   simple::Publisher<simple_msgs::Image<uint8_t>> pub("tcp://*:5555");
 
   // Publish an image from the pool of images we read from files, for a total of N_RUN times.
-  for (int i = 0; i < N_RUN; i++)
-  {
+  for (int i = 0; i < N_RUN; i++) {
     // At each iteration pick one of the images in rotation.
     auto image = images[i % 4];
     // Set the image dimensions (e.g. 512x512x1).
