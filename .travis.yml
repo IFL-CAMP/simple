@@ -75,7 +75,7 @@ before_script:
       lcov --directory . --zerocounters
     fi
   - mkdir -p build && cd build
-  - cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBUILD_TESTS=ON -DBUILD_EXAMPLES=ON
+  - cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DSIMPLE_BUILD_TESTS=ON -DSIMPLE_BUILD_EXAMPLES=ON
 
 script:
   - make -j8
