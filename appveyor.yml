@@ -39,7 +39,7 @@ before_build:
   - cd %APPVEYOR_BUILD_FOLDER%
   - rmdir deps /s /q
   - mkdir build && cd build
-  - cmake -G "%CMAKE_GENERATOR% Win64" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DBUILD_TESTS=ON -DBUILD_EXAMPLES=ON ..
+  - cmake -G "%CMAKE_GENERATOR% Win64" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DSIMPLE_BUILD_TESTS=ON -DSIMPLE_BUILD_EXAMPLES=ON ..
 
 build_script:
   - cmake --build . --config Release -- /verbosity:minimal
