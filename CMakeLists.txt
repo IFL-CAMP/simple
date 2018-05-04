@@ -34,16 +34,16 @@ endif()
 
 ###### OPTIONAL BUILDS
 
-option(BUILD_EXAMPLES "Build SIMPLE Examples" FALSE)
-option(BUILD_TESTS "Build SIMPLE Tests" FALSE)
+option(SIMPE_BUILD_EXAMPLES "Build SIMPLE Examples" FALSE)
+option(SIMPLE_BUILD_TESTS "Build SIMPLE Tests" FALSE)
 
 # Examples
-if (${BUILD_EXAMPLES})
+if (${SIMPE_BUILD_EXAMPLES})
   add_subdirectory(examples)
 endif()
 
 # Tests
-if (${BUILD_TESTS})
+if (${SIMPLE_BUILD_TESTS})
   include(CTest)
   if (CMAKE_CXX_COMPILER_ID MATCHES "GNU") # Coverage flags for GCC
     add_compile_options(-g -O0 -fprofile-arcs -ftest-coverage)
