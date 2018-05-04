@@ -25,10 +25,8 @@
 #include "header.h"
 #include "pose.h"
 
-namespace simple_msgs
-{
-class PoseStamped : public GenericMessage
-{
+namespace simple_msgs {
+class PoseStamped : public GenericMessage {
 public:
   PoseStamped() = default;
   PoseStamped(Header, Pose);

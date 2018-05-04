@@ -22,8 +22,7 @@
 #include "simple/client.hpp"
 #include "simple_msgs/pose.h"
 
-int main()
-{
+int main() {
   const int N_RUN = 25;
   const int SLEEP_TIME = 1000;  //<  Milliseconds.
 
@@ -35,15 +34,11 @@ int main()
   // Send a request every SLEEP_TIME milliseconds for N_RUN times.
   // The request is a Pose message, the reply is the modified Pose message.
   // The message is modified by the Server that listens on localhost:5555 accordingly to its callback function.
-  for (auto i = 0; i < N_RUN; ++i)
-  {
+  for (auto i = 0; i < N_RUN; ++i) {
     std::cout << "Sending: \n" << p << std::endl;
-    if (client.request(p))
-    {
+    if (client.request(p)) {
       std::cout << "Receiving: \n" << p << std::endl;
-    }
-    else
-    {
+    } else {
       std::cerr << "Request to the server failed." << std::endl;
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_TIME));

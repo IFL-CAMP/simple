@@ -25,10 +25,8 @@
 #include "point.h"
 #include "quaternion.h"
 
-namespace simple_msgs
-{
-class Pose : public GenericMessage
-{
+namespace simple_msgs {
+class Pose : public GenericMessage {
 public:
   Pose() = default;
   Pose(Point, Quaternion);
@@ -40,8 +38,7 @@ public:
   Pose& operator=(Pose&&) noexcept;
   Pose& operator=(const uint8_t*);
 
-  inline bool operator==(const Pose& rhs) const
-  {
+  inline bool operator==(const Pose& rhs) const {
     return (position_ == rhs.position_ && quaternion_ == rhs.quaternion_);
   }
   inline bool operator!=(const Pose& rhs) const { return !(*this == rhs); }

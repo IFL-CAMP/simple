@@ -20,13 +20,9 @@
 
 #include "simple_msgs/pose.h"
 
-namespace simple_msgs
-{
+namespace simple_msgs {
 Pose::Pose(Point position, Quaternion quaternion)
-  : quaternion_(std::move(quaternion))
-  , position_(std::move(position))
-{
-}
+  : quaternion_(std::move(quaternion)), position_(std::move(position)) {}
 
 Pose::Pose(const uint8_t* data)
 
@@ -36,20 +32,12 @@ Pose::Pose(const uint8_t* data)
   position_ = Point(p->position()->data());
 }
 
-Pose::Pose(const Pose& other)
-  : Pose(other.position_, other.quaternion_)
-{
-}
+Pose::Pose(const Pose& other) : Pose(other.position_, other.quaternion_) {}
 
-Pose::Pose(Pose&& other) noexcept
-  : Pose(other.position_, other.quaternion_)
-{
-}
+Pose::Pose(Pose&& other) noexcept : Pose(other.position_, other.quaternion_) {}
 
-Pose& Pose::operator=(const Pose& p)
-{
-  if (this != std::addressof(p))
-  {
+Pose& Pose::operator=(const Pose& p) {
+  if (this != std::addressof(p)) {
     std::lock_guard<std::mutex> lock(mutex_);
     position_ = p.position_;
     quaternion_ = p.quaternion_;
@@ -57,10 +45,8 @@ Pose& Pose::operator=(const Pose& p)
   return *this;
 }
 
-Pose& Pose::operator=(Pose&& p) noexcept
-{
-  if (this != std::addressof(p))
-  {
+Pose& Pose::operator=(Pose&& p) noexcept {
+  if (this != std::addressof(p)) {
     std::lock_guard<std::mutex> lock(mutex_);
     position_ = std::move(p.position_);
     quaternion_ = std::move(p.quaternion_);
@@ -68,16 +54,14 @@ Pose& Pose::operator=(Pose&& p) noexcept
   return *this;
 }
 
-Pose& Pose::operator=(const uint8_t* data)
-{
+Pose& Pose::operator=(const uint8_t* data) {
   std::lock_guard<std::mutex> lock(mutex_);
   position_ = GetPoseFbs(data)->position()->data();
   quaternion_ = GetPoseFbs(data)->quaternion()->data();
   return *this;
 }
 
-std::shared_ptr<flatbuffers::DetachedBuffer> Pose::getBufferData() const
-{
+std::shared_ptr<flatbuffers::DetachedBuffer> Pose::getBufferData() const {
   std::lock_guard<std::mutex> lock(mutex_);
   auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
 
@@ -95,20 +79,17 @@ std::shared_ptr<flatbuffers::DetachedBuffer> Pose::getBufferData() const
   return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
-void Pose::setQuaternion(const Quaternion& quaternion)
-{
+void Pose::setQuaternion(const Quaternion& quaternion) {
   std::lock_guard<std::mutex> lock(mutex_);
   quaternion_ = quaternion;
 }
 
-void Pose::setPosition(const Point& position)
-{
+void Pose::setPosition(const Point& position) {
   std::lock_guard<std::mutex> lock(mutex_);
   position_ = position;
 }
 
-std::ostream& operator<<(std::ostream& out, const Pose& p)
-{
+std::ostream& operator<<(std::ostream& out, const Pose& p) {
   out << "Pose \n \t" << p.position_ << p.quaternion_;
   return out;
 }

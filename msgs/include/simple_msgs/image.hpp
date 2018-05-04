@@ -21,16 +21,14 @@
 
 #include <mutex>
 
-#include "generic_message.h"
 #include "generated/image_generated.h"
+#include "generic_message.h"
 #include "header.h"
 #include "pose.h"
 
-namespace simple_msgs
-{
+namespace simple_msgs {
 template <typename T>
-class Image : public GenericMessage
-{
+class Image : public GenericMessage {
 public:
   Image() = default;
 
@@ -48,9 +46,7 @@ public:
     , depth_(other.depth_)
     , data_(other.data_)
     , data_size_(other.data_size_)
-    , num_channels_(other.num_channels_)
-  {
-  }
+    , num_channels_(other.num_channels_) {}
 
   Image(Image&& other) noexcept
     : header_(std::move(other.header_))
@@ -64,14 +60,10 @@ public:
     , depth_(std::move(other.depth_))
     , data_(std::move(other.data_))
     , data_size_(std::move(other.data_size_))
-    , num_channels_(other.num_channels_)
-  {
-  }
+    , num_channels_(other.num_channels_) {}
 
-  Image& operator=(const Image& other)
-  {
-    if (this != std::addressof(other))
-    {
+  Image& operator=(const Image& other) {
+    if (this != std::addressof(other)) {
       std::lock_guard<std::mutex> lock(mutex_);
       header_ = other.header_;
       origin_ = other.origin_;
@@ -88,10 +80,8 @@ public:
     }
     return *this;
   }
-  Image& operator=(Image&& other) noexcept
-  {
-    if (this != std::addressof(other))
-    {
+  Image& operator=(Image&& other) noexcept {
+    if (this != std::addressof(other)) {
       std::lock_guard<std::mutex> lock(mutex_);
       header_ = std::move(other.header_);
       origin_ = std::move(other.origin_);
@@ -111,19 +101,15 @@ public:
 
   Image& operator=(const uint8_t* data);
 
-  bool operator==(const Image& rhs) const
-  {
+  bool operator==(const Image& rhs) const {
     bool compare =
         ((header_ == rhs.header_) && (origin_ == rhs.origin_) && (encoding_ == rhs.encoding_) && (resX_ == rhs.resX_) &&
          (resY_ == rhs.resY_) && (resZ_ == rhs.resZ_) && (width_ == rhs.width_) && (height_ == rhs.height_) &&
          (depth_ == rhs.depth_) && (data_size_ == rhs.data_size_) && (num_channels_ == rhs.num_channels_));
 
-    if (data_ && rhs.data_)
-    {
+    if (data_ && rhs.data_) {
       return (compare && (memcmp(*data_, *(rhs.data_), data_size_) == 0));
-    }
-    else
-    {
+    } else {
       return compare;
     }
   }
@@ -133,8 +119,7 @@ public:
    * @brief getBufferData
    * @return
    */
-  std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const override
-  {
+  std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const override {
     std::lock_guard<std::mutex> lock(mutex_);
 
     auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
@@ -150,20 +135,14 @@ public:
 
     auto type = getDataUnionType();
     flatbuffers::Offset<void> elem;
-    if (data_)
-    {
-      elem = getDataUnionElem(builder);
-    }
+    if (data_) { elem = getDataUnionElem(builder); }
 
     ImageFbsBuilder tmp_builder(*builder);
     // add the information
     tmp_builder.add_encoding(encoding_string);
     tmp_builder.add_header(header_vector);
     tmp_builder.add_origin(origin_vector);
-    if (data_)
-    {
-      tmp_builder.add_image(elem);
-    }
+    if (data_) { tmp_builder.add_image(elem); }
     tmp_builder.add_image_type(type);
     tmp_builder.add_image_size(data_size_);
     tmp_builder.add_resX(resX_);
@@ -188,36 +167,31 @@ public:
   Pose& getImageOrigin() { return origin_; }
   std::string getImageEncoding() const { return encoding_; }
   int getNumChannels() const { return num_channels_; }
-  void setImageEncoding(const std::string& encoding)
-  {
+  void setImageEncoding(const std::string& encoding) {
     std::lock_guard<std::mutex> lock(mutex_);
     encoding_ = encoding;
   }
 
-  void setImageResolution(double resX, double resY, double resZ)
-  {
+  void setImageResolution(double resX, double resY, double resZ) {
     std::lock_guard<std::mutex> lock(mutex_);
     resX_ = resX;
     resY_ = resY;
     resZ_ = resZ;
   }
 
-  void setImageDimensions(int width, int height, int depth)
-  {
+  void setImageDimensions(int width, int height, int depth) {
     std::lock_guard<std::mutex> lock(mutex_);
     width_ = width;
     height_ = height;
     depth_ = depth;
   }
 
-  void setHeader(const Header& header)
-  {
+  void setHeader(const Header& header) {
     std::lock_guard<std::mutex> lock(mutex_);
     header_ = header;
   }
 
-  void setOrigin(const Pose& origin_pose)
-  {
+  void setOrigin(const Pose& origin_pose) {
     std::lock_guard<std::mutex> lock(mutex_);
     origin_ = origin_pose;
   }
@@ -228,8 +202,7 @@ public:
    * @param data_size Total length of the data (already contemplating the number of channels)
    * @param num_channels Number of channels in the image
    */
-  void setImageData(const T* data, int data_size, int num_channels = 1)
-  {
+  void setImageData(const T* data, int data_size, int num_channels = 1) {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = std::make_shared<const T*>(data);
     data_size_ = data_size;
@@ -242,8 +215,7 @@ public:
   static const char* getTopic() { return ImageFbsIdentifier(); }
 
 private:
-  void fillPartialImage(const simple_msgs::ImageFbs* imageData)
-  {
+  void fillPartialImage(const simple_msgs::ImageFbs* imageData) {
     // Set Header.
     header_ = imageData->header()->data();
     // Set Origin.

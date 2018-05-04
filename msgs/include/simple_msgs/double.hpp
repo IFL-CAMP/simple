@@ -19,31 +19,24 @@
 #ifndef SIMPLE_MSGS_DOUBLE_H
 #define SIMPLE_MSGS_DOUBLE_H
 
-#include "numeric_type.hpp"
 #include "generated/double_generated.h"
+#include "numeric_type.hpp"
 
-namespace simple_msgs
-{
+namespace simple_msgs {
 using Double = NumericType<double>;
 
 template <>
-NumericType<double>::NumericType(const uint8_t* data)
-  : GenericMessage()
-  , data_(GetDoubleFbs(data)->data())
-{
-}
+NumericType<double>::NumericType(const uint8_t* data) : GenericMessage(), data_(GetDoubleFbs(data)->data()) {}
 
 template <>
-NumericType<double>& NumericType<double>::operator=(const uint8_t* data)
-{
+NumericType<double>& NumericType<double>::operator=(const uint8_t* data) {
   std::lock_guard<std::mutex> lock(mutex_);
   data_ = GetDoubleFbs(data)->data();
   return *this;
 }
 
 template <>
-std::shared_ptr<flatbuffers::DetachedBuffer> NumericType<double>::getBufferData() const
-{
+std::shared_ptr<flatbuffers::DetachedBuffer> NumericType<double>::getBufferData() const {
   std::lock_guard<std::mutex> lock(mutex_);
   auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
   DoubleFbsBuilder tmp_builder(*builder);
@@ -54,8 +47,7 @@ std::shared_ptr<flatbuffers::DetachedBuffer> NumericType<double>::getBufferData(
 }
 
 template <>
-inline const char* NumericType<double>::getTopic()
-{
+inline const char* NumericType<double>::getTopic() {
   return DoubleFbsIdentifier();
 }
 }  // Namespace simple_msgs.

@@ -20,34 +20,18 @@
 
 #include "simple_msgs/pose_stamped.h"
 
-namespace simple_msgs
-{
-PoseStamped::PoseStamped(Header header, Pose pose)
-  : pose_(std::move(pose))
-  , header_(std::move(header))
-{
-}
+namespace simple_msgs {
+PoseStamped::PoseStamped(Header header, Pose pose) : pose_(std::move(pose)), header_(std::move(header)) {}
 
 PoseStamped::PoseStamped(const uint8_t* data)
-  : pose_(GetPoseStampedFbs(data)->pose()->data())
-  , header_(GetPoseStampedFbs(data)->header()->data())
-{
-}
+  : pose_(GetPoseStampedFbs(data)->pose()->data()), header_(GetPoseStampedFbs(data)->header()->data()) {}
 
-PoseStamped::PoseStamped(const PoseStamped& other)
-  : PoseStamped(other.header_, other.pose_)
-{
-}
+PoseStamped::PoseStamped(const PoseStamped& other) : PoseStamped(other.header_, other.pose_) {}
 
-PoseStamped::PoseStamped(PoseStamped&& other) noexcept
-  : PoseStamped(other.header_, other.pose_)
-{
-}
+PoseStamped::PoseStamped(PoseStamped&& other) noexcept : PoseStamped(other.header_, other.pose_) {}
 
-PoseStamped& PoseStamped::operator=(const PoseStamped& p)
-{
-  if (this != std::addressof(p))
-  {
+PoseStamped& PoseStamped::operator=(const PoseStamped& p) {
+  if (this != std::addressof(p)) {
     std::lock_guard<std::mutex> lock(mutex_);
     pose_ = p.pose_;
     header_ = p.header_;
@@ -55,10 +39,8 @@ PoseStamped& PoseStamped::operator=(const PoseStamped& p)
   return *this;
 }
 
-PoseStamped& PoseStamped::operator=(PoseStamped&& p) noexcept
-{
-  if (this != std::addressof(p))
-  {
+PoseStamped& PoseStamped::operator=(PoseStamped&& p) noexcept {
+  if (this != std::addressof(p)) {
     std::lock_guard<std::mutex> lock(mutex_);
     pose_ = std::move(p.pose_);
     header_ = std::move(p.header_);
@@ -66,8 +48,7 @@ PoseStamped& PoseStamped::operator=(PoseStamped&& p) noexcept
   return *this;
 }
 
-PoseStamped& PoseStamped::operator=(const uint8_t* data)
-{
+PoseStamped& PoseStamped::operator=(const uint8_t* data) {
   std::lock_guard<std::mutex> lock(mutex_);
   auto p = GetPoseStampedFbs(data);
   pose_ = Pose(p->pose()->data());
@@ -75,8 +56,7 @@ PoseStamped& PoseStamped::operator=(const uint8_t* data)
   return *this;
 }
 
-std::shared_ptr<flatbuffers::DetachedBuffer> PoseStamped::getBufferData() const
-{
+std::shared_ptr<flatbuffers::DetachedBuffer> PoseStamped::getBufferData() const {
   std::lock_guard<std::mutex> lock(mutex_);
   auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
 
@@ -94,20 +74,17 @@ std::shared_ptr<flatbuffers::DetachedBuffer> PoseStamped::getBufferData() const
   return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
-void PoseStamped::setPose(const Pose& pose)
-{
+void PoseStamped::setPose(const Pose& pose) {
   std::lock_guard<std::mutex> lock(mutex_);
   pose_ = pose;
 }
 
-void PoseStamped::setHeader(const Header& header)
-{
+void PoseStamped::setHeader(const Header& header) {
   std::lock_guard<std::mutex> lock(mutex_);
   header_ = header;
 }
 
-std::ostream& operator<<(std::ostream& out, const PoseStamped& p)
-{
+std::ostream& operator<<(std::ostream& out, const PoseStamped& p) {
   out << p.header_ << p.pose_;
   return out;
 }

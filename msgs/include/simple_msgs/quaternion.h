@@ -22,16 +22,14 @@
 #include <array>
 #include <iostream>
 
-#include "generic_message.h"
 #include "generated/quaternion_generated.h"
+#include "generic_message.h"
 
-namespace simple_msgs
-{
+namespace simple_msgs {
 /**
  * @brief Quaternion: wrapper class around the QuaternionFbs generated code from flatbuffers.
  */
-class Quaternion : public GenericMessage
-{
+class Quaternion : public GenericMessage {
 public:
   Quaternion() = default;
   Quaternion(double, double, double, double);

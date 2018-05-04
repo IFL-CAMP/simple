@@ -19,17 +19,16 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include "simple_msgs/header.h"
-#include "simple_msgs/rotation_matrix.h"
-#include "simple_msgs/rotation_matrix_stamped.h"
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include "simple_msgs/header.h"
+#include "simple_msgs/rotation_matrix.h"
+#include "simple_msgs/rotation_matrix_stamped.h"
 
 // TEST FOR USING THE STAMPED ROTATION MATRIX MESSAGE WRAPPER
 
-SCENARIO("Using a RotationMatrixStamped Message")
-{
+SCENARIO("Using a RotationMatrixStamped Message") {
   double double_1 = static_cast<double>(rand()) / RAND_MAX;
   double double_2 = static_cast<double>(rand()) / RAND_MAX;
   double double_3 = static_cast<double>(rand()) / RAND_MAX;
@@ -48,62 +47,48 @@ SCENARIO("Using a RotationMatrixStamped Message")
   simple_msgs::Header empty_header;
   simple_msgs::Header random_header(random_int, random_string, time);
   // Test the constructors.
-  GIVEN("A RotationMatrixStamped created from an empty constructor")
-  {
+  GIVEN("A RotationMatrixStamped created from an empty constructor") {
     simple_msgs::RotationMatrixStamped empty_rotation_matrix_stamped;
-    WHEN("It is constructed")
-    {
-      THEN("It's elements have to match the default")
-      {
+    WHEN("It is constructed") {
+      THEN("It's elements have to match the default") {
         REQUIRE(empty_rotation_matrix_stamped.getHeader() == empty_header);
         REQUIRE(empty_rotation_matrix_stamped.getRotationMatrix() == empty_rotation_matrix);
       }
     }
   }
 
-  GIVEN("A RotationMatrixStamped created from a rotation_matrix and a header")
-  {
+  GIVEN("A RotationMatrixStamped created from a rotation_matrix and a header") {
     simple_msgs::RotationMatrixStamped rotation_matrix_stamped(random_header, random_rotation_matrix);
-    WHEN("I check the RotationMatrixStamped's elements")
-    {
-      THEN("They all have to be equal to the parameters from the constructor")
-      {
+    WHEN("I check the RotationMatrixStamped's elements") {
+      THEN("They all have to be equal to the parameters from the constructor") {
         REQUIRE(rotation_matrix_stamped.getRotationMatrix() == random_rotation_matrix);
         REQUIRE(rotation_matrix_stamped.getHeader() == random_header);
       }
     }
   }
 
-  GIVEN("A RotationMatrixStamped created from the serialized data of an existing RotationMatrixStamped")
-  {
+  GIVEN("A RotationMatrixStamped created from the serialized data of an existing RotationMatrixStamped") {
     simple_msgs::RotationMatrixStamped rotation_matrix_stamped(random_header, random_rotation_matrix);
     simple_msgs::RotationMatrixStamped buffer_rotation_matrix_stamped(rotation_matrix_stamped.getBufferData()->data());
-    WHEN("I check the RotationMatrixStamped's elements")
-    {
-      THEN("The new RotationMatrixStamped has to be equal to the other")
-      {
+    WHEN("I check the RotationMatrixStamped's elements") {
+      THEN("The new RotationMatrixStamped has to be equal to the other") {
         REQUIRE(buffer_rotation_matrix_stamped == rotation_matrix_stamped);
       }
     }
   }
 
   // Testing copy constructors.
-  GIVEN("A RotationMatrixStamped")
-  {
+  GIVEN("A RotationMatrixStamped") {
     simple_msgs::RotationMatrixStamped rotation_matrix_stamped(random_header, random_rotation_matrix);
-    WHEN("I copy-construct a new RotationMatrixStamped")
-    {
+    WHEN("I copy-construct a new RotationMatrixStamped") {
       const simple_msgs::RotationMatrixStamped copy_rotation_matrix_stamped(rotation_matrix_stamped);
-      THEN("The new RotationMatrixStamped is equal to the other")
-      {
+      THEN("The new RotationMatrixStamped is equal to the other") {
         REQUIRE(copy_rotation_matrix_stamped == rotation_matrix_stamped);
       }
     }
-    WHEN("I move-construct a new RotationMatrixStamped")
-    {
+    WHEN("I move-construct a new RotationMatrixStamped") {
       simple_msgs::RotationMatrixStamped move_rotation_matrix_stamped(std::move(rotation_matrix_stamped));
-      THEN("The new RotationMatrixStamped's elements are equal to the previous' ones")
-      {
+      THEN("The new RotationMatrixStamped's elements are equal to the previous' ones") {
         REQUIRE(move_rotation_matrix_stamped.getRotationMatrix() == random_rotation_matrix);
         REQUIRE(move_rotation_matrix_stamped.getHeader() == random_header);
       }
@@ -111,33 +96,26 @@ SCENARIO("Using a RotationMatrixStamped Message")
   }
 
   // Testing Copy-assignments.
-  GIVEN("A RotationMatrixStamped")
-  {
+  GIVEN("A RotationMatrixStamped") {
     simple_msgs::RotationMatrixStamped rotation_matrix_stamped(random_header, random_rotation_matrix);
-    WHEN("I copy-assign from that RotationMatrixStamped's buffer")
-    {
+    WHEN("I copy-assign from that RotationMatrixStamped's buffer") {
       simple_msgs::RotationMatrixStamped copy_assigned_buffer_rotation_matrix_stamped;
       copy_assigned_buffer_rotation_matrix_stamped = rotation_matrix_stamped.getBufferData()->data();
-      THEN("The new RotationMatrixStamped has to be same as the original")
-      {
+      THEN("The new RotationMatrixStamped has to be same as the original") {
         REQUIRE(copy_assigned_buffer_rotation_matrix_stamped == rotation_matrix_stamped);
       }
     }
-    WHEN("I copy-assign from that RotationMatrixStamped")
-    {
+    WHEN("I copy-assign from that RotationMatrixStamped") {
       simple_msgs::RotationMatrixStamped copy_assigned_rotation_matrix_stamped;
       copy_assigned_rotation_matrix_stamped = rotation_matrix_stamped;
-      THEN("The new RotationMatrixStamped has to be same as the original")
-      {
+      THEN("The new RotationMatrixStamped has to be same as the original") {
         REQUIRE(copy_assigned_rotation_matrix_stamped == rotation_matrix_stamped);
       }
     }
-    WHEN("I move-assign from that RotationMatrixStamped")
-    {
+    WHEN("I move-assign from that RotationMatrixStamped") {
       simple_msgs::RotationMatrixStamped move_assigned_rotation_matrix_stamped;
       move_assigned_rotation_matrix_stamped = std::move(rotation_matrix_stamped);
-      THEN("The new RotationMatrixStamped has to be same as the original")
-      {
+      THEN("The new RotationMatrixStamped has to be same as the original") {
         REQUIRE(move_assigned_rotation_matrix_stamped.getRotationMatrix() == random_rotation_matrix);
         REQUIRE(move_assigned_rotation_matrix_stamped.getHeader() == random_header);
       }
@@ -145,55 +123,44 @@ SCENARIO("Using a RotationMatrixStamped Message")
   }
 
   // Testing setters/getters.
-  GIVEN("A RotationMatrixStamped")
-  {
+  GIVEN("A RotationMatrixStamped") {
     simple_msgs::RotationMatrixStamped rotation_matrix_stamped;
-    WHEN("I set the rotation_matrix of the rotation_matrix_stamped")
-    {
+    WHEN("I set the rotation_matrix of the rotation_matrix_stamped") {
       rotation_matrix_stamped.setRotationMatrix(random_rotation_matrix);
-      THEN("The position is correct")
-      {
+      THEN("The position is correct") {
         REQUIRE(rotation_matrix_stamped.getRotationMatrix() == random_rotation_matrix);
       }
     }
-    WHEN("I set the header of the rotation_matrix_stamped")
-    {
+    WHEN("I set the header of the rotation_matrix_stamped") {
       rotation_matrix_stamped.setHeader(random_header);
       THEN("The quaternion is correct") { REQUIRE(rotation_matrix_stamped.getHeader() == random_header); }
     }
   }
 
   // Testing operations.
-  GIVEN("Two identical RotationMatrixStampeds")
-  {
+  GIVEN("Two identical RotationMatrixStampeds") {
     simple_msgs::RotationMatrixStamped first_rotation_matrix_stamped(random_header, random_rotation_matrix);
     simple_msgs::RotationMatrixStamped second_rotation_matrix_stamped(random_header, random_rotation_matrix);
-    WHEN("I compare these RotationMatrixStampeds")
-    {
+    WHEN("I compare these RotationMatrixStampeds") {
       THEN("They have to be equal") { REQUIRE(first_rotation_matrix_stamped == second_rotation_matrix_stamped); }
     }
-    WHEN("I change something in the first rotation_matrix_stamped")
-    {
+    WHEN("I change something in the first rotation_matrix_stamped") {
       first_rotation_matrix_stamped.setHeader(empty_header);
       THEN("They have to be different") { REQUIRE(first_rotation_matrix_stamped != second_rotation_matrix_stamped); }
     }
   }
 
   // Testing Topic and ostream
-  GIVEN("A Rotation Matrix Stamped")
-  {
+  GIVEN("A Rotation Matrix Stamped") {
     simple_msgs::RotationMatrixStamped rotation_matrix_stamped(random_header, random_rotation_matrix);
-    WHEN("I get the message topic")
-    {
+    WHEN("I get the message topic") {
       std::string topic_name = rotation_matrix_stamped.getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "RMST"); }
     }
-    WHEN("I print the RotatioMatrixStamped")
-    {
+    WHEN("I print the RotatioMatrixStamped") {
       std::ostringstream out;
       out << rotation_matrix_stamped;
-      THEN("The output is correct")
-      {
+      THEN("The output is correct") {
         std::string correct =
             "Header\n \tseq_n: " + std::to_string(rotation_matrix_stamped.getHeader().getSequenceNumber()) +
             "\n \tframe_id: " + rotation_matrix_stamped.getHeader().getFrameID() + "\n \t" +

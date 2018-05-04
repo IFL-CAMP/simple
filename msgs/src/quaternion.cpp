@@ -18,22 +18,12 @@
 
 #include "simple_msgs/quaternion.h"
 
-namespace simple_msgs
-{
-Quaternion::Quaternion(double x, double y, double z, double w)
-  : data_{{x, y, z, w}}
-{
-}
+namespace simple_msgs {
+Quaternion::Quaternion(double x, double y, double z, double w) : data_{{x, y, z, w}} {}
 
-Quaternion::Quaternion(const std::array<double, 4>& array)
-  : data_(array)
-{
-}
+Quaternion::Quaternion(const std::array<double, 4>& array) : data_(array) {}
 
-Quaternion::Quaternion(std::array<double, 4>&& array) noexcept
-  : data_(array)
-{
-}
+Quaternion::Quaternion(std::array<double, 4>&& array) noexcept : data_(array) {}
 
 Quaternion::Quaternion(const uint8_t* data)
 
@@ -45,52 +35,39 @@ Quaternion::Quaternion(const uint8_t* data)
   data_[3] = q->w();
 }
 
-Quaternion::Quaternion(const Quaternion& other)
-  : Quaternion(other.data_)
-{
-}
+Quaternion::Quaternion(const Quaternion& other) : Quaternion(other.data_) {}
 
-Quaternion::Quaternion(Quaternion&& other) noexcept
-  : data_(other.data_)
-{
-}
+Quaternion::Quaternion(Quaternion&& other) noexcept : data_(other.data_) {}
 
-Quaternion& Quaternion::operator=(const Quaternion& other)
-{
-  if (this != std::addressof(other))
-  {
+Quaternion& Quaternion::operator=(const Quaternion& other) {
+  if (this != std::addressof(other)) {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = other.data_;
   }
   return *this;
 }
 
-Quaternion& Quaternion::operator=(Quaternion&& other) noexcept
-{
-  if (this != std::addressof(other))
-  {
+Quaternion& Quaternion::operator=(Quaternion&& other) noexcept {
+  if (this != std::addressof(other)) {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = other.data_;
   }
   return *this;
 }
 
-Quaternion& Quaternion::operator=(const std::array<double, 4>& array)
-{
+Quaternion& Quaternion::operator=(const std::array<double, 4>& array) {
   std::lock_guard<std::mutex> lock(mutex_);
   data_ = array;
   return *this;
 }
 
-Quaternion& Quaternion::operator=(std::array<double, 4>&& array) noexcept
-{
+Quaternion& Quaternion::operator=(std::array<double, 4>&& array) noexcept {
   std::lock_guard<std::mutex> lock(mutex_);
   data_ = array;
   return *this;
 }
 
-Quaternion& Quaternion::operator=(const uint8_t* data)
-{
+Quaternion& Quaternion::operator=(const uint8_t* data) {
   std::lock_guard<std::mutex> lock(mutex_);
   auto q = GetQuaternionFbs(data);
   data_[0] = q->x();
@@ -101,8 +78,7 @@ Quaternion& Quaternion::operator=(const uint8_t* data)
   return *this;
 }
 
-std::shared_ptr<flatbuffers::DetachedBuffer> Quaternion::getBufferData() const
-{
+std::shared_ptr<flatbuffers::DetachedBuffer> Quaternion::getBufferData() const {
   std::lock_guard<std::mutex> lock(mutex_);
   auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
 
@@ -115,32 +91,27 @@ std::shared_ptr<flatbuffers::DetachedBuffer> Quaternion::getBufferData() const
 
   return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
-void Quaternion::setX(double x)
-{
+void Quaternion::setX(double x) {
   std::lock_guard<std::mutex> lock(mutex_);
   data_[0] = x;
 }
 
-void Quaternion::setY(double y)
-{
+void Quaternion::setY(double y) {
   std::lock_guard<std::mutex> lock(mutex_);
   data_[1] = y;
 }
 
-void Quaternion::setZ(double z)
-{
+void Quaternion::setZ(double z) {
   std::lock_guard<std::mutex> lock(mutex_);
   data_[2] = z;
 }
 
-void Quaternion::setW(double w)
-{
+void Quaternion::setW(double w) {
   std::lock_guard<std::mutex> lock(mutex_);
   data_[3] = w;
 }
 
-std::ostream& operator<<(std::ostream& out, const Quaternion& q)
-{
+std::ostream& operator<<(std::ostream& out, const Quaternion& q) {
   out << "Quaternion \n \t"
       << "x: " << std::to_string(q.data_[0]) << "\n \t"
       << "y: " << std::to_string(q.data_[1]) << "\n \t"

@@ -20,19 +20,19 @@
 #define SIMPLE_MSGS_ALL_H
 
 #include "bool.h"
-#include "int.hpp"
 #include "double.hpp"
 #include "float.hpp"
-#include "string.h"
 #include "header.h"
 #include "image.hpp"
+#include "int.hpp"
 #include "point.h"
 #include "point_stamped.h"
-#include "quaternion.h"
-#include "quaternion_stamped.h"
 #include "pose.h"
 #include "pose_stamped.h"
+#include "quaternion.h"
+#include "quaternion_stamped.h"
 #include "rotation_matrix.h"
 #include "rotation_matrix_stamped.h"
+#include "string.h"
 
 #endif  // SIMPLE_MSGS_ALL_H

@@ -20,34 +20,22 @@
 
 #include "simple_msgs/rotation_matrix_stamped.h"
 
-namespace simple_msgs
-{
+namespace simple_msgs {
 RotationMatrixStamped::RotationMatrixStamped(Header header, RotationMatrix rotation_matrix)
-  : rotation_matrix_(std::move(rotation_matrix))
-  , header_(std::move(header))
-{
-}
+  : rotation_matrix_(std::move(rotation_matrix)), header_(std::move(header)) {}
 
 RotationMatrixStamped::RotationMatrixStamped(const uint8_t* data)
   : rotation_matrix_(GetRotationMatrixStampedFbs(data)->rotation_matrix()->data())
-  , header_(GetRotationMatrixStampedFbs(data)->header()->data())
-{
-}
+  , header_(GetRotationMatrixStampedFbs(data)->header()->data()) {}
 
 RotationMatrixStamped::RotationMatrixStamped(const RotationMatrixStamped& m)
-  : RotationMatrixStamped(m.header_, m.rotation_matrix_)
-{
-}
+  : RotationMatrixStamped(m.header_, m.rotation_matrix_) {}
 
 RotationMatrixStamped::RotationMatrixStamped(RotationMatrixStamped&& m) noexcept
-  : RotationMatrixStamped(m.header_, m.rotation_matrix_)
-{
-}
+  : RotationMatrixStamped(m.header_, m.rotation_matrix_) {}
 
-RotationMatrixStamped& RotationMatrixStamped::operator=(const RotationMatrixStamped& other)
-{
-  if (this != std::addressof(other))
-  {
+RotationMatrixStamped& RotationMatrixStamped::operator=(const RotationMatrixStamped& other) {
+  if (this != std::addressof(other)) {
     std::lock_guard<std::mutex> lock(mutex_);
     rotation_matrix_ = other.rotation_matrix_;
     header_ = other.header_;
@@ -55,10 +43,8 @@ RotationMatrixStamped& RotationMatrixStamped::operator=(const RotationMatrixStam
   return *this;
 }
 
-RotationMatrixStamped& RotationMatrixStamped::operator=(RotationMatrixStamped&& other) noexcept
-{
-  if (this != std::addressof(other))
-  {
+RotationMatrixStamped& RotationMatrixStamped::operator=(RotationMatrixStamped&& other) noexcept {
+  if (this != std::addressof(other)) {
     std::lock_guard<std::mutex> lock(mutex_);
     rotation_matrix_ = std::move(other.rotation_matrix_);
     header_ = std::move(other.header_);
@@ -66,8 +52,7 @@ RotationMatrixStamped& RotationMatrixStamped::operator=(RotationMatrixStamped&& 
   return *this;
 }
 
-RotationMatrixStamped& RotationMatrixStamped::operator=(const uint8_t* data)
-{
+RotationMatrixStamped& RotationMatrixStamped::operator=(const uint8_t* data) {
   std::lock_guard<std::mutex> lock(mutex_);
   auto matrix = GetRotationMatrixStampedFbs(data);
   rotation_matrix_ = RotationMatrix(matrix->rotation_matrix()->data());
@@ -75,8 +60,7 @@ RotationMatrixStamped& RotationMatrixStamped::operator=(const uint8_t* data)
   return *this;
 }
 
-std::shared_ptr<flatbuffers::DetachedBuffer> RotationMatrixStamped::getBufferData() const
-{
+std::shared_ptr<flatbuffers::DetachedBuffer> RotationMatrixStamped::getBufferData() const {
   std::lock_guard<std::mutex> lock(mutex_);
   auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
 
@@ -94,20 +78,17 @@ std::shared_ptr<flatbuffers::DetachedBuffer> RotationMatrixStamped::getBufferDat
   return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
-void RotationMatrixStamped::setRotationMatrix(const RotationMatrix& rotation_matrix)
-{
+void RotationMatrixStamped::setRotationMatrix(const RotationMatrix& rotation_matrix) {
   std::lock_guard<std::mutex> lock(mutex_);
   rotation_matrix_ = rotation_matrix;
 }
 
-void RotationMatrixStamped::setHeader(const Header& header)
-{
+void RotationMatrixStamped::setHeader(const Header& header) {
   std::lock_guard<std::mutex> lock(mutex_);
   header_ = header;
 }
 
-std::ostream& operator<<(std::ostream& out, const RotationMatrixStamped& q)
-{
+std::ostream& operator<<(std::ostream& out, const RotationMatrixStamped& q) {
   out << q.header_ << q.rotation_matrix_;
 
   return out;

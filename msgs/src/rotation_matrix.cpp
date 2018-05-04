@@ -18,82 +18,56 @@
 
 #include "simple_msgs/rotation_matrix.h"
 
-namespace simple_msgs
-{
-RotationMatrix::RotationMatrix(double value)
-  : data_{{value, value, value, value, value, value, value, value, value}}
-{
-}
+namespace simple_msgs {
+RotationMatrix::RotationMatrix(double value) : data_{{value, value, value, value, value, value, value, value, value}} {}
 
 RotationMatrix::RotationMatrix(double r11, double r12, double r13, double r21, double r22, double r23, double r31,
                                double r32, double r33)
-  : data_{{r11, r12, r13, r21, r22, r23, r31, r32, r33}}
-{
-}
+  : data_{{r11, r12, r13, r21, r22, r23, r31, r32, r33}} {}
 
-RotationMatrix::RotationMatrix(const std::array<double, 9>& array)
-  : data_(array)
-{
-}
+RotationMatrix::RotationMatrix(const std::array<double, 9>& array) : data_(array) {}
 
-RotationMatrix::RotationMatrix(std::array<double, 9>&& array) noexcept
-  : data_(array)
-{
-}
+RotationMatrix::RotationMatrix(std::array<double, 9>&& array) noexcept : data_(array) {}
 
-RotationMatrix::RotationMatrix(const uint8_t* data)
-{
+RotationMatrix::RotationMatrix(const uint8_t* data) {
   auto r = GetRotationMatrixFbs(data);
   data_ =
       std::array<double, 9>{{r->r11(), r->r12(), r->r13(), r->r21(), r->r22(), r->r23(), r->r31(), r->r32(), r->r33()}};
 }
 
-RotationMatrix::RotationMatrix(const RotationMatrix& m)
-  : RotationMatrix(m.data_)
-{
-}
+RotationMatrix::RotationMatrix(const RotationMatrix& m) : RotationMatrix(m.data_) {}
 
-RotationMatrix::RotationMatrix(RotationMatrix&& m) noexcept
-  : RotationMatrix(m.data_)
-{
-}
+RotationMatrix::RotationMatrix(RotationMatrix&& m) noexcept : RotationMatrix(m.data_) {}
 
-RotationMatrix& RotationMatrix::operator=(const RotationMatrix& other)
-{
-  if (this != std::addressof(other))
-  {
+RotationMatrix& RotationMatrix::operator=(const RotationMatrix& other) {
+  if (this != std::addressof(other)) {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = other.data_;
   }
   return *this;
 }
 
-RotationMatrix& RotationMatrix::operator=(RotationMatrix&& other) noexcept
-{
-  if (this != std::addressof(other))
-  {
+RotationMatrix& RotationMatrix::operator=(RotationMatrix&& other) noexcept {
+  if (this != std::addressof(other)) {
     std::lock_guard<std::mutex> lock(mutex_);
     data_ = other.data_;
   }
   return *this;
 }
 
-RotationMatrix& RotationMatrix::operator=(const std::array<double, 9>& array)
-{
+RotationMatrix& RotationMatrix::operator=(const std::array<double, 9>& array) {
   std::lock_guard<std::mutex> lock(mutex_);
   data_ = array;
   return *this;
 }
 
-RotationMatrix& RotationMatrix::operator=(std::array<double, 9>&& array) noexcept
-{
+RotationMatrix& RotationMatrix::operator=(std::array<double, 9>&& array) noexcept {
   std::lock_guard<std::mutex> lock(mutex_);
   data_ = array;
   return *this;
 }
 
-RotationMatrix& RotationMatrix::operator=(const uint8_t* data)
-{
+RotationMatrix& RotationMatrix::operator=(const uint8_t* data) {
   std::lock_guard<std::mutex> lock(mutex_);
   auto matrix = GetRotationMatrixFbs(data);
   data_ = std::array<double, 9>{{matrix->r11(), matrix->r12(), matrix->r13(), matrix->r21(), matrix->r22(),
@@ -101,8 +75,7 @@ RotationMatrix& RotationMatrix::operator=(const uint8_t* data)
   return *this;
 }
 
-std::shared_ptr<flatbuffers::DetachedBuffer> RotationMatrix::getBufferData() const
-{
+std::shared_ptr<flatbuffers::DetachedBuffer> RotationMatrix::getBufferData() const {
   std::lock_guard<std::mutex> lock(mutex_);
   auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
 
@@ -121,63 +94,43 @@ std::shared_ptr<flatbuffers::DetachedBuffer> RotationMatrix::getBufferData() con
   return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
 }
 
-RotationMatrix RotationMatrix::getTranspose() const
-{
+RotationMatrix RotationMatrix::getTranspose() const {
   return RotationMatrix(data_[0], data_[3], data_[6], data_[1], data_[4], data_[7], data_[2], data_[5], data_[8]);
 }
 
-std::array<double, 3> RotationMatrix::getRow(int row_index) const
-{
-  if (0 <= row_index && row_index <= 2)
-  {
+std::array<double, 3> RotationMatrix::getRow(int row_index) const {
+  if (0 <= row_index && row_index <= 2) {
     return std::array<double, 3>{{data_.at(row_index * 3), data_.at(row_index * 3 + 1), data_.at(row_index * 3 + 2)}};
   }
 
   throw std::out_of_range("Index out of range [0,2]");
 }
 
-std::array<double, 3> RotationMatrix::getColumn(int column_index) const
-{
-  if (0 <= column_index && column_index <= 2)
-  {
+std::array<double, 3> RotationMatrix::getColumn(int column_index) const {
+  if (0 <= column_index && column_index <= 2) {
     return std::array<double, 3>{
         {data_.at(column_index), data_.at(3 * 1 + column_index), data_.at(3 * 2 + column_index)}};
   }
 
   throw std::out_of_range("Index out of range [0,2]");
 }
-void RotationMatrix::setRow(int row_index, const std::array<double, 3>& values)
-{
-  if (0 <= row_index && row_index <= 2)
-  {
-    for (size_t i = 0; i < values.size(); ++i)
-    {
-      data_.at(row_index * 3 + i) = values.at(i);
-    }
-  }
-  else
-  {
+void RotationMatrix::setRow(int row_index, const std::array<double, 3>& values) {
+  if (0 <= row_index && row_index <= 2) {
+    for (size_t i = 0; i < values.size(); ++i) { data_.at(row_index * 3 + i) = values.at(i); }
+  } else {
     throw std::out_of_range("Index out of range [0,2]");
   }
 }
 
-void RotationMatrix::setColumn(int column_index, const std::array<double, 3>& values)
-{
-  if (0 <= column_index && column_index <= 2)
-  {
-    for (size_t i = 0; i < values.size(); ++i)
-    {
-      data_.at(3 * i + column_index) = values.at(i);
-    }
-  }
-  else
-  {
+void RotationMatrix::setColumn(int column_index, const std::array<double, 3>& values) {
+  if (0 <= column_index && column_index <= 2) {
+    for (size_t i = 0; i < values.size(); ++i) { data_.at(3 * i + column_index) = values.at(i); }
+  } else {
     throw std::out_of_range("Index out of range [0,2]");
   }
 }
 
-std::ostream& operator<<(std::ostream& out, const RotationMatrix& q)
-{
+std::ostream& operator<<(std::ostream& out, const RotationMatrix& q) {
   out << "RotationMatrix \n \t" << std::to_string(q.data_[0]) << " " << std::to_string(q.data_[1]) << " "
       << std::to_string(q.data_[2]) << "\n \t" << std::to_string(q.data_[3]) << " " << std::to_string(q.data_[4]) << " "
       << std::to_string(q.data_[5]) << "\n \t" << std::to_string(q.data_[6]) << " " << std::to_string(q.data_[7]) << " "
@@ -186,8 +139,7 @@ std::ostream& operator<<(std::ostream& out, const RotationMatrix& q)
   return out;
 }
 
-const RotationMatrix& RotationMatrix::Identity()
-{
+const RotationMatrix& RotationMatrix::Identity() {
   static const RotationMatrix identity(1, 0, 0, 0, 1, 0, 0, 0, 1);
   return identity;
 }

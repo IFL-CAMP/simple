@@ -24,14 +24,12 @@
 // Callback function for a Server object.
 // Whenever the Server receives a request (a Pose message), it is elaborated by this function.
 // In this trivial case, all elements of the Pose translation part will be increased by 1.
-void example_callback(simple_msgs::Pose& p)
-{
+void example_callback(simple_msgs::Pose& p) {
   std::cout << "Received a point. Adding 1 to its elements." << std::endl;
   p.getPosition() += 1.0;
 }
 
-int main()
-{
+int main() {
   const int SLEEP_TIME = 60000;  //< Milliseconds.
 
   // A Server listening on port 5555 for requests from any IP address.
