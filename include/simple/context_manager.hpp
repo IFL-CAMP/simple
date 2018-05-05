@@ -25,16 +25,25 @@
 namespace simple {
 class ContextManager {
 public:
-  ContextManager() : context_(zmq_ctx_new()) {}
-
+  ContextManager() = delete;
   ContextManager(const ContextManager&) = delete;
   ContextManager& operator=(const ContextManager&) = delete;
-  ~ContextManager() { zmq_ctx_term(context_); }
-  void* instance() const { return context_; }
+
+  ~ContextManager() {
+    zmq_ctx_term(context_);
+    context_ = nullptr;
+  }
+
+  static void* instance() {
+    if (context_ == nullptr) { context_ = zmq_ctx_new(); }
+    return context_;
+  }
 
 private:
-  void* context_{nullptr};
+  static void* context_;
 };
 }  // Namespace simple.
+
+void* simple::ContextManager::context_ = nullptr;
 
 #endif  // SIMPLE_CONTEXT_MANAGER_HPP

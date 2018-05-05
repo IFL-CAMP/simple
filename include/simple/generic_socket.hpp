@@ -43,7 +43,7 @@ protected:
   GenericSocket() = default;
 
   explicit GenericSocket(int type) {
-    socket_ = zmq_socket(context_.instance(), type);
+    socket_ = zmq_socket(ContextManager::instance(), type);
     zmq_msg_init(&recv_message_);
   }
 
@@ -153,7 +153,7 @@ protected:
   }
 
   void renewSocket(int type) {
-    socket_ = zmq_socket(context_.instance(), type);
+    socket_ = zmq_socket(ContextManager::instance(), type);
     zmq_msg_init(&recv_message_);
   }
 
@@ -163,7 +163,6 @@ protected:
   std::string address_{""};
   int timeout_{0};
   int linger_{30000};
-  ContextManager context_;
   zmq_msg_t recv_message_{};
 };
 }  // Namespace simple.
