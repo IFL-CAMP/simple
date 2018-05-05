@@ -77,10 +77,6 @@ add_executable(test_pub_sub test_pub_sub.cpp)
 target_link_libraries(test_pub_sub simple-static ${coverage_lib})
 add_test(NAME simple_tests.pub_sub COMMAND $<TARGET_FILE:test_pub_sub>)
 
-add_executable(test_wrong_pub_sub test_wrong_pub_sub.cpp)
-target_link_libraries(test_wrong_pub_sub simple-static ${coverage_lib})
-add_test(NAME simple_tests.wrong_pub_sub COMMAND $<TARGET_FILE:test_wrong_pub_sub>)
-
 # CLIENT / SERVER TESTS
 
 add_executable(test_req_rep test_single_req_rep.cpp)
@@ -105,7 +101,6 @@ TARGETS
   test_quaternion_stamped
   test_rotation_matrix_stamped
   test_pub_sub 
-  test_wrong_pub_sub 
   test_req_rep
 DESTINATION 
 	bin
