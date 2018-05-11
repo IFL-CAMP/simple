@@ -19,32 +19,30 @@
 #include "simple_msgs/bool.h"
 
 namespace simple_msgs {
-Bool::Bool(bool data) : data_(data) {}
+Bool::Bool(bool data) : data_{data} {}
 
-Bool::Bool(const uint8_t* data) : data_(GetBoolFbs(data)->data()) {}
+Bool::Bool(const uint8_t* data) : data_{GetBoolFbs(data)->data()} {}
 
-Bool::Bool(const Bool& other) : Bool(other.data_) {}
+Bool::Bool(const Bool& other) : Bool{other.data_} {}
 
-Bool::Bool(Bool&& other) noexcept : data_(other.data_) {}
+Bool::Bool(Bool&& other) noexcept : data_{std::move(other.data_)} {}
 
 Bool& Bool::operator=(const Bool& other) {
   if (this != std::addressof(other)) {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock{mutex_};
     data_ = other.data_;
   }
   return *this;
 }
 
 Bool& Bool::operator=(Bool&& other) noexcept {
-  if (this != std::addressof(other)) { data_ = other.data_; }
+  if (this != std::addressof(other)) { data_ = std::move(other.data_); }
   return *this;
 }
 
 Bool& Bool::operator=(const uint8_t* data) {
-  std::lock_guard<std::mutex> lock(mutex_);
-  auto b = GetBoolFbs(data);
-  data_ = b->data();
-
+  std::lock_guard<std::mutex> lock{mutex_};
+  data_ = GetBoolFbs(data)->data();
   return *this;
 }
 
@@ -59,7 +57,7 @@ std::shared_ptr<flatbuffers::DetachedBuffer> Bool::getBufferData() const {
 }
 
 void Bool::set(bool data) {
-  std::lock_guard<std::mutex> lock(mutex_);
+  std::lock_guard<std::mutex> lock{mutex_};
   data_ = data;
 }
 

@@ -29,7 +29,8 @@ class String : public GenericMessage {
 public:
   // Constructors,
   String() = default;
-  String(std::string);
+  String(const std::string&);
+  String(std::string&&);
   String(const char*);
   String(const uint8_t*);
   String(const String&);
@@ -59,11 +60,12 @@ public:
    * @brief Returns the string information contained in the message.
    */
   inline std::string get() const { return data_; }
+
   /**
    * @brief Modifies the string information contained in the message.
    */
   inline void set(const std::string& data) {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock{mutex_};
     data_ = data;
   }
 

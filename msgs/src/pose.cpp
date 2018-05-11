@@ -21,24 +21,21 @@
 #include "simple_msgs/pose.h"
 
 namespace simple_msgs {
-Pose::Pose(Point position, Quaternion quaternion)
-  : quaternion_(std::move(quaternion)), position_(std::move(position)) {}
+Pose::Pose(const Point& position, const Quaternion& quaternion) : position_{position}, quaternion_{quaternion} {}
+
+Pose::Pose(Point&& position, Quaternion&& quaternion)
+  : position_{std::move(position)}, quaternion_{std::move(quaternion)} {}
 
 Pose::Pose(const uint8_t* data)
+  : position_{GetPoseFbs(data)->position()->data()}, quaternion_{GetPoseFbs(data)->quaternion()->data()} {}
 
-{
-  auto p = GetPoseFbs(data);
-  quaternion_ = Quaternion(p->quaternion()->data());
-  position_ = Point(p->position()->data());
-}
+Pose::Pose(const Pose& other) : Pose{other.position_, other.quaternion_} {}
 
-Pose::Pose(const Pose& other) : Pose(other.position_, other.quaternion_) {}
-
-Pose::Pose(Pose&& other) noexcept : Pose(other.position_, other.quaternion_) {}
+Pose::Pose(Pose&& other) noexcept : Pose{std::move(other.position_), std::move(other.quaternion_)} {}
 
 Pose& Pose::operator=(const Pose& p) {
   if (this != std::addressof(p)) {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock{mutex_};
     position_ = p.position_;
     quaternion_ = p.quaternion_;
   }
@@ -47,7 +44,7 @@ Pose& Pose::operator=(const Pose& p) {
 
 Pose& Pose::operator=(Pose&& p) noexcept {
   if (this != std::addressof(p)) {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock{mutex_};
     position_ = std::move(p.position_);
     quaternion_ = std::move(p.quaternion_);
   }
@@ -55,7 +52,7 @@ Pose& Pose::operator=(Pose&& p) noexcept {
 }
 
 Pose& Pose::operator=(const uint8_t* data) {
-  std::lock_guard<std::mutex> lock(mutex_);
+  std::lock_guard<std::mutex> lock{mutex_};
   position_ = GetPoseFbs(data)->position()->data();
   quaternion_ = GetPoseFbs(data)->quaternion()->data();
   return *this;
@@ -71,21 +68,20 @@ std::shared_ptr<flatbuffers::DetachedBuffer> Pose::getBufferData() const {
   auto quaternion_data = quaternion_.getBufferData();
   auto quaternion_vector = builder.CreateVector(quaternion_data->data(), quaternion_data->size());
 
-  PoseFbsBuilder tmp_builder(builder);
+  PoseFbsBuilder tmp_builder{builder};
   tmp_builder.add_position(position_vector);
   tmp_builder.add_quaternion(quaternion_vector);
   FinishPoseFbsBuffer(builder, tmp_builder.Finish());
-
   return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
 
 void Pose::setQuaternion(const Quaternion& quaternion) {
-  std::lock_guard<std::mutex> lock(mutex_);
+  std::lock_guard<std::mutex> lock{mutex_};
   quaternion_ = quaternion;
 }
 
 void Pose::setPosition(const Point& position) {
-  std::lock_guard<std::mutex> lock(mutex_);
+  std::lock_guard<std::mutex> lock{mutex_};
   position_ = position;
 }
 

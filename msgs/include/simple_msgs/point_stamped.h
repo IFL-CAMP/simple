@@ -33,7 +33,8 @@ namespace simple_msgs {
 class PointStamped : public GenericMessage {
 public:
   PointStamped() = default;
-  PointStamped(Header, Point);
+  PointStamped(const Header&, const Point&);
+  PointStamped(Header&&, Point&&);
   PointStamped(const uint8_t*);
   PointStamped(const PointStamped&);
   PointStamped(PointStamped&&) noexcept;
@@ -53,15 +54,17 @@ public:
   std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const override;
 
   /**
-   * @brief Returns the point as an array of 3 elements.
-   */
-  inline Point& getPoint() { return point_; }
-  inline const Point& getPoint() const { return point_; }
-  /**
    * @brief Returns message Header.
    */
   inline Header& getHeader() { return header_; }
   inline const Header& getHeader() const { return header_; }
+
+  /**
+   * @brief Returns the point as an array of 3 elements.
+   */
+  inline Point& getPoint() { return point_; }
+  inline const Point& getPoint() const { return point_; }
+
   /**
    * @brief Modifies the message header.
    */
@@ -76,8 +79,8 @@ public:
   static inline std::string getTopic() { return PointStampedFbsIdentifier(); }
 
 private:
-  Point point_;
-  Header header_;
+  Header header_{};
+  Point point_{};
 };
 }  // Namespace simple_msgs.
 

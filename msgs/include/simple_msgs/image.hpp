@@ -35,36 +35,36 @@ public:
   Image(const uint8_t* data);
 
   Image(const Image& other)
-    : header_(other.header_)
-    , origin_(other.origin_)
-    , encoding_(other.encoding_)
-    , resX_(other.resX_)
-    , resY_(other.resY_)
-    , resZ_(other.resZ_)
-    , width_(other.width_)
-    , height_(other.height_)
-    , depth_(other.depth_)
-    , data_(other.data_)
-    , data_size_(other.data_size_)
-    , num_channels_(other.num_channels_) {}
+    : header_{other.header_}
+    , origin_{other.origin_}
+    , encoding_{other.encoding_}
+    , resX_{other.resX_}
+    , resY_{other.resY_}
+    , resZ_{other.resZ_}
+    , width_{other.width_}
+    , height_{other.height_}
+    , depth_{other.depth_}
+    , data_size_{other.data_size_}
+    , num_channels_{other.num_channels_}
+    , data_{other.data_} {}
 
   Image(Image&& other) noexcept
-    : header_(std::move(other.header_))
-    , origin_(std::move(other.origin_))
-    , encoding_(std::move(other.encoding_))
-    , resX_(std::move(other.resX_))
-    , resY_(std::move(other.resY_))
-    , resZ_(std::move(other.resZ_))
-    , width_(std::move(other.width_))
-    , height_(std::move(other.height_))
-    , depth_(std::move(other.depth_))
-    , data_(std::move(other.data_))
-    , data_size_(std::move(other.data_size_))
-    , num_channels_(other.num_channels_) {}
+    : header_{std::move(other.header_)}
+    , origin_{std::move(other.origin_)}
+    , encoding_{std::move(other.encoding_)}
+    , resX_{std::move(other.resX_)}
+    , resY_{std::move(other.resY_)}
+    , resZ_{std::move(other.resZ_)}
+    , width_{std::move(other.width_)}
+    , height_{std::move(other.height_)}
+    , depth_{std::move(other.depth_)}
+    , data_size_{std::move(other.data_size_)}
+    , num_channels_{std::move(other.num_channels_)}
+    , data_{std::move(other.data_)} {}
 
   Image& operator=(const Image& other) {
     if (this != std::addressof(other)) {
-      std::lock_guard<std::mutex> lock(mutex_);
+      std::lock_guard<std::mutex> lock{mutex_};
       header_ = other.header_;
       origin_ = other.origin_;
       encoding_ = other.encoding_;
@@ -74,15 +74,16 @@ public:
       width_ = other.width_;
       height_ = other.height_;
       depth_ = other.depth_;
-      data_ = other.data_;
       data_size_ = other.data_size_;
       num_channels_ = other.num_channels_;
+      data_ = other.data_;
     }
     return *this;
   }
+
   Image& operator=(Image&& other) noexcept {
     if (this != std::addressof(other)) {
-      std::lock_guard<std::mutex> lock(mutex_);
+      std::lock_guard<std::mutex> lock{mutex_};
       header_ = std::move(other.header_);
       origin_ = std::move(other.origin_);
       encoding_ = std::move(other.encoding_);
@@ -92,9 +93,9 @@ public:
       width_ = std::move(other.width_);
       height_ = std::move(other.height_);
       depth_ = std::move(other.depth_);
-      data_ = std::move(other.data_);
       data_size_ = std::move(other.data_size_);
       num_channels_ = std::move(other.num_channels_);
+      data_ = std::move(other.data_);
     }
     return *this;
   }
@@ -132,10 +133,10 @@ public:
     auto origin_vector = builder->CreateVector(origin_data->data(), origin_data->size());
 
     auto type = getDataUnionType();
-    flatbuffers::Offset<void> elem;
+    flatbuffers::Offset<void> elem{};
     if (data_) { elem = getDataUnionElem(builder); }
 
-    ImageFbsBuilder tmp_builder(*builder);
+    ImageFbsBuilder tmp_builder{*builder};
     // add the information
     tmp_builder.add_encoding(encoding_string);
     tmp_builder.add_header(header_vector);
@@ -151,12 +152,11 @@ public:
     tmp_builder.add_depth(depth_);
     tmp_builder.add_num_channels(num_channels_);
     FinishImageFbsBuffer(*builder, tmp_builder.Finish());
-
     return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
   }
 
-  std::array<double, 3> getResolution() const { return std::array<double, 3>{{resX_, resY_, resZ_}}; }
-  std::array<int, 3> getImageDimensions() const { return std::array<int, 3>{{width_, height_, depth_}}; }
+  std::array<double, 3> getResolution() const { return {{resX_, resY_, resZ_}}; }
+  std::array<int, 3> getImageDimensions() const { return {{width_, height_, depth_}}; }
   const T* getImageData() const { return *data_; }
   int getImageSize() const { return data_size_; }
   const Header& getHeader() const { return header_; }
@@ -165,33 +165,44 @@ public:
   Pose& getImageOrigin() { return origin_; }
   std::string getImageEncoding() const { return encoding_; }
   int getNumChannels() const { return num_channels_; }
+
   void setImageEncoding(const std::string& encoding) {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock{mutex_};
     encoding_ = encoding;
   }
 
   void setImageResolution(double resX, double resY, double resZ) {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock{mutex_};
     resX_ = resX;
     resY_ = resY;
     resZ_ = resZ;
   }
 
   void setImageDimensions(int width, int height, int depth) {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock{mutex_};
     width_ = width;
     height_ = height;
     depth_ = depth;
   }
 
   void setHeader(const Header& header) {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock{mutex_};
     header_ = header;
   }
 
+  void setHeader(Header&& header) {
+    std::lock_guard<std::mutex> lock{mutex_};
+    header_ = std::move(header);
+  }
+
   void setOrigin(const Pose& origin_pose) {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock{mutex_};
     origin_ = origin_pose;
+  }
+
+  void setOrigin(Pose&& origin_pose) {
+    std::lock_guard<std::mutex> lock{mutex_};
+    origin_ = std::move(origin_pose);
   }
 
   /**
@@ -201,7 +212,7 @@ public:
    * @param num_channels Number of channels in the image
    */
   void setImageData(const T* data, int data_size, int num_channels = 1) {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock{mutex_};
     data_ = std::make_shared<const T*>(data);
     data_size_ = data_size;
     num_channels_ = num_channels;
@@ -233,17 +244,14 @@ private:
   }
 
   simple_msgs::data getDataUnionType() const;
-  flatbuffers::Offset<void> getDataUnionElem(const std::unique_ptr<flatbuffers::FlatBufferBuilder>& builder) const;
+  flatbuffers::Offset<void> getDataUnionElem(std::shared_ptr<flatbuffers::FlatBufferBuilder> builder) const;
 
-  simple_msgs::Header header_;
-  simple_msgs::Pose origin_;
+  simple_msgs::Header header_{};
+  simple_msgs::Pose origin_{};
   std::string encoding_{""};
-
   double resX_{0.0}, resY_{0.0}, resZ_{0.0};
-  int width_{0}, height_{0}, depth_{0};
-  std::shared_ptr<const T*> data_{};
-  int data_size_{0};
-  int num_channels_{1};
+  int width_{0}, height_{0}, depth_{0}, data_size_{0}, num_channels_{1};
+  std::shared_ptr<const T*> data_{nullptr};
 };
 
 }  // Namespace simple_msgs.

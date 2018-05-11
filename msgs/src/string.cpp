@@ -22,19 +22,21 @@
 #include "simple_msgs/string.h"
 
 namespace simple_msgs {
-String::String(std::string data) : data_(std::move(data)) {}
+String::String(const std::string& data) : data_{data} {}
 
-String::String(const char* data) : data_(data) {}
+String::String(std::string&& data) : data_{std::move(data)} {}
 
-String::String(const uint8_t* data) : data_(GetStringFbs(data)->data()->c_str()) {}
+String::String(const char* data) : data_{data} {}
 
-String::String(const String& other) : String(other.data_) {}
+String::String(const uint8_t* data) : data_{GetStringFbs(data)->data()->c_str()} {}
 
-String::String(String&& other) noexcept : data_(std::move(other.data_)) {}
+String::String(const String& other) : String{other.data_} {}
+
+String::String(String&& other) noexcept : data_{std::move(other.data_)} {}
 
 String& String::operator=(const String& other) {
   if (this != std::addressof(other)) {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock{mutex_};
     data_ = other.data_;
   }
   return *this;
@@ -42,7 +44,7 @@ String& String::operator=(const String& other) {
 
 String& String::operator=(String&& other) noexcept {
   if (this != std::addressof(other)) {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock{mutex_};
     data_ = std::move(other.data_);
     other.data_.clear();
   }
@@ -50,14 +52,14 @@ String& String::operator=(String&& other) noexcept {
 }
 
 String& String::operator=(const uint8_t* data) {
-  std::lock_guard<std::mutex> lock(mutex_);
+  std::lock_guard<std::mutex> lock{mutex_};
   auto s = GetStringFbs(data);
   data_ = s->data()->c_str();
   return *this;
 }
 
 String& String::operator+=(const String& rhs) {
-  std::lock_guard<std::mutex> lock(mutex_);
+  std::lock_guard<std::mutex> lock{mutex_};
   data_ += rhs.data_;
   return *this;
 }
@@ -72,7 +74,7 @@ std::shared_ptr<flatbuffers::DetachedBuffer> String::getBufferData() const {
   flatbuffers::FlatBufferBuilder builder{1024};
 
   auto string_data = builder.CreateString(data_);
-  StringFbsBuilder tmp_builder(builder);
+  StringFbsBuilder tmp_builder{builder};
   tmp_builder.add_data(string_data);
   FinishStringFbsBuffer(builder, tmp_builder.Finish());
 

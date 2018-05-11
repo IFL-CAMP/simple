@@ -26,11 +26,11 @@ namespace simple_msgs {
 using Double = NumericType<double>;
 
 template <>
-NumericType<double>::NumericType(const uint8_t* data) : GenericMessage(), data_(GetDoubleFbs(data)->data()) {}
+NumericType<double>::NumericType(const uint8_t* data) : GenericMessage{}, data_{GetDoubleFbs(data)->data()} {}
 
 template <>
 NumericType<double>& NumericType<double>::operator=(const uint8_t* data) {
-  std::lock_guard<std::mutex> lock(mutex_);
+  std::lock_guard<std::mutex> lock{mutex_};
   data_ = GetDoubleFbs(data)->data();
   return *this;
 }

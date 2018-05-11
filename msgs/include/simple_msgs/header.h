@@ -31,7 +31,7 @@ namespace simple_msgs {
 class Header : public GenericMessage {
 public:
   Header() = default;
-  Header(int, std::string, long long);
+  Header(int, const std::string&, long long);
   Header(const uint8_t*);
   Header(const Header&);
   Header(Header&&) noexcept;
@@ -44,6 +44,7 @@ public:
     return (seq_n_ == rhs.seq_n_ && frame_id_ == rhs.frame_id_ && timestamp_ == rhs.timestamp_);
   }
   inline bool operator!=(const Header& rhs) const { return !(*this == rhs); }
+
   friend std::ostream& operator<<(std::ostream& out, const Header& h);
 
   /**
@@ -54,13 +55,11 @@ public:
   /**
    * @brief Returns the sequence number of the message.
    */
-  inline int getSequenceNumber() { return seq_n_; }
   inline int getSequenceNumber() const { return seq_n_; }
   /**
    * @brief Returns the frame id of the message.
    */
-  inline std::string getFrameID() { return frame_id_; }
-  inline const std::string getFrameID() const { return frame_id_; }
+  inline std::string getFrameID() const { return frame_id_; }
   /**
    * @brief Returns the timestamp of the message.
    */

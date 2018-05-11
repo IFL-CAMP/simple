@@ -29,7 +29,8 @@ namespace simple_msgs {
 class Pose : public GenericMessage {
 public:
   Pose() = default;
-  Pose(Point, Quaternion);
+  Pose(const Point&, const Quaternion&);
+  Pose(Point&&, Quaternion&&);
   Pose(const uint8_t*);
   Pose(const Pose&);
   Pose(Pose&&) noexcept;
@@ -53,19 +54,15 @@ public:
   /**
    * @brief Returns the translational part of the Pose as a Point message.
    */
-  const Point& getPosition() const { return position_; }
+  inline Point& getPosition() { return position_; }
+  inline const Point& getPosition() const { return position_; }
+
   /**
    * @brief Returns the rotational part of the Pose as a Quaternion message.
    */
-  const Quaternion& getQuaternion() const { return quaternion_; }
-  /**
-   * @brief Returns the translational part of the Pose as a Point message.
-   */
-  Point& getPosition() { return position_; }
-  /**
-   * @brief Returns the rotational part of the Pose as a Quaternion message.
-   */
-  Quaternion& getQuaternion() { return quaternion_; }
+  inline Quaternion& getQuaternion() { return quaternion_; }
+  inline const Quaternion& getQuaternion() const { return quaternion_; }
+
   /**
    * @brief Modifies the rotational part of the Pose.
    */
@@ -82,8 +79,8 @@ public:
   static inline std::string getTopic() { return PoseFbsIdentifier(); }
 
 private:
-  Quaternion quaternion_;
-  Point position_;
+  Point position_{};
+  Quaternion quaternion_{};
 };
 }  // Namespace simple_msgs.
 
