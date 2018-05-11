@@ -48,7 +48,7 @@ std::shared_ptr<flatbuffers::DetachedBuffer> NumericType<int>::getBufferData() c
 }
 
 template <>
-inline const char* NumericType<int>::getTopic() {
+inline std::string NumericType<int>::getTopic() {
   return IntFbsIdentifier();
 }
 }  // Namespace simple_msgs.

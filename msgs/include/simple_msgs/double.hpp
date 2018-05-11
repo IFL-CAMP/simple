@@ -46,7 +46,7 @@ std::shared_ptr<flatbuffers::DetachedBuffer> NumericType<double>::getBufferData(
 }
 
 template <>
-inline const char* NumericType<double>::getTopic() {
+inline std::string NumericType<double>::getTopic() {
   return DoubleFbsIdentifier();
 }
 }  // Namespace simple_msgs.

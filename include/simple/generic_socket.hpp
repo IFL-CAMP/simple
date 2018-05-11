@@ -79,7 +79,7 @@ protected:
               const std::string& custom_error = "[SIMPLE Error] - ") {
     // Send the topic first and add the rest of the message after it.
     zmq_msg_t topic = {};
-    zmq_msg_init_data(&topic, const_cast<void*>(static_cast<const void*>(topic_)), topic_size_, nullptr, nullptr);
+    zmq_msg_init_data(&topic, static_cast<void*>(&topic_), topic_.size(), nullptr, nullptr);
 
     zmq_msg_t message = {};
     auto buffer_pointer = new std::shared_ptr<flatbuffers::DetachedBuffer>{buffer};
@@ -110,7 +110,7 @@ protected:
     int message_received = zmq_msg_recv(&local_message, socket_, 0);
 
     if (message_received != -1) {
-      if (strncmp(static_cast<char*>(zmq_msg_data(&local_message)), topic_, topic_size_) == 0) {
+      if (std::string{static_cast<char*>(zmq_msg_data(&local_message))} != topic_) {
         zmq_getsockopt(socket_, ZMQ_RCVMORE, &data_past_topic, &data_past_topic_size);
         if (data_past_topic != 0) {
           message_received = zmq_msg_recv(&local_message, socket_, 0);
@@ -141,7 +141,7 @@ protected:
     return message_received;
   }
 
-  void filter() { zmq_setsockopt(socket_, ZMQ_SUBSCRIBE, topic_, topic_size_); }
+  void filter() { zmq_setsockopt(socket_, ZMQ_SUBSCRIBE, topic_.c_str(), topic_.size()); }
   void setTimeout(int timeout) {
     zmq_setsockopt(socket_, ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
     timeout_ = timeout;
@@ -158,8 +158,7 @@ protected:
   }
 
   void* socket_{nullptr};
-  const char* topic_{T::getTopic()};
-  const size_t topic_size_{strlen(topic_)};
+  std::string topic_{T::getTopic()};
   std::string address_{""};
   int timeout_{0};
   int linger_{30000};
