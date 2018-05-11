@@ -79,7 +79,8 @@ protected:
               const std::string& custom_error = "[SIMPLE Error] - ") {
     // Send the topic first and add the rest of the message after it.
     zmq_msg_t topic = {};
-    zmq_msg_init_data(&topic, static_cast<void*>(&topic_), topic_.size(), nullptr, nullptr);
+    auto topic_ptr = const_cast<void*>(static_cast<const void*>(topic_.c_str()));
+    zmq_msg_init_data(&topic, topic_ptr, topic_.size(), nullptr, nullptr);
 
     zmq_msg_t message = {};
     auto buffer_pointer = new std::shared_ptr<flatbuffers::DetachedBuffer>{buffer};
