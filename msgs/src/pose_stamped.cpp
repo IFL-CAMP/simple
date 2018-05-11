@@ -57,21 +57,21 @@ PoseStamped& PoseStamped::operator=(const uint8_t* data) {
 }
 
 std::shared_ptr<flatbuffers::DetachedBuffer> PoseStamped::getBufferData() const {
-  std::lock_guard<std::mutex> lock(mutex_);
-  auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
+  std::lock_guard<std::mutex> lock{mutex_};
+  flatbuffers::FlatBufferBuilder builder{1024};
 
   auto pose_data = pose_.getBufferData();
-  auto poseVec = builder->CreateVector(pose_data->data(), pose_data->size());
+  auto poseVec = builder.CreateVector(pose_data->data(), pose_data->size());
 
   auto header_data = header_.getBufferData();
-  auto headerVec = builder->CreateVector(header_data->data(), header_data->size());
+  auto headerVec = builder.CreateVector(header_data->data(), header_data->size());
 
-  PoseStampedFbsBuilder tmp_builder(*builder);
+  PoseStampedFbsBuilder tmp_builder(builder);
   tmp_builder.add_pose(poseVec);
   tmp_builder.add_header(headerVec);
-  FinishPoseStampedFbsBuffer(*builder, tmp_builder.Finish());
+  FinishPoseStampedFbsBuffer(builder, tmp_builder.Finish());
 
-  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
 
 void PoseStamped::setPose(const Pose& pose) {

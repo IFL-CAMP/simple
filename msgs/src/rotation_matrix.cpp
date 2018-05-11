@@ -89,9 +89,9 @@ std::shared_ptr<flatbuffers::DetachedBuffer> RotationMatrix::getBufferData() con
   tmp_builder.add_r31(data_[6]);
   tmp_builder.add_r32(data_[7]);
   tmp_builder.add_r33(data_[8]);
-  FinishRotationMatrixFbsBuffer(*builder, tmp_builder.Finish());
+  FinishRotationMatrixFbsBuffer(builder, tmp_builder.Finish());
 
-  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
 
 RotationMatrix RotationMatrix::getTranspose() const {

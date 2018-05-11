@@ -120,10 +120,8 @@ public:
    * @return
    */
   std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const override {
-    std::lock_guard<std::mutex> lock(mutex_);
-
-    auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
-    // auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
+    std::lock_guard<std::mutex> lock{mutex_};
+    auto builder = std::make_shared<flatbuffers::FlatBufferBuilder>(1024);
 
     auto encoding_string = builder->CreateString(encoding_);
 

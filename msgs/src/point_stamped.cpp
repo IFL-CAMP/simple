@@ -58,21 +58,21 @@ PointStamped& PointStamped::operator=(const uint8_t* data) {
 }
 
 std::shared_ptr<flatbuffers::DetachedBuffer> PointStamped::getBufferData() const {
-  std::lock_guard<std::mutex> lock(mutex_);
-  auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
+  std::lock_guard<std::mutex> lock{mutex_};
+  flatbuffers::FlatBufferBuilder builder{1024};
 
   auto point_data = point_.getBufferData();
-  auto point_vector = builder->CreateVector(point_data->data(), point_data->size());
+  auto point_vector = builder.CreateVector(point_data->data(), point_data->size());
 
   auto header_data = header_.getBufferData();
-  auto header_vector = builder->CreateVector(header_data->data(), header_data->size());
+  auto header_vector = builder.CreateVector(header_data->data(), header_data->size());
 
-  PointStampedFbsBuilder tmp_builder(*builder);
+  PointStampedFbsBuilder tmp_builder{builder};
   tmp_builder.add_point(point_vector);
   tmp_builder.add_header(header_vector);
-  FinishPointStampedFbsBuffer(*builder, tmp_builder.Finish());
+  FinishPointStampedFbsBuffer(builder, tmp_builder.Finish());
 
-  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
 
 void PointStamped::setHeader(const Header& h) {

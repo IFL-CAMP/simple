@@ -49,13 +49,13 @@ Bool& Bool::operator=(const uint8_t* data) {
 }
 
 std::shared_ptr<flatbuffers::DetachedBuffer> Bool::getBufferData() const {
-  std::lock_guard<std::mutex> lock(mutex_);
-  auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
+  std::lock_guard<std::mutex> lock{mutex_};
+  flatbuffers::FlatBufferBuilder builder{1024};
 
-  BoolFbsBuilder tmp_builder(*builder);
+  BoolFbsBuilder tmp_builder{builder};
   tmp_builder.add_data(data_);
-  FinishBoolFbsBuffer(*builder, tmp_builder.Finish());
-  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
+  FinishBoolFbsBuffer(builder, tmp_builder.Finish());
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
 
 void Bool::set(bool data) {

@@ -68,15 +68,15 @@ String operator+(String lhs, const String& rhs) {
 }
 
 std::shared_ptr<flatbuffers::DetachedBuffer> String::getBufferData() const {
-  std::lock_guard<std::mutex> lock(mutex_);
-  auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
+  std::lock_guard<std::mutex> lock{mutex_};
+  flatbuffers::FlatBufferBuilder builder{1024};
 
-  auto string_data = builder->CreateString(data_);
-  StringFbsBuilder tmp_builder(*builder);
+  auto string_data = builder.CreateString(data_);
+  StringFbsBuilder tmp_builder(builder);
   tmp_builder.add_data(string_data);
-  FinishStringFbsBuffer(*builder, tmp_builder.Finish());
+  FinishStringFbsBuffer(builder, tmp_builder.Finish());
 
-  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
 
 std::ostream& operator<<(std::ostream& out, const String& s) {

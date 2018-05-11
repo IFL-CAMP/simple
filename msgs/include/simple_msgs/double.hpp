@@ -37,13 +37,12 @@ NumericType<double>& NumericType<double>::operator=(const uint8_t* data) {
 
 template <>
 std::shared_ptr<flatbuffers::DetachedBuffer> NumericType<double>::getBufferData() const {
-  std::lock_guard<std::mutex> lock(mutex_);
-  auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
-  DoubleFbsBuilder tmp_builder(*builder);
+  std::lock_guard<std::mutex> lock{mutex_};
+  flatbuffers::FlatBufferBuilder builder{1024};
+  DoubleFbsBuilder tmp_builder{builder};
   tmp_builder.add_data(data_);
-  FinishDoubleFbsBuffer(*builder, tmp_builder.Finish());
-
-  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
+  FinishDoubleFbsBuffer(builder, tmp_builder.Finish());
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
 
 template <>

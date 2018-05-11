@@ -123,15 +123,15 @@ Point operator/(Point lhs, const Point& rhs) {
 }
 
 std::shared_ptr<flatbuffers::DetachedBuffer> Point::getBufferData() const {
-  std::lock_guard<std::mutex> lock(mutex_);
-  auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
-  PointFbsBuilder tmp_builder(*builder);
+  std::lock_guard<std::mutex> lock{mutex_};
+  flatbuffers::FlatBufferBuilder builder{1024};
+  PointFbsBuilder tmp_builder(builder);
   tmp_builder.add_x(data_[0]);
   tmp_builder.add_y(data_[1]);
   tmp_builder.add_z(data_[2]);
-  FinishPointFbsBuffer(*builder, tmp_builder.Finish());
+  FinishPointFbsBuffer(builder, tmp_builder.Finish());
 
-  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
 
 void Point::setX(double x) {

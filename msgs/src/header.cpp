@@ -62,17 +62,17 @@ Header& Header::operator=(const uint8_t* data) {
 }
 
 std::shared_ptr<flatbuffers::DetachedBuffer> Header::getBufferData() const {
-  std::lock_guard<std::mutex> lock(mutex_);
-  auto builder = make_unique<flatbuffers::FlatBufferBuilder>(1024);
+  std::lock_guard<std::mutex> lock{mutex_};
+  flatbuffers::FlatBufferBuilder builder{1024};
 
-  auto frame_id_string = builder->CreateString(frame_id_);
-  HeaderFbsBuilder tmp_builder(*builder);
+  auto frame_id_string = builder.CreateString(frame_id_);
+  HeaderFbsBuilder tmp_builder(builder);
   tmp_builder.add_frame_id(frame_id_string);
   tmp_builder.add_sequence_number(seq_n_);
   tmp_builder.add_timestamp(timestamp_);
-  FinishHeaderFbsBuffer(*builder, tmp_builder.Finish());
+  FinishHeaderFbsBuffer(builder, tmp_builder.Finish());
 
-  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
 
 void Header::setSequenceNumber(int seq_n) {
