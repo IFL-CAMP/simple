@@ -52,11 +52,16 @@ PoseStamped& PoseStamped::operator=(PoseStamped&& p) noexcept {
   return *this;
 }
 
-PoseStamped& PoseStamped::operator=(const uint8_t* data) {
+PoseStamped& PoseStamped::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
-  auto p = GetPoseStampedFbs(data);
-  header_ = Header(p->header()->data());
-  pose_ = Pose(p->pose()->data());
+  auto p = GetPoseStampedFbs(*data);
+
+  auto header_ptr = static_cast<const void*>(p->header()->data());
+  header_ = std::make_shared<void*>(const_cast<void*>(header_ptr));
+
+  auto pose_ptr = static_cast<const void*>(p->pose()->data());
+  pose_ = std::make_shared<void*>(const_cast<void*>(pose_ptr));
+
   return *this;
 }
 

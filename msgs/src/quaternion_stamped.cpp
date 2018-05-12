@@ -55,9 +55,9 @@ QuaternionStamped& QuaternionStamped::operator=(QuaternionStamped&& other) noexc
   return *this;
 }
 
-QuaternionStamped& QuaternionStamped::operator=(const uint8_t* data) {
+QuaternionStamped& QuaternionStamped::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
-  auto matrix = GetQuaternionStampedFbs(data);
+  auto matrix = GetQuaternionStampedFbs(*data);
   header_ = matrix->header()->data();
   quaternion_ = matrix->quaternion()->data();
   return *this;

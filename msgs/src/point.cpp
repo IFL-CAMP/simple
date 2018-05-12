@@ -68,10 +68,8 @@ Point& Point::operator=(std::array<double, 3>&& array) noexcept {
 
 Point& Point::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
-  auto p = GetPointFbs(data);
-  data_[0] = p->x();
-  data_[1] = p->y();
-  data_[2] = p->z();
+  auto p = GetPointFbs(*data);
+  data_ = std::move(std::array<double, 3>{p->x(), p->y(), p->z()});
   return *this;
 }
 

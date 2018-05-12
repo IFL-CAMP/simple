@@ -42,7 +42,7 @@ public:
 
   RotationMatrixStamped& operator=(const RotationMatrixStamped&);
   RotationMatrixStamped& operator=(RotationMatrixStamped&&) noexcept;
-  RotationMatrixStamped& operator=(const uint8_t*);
+  RotationMatrixStamped& operator=(std::shared_ptr<void*>);
 
   inline bool operator==(const RotationMatrixStamped& rhs) const {
     return (rotation_matrix_ == rhs.rotation_matrix_ && header_ == rhs.header_);

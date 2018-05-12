@@ -74,9 +74,9 @@ RotationMatrix& RotationMatrix::operator=(std::array<double, 9>&& array) noexcep
   return *this;
 }
 
-RotationMatrix& RotationMatrix::operator=(const uint8_t* data) {
+RotationMatrix& RotationMatrix::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
-  auto matrix = GetRotationMatrixFbs(data);
+  auto matrix = GetRotationMatrixFbs(*data);
   data_ = std::array<double, 9>{{matrix->r11(), matrix->r12(), matrix->r13(), matrix->r21(), matrix->r22(),
                                  matrix->r23(), matrix->r31(), matrix->r32(), matrix->r33()}};
   return *this;

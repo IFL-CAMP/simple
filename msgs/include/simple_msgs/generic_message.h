@@ -42,8 +42,7 @@ public:
   virtual std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const = 0;
 
 protected:
-  mutable std::mutex mutex_;
-  std::shared_ptr<void*> data_{nullptr};
+  mutable std::mutex mutex_{};
 };
 }  // Namespace simple_msgs.
 

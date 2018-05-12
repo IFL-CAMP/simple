@@ -66,13 +66,14 @@ flatbuffers::Offset<void> Image<double>::getDataUnionElem(
 template <>
 Image<uint8_t>& Image<uint8_t>::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
-  auto image_data = GetImageFbs(data);
+  auto image_data = GetImageFbs(*data);
 
   Image<uint8_t>::fillPartialImage(image_data);
 
   // Set the Image data according to the right date type.
   if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE)) {
     auto local_data = static_cast<const uint8_type*>(image_data->image())->raw()->data();
+    //    data = {data, &local_data};
     data_ = std::make_shared<const uint8_t*>(local_data);
   }
   return *this;
@@ -81,7 +82,7 @@ Image<uint8_t>& Image<uint8_t>::operator=(std::shared_ptr<void*> data) {
 template <>
 Image<int16_t>& Image<int16_t>::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
-  auto image_data = GetImageFbs(data);
+  auto image_data = GetImageFbs(*data);
 
   Image<int16_t>::fillPartialImage(image_data);
 
@@ -96,7 +97,7 @@ Image<int16_t>& Image<int16_t>::operator=(std::shared_ptr<void*> data) {
 template <>
 Image<double>& Image<double>::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
-  auto image_data = GetImageFbs(data);
+  auto image_data = GetImageFbs(*data);
 
   Image<double>::fillPartialImage(image_data);
 
@@ -111,7 +112,7 @@ Image<double>& Image<double>::operator=(std::shared_ptr<void*> data) {
 template <>
 Image<float>& Image<float>::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
-  auto image_data = GetImageFbs(data);
+  auto image_data = GetImageFbs(*data);
 
   Image<float>::fillPartialImage(image_data);
 

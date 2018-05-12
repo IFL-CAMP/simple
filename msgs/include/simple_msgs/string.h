@@ -39,7 +39,7 @@ public:
   // Copy operations.
   String& operator=(const String&);
   String& operator=(String&&) noexcept;
-  String& operator=(const uint8_t*);
+  String& operator=(std::shared_ptr<void*>);
 
   // Relational operators.
   inline bool operator==(const String& rhs) const { return (data_ == rhs.data_); }

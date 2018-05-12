@@ -55,9 +55,9 @@ RotationMatrixStamped& RotationMatrixStamped::operator=(RotationMatrixStamped&& 
   return *this;
 }
 
-RotationMatrixStamped& RotationMatrixStamped::operator=(const uint8_t* data) {
+RotationMatrixStamped& RotationMatrixStamped::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
-  auto matrix = GetRotationMatrixStampedFbs(data);
+  auto matrix = GetRotationMatrixStampedFbs(*data);
   rotation_matrix_ = matrix->rotation_matrix()->data();
   header_ = matrix->header()->data();
   return *this;

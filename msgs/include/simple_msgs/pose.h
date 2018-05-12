@@ -37,7 +37,7 @@ public:
 
   Pose& operator=(const Pose&);
   Pose& operator=(Pose&&) noexcept;
-  Pose& operator=(const uint8_t*);
+  Pose& operator=(std::shared_ptr<void*>);
 
   inline bool operator==(const Pose& rhs) const {
     return (position_ == rhs.position_ && quaternion_ == rhs.quaternion_);

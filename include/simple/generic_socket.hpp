@@ -32,10 +32,7 @@ namespace simple {
 template <typename T>
 class GenericSocket {
 public:
-  virtual ~GenericSocket() {
-    zmq_msg_close(&recv_message_);
-    zmq_close(socket_);
-  }
+  virtual ~GenericSocket() { zmq_close(socket_); }
 
   GenericSocket(const GenericSocket&) = delete;
   GenericSocket& operator=(const GenericSocket&) = delete;
@@ -43,10 +40,7 @@ public:
 protected:
   GenericSocket() = default;
 
-  explicit GenericSocket(int type) {
-    socket_ = zmq_socket(ContextManager::instance(), type);
-    zmq_msg_init(&recv_message_);
-  }
+  explicit GenericSocket(int type) { socket_ = zmq_socket(ContextManager::instance(), type); }
 
   void bind(const std::string& address) {
     address_ = address;
@@ -71,6 +65,7 @@ protected:
   int sendMsg(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer,
               const std::string& custom_error = "[SIMPLE Error] - ") {
     // Send the topic first and add the rest of the message after it.
+
     zmq_msg_t topic{};
     auto topic_ptr = const_cast<void*>(static_cast<const void*>(topic_.c_str()));
     zmq_msg_init_data(&topic, topic_ptr, topic_.size(), nullptr, nullptr);
@@ -100,7 +95,7 @@ protected:
     return message_sent;
   }
 
-  std::shared_ptr<void*> getMessageData(const std::shared_ptr<zmq_msg_t>& msg) {
+  std::shared_ptr<void*> getMessageData(std::shared_ptr<zmq_msg_t> msg) {
     auto data_ptr = zmq_msg_data(msg.get());
     return {msg, &data_ptr};
   }
@@ -109,44 +104,44 @@ protected:
     int data_past_topic{0};
     auto data_past_topic_size{sizeof(data_past_topic)};
 
-    // Start local zmq_message.
-    //    std::shared_ptr<zmq_msg_t> local_message = std::make_shared<zmq_msg_t>();
-    std::shared_ptr<zmq_msg_t> local_message(nullptr, [](zmq_msg_t* msg) {
+    std::shared_ptr<zmq_msg_t> local_message(new zmq_msg_t{}, [](zmq_msg_t* disposable_msg) {
       std::cout << "CALLING ZMQ MSG CLOSE" << std::endl;
-      zmq_msg_close(msg);
+      zmq_msg_close(disposable_msg);
     });
     zmq_msg_init(local_message.get());
 
-    int message_received = zmq_msg_recv(local_message.get(), socket_, 0);
+    int bytes_received = zmq_msg_recv(local_message.get(), socket_, 0);
 
-    if (message_received != -1) {
-      if (std::string{static_cast<char*>(zmq_msg_data(local_message.get()))} != topic_) {
-        zmq_getsockopt(socket_, ZMQ_RCVMORE, &data_past_topic, &data_past_topic_size);
-        if (data_past_topic != 0) {
-          message_received = zmq_msg_recv(local_message.get(), socket_, 0);
-          if (message_received != -1 && zmq_msg_size(local_message.get()) != 0) {
-            auto message_data = getMessageData(local_message);
-            msg = message_data;  //< Build a T object from the server reply.
-          } else {
-            // If receive failed, close the local message.
-            std::cerr << custom_error << "Failed to receive the message. ZMQ Error: " << zmq_strerror(zmq_errno())
-                      << std::endl;
-          }
-        } else {
-          // If no data past topic, close the local message.
-          std::cerr << custom_error << "No data inside message." << std::endl;
-        }
-      } else {
-        // If receive failed, close the local message.
-        std::cerr << custom_error << "Received the wrong message type." << std::endl;
-      }
-    } else {
-      // If receive failed, close the local message.
+    if (bytes_received == -1) { return bytes_received; }
+
+    if (std::string{static_cast<char*>(zmq_msg_data(local_message.get()))} == topic_) {
+      std::cerr << custom_error << "Received the wrong message type." << std::endl;
+      return -1;
     }
-    return message_received;
+
+    zmq_getsockopt(socket_, ZMQ_RCVMORE, &data_past_topic, &data_past_topic_size);
+
+    if (data_past_topic == 0 || data_past_topic_size == 0) {
+      std::cerr << custom_error << "No data inside message." << std::endl;
+      return -1;
+    }
+
+    bytes_received = zmq_msg_recv(local_message.get(), socket_, 0);
+
+    if (bytes_received == -1 || zmq_msg_size(local_message.get()) == 0) {
+      std::cerr << custom_error << "Failed to receive the message. ZMQ Error: " << zmq_strerror(zmq_errno())
+                << std::endl;
+      return -1;
+    }
+
+    void* data_ptr = zmq_msg_data(local_message.get());
+    msg = {local_message, &data_ptr};
+
+    return bytes_received;
   }
 
   void filter() { zmq_setsockopt(socket_, ZMQ_SUBSCRIBE, topic_.c_str(), topic_.size()); }
+
   void setTimeout(int timeout) {
     zmq_setsockopt(socket_, ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
     timeout_ = timeout;
@@ -157,17 +152,11 @@ protected:
     linger_ = linger;
   }
 
-  void renewSocket(int type) {
-    socket_ = zmq_socket(ContextManager::instance(), type);
-    zmq_msg_init(&recv_message_);
-  }
+  void renewSocket(int type) { socket_ = zmq_socket(ContextManager::instance(), type); }
 
   void* socket_{nullptr};
-  std::string topic_{T::getTopic()};
-  std::string address_{""};
-  int timeout_{0};
-  int linger_{30000};
-  zmq_msg_t recv_message_{};
+  std::string topic_{T::getTopic()}, address_{""};
+  int timeout_{0}, linger_{30000};
 };
 }  // Namespace simple.
 

@@ -41,7 +41,7 @@ public:
 
   Quaternion& operator=(const Quaternion&);
   Quaternion& operator=(Quaternion&&) noexcept;
-  Quaternion& operator=(const uint8_t*);
+  Quaternion& operator=(std::shared_ptr<void*>);
   Quaternion& operator=(const std::array<double, 4>&);
   Quaternion& operator=(std::array<double, 4>&&) noexcept;
 

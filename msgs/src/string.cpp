@@ -51,10 +51,9 @@ String& String::operator=(String&& other) noexcept {
   return *this;
 }
 
-String& String::operator=(const uint8_t* data) {
+String& String::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
-  auto s = GetStringFbs(data);
-  data_ = s->data()->c_str();
+  data_ = GetStringFbs(*data)->data()->c_str();
   return *this;
 }
 

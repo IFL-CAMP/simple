@@ -55,9 +55,9 @@ Header& Header::operator=(Header&& other) noexcept {
 
 Header& Header::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
-  seq_n_ = GetHeaderFbs(data)->sequence_number();
-  frame_id_ = GetHeaderFbs(data)->frame_id()->c_str();
-  timestamp_ = static_cast<long long>(GetHeaderFbs(data)->timestamp());
+  seq_n_ = GetHeaderFbs(*data)->sequence_number();
+  frame_id_ = std::move(GetHeaderFbs(*data)->frame_id()->c_str());
+  timestamp_ = static_cast<long long>(GetHeaderFbs(*data)->timestamp());
   return *this;
 }
 

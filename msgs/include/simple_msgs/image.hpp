@@ -100,7 +100,7 @@ public:
     return *this;
   }
 
-  Image& operator=(const uint8_t* data);
+  Image& operator=(std::shared_ptr<void*> data);
 
   bool operator==(const Image& rhs) const {
     bool compare =

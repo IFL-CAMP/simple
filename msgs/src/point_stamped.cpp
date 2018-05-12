@@ -53,7 +53,7 @@ PointStamped& PointStamped::operator=(PointStamped&& other) noexcept {
 
 PointStamped& PointStamped::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
-  auto p = GetPointStampedFbs(data);
+  auto p = GetPointStampedFbs(*data);
   header_ = p->header()->data();
   point_ = p->point()->data();
   return *this;

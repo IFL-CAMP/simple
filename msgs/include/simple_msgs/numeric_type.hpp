@@ -37,7 +37,7 @@ public:
   /**
    * @brief Constructor from the buffer data, implementation is specific to the template specialization.
    */
-  explicit NumericType(const uint8_t* data);
+  NumericType(const uint8_t* data);
 
   // Copy operations.
 
@@ -49,7 +49,7 @@ public:
     return *this;
   }
 
-  NumericType& operator=(const uint8_t* data);
+  NumericType& operator=(std::shared_ptr<void*> data);
 
   // Move operations.
 

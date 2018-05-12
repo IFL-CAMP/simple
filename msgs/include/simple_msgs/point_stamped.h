@@ -41,7 +41,7 @@ public:
 
   PointStamped& operator=(const PointStamped&);
   PointStamped& operator=(PointStamped&&) noexcept;
-  PointStamped& operator=(const uint8_t*);
+  PointStamped& operator=(std::shared_ptr<void*>);
 
   inline bool operator==(const PointStamped& rhs) const { return (point_ == rhs.point_ && header_ == rhs.header_); }
   inline bool operator!=(const PointStamped& rhs) const { return !(*this == rhs); }

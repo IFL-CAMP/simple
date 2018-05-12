@@ -65,9 +65,9 @@ Quaternion& Quaternion::operator=(std::array<double, 4>&& array) noexcept {
   return *this;
 }
 
-Quaternion& Quaternion::operator=(const uint8_t* data) {
+Quaternion& Quaternion::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
-  auto q = GetQuaternionFbs(data);
+  auto q = GetQuaternionFbs(*data);
   data_[0] = q->x();
   data_[1] = q->y();
   data_[2] = q->z();

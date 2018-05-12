@@ -42,7 +42,7 @@ public:
 
   QuaternionStamped& operator=(const QuaternionStamped&);
   QuaternionStamped& operator=(QuaternionStamped&&) noexcept;
-  QuaternionStamped& operator=(const uint8_t*);
+  QuaternionStamped& operator=(std::shared_ptr<void*>);
 
   inline bool operator==(const QuaternionStamped& rhs) const {
     return (quaternion_ == rhs.quaternion_ && header_ == rhs.header_);

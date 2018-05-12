@@ -42,8 +42,7 @@ Bool& Bool::operator=(Bool&& other) noexcept {
 
 Bool& Bool::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
-  data_ = data;
-  data_ = GetBoolFbs(data.get())->data();
+  data_ = GetBoolFbs(*data)->data();
   return *this;
 }
 

@@ -43,7 +43,7 @@ public:
 
   RotationMatrix& operator=(const RotationMatrix&);
   RotationMatrix& operator=(RotationMatrix&&) noexcept;
-  RotationMatrix& operator=(const uint8_t*);
+  RotationMatrix& operator=(std::shared_ptr<void*>);
   RotationMatrix& operator=(const std::array<double, 9>&);
   RotationMatrix& operator=(std::array<double, 9>&&) noexcept;
 

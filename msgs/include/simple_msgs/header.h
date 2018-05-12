@@ -38,7 +38,7 @@ public:
 
   Header& operator=(const Header&);
   Header& operator=(Header&&) noexcept;
-  Header& operator=(const uint8_t*);
+  Header& operator=(std::shared_ptr<void*>);
 
   inline bool operator==(const Header& rhs) const {
     return (seq_n_ == rhs.seq_n_ && frame_id_ == rhs.frame_id_ && timestamp_ == rhs.timestamp_);

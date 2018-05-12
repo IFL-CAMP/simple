@@ -37,7 +37,7 @@ public:
 
   PoseStamped& operator=(const PoseStamped&);
   PoseStamped& operator=(PoseStamped&&) noexcept;
-  PoseStamped& operator=(const uint8_t*);
+  PoseStamped& operator=(std::shared_ptr<void*>);
 
   inline bool operator==(const PoseStamped& rhs) const { return (pose_ == rhs.pose_ && header_ == rhs.header_); }
   inline bool operator!=(const PoseStamped& rhs) const { return !(*this == rhs); }

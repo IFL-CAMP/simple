@@ -42,7 +42,7 @@ public:
 
   Point& operator=(const Point&);
   Point& operator=(Point&&) noexcept;
-  Point& operator=(const uint8_t*);
+  Point& operator=(std::shared_ptr<void*>);
   Point& operator=(const std::array<double, 3>&);
   Point& operator=(std::array<double, 3>&&) noexcept;
 
