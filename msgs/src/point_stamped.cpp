@@ -51,7 +51,7 @@ PointStamped& PointStamped::operator=(PointStamped&& other) noexcept {
   return *this;
 }
 
-PointStamped& PointStamped::operator=(const uint8_t* data) {
+PointStamped& PointStamped::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
   auto p = GetPointStampedFbs(data);
   header_ = p->header()->data();

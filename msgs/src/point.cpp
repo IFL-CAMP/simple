@@ -66,7 +66,7 @@ Point& Point::operator=(std::array<double, 3>&& array) noexcept {
   return *this;
 }
 
-Point& Point::operator=(const uint8_t* data) {
+Point& Point::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
   auto p = GetPointFbs(data);
   data_[0] = p->x();

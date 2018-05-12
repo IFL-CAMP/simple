@@ -43,6 +43,7 @@ public:
 
 protected:
   mutable std::mutex mutex_;
+  std::shared_ptr<void*> data_{nullptr};
 };
 }  // Namespace simple_msgs.
 

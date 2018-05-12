@@ -64,7 +64,7 @@ flatbuffers::Offset<void> Image<double>::getDataUnionElem(
 }
 
 template <>
-Image<uint8_t>& Image<uint8_t>::operator=(const uint8_t* data) {
+Image<uint8_t>& Image<uint8_t>::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
   auto image_data = GetImageFbs(data);
 
@@ -79,7 +79,7 @@ Image<uint8_t>& Image<uint8_t>::operator=(const uint8_t* data) {
 }
 
 template <>
-Image<int16_t>& Image<int16_t>::operator=(const uint8_t* data) {
+Image<int16_t>& Image<int16_t>::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
   auto image_data = GetImageFbs(data);
 
@@ -94,7 +94,7 @@ Image<int16_t>& Image<int16_t>::operator=(const uint8_t* data) {
 }
 
 template <>
-Image<double>& Image<double>::operator=(const uint8_t* data) {
+Image<double>& Image<double>::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
   auto image_data = GetImageFbs(data);
 
@@ -109,7 +109,7 @@ Image<double>& Image<double>::operator=(const uint8_t* data) {
 }
 
 template <>
-Image<float>& Image<float>::operator=(const uint8_t* data) {
+Image<float>& Image<float>::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
   auto image_data = GetImageFbs(data);
 

@@ -24,6 +24,7 @@
 #include <zmq.h>
 #include <cstring>
 #include <iostream>
+#include <memory>
 #include <string>
 #include "context_manager.hpp"
 
@@ -67,24 +68,24 @@ protected:
     }
   }
 
-  // Keep a copy of the buffer alive until the message is sent.
-  static void freeBuffer(void* /*unused*/, void* hint) {
-    if (hint != nullptr) {
-      auto b = static_cast<std::shared_ptr<flatbuffers::DetachedBuffer>*>(hint);
-      delete b;
-    }
-  }
-
   int sendMsg(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer,
               const std::string& custom_error = "[SIMPLE Error] - ") {
     // Send the topic first and add the rest of the message after it.
-    zmq_msg_t topic = {};
+    zmq_msg_t topic{};
     auto topic_ptr = const_cast<void*>(static_cast<const void*>(topic_.c_str()));
     zmq_msg_init_data(&topic, topic_ptr, topic_.size(), nullptr, nullptr);
 
-    zmq_msg_t message = {};
     auto buffer_pointer = new std::shared_ptr<flatbuffers::DetachedBuffer>{buffer};
-    zmq_msg_init_data(&message, buffer->data(), buffer->size(), freeBuffer, buffer_pointer);
+
+    auto free_function = [](void* /*unused*/, void* hint) {
+      if (hint != nullptr) {
+        auto b = static_cast<std::shared_ptr<flatbuffers::DetachedBuffer>*>(hint);
+        delete b;
+      }
+    };
+
+    zmq_msg_t message{};
+    zmq_msg_init_data(&message, buffer->data(), buffer->size(), free_function, buffer_pointer);
 
     // Send the topic first and add the rest of the message after it.
     auto topic_sent = zmq_msg_send(&topic, socket_, ZMQ_SNDMORE);
@@ -99,45 +100,48 @@ protected:
     return message_sent;
   }
 
+  std::shared_ptr<void*> getMessageData(const std::shared_ptr<zmq_msg_t>& msg) {
+    auto data_ptr = zmq_msg_data(msg.get());
+    return {msg, &data_ptr};
+  }
+
   int receiveMsg(T& msg, const std::string& custom_error = "") {
     int data_past_topic{0};
     auto data_past_topic_size{sizeof(data_past_topic)};
 
     // Start local zmq_message.
-    zmq_msg_t local_message{};
+    //    std::shared_ptr<zmq_msg_t> local_message = std::make_shared<zmq_msg_t>();
+    std::shared_ptr<zmq_msg_t> local_message(nullptr, [](zmq_msg_t* msg) {
+      std::cout << "CALLING ZMQ MSG CLOSE" << std::endl;
+      zmq_msg_close(msg);
+    });
+    zmq_msg_init(local_message.get());
 
-    zmq_msg_init(&local_message);
-
-    int message_received = zmq_msg_recv(&local_message, socket_, 0);
+    int message_received = zmq_msg_recv(local_message.get(), socket_, 0);
 
     if (message_received != -1) {
-      if (std::string{static_cast<char*>(zmq_msg_data(&local_message))} != topic_) {
+      if (std::string{static_cast<char*>(zmq_msg_data(local_message.get()))} != topic_) {
         zmq_getsockopt(socket_, ZMQ_RCVMORE, &data_past_topic, &data_past_topic_size);
         if (data_past_topic != 0) {
-          message_received = zmq_msg_recv(&local_message, socket_, 0);
-          if (message_received != -1 && zmq_msg_size(&local_message) != 0) {
-            // If message was received, move it to member message.
-            zmq_msg_move(&recv_message_, &local_message);
-            msg = static_cast<uint8_t*>(zmq_msg_data(&recv_message_));  //< Build a T object from the server reply.
+          message_received = zmq_msg_recv(local_message.get(), socket_, 0);
+          if (message_received != -1 && zmq_msg_size(local_message.get()) != 0) {
+            auto message_data = getMessageData(local_message);
+            msg = message_data;  //< Build a T object from the server reply.
           } else {
             // If receive failed, close the local message.
-            zmq_msg_close(&local_message);
             std::cerr << custom_error << "Failed to receive the message. ZMQ Error: " << zmq_strerror(zmq_errno())
                       << std::endl;
           }
         } else {
           // If no data past topic, close the local message.
-          zmq_msg_close(&local_message);
           std::cerr << custom_error << "No data inside message." << std::endl;
         }
       } else {
         // If receive failed, close the local message.
-        zmq_msg_close(&local_message);
         std::cerr << custom_error << "Received the wrong message type." << std::endl;
       }
     } else {
       // If receive failed, close the local message.
-      zmq_msg_close(&local_message);
     }
     return message_received;
   }

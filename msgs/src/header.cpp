@@ -53,7 +53,7 @@ Header& Header::operator=(Header&& other) noexcept {
   return *this;
 }
 
-Header& Header::operator=(const uint8_t* data) {
+Header& Header::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
   seq_n_ = GetHeaderFbs(data)->sequence_number();
   frame_id_ = GetHeaderFbs(data)->frame_id()->c_str();

@@ -51,7 +51,7 @@ Pose& Pose::operator=(Pose&& p) noexcept {
   return *this;
 }
 
-Pose& Pose::operator=(const uint8_t* data) {
+Pose& Pose::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
   position_ = GetPoseFbs(data)->position()->data();
   quaternion_ = GetPoseFbs(data)->quaternion()->data();
