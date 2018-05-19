@@ -60,12 +60,8 @@ SCENARIO("Using an uint8 Image Message") {
         REQUIRE(empty_image.getImageOrigin() == empty_pose);
         REQUIRE(empty_image.getHeader() == empty_header);
         REQUIRE(empty_image.getImageEncoding().empty());
-        // REQUIRE(empty_image.getImageData() == nullptr);
+        REQUIRE(empty_image.getImageData() == nullptr);
       }
-    }
-    WHEN("I build another empty image from the buffer of the empty image") {
-      simple_msgs::Image<uint8_t> copy_empty_image(empty_image.getBufferData()->data());
-      THEN("All image fields have to match the default parameters") { REQUIRE(copy_empty_image == empty_image); }
     }
   }
 
@@ -78,12 +74,8 @@ SCENARIO("Using an uint8 Image Message") {
     random_image.setHeader(random_header);
     random_image.setOrigin(random_pose);
     random_image.setImageData(uint8_data, size_uint8);
-    WHEN("I copy construct a new image from the existing image's buffer") {
-      simple_msgs::Image<uint8_t> buffer_copy_image(random_image.getBufferData()->data());
-      THEN("The two images are the same") { REQUIRE(buffer_copy_image == random_image); }
-    }
     WHEN("I copy-construct a new image") {
-      const simple_msgs::Image<uint8_t>& copy_image(random_image);
+      const simple_msgs::Image<uint8_t> copy_image(random_image);
       THEN("Both images are the same") { REQUIRE(copy_image == random_image); }
     }
     WHEN("I move-construct a new image") {
@@ -100,7 +92,7 @@ SCENARIO("Using an uint8 Image Message") {
         REQUIRE(move_image.getImageOrigin() == random_pose);
         REQUIRE(move_image.getHeader() == random_header);
         REQUIRE(move_image.getImageEncoding() == random_string);
-        REQUIRE(*(move_image.getImageData()) == *uint8_data);
+        REQUIRE((move_image.getImageData()) == uint8_data);
       }
     }
   }
@@ -114,11 +106,6 @@ SCENARIO("Using an uint8 Image Message") {
     random_image.setHeader(random_header);
     random_image.setOrigin(random_pose);
     random_image.setImageData(uint8_data, size_uint8);
-    WHEN("I copy assign a new image from the existing image's buffer") {
-      simple_msgs::Image<uint8_t> buffer_assigned_image;
-      buffer_assigned_image = random_image.getBufferData()->data();
-      THEN("The two images are the same") { REQUIRE(buffer_assigned_image == random_image); }
-    }
     WHEN("I copy-assign a new image") {
       simple_msgs::Image<uint8_t> copy_assigned_image;
       copy_assigned_image = random_image;
@@ -139,7 +126,7 @@ SCENARIO("Using an uint8 Image Message") {
         REQUIRE(move_assigned_image.getImageOrigin() == random_pose);
         REQUIRE(move_assigned_image.getHeader() == random_header);
         REQUIRE(move_assigned_image.getImageEncoding() == random_string);
-        REQUIRE(*(move_assigned_image.getImageData()) == *uint8_data);
+        REQUIRE((move_assigned_image.getImageData()) == uint8_data);
       }
     }
   }
@@ -237,12 +224,8 @@ SCENARIO("Using an int16 Image Message") {
         REQUIRE(empty_image.getImageOrigin() == empty_pose);
         REQUIRE(empty_image.getHeader() == empty_header);
         REQUIRE(empty_image.getImageEncoding().empty());
-        // REQUIRE(empty_image.getImageData() == nullptr);
+        REQUIRE(empty_image.getImageData() == nullptr);
       }
-    }
-    WHEN("I build another empty image from the buffer of the empty image") {
-      simple_msgs::Image<int16_t> copy_empty_image(empty_image.getBufferData()->data());
-      THEN("All image fields have to match the default parameters") { REQUIRE(copy_empty_image == empty_image); }
     }
   }
 
@@ -255,10 +238,6 @@ SCENARIO("Using an int16 Image Message") {
     random_image.setHeader(random_header);
     random_image.setOrigin(random_pose);
     random_image.setImageData(int16_data, size_int16);
-    WHEN("I copy construct a new image from the existing image's buffer") {
-      simple_msgs::Image<int16_t> buffer_copy_image(random_image.getBufferData()->data());
-      THEN("The two images are the same") { REQUIRE(buffer_copy_image == random_image); }
-    }
     WHEN("I copy-construct a new image") {
       const simple_msgs::Image<int16_t>& copy_image(random_image);
       THEN("Both images are the same") { REQUIRE(copy_image == random_image); }
@@ -277,7 +256,7 @@ SCENARIO("Using an int16 Image Message") {
         REQUIRE(move_image.getImageOrigin() == random_pose);
         REQUIRE(move_image.getHeader() == random_header);
         REQUIRE(move_image.getImageEncoding() == random_string);
-        REQUIRE(*(move_image.getImageData()) == *int16_data);
+        REQUIRE((move_image.getImageData()) == int16_data);
       }
     }
   }
@@ -291,11 +270,6 @@ SCENARIO("Using an int16 Image Message") {
     random_image.setHeader(random_header);
     random_image.setOrigin(random_pose);
     random_image.setImageData(int16_data, size_int16);
-    WHEN("I copy assign a new image from the existing image's buffer") {
-      simple_msgs::Image<int16_t> buffer_assigned_image;
-      buffer_assigned_image = random_image.getBufferData()->data();
-      THEN("The two images are the same") { REQUIRE(buffer_assigned_image == random_image); }
-    }
     WHEN("I copy-assign a new image") {
       simple_msgs::Image<int16_t> copy_assigned_image;
       copy_assigned_image = random_image;
@@ -316,7 +290,7 @@ SCENARIO("Using an int16 Image Message") {
         REQUIRE(move_assigned_image.getImageOrigin() == random_pose);
         REQUIRE(move_assigned_image.getHeader() == random_header);
         REQUIRE(move_assigned_image.getImageEncoding() == random_string);
-        REQUIRE(*(move_assigned_image.getImageData()) == *int16_data);
+        REQUIRE((move_assigned_image.getImageData()) == int16_data);
       }
     }
   }
@@ -414,12 +388,8 @@ SCENARIO("Using a float Image Message") {
         REQUIRE(empty_image.getImageOrigin() == empty_pose);
         REQUIRE(empty_image.getHeader() == empty_header);
         REQUIRE(empty_image.getImageEncoding().empty());
-        // REQUIRE(empty_image.getImageData() == nullptr);
+        REQUIRE(empty_image.getImageData() == nullptr);
       }
-    }
-    WHEN("I build another empty image from the buffer of the empty image") {
-      simple_msgs::Image<float> copy_empty_image(empty_image.getBufferData()->data());
-      THEN("All image fields have to match the default parameters") { REQUIRE(copy_empty_image == empty_image); }
     }
   }
 
@@ -432,10 +402,6 @@ SCENARIO("Using a float Image Message") {
     random_image.setHeader(random_header);
     random_image.setOrigin(random_pose);
     random_image.setImageData(float_data, size_float);
-    WHEN("I copy construct a new image from the existing image's buffer") {
-      simple_msgs::Image<float> buffer_copy_image(random_image.getBufferData()->data());
-      THEN("The two images are the same") { REQUIRE(buffer_copy_image == random_image); }
-    }
     WHEN("I copy-construct a new image") {
       const simple_msgs::Image<float>& copy_image(random_image);
       THEN("Both images are the same") { REQUIRE(copy_image == random_image); }
@@ -454,7 +420,7 @@ SCENARIO("Using a float Image Message") {
         REQUIRE(move_image.getImageOrigin() == random_pose);
         REQUIRE(move_image.getHeader() == random_header);
         REQUIRE(move_image.getImageEncoding() == random_string);
-        REQUIRE(*(move_image.getImageData()) == *float_data);
+        REQUIRE((move_image.getImageData()) == float_data);
       }
     }
   }
@@ -468,11 +434,6 @@ SCENARIO("Using a float Image Message") {
     random_image.setHeader(random_header);
     random_image.setOrigin(random_pose);
     random_image.setImageData(float_data, size_float);
-    WHEN("I copy assign a new image from the existing image's buffer") {
-      simple_msgs::Image<float> buffer_assigned_image;
-      buffer_assigned_image = random_image.getBufferData()->data();
-      THEN("The two images are the same") { REQUIRE(buffer_assigned_image == random_image); }
-    }
     WHEN("I copy-assign a new image") {
       simple_msgs::Image<float> copy_assigned_image;
       copy_assigned_image = random_image;
@@ -493,7 +454,7 @@ SCENARIO("Using a float Image Message") {
         REQUIRE(move_assigned_image.getImageOrigin() == random_pose);
         REQUIRE(move_assigned_image.getHeader() == random_header);
         REQUIRE(move_assigned_image.getImageEncoding() == random_string);
-        REQUIRE(*(move_assigned_image.getImageData()) == *float_data);
+        REQUIRE((move_assigned_image.getImageData()) == float_data);
       }
     }
   }
@@ -591,12 +552,8 @@ SCENARIO("Using a double Image Message") {
         REQUIRE(empty_image.getImageOrigin() == empty_pose);
         REQUIRE(empty_image.getHeader() == empty_header);
         REQUIRE(empty_image.getImageEncoding().empty());
-        // REQUIRE(empty_image.getImageData() == nullptr);
+        REQUIRE(empty_image.getImageData() == nullptr);
       }
-    }
-    WHEN("I build another empty image from the buffer of the empty image") {
-      simple_msgs::Image<double> copy_empty_image(empty_image.getBufferData()->data());
-      THEN("All image fields have to match the default parameters") { REQUIRE(copy_empty_image == empty_image); }
     }
   }
 
@@ -609,10 +566,6 @@ SCENARIO("Using a double Image Message") {
     random_image.setHeader(random_header);
     random_image.setOrigin(random_pose);
     random_image.setImageData(double_data, size_double);
-    WHEN("I copy construct a new image from the existing image's buffer") {
-      simple_msgs::Image<double> buffer_copy_image(random_image.getBufferData()->data());
-      THEN("The two images are the same") { REQUIRE(buffer_copy_image == random_image); }
-    }
     WHEN("I copy-construct a new image") {
       const simple_msgs::Image<double>& copy_image(random_image);
       THEN("Both images are the same") { REQUIRE(copy_image == random_image); }
@@ -631,7 +584,7 @@ SCENARIO("Using a double Image Message") {
         REQUIRE(move_image.getImageOrigin() == random_pose);
         REQUIRE(move_image.getHeader() == random_header);
         REQUIRE(move_image.getImageEncoding() == random_string);
-        REQUIRE(*(move_image.getImageData()) == *double_data);
+        REQUIRE((move_image.getImageData()) == double_data);
       }
     }
   }
@@ -645,11 +598,6 @@ SCENARIO("Using a double Image Message") {
     random_image.setHeader(random_header);
     random_image.setOrigin(random_pose);
     random_image.setImageData(double_data, size_double);
-    WHEN("I copy assign a new image from the existing image's buffer") {
-      simple_msgs::Image<double> buffer_assigned_image;
-      buffer_assigned_image = random_image.getBufferData()->data();
-      THEN("The two images are the same") { REQUIRE(buffer_assigned_image == random_image); }
-    }
     WHEN("I copy-assign a new image") {
       simple_msgs::Image<double> copy_assigned_image;
       copy_assigned_image = random_image;
@@ -670,7 +618,7 @@ SCENARIO("Using a double Image Message") {
         REQUIRE(move_assigned_image.getImageOrigin() == random_pose);
         REQUIRE(move_assigned_image.getHeader() == random_header);
         REQUIRE(move_assigned_image.getImageEncoding() == random_string);
-        REQUIRE(*(move_assigned_image.getImageData()) == *double_data);
+        REQUIRE((move_assigned_image.getImageData()) == double_data);
       }
     }
   }
