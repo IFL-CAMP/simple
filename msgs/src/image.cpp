@@ -42,29 +42,25 @@ data Image<double>::getDataUnionType() const {
 template <>
 flatbuffers::Offset<void> Image<uint8_t>::getDataUnionElem(
     std::shared_ptr<flatbuffers::FlatBufferBuilder> builder) const {
-  return owning_data_ ? Createuint8_type(*builder, builder->CreateVector(data_.get(), data_size_)).Union()
-                      : Createuint8_type(*builder, builder->CreateVector(not_owning_data_, data_size_)).Union();
+  return Createuint8_type(*builder, builder->CreateVector(data_.getData(), data_size_)).Union();
 }
 
 template <>
 flatbuffers::Offset<void> Image<int16_t>::getDataUnionElem(
     std::shared_ptr<flatbuffers::FlatBufferBuilder> builder) const {
-  return owning_data_ ? Createint16_type(*builder, builder->CreateVector(data_.get(), data_size_)).Union()
-                      : Createint16_type(*builder, builder->CreateVector(not_owning_data_, data_size_)).Union();
+  return Createint16_type(*builder, builder->CreateVector(data_.getData(), data_size_)).Union();
 }
 
 template <>
 flatbuffers::Offset<void> Image<float>::getDataUnionElem(
     std::shared_ptr<flatbuffers::FlatBufferBuilder> builder) const {
-  return owning_data_ ? Createfloat_type(*builder, builder->CreateVector(data_.get(), data_size_)).Union()
-                      : Createfloat_type(*builder, builder->CreateVector(not_owning_data_, data_size_)).Union();
+  return Createfloat_type(*builder, builder->CreateVector(data_.getData(), data_size_)).Union();
 }
 
 template <>
 flatbuffers::Offset<void> Image<double>::getDataUnionElem(
     std::shared_ptr<flatbuffers::FlatBufferBuilder> builder) const {
-  return owning_data_ ? Createdouble_type(*builder, builder->CreateVector(data_.get(), data_size_)).Union()
-                      : Createdouble_type(*builder, builder->CreateVector(not_owning_data_, data_size_)).Union();
+  return Createdouble_type(*builder, builder->CreateVector(data_.getData(), data_size_)).Union();
 }
 
 template <>
@@ -77,8 +73,7 @@ Image<uint8_t>& Image<uint8_t>::operator=(std::shared_ptr<void*> data) {
   // Set the Image data according to the right date type.
   if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE)) {
     const uint8_t* local_data = (image_data->image_as_uint8_type())->raw()->data();
-    data_ = std::shared_ptr<const uint8_t>(data, local_data);
-    owning_data_ = true;
+    data_.setData({data, local_data});
   }
   return *this;
 }
@@ -93,8 +88,7 @@ Image<int16_t>& Image<int16_t>::operator=(std::shared_ptr<void*> data) {
   // Set the Image data according to the right date type.
   if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE)) {
     auto local_data = (image_data->image_as_int16_type())->raw()->data();
-    data_ = std::shared_ptr<const int16_t>(data, local_data);
-    owning_data_ = true;
+    data_.setData({data, local_data});
   }
   return *this;
 }
@@ -109,8 +103,7 @@ Image<float>& Image<float>::operator=(std::shared_ptr<void*> data) {
   // Set the Image data according to the right date type.
   if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE)) {
     auto local_data = (image_data->image_as_float_type())->raw()->data();
-    data_ = std::shared_ptr<const float>(data, local_data);
-    owning_data_ = true;
+    data_.setData({data, local_data});
   }
   return *this;
 }
@@ -125,8 +118,7 @@ Image<double>& Image<double>::operator=(std::shared_ptr<void*> data) {
   // Set the Image data according to the right date type.
   if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE)) {
     auto local_data = (image_data->image_as_double_type())->raw()->data();
-    data_ = std::shared_ptr<const double>(data, local_data);
-    owning_data_ = true;
+    data_.setData({data, local_data});
   }
   return *this;
 }

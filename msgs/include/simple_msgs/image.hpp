@@ -44,9 +44,7 @@ public:
     , depth_{other.depth_}
     , data_size_{other.data_size_}
     , num_channels_{other.num_channels_}
-    , data_{other.data_}
-    , not_owning_data_{other.not_owning_data_}
-    , owning_data_{other.owning_data_} {}
+    , data_{other.data_} {}
 
   Image(Image&& other) noexcept
     : header_{std::move(other.header_)}
@@ -60,9 +58,7 @@ public:
     , depth_{std::move(other.depth_)}
     , data_size_{std::move(other.data_size_)}
     , num_channels_{std::move(other.num_channels_)}
-    , data_{std::move(other.data_)}
-    , not_owning_data_{std::move(other.not_owning_data_)}
-    , owning_data_{std::move(other.owning_data_)} {}
+    , data_{std::move(other.data_)} {}
 
   Image& operator=(const Image& other) {
     if (this != std::addressof(other)) {
@@ -79,8 +75,6 @@ public:
       data_size_ = other.data_size_;
       num_channels_ = other.num_channels_;
       data_ = other.data_;
-      not_owning_data_ = other.not_owning_data_;
-      owning_data_ = other.owning_data_;
     }
     return *this;
   }
@@ -100,8 +94,6 @@ public:
       data_size_ = std::move(other.data_size_);
       num_channels_ = std::move(other.num_channels_);
       data_ = std::move(other.data_);
-      not_owning_data_ = std::move(other.not_owning_data_);
-      owning_data_ = std::move(other.owning_data_);
     }
     return *this;
   }
@@ -114,12 +106,10 @@ public:
          (resY_ == rhs.resY_) && (resZ_ == rhs.resZ_) && (width_ == rhs.width_) && (height_ == rhs.height_) &&
          (depth_ == rhs.depth_) && (data_size_ == rhs.data_size_) && (num_channels_ == rhs.num_channels_));
 
-    if (data_ && rhs.data_) {
-      return owning_data_ ? (compare && (memcmp(data_.get(), (rhs.data_.get()), data_size_) == 0))
-                          : (compare && (memcmp(not_owning_data_, (rhs.not_owning_data_), data_size_) == 0));
-    } else {
-      return compare;
+    if (!data_.empty() && !rhs.data_.empty()) {
+      compare = compare && (memcmp(data_.getData(), (rhs.data_.getData()), data_size_) == 0);
     }
+    return compare;
   }
 
   bool operator!=(const Image& rhs) const { return !(*this == rhs); }
@@ -141,14 +131,14 @@ public:
 
     auto type = getDataUnionType();
     flatbuffers::Offset<void> elem{};
-    if (data_ || not_owning_data_) { elem = getDataUnionElem(builder); }
+    if (!data_.empty()) { elem = getDataUnionElem(builder); }
 
     ImageFbsBuilder tmp_builder{*builder};
     // add the information
     tmp_builder.add_encoding(encoding_string);
     tmp_builder.add_header(header_vector);
     tmp_builder.add_origin(origin_vector);
-    if (data_ || not_owning_data_) { tmp_builder.add_image(elem); }
+    if (!data_.empty()) { tmp_builder.add_image(elem); }
     tmp_builder.add_image_type(type);
     tmp_builder.add_image_size(data_size_);
     tmp_builder.add_resX(resX_);
@@ -164,7 +154,7 @@ public:
 
   std::array<double, 3> getResolution() const { return {{resX_, resY_, resZ_}}; }
   std::array<int, 3> getImageDimensions() const { return {{width_, height_, depth_}}; }
-  const T* getImageData() const { return owning_data_ ? data_.get() : not_owning_data_; }
+  const T* getImageData() const { return data_.getData(); }
   int getImageSize() const { return data_size_; }
   const Header& getHeader() const { return header_; }
   Header& getHeader() { return header_; }
@@ -220,16 +210,14 @@ public:
    */
   void setImageData(const T* data, int data_size, int num_channels = 1) {
     std::lock_guard<std::mutex> lock{mutex_};
-    not_owning_data_ = data;
-    owning_data_ = false;
+    data_.setData(data);
     data_size_ = data_size;
     num_channels_ = num_channels;
   }
 
   void setImageData(std::shared_ptr<const T> data, int data_size, int num_channels = 1) {
     std::lock_guard<std::mutex> lock{mutex_};
-    data_ = data;
-    owning_data_ = true;
+    data_.setData(data);
     data_size_ = data_size;
     num_channels_ = num_channels;
   }
@@ -240,6 +228,30 @@ public:
   static inline std::string getTopic() { return ImageFbsIdentifier(); }
 
 private:
+  class InternalData {
+  public:
+    const T* getData() const { return is_data_owner_ ? owning_data_.get() : not_owning_data_; }
+
+    bool empty() const { return (owning_data_ == nullptr && not_owning_data_ == nullptr); }
+
+    void setData(const T* data) {
+      is_data_owner_ = false;
+      not_owning_data_ = data;
+      owning_data_.reset();
+    }
+
+    void setData(std::shared_ptr<const T> data) {
+      is_data_owner_ = true;
+      owning_data_ = data;
+      not_owning_data_ = nullptr;
+    }
+
+  private:
+    std::shared_ptr<const T> owning_data_{nullptr};
+    const T* not_owning_data_{nullptr};
+    bool is_data_owner_{false};
+  };
+
   void fillPartialImage(const simple_msgs::ImageFbs* imageData) {
     // Set Header.
     header_ = imageData->header()->data();
@@ -267,9 +279,7 @@ private:
   std::string encoding_{""};
   double resX_{0.0}, resY_{0.0}, resZ_{0.0};
   int width_{0}, height_{0}, depth_{0}, data_size_{0}, num_channels_{1};
-  std::shared_ptr<const T> data_{nullptr};
-  const T* not_owning_data_{nullptr};
-  bool owning_data_{false};
+  InternalData data_{};
 };
 
 }  // Namespace simple_msgs.
