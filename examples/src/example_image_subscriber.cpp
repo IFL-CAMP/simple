@@ -22,8 +22,8 @@
 #include "simple/subscriber.hpp"
 #include "simple_msgs/image.hpp"
 
-const std::string window_name("Received image");
-cv::Mat buffer;
+const std::string window_name{"Received image"};
+cv::Mat buffer{};
 
 // Callback function for the Image Subscriber.
 // Every image that is received by the Subscriber is shown in a OpenCV window.
@@ -32,9 +32,9 @@ void example_callback(const simple_msgs::Image<uint8_t>& i) {
   auto img = const_cast<uint8_t*>(i.getImageData());
 
   // Get the image dimensions, e.g. 512x512x1.
-  auto dimensions = i.getImageDimensions();
+  const auto dimensions = i.getImageDimensions();
   // Build an OpenCV Mat from those.
-  cv::Mat received_img(dimensions[0], dimensions[1], CV_8UC3, img);
+  cv::Mat received_img{dimensions[0], dimensions[1], CV_8UC3, img};
   received_img.copyTo(buffer);
 
   cv::imshow(window_name, buffer);
@@ -47,10 +47,10 @@ int main() {
 
   // Created a Subscriber that listens to Images sent by a Publisher on the IP address "localhost" on port 5555.
   std::cout << "Creating a subscriber for Image messages." << std::endl;
-  simple::Subscriber<simple_msgs::Image<uint8_t>> sub("tcp://localhost:5555", example_callback);
+
+  simple::Subscriber<simple_msgs::Image<uint8_t>> sub{"tcp://localhost:5555", example_callback};
 
   cv::waitKey(0);
-
   std::cout << "Subscribing ended." << std::endl;
 
   cv::destroyAllWindows();

@@ -24,46 +24,46 @@
 #include "simple/publisher.hpp"
 #include "simple_msgs/image.hpp"
 
-const std::string data_dir = DATA_DIR;
+const std::string DATA_DIRECTORY{DATA_DIR};
 
 // Create a vector containing OpenCV images.
 std::vector<std::pair<cv::Mat, int>> readImage() {
-  const std::string lena_path = data_dir + "lena.ascii.pgm";
-  const std::string barbara_path = data_dir + "barbara.ascii.pgm";
-  const std::string baboon_path = data_dir + "baboon.ascii.pgm";
-  const std::string lena_color_path = data_dir + "lena512color.tiff";
+  const std::string lena_path = DATA_DIRECTORY + "lena.ascii.pgm";
+  const std::string barbara_path = DATA_DIRECTORY + "barbara.ascii.pgm";
+  const std::string baboon_path = DATA_DIRECTORY + "baboon.ascii.pgm";
+  const std::string lena_color_path = DATA_DIRECTORY + "lena512color.tiff";
 
   cv::Mat lena = cv::imread(lena_path, CV_LOAD_IMAGE_COLOR);
   cv::Mat barbara = cv::imread(barbara_path, CV_LOAD_IMAGE_COLOR);
   cv::Mat baboon = cv::imread(baboon_path, CV_LOAD_IMAGE_COLOR);
   cv::Mat lena_color = cv::imread(lena_color_path, CV_LOAD_IMAGE_COLOR);
 
-  std::vector<std::pair<cv::Mat, int>> return_vector;
-  return_vector.push_back(std::make_pair(lena, lena.rows * lena.cols * lena.channels()));
-  return_vector.push_back(std::make_pair(barbara, barbara.rows * barbara.cols * barbara.channels()));
-  return_vector.push_back(std::make_pair(baboon, baboon.rows * baboon.cols * baboon.channels()));
-  return_vector.push_back(std::make_pair(lena_color, lena_color.rows * lena_color.cols * lena_color.channels()));
+  std::vector<std::pair<cv::Mat, int>> return_vector{
+      std::make_pair(lena, lena.rows * lena.cols * lena.channels()),
+      std::make_pair(barbara, barbara.rows * barbara.cols * barbara.channels()),
+      std::make_pair(baboon, baboon.rows * baboon.cols * baboon.channels()),
+      std::make_pair(lena_color, lena_color.rows * lena_color.cols * lena_color.channels())};
 
   return return_vector;
 }
 
 int main() {
-  const int N_RUN = 3000;
-  const int SLEEP_TIME = 200;  //<  Milliseconds.
+  const int N_RUN{30000};
+  const int SLEEP_TIME{200};  //<  Milliseconds.
 
   // Obtain the images.
   auto images = readImage();
 
   // Add dummy Header and Origin to the image message.
-  simple_msgs::Header h(1, "Image", 0);
-  simple_msgs::Pose p;
-  simple_msgs::Image<uint8_t> img;
+  simple_msgs::Header h{1, "Image", 0};
+  simple_msgs::Pose p{};
+  simple_msgs::Image<uint8_t> img{};
   img.setHeader(h);
   img.setOrigin(p);
 
   // Create a Publisher that will send Image messages to any Subscriber listening on port 5555.
   // In this example images are treated as uint8.
-  simple::Publisher<simple_msgs::Image<uint8_t>> pub("tcp://*:5555");
+  simple::Publisher<simple_msgs::Image<uint8_t>> pub{"tcp://*:5555"};
 
   // Publish an image from the pool of images we read from files, for a total of N_RUN times.
   for (int i = 0; i < N_RUN; i++) {
