@@ -53,10 +53,10 @@ Pose& Pose::operator=(Pose&& p) noexcept {
 
 Pose& Pose::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
-  auto pos = static_cast<const void*>(GetPoseFbs(*data)->position()->data());
-  position_ = std::make_shared<void*>(const_cast<void*>(pos));
-  auto quat = static_cast<const void*>(GetPoseFbs(*data)->quaternion()->data());
-  quaternion_ = std::make_shared<void*>(const_cast<void*>(quat));
+  auto position = static_cast<const void*>(GetPoseFbs(*data)->position()->data());
+  position_ = std::make_shared<void*>(const_cast<void*>(position));
+  auto quaternion = static_cast<const void*>(GetPoseFbs(*data)->quaternion()->data());
+  quaternion_ = std::make_shared<void*>(const_cast<void*>(quaternion));
   return *this;
 }
 
