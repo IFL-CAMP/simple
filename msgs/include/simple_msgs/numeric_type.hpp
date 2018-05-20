@@ -61,8 +61,6 @@ public:
     return *this;
   }
 
-  ~NumericType() = default;
-
   // Relational operators.
   inline bool operator==(const NumericType& rhs) const { return data_ == rhs.data_; }
   inline bool operator!=(const NumericType& rhs) const { return !(*this == rhs); }
