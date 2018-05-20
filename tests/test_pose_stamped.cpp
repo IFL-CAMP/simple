@@ -23,6 +23,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+
 #include "simple_msgs/header.h"
 #include "simple_msgs/pose.h"
 #include "simple_msgs/pose_stamped.h"
@@ -40,17 +41,17 @@ SCENARIO("Using a PoseStamped Message") {
   long long time = rand();
   int random_int = rand() / 100;
   std::string random_string = std::to_string(double_1);
-  simple_msgs::Point random_point(double_1, double_2, double_3);
-  simple_msgs::Quaternion random_quaternion(double_4, double_5, double_6, double_7);
-  simple_msgs::Pose random_pose(random_point, random_quaternion);
-  simple_msgs::Pose empty_pose;
-  simple_msgs::Header empty_header;
-  simple_msgs::Header random_header(random_int, random_string, time);
+  simple_msgs::Point random_point{double_1, double_2, double_3};
+  simple_msgs::Quaternion random_quaternion{double_4, double_5, double_6, double_7};
+  simple_msgs::Pose random_pose{random_point, random_quaternion};
+  simple_msgs::Pose empty_pose{};
+  simple_msgs::Header empty_header{};
+  simple_msgs::Header random_header{random_int, random_string, time};
   // Test the constructors.
   GIVEN("A PoseStamped created from an empty constructor") {
-    simple_msgs::PoseStamped empty_pose_stamped;
+    simple_msgs::PoseStamped empty_pose_stamped{};
     WHEN("It is constructed") {
-      THEN("It's elements have to match the default") {
+      THEN("Its elements have to match the default") {
         REQUIRE(empty_pose_stamped.getHeader() == empty_header);
         REQUIRE(empty_pose_stamped.getPose() == empty_pose);
       }
@@ -58,8 +59,8 @@ SCENARIO("Using a PoseStamped Message") {
   }
 
   GIVEN("A PoseStamped created from a pose and a header") {
-    simple_msgs::PoseStamped pose_stamped(random_header, random_pose);
-    WHEN("I check the PoseStamped's elements") {
+    simple_msgs::PoseStamped pose_stamped{random_header, random_pose};
+    WHEN("I check the PoseStamped elements") {
       THEN("They all have to be equal to the parameters from the constructor") {
         REQUIRE(pose_stamped.getPose() == random_pose);
         REQUIRE(pose_stamped.getHeader() == random_header);
@@ -67,24 +68,19 @@ SCENARIO("Using a PoseStamped Message") {
     }
   }
 
-  GIVEN("A PoseStamped created from the serialized data of an existing "
-        "PoseStamped") {
-    simple_msgs::PoseStamped pose_stamped(random_header, random_pose);
-    simple_msgs::PoseStamped buffer_pose_stamped(pose_stamped.getBufferData()->data());
-    WHEN("I check the PoseStamped's elements") {
-      THEN("The new PoseStamped has to be equal to the other") { REQUIRE(buffer_pose_stamped == pose_stamped); }
-    }
-  }
-
   // Testing copy constructors.
   GIVEN("A PoseStamped") {
-    simple_msgs::PoseStamped pose_stamped(random_header, random_pose);
+    simple_msgs::PoseStamped pose_stamped{random_header, random_pose};
+    WHEN("Another PoseStamped is created from the serialized data of the original one") {
+      simple_msgs::PoseStamped buffer_pose_stamped{pose_stamped.getBufferData()->data()};
+      THEN("The new PoseStamped has to be equal to the other") { REQUIRE(buffer_pose_stamped == pose_stamped); }
+    }
     WHEN("I copy-construct a new PoseStamped") {
-      const simple_msgs::PoseStamped& copy_pose_stamped(pose_stamped);
+      simple_msgs::PoseStamped copy_pose_stamped{pose_stamped};
       THEN("The new PoseStamped is equal to the other") { REQUIRE(copy_pose_stamped == pose_stamped); }
     }
     WHEN("I move-construct a new PoseStamped") {
-      simple_msgs::PoseStamped move_pose_stamped(std::move(pose_stamped));
+      simple_msgs::PoseStamped move_pose_stamped{std::move(pose_stamped)};
       THEN("The new PoseStamped's elements are equal to the previous' ones") {
         REQUIRE(move_pose_stamped.getPose() == random_pose);
         REQUIRE(move_pose_stamped.getHeader() == random_header);
@@ -94,23 +90,24 @@ SCENARIO("Using a PoseStamped Message") {
 
   // Testing Copy-assignments.
   GIVEN("A PoseStamped") {
-    simple_msgs::PoseStamped pose_stamped(random_header, random_pose);
+    simple_msgs::PoseStamped pose_stamped{random_header, random_pose};
     WHEN("I copy-assign from that PoseStamped's buffer") {
-      simple_msgs::PoseStamped copy_assigned_buffer_pose_stamped;
-      copy_assigned_buffer_pose_stamped = pose_stamped.getBufferData()->data();
+      simple_msgs::PoseStamped copy_assigned_buffer_pose_stamped{};
+      auto data_ptr = std::make_shared<void*>(pose_stamped.getBufferData()->data());
+      copy_assigned_buffer_pose_stamped = data_ptr;
       THEN("The new PoseStamped has to be same as the original") {
         REQUIRE(copy_assigned_buffer_pose_stamped == pose_stamped);
       }
     }
     WHEN("I copy-assign from that PoseStamped") {
-      simple_msgs::PoseStamped copy_assigned_pose_stamped;
+      simple_msgs::PoseStamped copy_assigned_pose_stamped{};
       copy_assigned_pose_stamped = pose_stamped;
       THEN("The new PoseStamped has to be same as the original") {
         REQUIRE(copy_assigned_pose_stamped == pose_stamped);
       }
     }
     WHEN("I move-assign from that PoseStamped") {
-      simple_msgs::PoseStamped move_assigned_pose_stamped;
+      simple_msgs::PoseStamped move_assigned_pose_stamped{};
       move_assigned_pose_stamped = std::move(pose_stamped);
       THEN("The new PoseStamped has to be same as the original") {
         REQUIRE(move_assigned_pose_stamped.getPose() == random_pose);
@@ -121,7 +118,7 @@ SCENARIO("Using a PoseStamped Message") {
 
   // Testing setters/getters.
   GIVEN("A PoseStamped") {
-    simple_msgs::PoseStamped pose_stamped;
+    simple_msgs::PoseStamped pose_stamped{};
     WHEN("I set the pose of the pose_stamped") {
       pose_stamped.setPose(random_pose);
       THEN("The position is correct") { REQUIRE(pose_stamped.getPose() == random_pose); }
@@ -134,8 +131,8 @@ SCENARIO("Using a PoseStamped Message") {
 
   // Testing operations.
   GIVEN("Two identical PoseStampeds") {
-    simple_msgs::PoseStamped first_pose_stamped(random_header, random_pose);
-    simple_msgs::PoseStamped second_pose_stamped(random_header, random_pose);
+    simple_msgs::PoseStamped first_pose_stamped{random_header, random_pose};
+    simple_msgs::PoseStamped second_pose_stamped{random_header, random_pose};
     WHEN("I compare these PoseStampeds") {
       THEN("They have to be equal") { REQUIRE(first_pose_stamped == second_pose_stamped); }
     }
@@ -147,7 +144,7 @@ SCENARIO("Using a PoseStamped Message") {
 
   // Testing Topic
   GIVEN("A point") {
-    simple_msgs::PoseStamped pose_stamped;
+    simple_msgs::PoseStamped pose_stamped{};
     WHEN("I get the message topic") {
       std::string topic_name = pose_stamped.getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "POST"); }

@@ -46,7 +46,7 @@ SCENARIO("Using a Rotation Matrix Message") {
   std::array<double, 3> row2_array{{double_7, double_8, double_9}};
   // Testing constructors.
   GIVEN("An empty rotation matrix") {
-    simple_msgs::RotationMatrix rotation_matrix;
+    simple_msgs::RotationMatrix rotation_matrix{};
 
     WHEN("It is constructed") {
       THEN("The Rotation Matrix elements have to be zero") {
@@ -64,7 +64,7 @@ SCENARIO("Using a Rotation Matrix Message") {
   }
 
   GIVEN("A Rotation Matrix created from 1 double") {
-    simple_msgs::RotationMatrix double_rotation_matrix(double_1);
+    simple_msgs::RotationMatrix double_rotation_matrix{double_1};
     WHEN("We check the Rotation Matrix's elements") {
       THEN("They all have to be equal to the double from the constructor") {
         REQUIRE(double_rotation_matrix.getRow(0)[0] == double_1);
@@ -81,8 +81,8 @@ SCENARIO("Using a Rotation Matrix Message") {
   }
 
   GIVEN("A Rotation Matrix created from 9 doubles") {
-    simple_msgs::RotationMatrix doubles_rotation_matrix(double_1, double_2, double_3, double_4, double_5, double_6,
-                                                        double_7, double_8, double_9);
+    simple_msgs::RotationMatrix doubles_rotation_matrix{double_1, double_2, double_3, double_4, double_5,
+                                                        double_6, double_7, double_8, double_9};
     WHEN("We check the Rotation Matrix's elements") {
       THEN("They all have to be equal to the doubles from the constructor") {
         REQUIRE(doubles_rotation_matrix.getRow(0)[0] == double_1);
@@ -99,7 +99,7 @@ SCENARIO("Using a Rotation Matrix Message") {
   }
 
   GIVEN("A Rotation Matrix created from an array of doubles") {
-    simple_msgs::RotationMatrix array_rotation_matrix(doubles_array);
+    simple_msgs::RotationMatrix array_rotation_matrix{doubles_array};
     WHEN("We check the Rotation Matrix's elements") {
       THEN("They all have to be equal to the doubles") {
         REQUIRE(array_rotation_matrix.getRow(0)[0] == double_1);
@@ -116,7 +116,7 @@ SCENARIO("Using a Rotation Matrix Message") {
   }
 
   GIVEN("A Rotation Matrix created from moving an array of doubles") {
-    simple_msgs::RotationMatrix moved_array_rotation_matrix(std::move(doubles_array));
+    simple_msgs::RotationMatrix moved_array_rotation_matrix{std::move(doubles_array)};
     WHEN("We check the Rotation Matrix's elements") {
       THEN("They all have to be equal to the doubles") {
         REQUIRE(moved_array_rotation_matrix.getRow(0)[0] == double_1);
@@ -134,19 +134,19 @@ SCENARIO("Using a Rotation Matrix Message") {
 
   // Testing copy-constructors.
   GIVEN("A rotation Matrix") {
-    simple_msgs::RotationMatrix array_rotation_matrix(doubles_array);
+    simple_msgs::RotationMatrix array_rotation_matrix{doubles_array};
     WHEN("I construct a new Rotation Matrix from the serialized data of the existing Rotation Matrix") {
-      simple_msgs::RotationMatrix copy_buffer_rotation_matrix(array_rotation_matrix.getBufferData()->data());
+      simple_msgs::RotationMatrix copy_buffer_rotation_matrix{array_rotation_matrix.getBufferData()->data()};
       THEN("The new Rotation Matrix has to be equal to the other") {
         REQUIRE(copy_buffer_rotation_matrix == array_rotation_matrix);
       }
     }
     WHEN("I copy-construct a new Rotation Matrix") {
-      const simple_msgs::RotationMatrix& copy_rotation_matrix(array_rotation_matrix);
+      simple_msgs::RotationMatrix copy_rotation_matrix{array_rotation_matrix};
       THEN("The new Rotation Matrix is equal to the other") { REQUIRE(copy_rotation_matrix == array_rotation_matrix); }
     }
     WHEN("I move-construct a new Rotation Matrix") {
-      simple_msgs::RotationMatrix moved_rotation_matrix(std::move(array_rotation_matrix));
+      simple_msgs::RotationMatrix moved_rotation_matrix{std::move(array_rotation_matrix)};
       THEN("The new Rotation Matrix's coordinates are equal to the previous' ones") {
         REQUIRE(moved_rotation_matrix.getRow(0)[0] == double_1);
         REQUIRE(moved_rotation_matrix.getRow(0)[1] == double_2);
@@ -163,23 +163,24 @@ SCENARIO("Using a Rotation Matrix Message") {
 
   // Testing copy-assignments.
   GIVEN("A Rotation Matrix") {
-    simple_msgs::RotationMatrix array_rotation_matrix(doubles_array);
+    simple_msgs::RotationMatrix array_rotation_matrix{doubles_array};
     WHEN("I copy-assign from that Rotation Matrix's buffer") {
-      simple_msgs::RotationMatrix copy_assigned_buffer_rotation_matrix;
-      copy_assigned_buffer_rotation_matrix = array_rotation_matrix.getBufferData()->data();
+      simple_msgs::RotationMatrix copy_assigned_buffer_rotation_matrix{};
+      auto data_ptr = std::make_shared<void*>(array_rotation_matrix.getBufferData()->data());
+      copy_assigned_buffer_rotation_matrix = data_ptr;
       THEN("The new Rotation Matrix has to be same as the original") {
         REQUIRE(copy_assigned_buffer_rotation_matrix == array_rotation_matrix);
       }
     }
     WHEN("I copy-assign from that Rotation Matrix") {
-      simple_msgs::RotationMatrix copy_assigned_rotation_matrix;
+      simple_msgs::RotationMatrix copy_assigned_rotation_matrix{};
       copy_assigned_rotation_matrix = array_rotation_matrix;
       THEN("The new Rotation Matrix has to be same as the original") {
         REQUIRE(copy_assigned_rotation_matrix == array_rotation_matrix);
       }
     }
     WHEN("I move-assign from that Rotation Matrix") {
-      simple_msgs::RotationMatrix move_assigned_rotation_matrix;
+      simple_msgs::RotationMatrix move_assigned_rotation_matrix{};
       move_assigned_rotation_matrix = std::move(array_rotation_matrix);
       THEN("The new Rotation Matrix has to be same as the original") {
         REQUIRE(move_assigned_rotation_matrix.getRow(0)[0] == double_1);
@@ -194,7 +195,7 @@ SCENARIO("Using a Rotation Matrix Message") {
       }
     }
     WHEN("I move-assign from an array") {
-      simple_msgs::RotationMatrix move_assigned_array_rotation_matrix;
+      simple_msgs::RotationMatrix move_assigned_array_rotation_matrix{};
       move_assigned_array_rotation_matrix = std::move(doubles_array);
       THEN("The new Rotation Matrix has to be same as the array") {
         REQUIRE(move_assigned_array_rotation_matrix.getRow(0)[0] == double_1);
@@ -211,7 +212,7 @@ SCENARIO("Using a Rotation Matrix Message") {
   }
 
   GIVEN("A Rotation Matrix") {
-    simple_msgs::RotationMatrix empty_rotation_matrix;
+    simple_msgs::RotationMatrix empty_rotation_matrix{};
     WHEN("I copy-assign an array to that Rotation Matrix") {
       empty_rotation_matrix = doubles_array;
       THEN("The Rotation Matrix's elements are equal to the array") {
@@ -227,7 +228,7 @@ SCENARIO("Using a Rotation Matrix Message") {
       }
     }
     WHEN("I move-assign from an array to that Rotation Matrix") {
-      empty_rotation_matrix = doubles_array;
+      empty_rotation_matrix = std::move(doubles_array);
       THEN("The quaternion's elements are the same as the array") {
         REQUIRE(empty_rotation_matrix.getRow(0)[0] == double_1);
         REQUIRE(empty_rotation_matrix.getRow(0)[1] == double_2);
@@ -244,8 +245,8 @@ SCENARIO("Using a Rotation Matrix Message") {
 
   // Testing operations.
   GIVEN("Two identical Rotation Matrixes") {
-    simple_msgs::RotationMatrix rotation_matrix_1(doubles_array);
-    simple_msgs::RotationMatrix rotation_matrix_2(doubles_array);
+    simple_msgs::RotationMatrix rotation_matrix_1{doubles_array};
+    simple_msgs::RotationMatrix rotation_matrix_2{doubles_array};
     WHEN("I compare these Rotation Matrixes") {
       THEN("They have to be equal") { REQUIRE(rotation_matrix_1 == rotation_matrix_2); }
     }
@@ -275,7 +276,7 @@ SCENARIO("Using a Rotation Matrix Message") {
 
   // Testing elements getters-setters.
   GIVEN("An empty rotation matrix") {
-    simple_msgs::RotationMatrix empty_rotation_matrix;
+    simple_msgs::RotationMatrix empty_rotation_matrix{};
     WHEN("I set the 1st row of the Rotation Matrix") {
       empty_rotation_matrix.setRow(0, row0_array);
       THEN("The Rotation Matrix row has the correct elements") {
@@ -327,7 +328,7 @@ SCENARIO("Using a Rotation Matrix Message") {
   }
 
   GIVEN("A Rotation Matrix") {
-    simple_msgs::RotationMatrix rotation_matrix(doubles_array);
+    simple_msgs::RotationMatrix rotation_matrix{doubles_array};
     WHEN("I get the array from the Rotation Matrix") {
       std::array<double, 9> array = rotation_matrix.toVector();
       THEN("The array elements are correct") {

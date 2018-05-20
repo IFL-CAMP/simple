@@ -29,25 +29,25 @@
 // TEST FOR USING THE IMAGE MESSAGE WRAPPER
 
 SCENARIO("Using an uint8 Image Message") {
-  simple_msgs::Pose empty_pose;
-  simple_msgs::Header empty_header;
+  simple_msgs::Pose empty_pose{};
+  simple_msgs::Header empty_header{};
   double random_double_1 = static_cast<double>(rand()) / RAND_MAX;
   double random_double_2 = static_cast<double>(rand()) / RAND_MAX;
   double random_double_3 = static_cast<double>(rand()) / RAND_MAX;
-  auto random_int_1 = static_cast<int>(rand() / 100);
-  auto random_int_2 = static_cast<int>(rand() / 100);
-  auto random_int_3 = static_cast<int>(rand() / 100);
+  auto random_int_1 = rand() / 100;
+  auto random_int_2 = rand() / 100;
+  auto random_int_3 = rand() / 100;
   std::string random_string = std::to_string(random_double_1);
   simple_msgs::Header random_header = createRandomHeader();
   simple_msgs::Pose random_pose = createRandomPose();
   // uint8_t data
-  int size_uint8 = 1;
-  uint8_t* uint8_data = new uint8_t[1]{static_cast<uint8_t>(rand() % 256)};
+  int image_size{1};
+  auto image_data = std::make_shared<uint8_t>(static_cast<uint8_t>(rand() % 256));
 
   // Testing constructor.
   GIVEN("A uint8_t Image created from an empty constructor") {
-    simple_msgs::Image<uint8_t> empty_image;
-    WHEN("I check the image's fields") {
+    simple_msgs::Image<uint8_t> empty_image{};
+    WHEN("I check the Image fields") {
       THEN("They have to match the default parameters") {
         REQUIRE(empty_image.getResolution()[0] == 0.0);
         REQUIRE(empty_image.getResolution()[1] == 0.0);
@@ -66,21 +66,21 @@ SCENARIO("Using an uint8 Image Message") {
   }
 
   // Testing copy-constructors.
-  GIVEN("An image") {
-    simple_msgs::Image<uint8_t> random_image;
+  GIVEN("An Image") {
+    simple_msgs::Image<uint8_t> random_image{};
     random_image.setImageResolution(random_double_1, random_double_2, random_double_3);
     random_image.setImageDimensions(random_int_1, random_int_2, random_int_3);
     random_image.setImageEncoding(random_string);
     random_image.setHeader(random_header);
     random_image.setOrigin(random_pose);
-    random_image.setImageData(uint8_data, size_uint8);
-    WHEN("I copy-construct a new image") {
-      const simple_msgs::Image<uint8_t> copy_image(random_image);
+    random_image.setImageData(image_data, image_size);
+    WHEN("I copy-construct a new Image") {
+      simple_msgs::Image<uint8_t> copy_image{random_image};
       THEN("Both images are the same") { REQUIRE(copy_image == random_image); }
     }
-    WHEN("I move-construct a new image") {
-      simple_msgs::Image<uint8_t> move_image(std::move(random_image));
-      THEN("The new image's fields are the same as the original") {
+    WHEN("I move-construct a new Image") {
+      simple_msgs::Image<uint8_t> move_image{std::move(random_image)};
+      THEN("The new Image fields are the same as the original") {
         REQUIRE(move_image.getResolution()[0] == random_double_1);
         REQUIRE(move_image.getResolution()[1] == random_double_2);
         REQUIRE(move_image.getResolution()[2] == random_double_3);
@@ -88,33 +88,39 @@ SCENARIO("Using an uint8 Image Message") {
         REQUIRE(move_image.getImageDimensions()[0] == random_int_1);
         REQUIRE(move_image.getImageDimensions()[1] == random_int_2);
         REQUIRE(move_image.getImageDimensions()[2] == random_int_3);
-        REQUIRE(move_image.getImageSize() == size_uint8);
+        REQUIRE(move_image.getImageSize() == image_size);
         REQUIRE(move_image.getImageOrigin() == random_pose);
         REQUIRE(move_image.getHeader() == random_header);
         REQUIRE(move_image.getImageEncoding() == random_string);
-        REQUIRE((move_image.getImageData()) == uint8_data);
+        REQUIRE((move_image.getImageData()) == image_data.get());
       }
     }
   }
 
   // Testing copy-assignment.
-  GIVEN("An image") {
-    simple_msgs::Image<uint8_t> random_image;
+  GIVEN("An Image") {
+    simple_msgs::Image<uint8_t> random_image{};
     random_image.setImageResolution(random_double_1, random_double_2, random_double_3);
     random_image.setImageDimensions(random_int_1, random_int_2, random_int_3);
     random_image.setImageEncoding(random_string);
     random_image.setHeader(random_header);
     random_image.setOrigin(random_pose);
-    random_image.setImageData(uint8_data, size_uint8);
-    WHEN("I copy-assign a new image") {
-      simple_msgs::Image<uint8_t> copy_assigned_image;
+    random_image.setImageData(image_data.get(), image_size);
+    WHEN("I copy-assign an Image from the original buffer") {
+      simple_msgs::Image<uint8_t> copy_buffer_image{};
+      auto data_ptr = std::make_shared<void*>(random_image.getBufferData()->data());
+      copy_buffer_image = data_ptr;
+      THEN("The new Image has to be same as the original") { REQUIRE(copy_buffer_image == random_image); }
+    }
+    WHEN("I copy-assign a new Image") {
+      simple_msgs::Image<uint8_t> copy_assigned_image{};
       copy_assigned_image = random_image;
       THEN("Both images are the same") { REQUIRE(copy_assigned_image == random_image); }
     }
-    WHEN("I move-assign a new image") {
-      simple_msgs::Image<uint8_t> move_assigned_image;
+    WHEN("I move-assign a new Image") {
+      simple_msgs::Image<uint8_t> move_assigned_image{};
       move_assigned_image = std::move(random_image);
-      THEN("The new image's fields are the same as the original") {
+      THEN("The new Image fields are the same as the original") {
         REQUIRE(move_assigned_image.getResolution()[0] == random_double_1);
         REQUIRE(move_assigned_image.getResolution()[1] == random_double_2);
         REQUIRE(move_assigned_image.getResolution()[2] == random_double_3);
@@ -122,24 +128,24 @@ SCENARIO("Using an uint8 Image Message") {
         REQUIRE(move_assigned_image.getImageDimensions()[0] == random_int_1);
         REQUIRE(move_assigned_image.getImageDimensions()[1] == random_int_2);
         REQUIRE(move_assigned_image.getImageDimensions()[2] == random_int_3);
-        REQUIRE(move_assigned_image.getImageSize() == size_uint8);
+        REQUIRE(move_assigned_image.getImageSize() == image_size);
         REQUIRE(move_assigned_image.getImageOrigin() == random_pose);
         REQUIRE(move_assigned_image.getHeader() == random_header);
         REQUIRE(move_assigned_image.getImageEncoding() == random_string);
-        REQUIRE((move_assigned_image.getImageData()) == uint8_data);
+        REQUIRE((move_assigned_image.getImageData()) == image_data.get());
       }
     }
   }
 
   // Testing operations.
-  GIVEN("Two identical images") {
-    simple_msgs::Image<uint8_t> random_image1;
+  GIVEN("Two identical Images") {
+    simple_msgs::Image<uint8_t> random_image1{};
     random_image1.setImageResolution(random_double_1, random_double_2, random_double_3);
     random_image1.setImageDimensions(random_int_1, random_int_2, random_int_3);
     random_image1.setImageEncoding(random_string);
     random_image1.setHeader(random_header);
     random_image1.setOrigin(random_pose);
-    simple_msgs::Image<uint8_t> random_image2;
+    simple_msgs::Image<uint8_t> random_image2{};
     random_image2.setImageResolution(random_double_1, random_double_2, random_double_3);
     random_image2.setImageDimensions(random_int_1, random_int_2, random_int_3);
     random_image2.setImageEncoding(random_string);
@@ -148,7 +154,7 @@ SCENARIO("Using an uint8 Image Message") {
     WHEN("I compare them") {
       THEN("They have to be the same") { REQUIRE(random_image1 == random_image2); }
     }
-    WHEN("I change something in the first image") {
+    WHEN("I change something in the first Image") {
       random_image1.setImageResolution(random_double_2, random_double_3, random_double_1);
       THEN("They have to be different") { REQUIRE(random_image1 != random_image2); }
     }
@@ -156,8 +162,8 @@ SCENARIO("Using an uint8 Image Message") {
 
   // Testing getters and setters.
   GIVEN("A uint8_t Image created from an empty constructor") {
-    simple_msgs::Image<uint8_t> empty_image;
-    WHEN("I set the image resolution") {
+    simple_msgs::Image<uint8_t> empty_image{};
+    WHEN("I set the Image resolution") {
       empty_image.setImageResolution(random_double_1, random_double_2, random_double_3);
       THEN("The resolution is correct") {
         REQUIRE(empty_image.getResolution()[0] == random_double_1);
@@ -165,11 +171,11 @@ SCENARIO("Using an uint8 Image Message") {
         REQUIRE(empty_image.getResolution()[2] == random_double_3);
       }
     }
-    WHEN("I set the image encoding") {
+    WHEN("I set the Image encoding") {
       empty_image.setImageEncoding(random_string);
       THEN("The encoding is correct") { REQUIRE(empty_image.getImageEncoding() == random_string); }
     }
-    WHEN("I set the image dimensions") {
+    WHEN("I set the Image dimensions") {
       empty_image.setImageDimensions(random_int_1, random_int_2, random_int_3);
       THEN("The dimensions are correct") {
         REQUIRE(empty_image.getImageDimensions()[0] == random_int_1);
@@ -177,11 +183,11 @@ SCENARIO("Using an uint8 Image Message") {
         REQUIRE(empty_image.getImageDimensions()[2] == random_int_3);
       }
     }
-    WHEN("I set the image header") {
+    WHEN("I set the Image header") {
       empty_image.setHeader(random_header);
       THEN("The header is correct") { REQUIRE(empty_image.getHeader() == random_header); }
     }
-    WHEN("I set the image origin") {
+    WHEN("I set the Image origin") {
       empty_image.setOrigin(random_pose);
       THEN("The origin is correct") { REQUIRE(empty_image.getImageOrigin() == random_pose); }
     }
@@ -192,26 +198,26 @@ SCENARIO("Using an uint8 Image Message") {
   }
 }
 
-SCENARIO("Using an int16 Image Message") {
-  simple_msgs::Pose empty_pose;
-  simple_msgs::Header empty_header;
+SCENARIO("Using an int16_t Image Message") {
+  simple_msgs::Pose empty_pose{};
+  simple_msgs::Header empty_header{};
   double random_double_1 = static_cast<double>(rand()) / RAND_MAX;
   double random_double_2 = static_cast<double>(rand()) / RAND_MAX;
   double random_double_3 = static_cast<double>(rand()) / RAND_MAX;
-  auto random_int_1 = static_cast<int>(rand() / 100);
-  auto random_int_2 = static_cast<int>(rand() / 100);
-  auto random_int_3 = static_cast<int>(rand() / 100);
+  auto random_int_1 = rand() / 100;
+  auto random_int_2 = rand() / 100;
+  auto random_int_3 = rand() / 100;
   std::string random_string = std::to_string(random_double_1);
   simple_msgs::Header random_header = createRandomHeader();
   simple_msgs::Pose random_pose = createRandomPose();
   // int16_t data
-  int size_int16 = 1;
-  int16_t int16_data[1] = {static_cast<int16_t>(rand() % 65536)};
+  int image_size{1};
+  auto image_data = std::make_shared<int16_t>(static_cast<int16_t>(rand() % 256));
 
   // Testing constructor.
   GIVEN("A int16_t Image created from an empty constructor") {
-    simple_msgs::Image<int16_t> empty_image;
-    WHEN("I check the image's fields") {
+    simple_msgs::Image<int16_t> empty_image{};
+    WHEN("I check the Image fields") {
       THEN("They have to match the default parameters") {
         REQUIRE(empty_image.getResolution()[0] == 0.0);
         REQUIRE(empty_image.getResolution()[1] == 0.0);
@@ -230,21 +236,21 @@ SCENARIO("Using an int16 Image Message") {
   }
 
   // Testing copy-constructors.
-  GIVEN("An image") {
-    simple_msgs::Image<int16_t> random_image;
+  GIVEN("An Image") {
+    simple_msgs::Image<int16_t> random_image{};
     random_image.setImageResolution(random_double_1, random_double_2, random_double_3);
     random_image.setImageDimensions(random_int_1, random_int_2, random_int_3);
     random_image.setImageEncoding(random_string);
     random_image.setHeader(random_header);
     random_image.setOrigin(random_pose);
-    random_image.setImageData(int16_data, size_int16);
-    WHEN("I copy-construct a new image") {
-      const simple_msgs::Image<int16_t>& copy_image(random_image);
+    random_image.setImageData(image_data, image_size);
+    WHEN("I copy-construct a new Image") {
+      simple_msgs::Image<int16_t> copy_image{random_image};
       THEN("Both images are the same") { REQUIRE(copy_image == random_image); }
     }
-    WHEN("I move-construct a new image") {
-      simple_msgs::Image<int16_t> move_image(std::move(random_image));
-      THEN("The new image's fields are the same as the original") {
+    WHEN("I move-construct a new Image") {
+      simple_msgs::Image<int16_t> move_image{std::move(random_image)};
+      THEN("The new Image fields are the same as the original") {
         REQUIRE(move_image.getResolution()[0] == random_double_1);
         REQUIRE(move_image.getResolution()[1] == random_double_2);
         REQUIRE(move_image.getResolution()[2] == random_double_3);
@@ -252,33 +258,39 @@ SCENARIO("Using an int16 Image Message") {
         REQUIRE(move_image.getImageDimensions()[0] == random_int_1);
         REQUIRE(move_image.getImageDimensions()[1] == random_int_2);
         REQUIRE(move_image.getImageDimensions()[2] == random_int_3);
-        REQUIRE(move_image.getImageSize() == size_int16);
+        REQUIRE(move_image.getImageSize() == image_size);
         REQUIRE(move_image.getImageOrigin() == random_pose);
         REQUIRE(move_image.getHeader() == random_header);
         REQUIRE(move_image.getImageEncoding() == random_string);
-        REQUIRE((move_image.getImageData()) == int16_data);
+        REQUIRE((move_image.getImageData()) == image_data.get());
       }
     }
   }
 
   // Testing copy-assignment.
-  GIVEN("An image") {
-    simple_msgs::Image<int16_t> random_image;
+  GIVEN("An Image") {
+    simple_msgs::Image<int16_t> random_image{};
     random_image.setImageResolution(random_double_1, random_double_2, random_double_3);
     random_image.setImageDimensions(random_int_1, random_int_2, random_int_3);
     random_image.setImageEncoding(random_string);
     random_image.setHeader(random_header);
     random_image.setOrigin(random_pose);
-    random_image.setImageData(int16_data, size_int16);
-    WHEN("I copy-assign a new image") {
-      simple_msgs::Image<int16_t> copy_assigned_image;
+    random_image.setImageData(image_data.get(), image_size);
+    WHEN("I copy-assign an Image from the original buffer") {
+      simple_msgs::Image<int16_t> copy_buffer_image{};
+      auto data_ptr = std::make_shared<void*>(random_image.getBufferData()->data());
+      copy_buffer_image = data_ptr;
+      THEN("The new Image has to be same as the original") { REQUIRE(copy_buffer_image == random_image); }
+    }
+    WHEN("I copy-assign a new Image") {
+      simple_msgs::Image<int16_t> copy_assigned_image{};
       copy_assigned_image = random_image;
       THEN("Both images are the same") { REQUIRE(copy_assigned_image == random_image); }
     }
-    WHEN("I move-assign a new image") {
-      simple_msgs::Image<int16_t> move_assigned_image;
+    WHEN("I move-assign a new Image") {
+      simple_msgs::Image<int16_t> move_assigned_image{};
       move_assigned_image = std::move(random_image);
-      THEN("The new image's fields are the same as the original") {
+      THEN("The new Image fields are the same as the original") {
         REQUIRE(move_assigned_image.getResolution()[0] == random_double_1);
         REQUIRE(move_assigned_image.getResolution()[1] == random_double_2);
         REQUIRE(move_assigned_image.getResolution()[2] == random_double_3);
@@ -286,24 +298,24 @@ SCENARIO("Using an int16 Image Message") {
         REQUIRE(move_assigned_image.getImageDimensions()[0] == random_int_1);
         REQUIRE(move_assigned_image.getImageDimensions()[1] == random_int_2);
         REQUIRE(move_assigned_image.getImageDimensions()[2] == random_int_3);
-        REQUIRE(move_assigned_image.getImageSize() == size_int16);
+        REQUIRE(move_assigned_image.getImageSize() == image_size);
         REQUIRE(move_assigned_image.getImageOrigin() == random_pose);
         REQUIRE(move_assigned_image.getHeader() == random_header);
         REQUIRE(move_assigned_image.getImageEncoding() == random_string);
-        REQUIRE((move_assigned_image.getImageData()) == int16_data);
+        REQUIRE((move_assigned_image.getImageData()) == image_data.get());
       }
     }
   }
 
   // Testing operations.
-  GIVEN("Two identical images") {
-    simple_msgs::Image<int16_t> random_image1;
+  GIVEN("Two identical Images") {
+    simple_msgs::Image<int16_t> random_image1{};
     random_image1.setImageResolution(random_double_1, random_double_2, random_double_3);
     random_image1.setImageDimensions(random_int_1, random_int_2, random_int_3);
     random_image1.setImageEncoding(random_string);
     random_image1.setHeader(random_header);
     random_image1.setOrigin(random_pose);
-    simple_msgs::Image<int16_t> random_image2;
+    simple_msgs::Image<int16_t> random_image2{};
     random_image2.setImageResolution(random_double_1, random_double_2, random_double_3);
     random_image2.setImageDimensions(random_int_1, random_int_2, random_int_3);
     random_image2.setImageEncoding(random_string);
@@ -312,16 +324,16 @@ SCENARIO("Using an int16 Image Message") {
     WHEN("I compare them") {
       THEN("They have to be the same") { REQUIRE(random_image1 == random_image2); }
     }
-    WHEN("I change something in the first image") {
+    WHEN("I change something in the first Image") {
       random_image1.setImageResolution(random_double_2, random_double_3, random_double_1);
       THEN("They have to be different") { REQUIRE(random_image1 != random_image2); }
     }
   }
 
   // Testing getters and setters.
-  GIVEN("A uint8_t Image created from an empty constructor") {
-    simple_msgs::Image<int16_t> empty_image;
-    WHEN("I set the image resolution") {
+  GIVEN("A int16_t Image created from an empty constructor") {
+    simple_msgs::Image<int16_t> empty_image{};
+    WHEN("I set the Image resolution") {
       empty_image.setImageResolution(random_double_1, random_double_2, random_double_3);
       THEN("The resolution is correct") {
         REQUIRE(empty_image.getResolution()[0] == random_double_1);
@@ -329,11 +341,11 @@ SCENARIO("Using an int16 Image Message") {
         REQUIRE(empty_image.getResolution()[2] == random_double_3);
       }
     }
-    WHEN("I set the image encoding") {
+    WHEN("I set the Image encoding") {
       empty_image.setImageEncoding(random_string);
       THEN("The encoding is correct") { REQUIRE(empty_image.getImageEncoding() == random_string); }
     }
-    WHEN("I set the image dimensions") {
+    WHEN("I set the Image dimensions") {
       empty_image.setImageDimensions(random_int_1, random_int_2, random_int_3);
       THEN("The dimensions are correct") {
         REQUIRE(empty_image.getImageDimensions()[0] == random_int_1);
@@ -341,11 +353,11 @@ SCENARIO("Using an int16 Image Message") {
         REQUIRE(empty_image.getImageDimensions()[2] == random_int_3);
       }
     }
-    WHEN("I set the image header") {
+    WHEN("I set the Image header") {
       empty_image.setHeader(random_header);
       THEN("The header is correct") { REQUIRE(empty_image.getHeader() == random_header); }
     }
-    WHEN("I set the image origin") {
+    WHEN("I set the Image origin") {
       empty_image.setOrigin(random_pose);
       THEN("The origin is correct") { REQUIRE(empty_image.getImageOrigin() == random_pose); }
     }
@@ -357,25 +369,25 @@ SCENARIO("Using an int16 Image Message") {
 }
 
 SCENARIO("Using a float Image Message") {
-  simple_msgs::Pose empty_pose;
-  simple_msgs::Header empty_header;
+  simple_msgs::Pose empty_pose{};
+  simple_msgs::Header empty_header{};
   double random_double_1 = static_cast<double>(rand()) / RAND_MAX;
   double random_double_2 = static_cast<double>(rand()) / RAND_MAX;
   double random_double_3 = static_cast<double>(rand()) / RAND_MAX;
-  auto random_int_1 = static_cast<int>(rand() / 100);
-  auto random_int_2 = static_cast<int>(rand() / 100);
-  auto random_int_3 = static_cast<int>(rand() / 100);
+  auto random_int_1 = rand() / 100;
+  auto random_int_2 = rand() / 100;
+  auto random_int_3 = rand() / 100;
   std::string random_string = std::to_string(random_double_1);
   simple_msgs::Header random_header = createRandomHeader();
   simple_msgs::Pose random_pose = createRandomPose();
   // float data
-  int size_float = 1;
-  float float_data[1] = {static_cast<float>(rand() / RAND_MAX)};
+  int image_size{1};
+  auto image_data = std::make_shared<float>(static_cast<float>(rand() % 256));
 
   // Testing constructor.
   GIVEN("A float Image created from an empty constructor") {
-    simple_msgs::Image<float> empty_image;
-    WHEN("I check the image's fields") {
+    simple_msgs::Image<float> empty_image{};
+    WHEN("I check the Image fields") {
       THEN("They have to match the default parameters") {
         REQUIRE(empty_image.getResolution()[0] == 0.0);
         REQUIRE(empty_image.getResolution()[1] == 0.0);
@@ -394,21 +406,21 @@ SCENARIO("Using a float Image Message") {
   }
 
   // Testing copy-constructors.
-  GIVEN("An image") {
-    simple_msgs::Image<float> random_image;
+  GIVEN("An Image") {
+    simple_msgs::Image<float> random_image{};
     random_image.setImageResolution(random_double_1, random_double_2, random_double_3);
     random_image.setImageDimensions(random_int_1, random_int_2, random_int_3);
     random_image.setImageEncoding(random_string);
     random_image.setHeader(random_header);
     random_image.setOrigin(random_pose);
-    random_image.setImageData(float_data, size_float);
-    WHEN("I copy-construct a new image") {
-      const simple_msgs::Image<float>& copy_image(random_image);
+    random_image.setImageData(image_data, image_size);
+    WHEN("I copy-construct a new Image") {
+      simple_msgs::Image<float> copy_image{random_image};
       THEN("Both images are the same") { REQUIRE(copy_image == random_image); }
     }
-    WHEN("I move-construct a new image") {
-      simple_msgs::Image<float> move_image(std::move(random_image));
-      THEN("The new image's fields are the same as the original") {
+    WHEN("I move-construct a new Image") {
+      simple_msgs::Image<float> move_image{std::move(random_image)};
+      THEN("The new Image fields are the same as the original") {
         REQUIRE(move_image.getResolution()[0] == random_double_1);
         REQUIRE(move_image.getResolution()[1] == random_double_2);
         REQUIRE(move_image.getResolution()[2] == random_double_3);
@@ -416,33 +428,39 @@ SCENARIO("Using a float Image Message") {
         REQUIRE(move_image.getImageDimensions()[0] == random_int_1);
         REQUIRE(move_image.getImageDimensions()[1] == random_int_2);
         REQUIRE(move_image.getImageDimensions()[2] == random_int_3);
-        REQUIRE(move_image.getImageSize() == size_float);
+        REQUIRE(move_image.getImageSize() == image_size);
         REQUIRE(move_image.getImageOrigin() == random_pose);
         REQUIRE(move_image.getHeader() == random_header);
         REQUIRE(move_image.getImageEncoding() == random_string);
-        REQUIRE((move_image.getImageData()) == float_data);
+        REQUIRE((move_image.getImageData()) == image_data.get());
       }
     }
   }
 
   // Testing copy-assignment.
-  GIVEN("An image") {
-    simple_msgs::Image<float> random_image;
+  GIVEN("An Image") {
+    simple_msgs::Image<float> random_image{};
     random_image.setImageResolution(random_double_1, random_double_2, random_double_3);
     random_image.setImageDimensions(random_int_1, random_int_2, random_int_3);
     random_image.setImageEncoding(random_string);
     random_image.setHeader(random_header);
     random_image.setOrigin(random_pose);
-    random_image.setImageData(float_data, size_float);
-    WHEN("I copy-assign a new image") {
-      simple_msgs::Image<float> copy_assigned_image;
+    random_image.setImageData(image_data.get(), image_size);
+    WHEN("I copy-assign an Image from the original buffer") {
+      simple_msgs::Image<float> copy_buffer_image{};
+      auto data_ptr = std::make_shared<void*>(random_image.getBufferData()->data());
+      copy_buffer_image = data_ptr;
+      THEN("The new Image has to be same as the original") { REQUIRE(copy_buffer_image == random_image); }
+    }
+    WHEN("I copy-assign a new Image") {
+      simple_msgs::Image<float> copy_assigned_image{};
       copy_assigned_image = random_image;
       THEN("Both images are the same") { REQUIRE(copy_assigned_image == random_image); }
     }
-    WHEN("I move-assign a new image") {
-      simple_msgs::Image<float> move_assigned_image;
+    WHEN("I move-assign a new Image") {
+      simple_msgs::Image<float> move_assigned_image{};
       move_assigned_image = std::move(random_image);
-      THEN("The new image's fields are the same as the original") {
+      THEN("The new Image fields are the same as the original") {
         REQUIRE(move_assigned_image.getResolution()[0] == random_double_1);
         REQUIRE(move_assigned_image.getResolution()[1] == random_double_2);
         REQUIRE(move_assigned_image.getResolution()[2] == random_double_3);
@@ -450,24 +468,24 @@ SCENARIO("Using a float Image Message") {
         REQUIRE(move_assigned_image.getImageDimensions()[0] == random_int_1);
         REQUIRE(move_assigned_image.getImageDimensions()[1] == random_int_2);
         REQUIRE(move_assigned_image.getImageDimensions()[2] == random_int_3);
-        REQUIRE(move_assigned_image.getImageSize() == size_float);
+        REQUIRE(move_assigned_image.getImageSize() == image_size);
         REQUIRE(move_assigned_image.getImageOrigin() == random_pose);
         REQUIRE(move_assigned_image.getHeader() == random_header);
         REQUIRE(move_assigned_image.getImageEncoding() == random_string);
-        REQUIRE((move_assigned_image.getImageData()) == float_data);
+        REQUIRE((move_assigned_image.getImageData()) == image_data.get());
       }
     }
   }
 
   // Testing operations.
-  GIVEN("Two identical images") {
-    simple_msgs::Image<float> random_image1;
+  GIVEN("Two identical Images") {
+    simple_msgs::Image<float> random_image1{};
     random_image1.setImageResolution(random_double_1, random_double_2, random_double_3);
     random_image1.setImageDimensions(random_int_1, random_int_2, random_int_3);
     random_image1.setImageEncoding(random_string);
     random_image1.setHeader(random_header);
     random_image1.setOrigin(random_pose);
-    simple_msgs::Image<float> random_image2;
+    simple_msgs::Image<float> random_image2{};
     random_image2.setImageResolution(random_double_1, random_double_2, random_double_3);
     random_image2.setImageDimensions(random_int_1, random_int_2, random_int_3);
     random_image2.setImageEncoding(random_string);
@@ -476,7 +494,7 @@ SCENARIO("Using a float Image Message") {
     WHEN("I compare them") {
       THEN("They have to be the same") { REQUIRE(random_image1 == random_image2); }
     }
-    WHEN("I change something in the first image") {
+    WHEN("I change something in the first Image") {
       random_image1.setImageResolution(random_double_2, random_double_3, random_double_1);
       THEN("They have to be different") { REQUIRE(random_image1 != random_image2); }
     }
@@ -484,8 +502,8 @@ SCENARIO("Using a float Image Message") {
 
   // Testing getters and setters.
   GIVEN("A float Image created from an empty constructor") {
-    simple_msgs::Image<float> empty_image;
-    WHEN("I set the image resolution") {
+    simple_msgs::Image<float> empty_image{};
+    WHEN("I set the Image resolution") {
       empty_image.setImageResolution(random_double_1, random_double_2, random_double_3);
       THEN("The resolution is correct") {
         REQUIRE(empty_image.getResolution()[0] == random_double_1);
@@ -493,11 +511,11 @@ SCENARIO("Using a float Image Message") {
         REQUIRE(empty_image.getResolution()[2] == random_double_3);
       }
     }
-    WHEN("I set the image encoding") {
+    WHEN("I set the Image encoding") {
       empty_image.setImageEncoding(random_string);
       THEN("The encoding is correct") { REQUIRE(empty_image.getImageEncoding() == random_string); }
     }
-    WHEN("I set the image dimensions") {
+    WHEN("I set the Image dimensions") {
       empty_image.setImageDimensions(random_int_1, random_int_2, random_int_3);
       THEN("The dimensions are correct") {
         REQUIRE(empty_image.getImageDimensions()[0] == random_int_1);
@@ -505,11 +523,11 @@ SCENARIO("Using a float Image Message") {
         REQUIRE(empty_image.getImageDimensions()[2] == random_int_3);
       }
     }
-    WHEN("I set the image header") {
+    WHEN("I set the Image header") {
       empty_image.setHeader(random_header);
       THEN("The header is correct") { REQUIRE(empty_image.getHeader() == random_header); }
     }
-    WHEN("I set the image origin") {
+    WHEN("I set the Image origin") {
       empty_image.setOrigin(random_pose);
       THEN("The origin is correct") { REQUIRE(empty_image.getImageOrigin() == random_pose); }
     }
@@ -520,26 +538,26 @@ SCENARIO("Using a float Image Message") {
   }
 }
 
-SCENARIO("Using a double Image Message") {
-  simple_msgs::Pose empty_pose;
-  simple_msgs::Header empty_header;
+SCENARIO("Using an double Image Message") {
+  simple_msgs::Pose empty_pose{};
+  simple_msgs::Header empty_header{};
   double random_double_1 = static_cast<double>(rand()) / RAND_MAX;
   double random_double_2 = static_cast<double>(rand()) / RAND_MAX;
   double random_double_3 = static_cast<double>(rand()) / RAND_MAX;
-  auto random_int_1 = static_cast<int>(rand() / 100);
-  auto random_int_2 = static_cast<int>(rand() / 100);
-  auto random_int_3 = static_cast<int>(rand() / 100);
+  auto random_int_1 = rand() / 100;
+  auto random_int_2 = rand() / 100;
+  auto random_int_3 = rand() / 100;
   std::string random_string = std::to_string(random_double_1);
   simple_msgs::Header random_header = createRandomHeader();
   simple_msgs::Pose random_pose = createRandomPose();
   // double data
-  int size_double = 1;
-  double double_data[1] = {static_cast<double>(rand() / RAND_MAX)};
+  int image_size{1};
+  auto image_data = std::make_shared<double>(static_cast<double>(rand() % 256));
 
   // Testing constructor.
   GIVEN("A double Image created from an empty constructor") {
-    simple_msgs::Image<double> empty_image;
-    WHEN("I check the image's fields") {
+    simple_msgs::Image<double> empty_image{};
+    WHEN("I check the Image fields") {
       THEN("They have to match the default parameters") {
         REQUIRE(empty_image.getResolution()[0] == 0.0);
         REQUIRE(empty_image.getResolution()[1] == 0.0);
@@ -558,21 +576,21 @@ SCENARIO("Using a double Image Message") {
   }
 
   // Testing copy-constructors.
-  GIVEN("An image") {
-    simple_msgs::Image<double> random_image;
+  GIVEN("An Image") {
+    simple_msgs::Image<double> random_image{};
     random_image.setImageResolution(random_double_1, random_double_2, random_double_3);
     random_image.setImageDimensions(random_int_1, random_int_2, random_int_3);
     random_image.setImageEncoding(random_string);
     random_image.setHeader(random_header);
     random_image.setOrigin(random_pose);
-    random_image.setImageData(double_data, size_double);
-    WHEN("I copy-construct a new image") {
-      const simple_msgs::Image<double>& copy_image(random_image);
+    random_image.setImageData(image_data, image_size);
+    WHEN("I copy-construct a new Image") {
+      simple_msgs::Image<double> copy_image{random_image};
       THEN("Both images are the same") { REQUIRE(copy_image == random_image); }
     }
-    WHEN("I move-construct a new image") {
-      simple_msgs::Image<double> move_image(std::move(random_image));
-      THEN("The new image's fields are the same as the original") {
+    WHEN("I move-construct a new Image") {
+      simple_msgs::Image<double> move_image{std::move(random_image)};
+      THEN("The new Image fields are the same as the original") {
         REQUIRE(move_image.getResolution()[0] == random_double_1);
         REQUIRE(move_image.getResolution()[1] == random_double_2);
         REQUIRE(move_image.getResolution()[2] == random_double_3);
@@ -580,33 +598,39 @@ SCENARIO("Using a double Image Message") {
         REQUIRE(move_image.getImageDimensions()[0] == random_int_1);
         REQUIRE(move_image.getImageDimensions()[1] == random_int_2);
         REQUIRE(move_image.getImageDimensions()[2] == random_int_3);
-        REQUIRE(move_image.getImageSize() == size_double);
+        REQUIRE(move_image.getImageSize() == image_size);
         REQUIRE(move_image.getImageOrigin() == random_pose);
         REQUIRE(move_image.getHeader() == random_header);
         REQUIRE(move_image.getImageEncoding() == random_string);
-        REQUIRE((move_image.getImageData()) == double_data);
+        REQUIRE((move_image.getImageData()) == image_data.get());
       }
     }
   }
 
   // Testing copy-assignment.
-  GIVEN("An image") {
-    simple_msgs::Image<double> random_image;
+  GIVEN("An Image") {
+    simple_msgs::Image<double> random_image{};
     random_image.setImageResolution(random_double_1, random_double_2, random_double_3);
     random_image.setImageDimensions(random_int_1, random_int_2, random_int_3);
     random_image.setImageEncoding(random_string);
     random_image.setHeader(random_header);
     random_image.setOrigin(random_pose);
-    random_image.setImageData(double_data, size_double);
-    WHEN("I copy-assign a new image") {
-      simple_msgs::Image<double> copy_assigned_image;
+    random_image.setImageData(image_data.get(), image_size);
+    WHEN("I copy-assign an Image from the original buffer") {
+      simple_msgs::Image<double> copy_buffer_image{};
+      auto data_ptr = std::make_shared<void*>(random_image.getBufferData()->data());
+      copy_buffer_image = data_ptr;
+      THEN("The new Image has to be same as the original") { REQUIRE(copy_buffer_image == random_image); }
+    }
+    WHEN("I copy-assign a new Image") {
+      simple_msgs::Image<double> copy_assigned_image{};
       copy_assigned_image = random_image;
       THEN("Both images are the same") { REQUIRE(copy_assigned_image == random_image); }
     }
-    WHEN("I move-assign a new image") {
-      simple_msgs::Image<double> move_assigned_image;
+    WHEN("I move-assign a new Image") {
+      simple_msgs::Image<double> move_assigned_image{};
       move_assigned_image = std::move(random_image);
-      THEN("The new image's fields are the same as the original") {
+      THEN("The new Image fields are the same as the original") {
         REQUIRE(move_assigned_image.getResolution()[0] == random_double_1);
         REQUIRE(move_assigned_image.getResolution()[1] == random_double_2);
         REQUIRE(move_assigned_image.getResolution()[2] == random_double_3);
@@ -614,24 +638,24 @@ SCENARIO("Using a double Image Message") {
         REQUIRE(move_assigned_image.getImageDimensions()[0] == random_int_1);
         REQUIRE(move_assigned_image.getImageDimensions()[1] == random_int_2);
         REQUIRE(move_assigned_image.getImageDimensions()[2] == random_int_3);
-        REQUIRE(move_assigned_image.getImageSize() == size_double);
+        REQUIRE(move_assigned_image.getImageSize() == image_size);
         REQUIRE(move_assigned_image.getImageOrigin() == random_pose);
         REQUIRE(move_assigned_image.getHeader() == random_header);
         REQUIRE(move_assigned_image.getImageEncoding() == random_string);
-        REQUIRE((move_assigned_image.getImageData()) == double_data);
+        REQUIRE((move_assigned_image.getImageData()) == image_data.get());
       }
     }
   }
 
   // Testing operations.
-  GIVEN("Two identical images") {
-    simple_msgs::Image<double> random_image1;
+  GIVEN("Two identical Images") {
+    simple_msgs::Image<double> random_image1{};
     random_image1.setImageResolution(random_double_1, random_double_2, random_double_3);
     random_image1.setImageDimensions(random_int_1, random_int_2, random_int_3);
     random_image1.setImageEncoding(random_string);
     random_image1.setHeader(random_header);
     random_image1.setOrigin(random_pose);
-    simple_msgs::Image<double> random_image2;
+    simple_msgs::Image<double> random_image2{};
     random_image2.setImageResolution(random_double_1, random_double_2, random_double_3);
     random_image2.setImageDimensions(random_int_1, random_int_2, random_int_3);
     random_image2.setImageEncoding(random_string);
@@ -640,7 +664,7 @@ SCENARIO("Using a double Image Message") {
     WHEN("I compare them") {
       THEN("They have to be the same") { REQUIRE(random_image1 == random_image2); }
     }
-    WHEN("I change something in the first image") {
+    WHEN("I change something in the first Image") {
       random_image1.setImageResolution(random_double_2, random_double_3, random_double_1);
       THEN("They have to be different") { REQUIRE(random_image1 != random_image2); }
     }
@@ -648,8 +672,8 @@ SCENARIO("Using a double Image Message") {
 
   // Testing getters and setters.
   GIVEN("A double Image created from an empty constructor") {
-    simple_msgs::Image<double> empty_image;
-    WHEN("I set the image resolution") {
+    simple_msgs::Image<double> empty_image{};
+    WHEN("I set the Image resolution") {
       empty_image.setImageResolution(random_double_1, random_double_2, random_double_3);
       THEN("The resolution is correct") {
         REQUIRE(empty_image.getResolution()[0] == random_double_1);
@@ -657,11 +681,11 @@ SCENARIO("Using a double Image Message") {
         REQUIRE(empty_image.getResolution()[2] == random_double_3);
       }
     }
-    WHEN("I set the image encoding") {
+    WHEN("I set the Image encoding") {
       empty_image.setImageEncoding(random_string);
       THEN("The encoding is correct") { REQUIRE(empty_image.getImageEncoding() == random_string); }
     }
-    WHEN("I set the image dimensions") {
+    WHEN("I set the Image dimensions") {
       empty_image.setImageDimensions(random_int_1, random_int_2, random_int_3);
       THEN("The dimensions are correct") {
         REQUIRE(empty_image.getImageDimensions()[0] == random_int_1);
@@ -669,11 +693,11 @@ SCENARIO("Using a double Image Message") {
         REQUIRE(empty_image.getImageDimensions()[2] == random_int_3);
       }
     }
-    WHEN("I set the image header") {
+    WHEN("I set the Image header") {
       empty_image.setHeader(random_header);
       THEN("The header is correct") { REQUIRE(empty_image.getHeader() == random_header); }
     }
-    WHEN("I set the image origin") {
+    WHEN("I set the Image origin") {
       empty_image.setOrigin(random_pose);
       THEN("The origin is correct") { REQUIRE(empty_image.getImageOrigin() == random_pose); }
     }

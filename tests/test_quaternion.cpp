@@ -35,7 +35,7 @@ SCENARIO("Using a Quaternion Message") {
   std::array<double, 4> double_array{{double_1, double_2, double_3, double_4}};
   // Testing constructors.
   GIVEN("An empty Quaternion") {
-    simple_msgs::Quaternion empty_quaternion;
+    simple_msgs::Quaternion empty_quaternion{};
     WHEN("It is constructed") {
       THEN("The first 3 elements have to be zero and the last one") {
         REQUIRE(empty_quaternion.getX() == 0.0);
@@ -46,9 +46,9 @@ SCENARIO("Using a Quaternion Message") {
     }
   }
 
-  GIVEN("A quaternion created from 4 doubles") {
-    simple_msgs::Quaternion q(double_1, double_2, double_3, double_4);
-    WHEN("We check the quaternion's elements") {
+  GIVEN("A Quaternion created from 4 doubles") {
+    simple_msgs::Quaternion q{double_1, double_2, double_3, double_4};
+    WHEN("We check the Quaternion elements") {
       THEN("They all have to be equal to the doubles from the constructor") {
         REQUIRE(q.getX() == double_1);
         REQUIRE(q.getY() == double_2);
@@ -58,9 +58,9 @@ SCENARIO("Using a Quaternion Message") {
     }
   }
 
-  GIVEN("A quaternion created from an array of doubles") {
-    simple_msgs::Quaternion array_quaternion(double_array);
-    WHEN("We check the quaternion's elements") {
+  GIVEN("A Quaternion created from an array of doubles") {
+    simple_msgs::Quaternion array_quaternion{double_array};
+    WHEN("We check the Quaternion elements") {
       THEN("They all have to be equal to the doubles") {
         REQUIRE(array_quaternion.getX() == double_1);
         REQUIRE(array_quaternion.getY() == double_2);
@@ -70,9 +70,9 @@ SCENARIO("Using a Quaternion Message") {
     }
   }
 
-  GIVEN("A quaternion created from moving an array of doubles") {
-    simple_msgs::Quaternion moved_array_quaternion(std::move(double_array));
-    WHEN("We check the quaternion's elements") {
+  GIVEN("A Quaternion created from moving an array of doubles") {
+    simple_msgs::Quaternion moved_array_quaternion{std::move(double_array)};
+    WHEN("We check the Quaternion elements") {
       THEN("They all have to be equal to the doubles") {
         REQUIRE(moved_array_quaternion.getX() == double_1);
         REQUIRE(moved_array_quaternion.getY() == double_2);
@@ -83,20 +83,19 @@ SCENARIO("Using a Quaternion Message") {
   }
 
   // Testing Copy-constructors.
-  GIVEN("A quaternion") {
-    simple_msgs::Quaternion quaternion(double_array);
-    WHEN("I construct a new quaternion from the serialized data of the "
-         "existing quaternion") {
+  GIVEN("A Quaternion") {
+    simple_msgs::Quaternion quaternion{double_array};
+    WHEN("I construct a new Quaternion from the serialized data of the existing Quaternion") {
       simple_msgs::Quaternion buffer_quaternion(quaternion.getBufferData()->data());
-      THEN("The new quaternion has to be equal to the other") { REQUIRE(buffer_quaternion == quaternion); }
+      THEN("The new Quaternion has to be equal to the other") { REQUIRE(buffer_quaternion == quaternion); }
     }
-    WHEN("I copy-construct a new quaternion") {
-      const simple_msgs::Quaternion& copy_quaternion(quaternion);
-      THEN("The new quaternion is equal to the other") { REQUIRE(copy_quaternion == quaternion); }
+    WHEN("I copy-construct a new Quaternion") {
+      const simple_msgs::Quaternion& copy_quaternion{quaternion};
+      THEN("The new Quaternion is equal to the other") { REQUIRE(copy_quaternion == quaternion); }
     }
-    WHEN("I move-construct a new quaternion") {
-      simple_msgs::Quaternion moved_quaternion(std::move(quaternion));
-      THEN("The new quaternion's coordinates are equal to the previous' ones") {
+    WHEN("I move-construct a new Quaternion") {
+      simple_msgs::Quaternion moved_quaternion{std::move(quaternion)};
+      THEN("The new Quaternion coordinates are equal to the previous' ones") {
         REQUIRE(moved_quaternion.getX() == double_1);
         REQUIRE(moved_quaternion.getY() == double_2);
         REQUIRE(moved_quaternion.getZ() == double_3);
@@ -106,44 +105,45 @@ SCENARIO("Using a Quaternion Message") {
   }
 
   // Testing Copy-assignments.
-  GIVEN("A quaternion") {
-    simple_msgs::Quaternion quaternion(double_array);
-    WHEN("I copy-assign from that quaternion's buffer") {
-      simple_msgs::Quaternion copy_assigned_buffer_quaternion;
-      copy_assigned_buffer_quaternion = quaternion.getBufferData()->data();
-      THEN("The new quaternion has to be same as the original") {
+  GIVEN("A Quaternion") {
+    simple_msgs::Quaternion quaternion{double_array};
+    WHEN("I copy-assign from that Quaternion's buffer") {
+      simple_msgs::Quaternion copy_assigned_buffer_quaternion{};
+      auto data_ptr = std::make_shared<void*>(quaternion.getBufferData()->data());
+      copy_assigned_buffer_quaternion = data_ptr;
+      THEN("The new Quaternion has to be same as the original") {
         REQUIRE(copy_assigned_buffer_quaternion == quaternion);
       }
     }
-    WHEN("I copy-assign from that quaternion") {
-      simple_msgs::Quaternion copy_assigned_quaternion;
+    WHEN("I copy-assign from that Quaternion") {
+      simple_msgs::Quaternion copy_assigned_quaternion{};
       copy_assigned_quaternion = quaternion;
-      THEN("The new quaternion has to be same as the original") { REQUIRE(copy_assigned_quaternion == quaternion); }
+      THEN("The new Quaternion has to be same as the original") { REQUIRE(copy_assigned_quaternion == quaternion); }
     }
-    WHEN("I move-assign from that quaternion") {
-      simple_msgs::Quaternion move_assigned_quaternion;
+    WHEN("I move-assign from that Quaternion") {
+      simple_msgs::Quaternion move_assigned_quaternion{};
       move_assigned_quaternion = std::move(quaternion);
-      THEN("The new quaternion has to be same as the original") {
+      THEN("The new Quaternion has to be same as the original") {
         REQUIRE(move_assigned_quaternion.getX() == double_1);
         REQUIRE(move_assigned_quaternion.getY() == double_2);
         REQUIRE(move_assigned_quaternion.getZ() == double_3);
         REQUIRE(move_assigned_quaternion.getW() == double_4);
       }
     }
-    WHEN("I copy-assign an array to that quaternion") {
-      simple_msgs::Quaternion copy_assined_array_quaternion;
+    WHEN("I copy-assign an array to that Quaternion") {
+      simple_msgs::Quaternion copy_assined_array_quaternion{};
       copy_assined_array_quaternion = double_array;
-      THEN("The quaternion's elements are equal to the array") {
+      THEN("The Quaternion elements are equal to the array") {
         REQUIRE(copy_assined_array_quaternion.getX() == double_1);
         REQUIRE(copy_assined_array_quaternion.getY() == double_2);
         REQUIRE(copy_assined_array_quaternion.getZ() == double_3);
         REQUIRE(copy_assined_array_quaternion.getW() == double_4);
       }
     }
-    WHEN("I move-assign from an array to that quaternion") {
-      simple_msgs::Quaternion move_assined_array_quaternion;
+    WHEN("I move-assign from an array to that Quaternion") {
+      simple_msgs::Quaternion move_assined_array_quaternion{};
       move_assined_array_quaternion = std::move(double_array);
-      THEN("The quaternion's elements are the same as the array") {
+      THEN("The Quaternion elements are the same as the array") {
         REQUIRE(move_assined_array_quaternion.getX() == double_1);
         REQUIRE(move_assined_array_quaternion.getY() == double_2);
         REQUIRE(move_assined_array_quaternion.getZ() == double_3);
@@ -153,13 +153,13 @@ SCENARIO("Using a Quaternion Message") {
   }
 
   // Testing operations.
-  GIVEN("Two identical quaternions") {
-    simple_msgs::Quaternion quaternion_1(double_array);
-    simple_msgs::Quaternion quaternion_2(double_array);
-    WHEN("I compare these quaternions") {
+  GIVEN("Two identical Quaternions") {
+    simple_msgs::Quaternion quaternion_1{double_array};
+    simple_msgs::Quaternion quaternion_2{double_array};
+    WHEN("I compare them") {
       THEN("They have to be equal") { REQUIRE(quaternion_1 == quaternion_2); }
     }
-    WHEN("I change one of the quaternions") {
+    WHEN("I change one of the Quaternion") {
       quaternion_1.setX(double_1 + double_2);
       THEN("They have to be different") { REQUIRE(quaternion_1 != quaternion_2); }
     }
@@ -191,7 +191,7 @@ SCENARIO("Using a Quaternion Message") {
   // Testing coordinates setters/getters.
   GIVEN("An instance of a quaternion.") {
     // start a quaternion
-    simple_msgs::Quaternion quaternion;
+    simple_msgs::Quaternion quaternion{};
 
     WHEN("I set the X coordinate of the quaternion") {
       quaternion.setX(double_1);

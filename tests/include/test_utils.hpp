@@ -194,30 +194,30 @@ void callbackFunctionRotationMatrixStamped(simple_msgs::RotationMatrixStamped& r
 // Set of const callbacks for all the simple_msgs
 // They receive a message and just save it.
 
-bool running_bool = false, running_int = false, running_float = false, running_double = false, running_string = false,
-     running_header = false, running_point = false, running_quaternion = false, running_pose = false,
-     running_rotation_matrix = false, running_point_stamped = false, running_quaternion_stamped = false,
-     running_pose_stamped = false, running_rotation_matrix_stamped = false;
+bool running_bool{false}, running_int{false}, running_float{false}, running_double{false}, running_string{false},
+    running_header{false}, running_point{false}, running_quaternion{false}, running_pose{false},
+    running_rotation_matrix{false}, running_point_stamped{false}, running_quaternion_stamped{false},
+    running_pose_stamped{false}, running_rotation_matrix_stamped{false};
 
 int num_received_bool = 0, num_received_int = 0, num_received_float = 0, num_received_double = 0,
     num_received_string = 0, num_received_header = 0, num_received_point = 0, num_received_quaternion = 0,
     num_received_pose = 0, num_received_rotation_matrix = 0, num_received_point_stamped = 0,
     num_received_quaternion_stamped = 0, num_received_pose_stamped = 0, num_received_rotation_matrix_stamped = 0;
 
-simple_msgs::Bool received_bool;
-simple_msgs::Int received_int;
-simple_msgs::Double received_double;
-simple_msgs::Float received_float;
-simple_msgs::String received_string;
-simple_msgs::Header received_header;
-simple_msgs::Point received_point;
-simple_msgs::PointStamped received_point_stamped;
-simple_msgs::Quaternion received_quaternion;
-simple_msgs::QuaternionStamped received_quaternion_stamped;
-simple_msgs::Pose received_pose;
-simple_msgs::PoseStamped received_pose_stamped;
-simple_msgs::RotationMatrix received_rotation_matrix;
-simple_msgs::RotationMatrixStamped received_rotation_matrix_stamped;
+simple_msgs::Bool received_bool{};
+simple_msgs::Int received_int{};
+simple_msgs::Double received_double{};
+simple_msgs::Float received_float{};
+simple_msgs::String received_string{};
+simple_msgs::Header received_header{};
+simple_msgs::Point received_point{};
+simple_msgs::PointStamped received_point_stamped{};
+simple_msgs::Quaternion received_quaternion{};
+simple_msgs::QuaternionStamped received_quaternion_stamped{};
+simple_msgs::Pose received_pose{};
+simple_msgs::PoseStamped received_pose_stamped{};
+simple_msgs::RotationMatrix received_rotation_matrix{};
+simple_msgs::RotationMatrixStamped received_rotation_matrix_stamped{};
 
 void callbackFunctionConstBool(const simple_msgs::Bool& b) {
   received_bool = b;
