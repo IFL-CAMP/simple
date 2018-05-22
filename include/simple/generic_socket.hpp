@@ -95,17 +95,15 @@ protected:
     return message_sent;
   }
 
-  std::shared_ptr<void*> getMessageData(std::shared_ptr<zmq_msg_t> msg) {
-    auto data_ptr = zmq_msg_data(msg.get());
-    return {msg, &data_ptr};
-  }
-
   int receiveMsg(T& msg, const std::string& custom_error = "") {
     int data_past_topic{0};
     auto data_past_topic_size{sizeof(data_past_topic)};
 
-    std::shared_ptr<zmq_msg_t> local_message(new zmq_msg_t{},
-                                             [](zmq_msg_t* disposable_msg) { zmq_msg_close(disposable_msg); });
+    std::shared_ptr<zmq_msg_t> local_message(new zmq_msg_t{}, [](zmq_msg_t* disposable_msg) {
+      zmq_msg_close(disposable_msg);
+      delete disposable_msg;
+    });
+
     zmq_msg_init(local_message.get());
 
     int bytes_received = zmq_msg_recv(local_message.get(), socket_, 0);
@@ -133,8 +131,7 @@ protected:
     }
 
     void* data_ptr = zmq_msg_data(local_message.get());
-    msg = {local_message, &data_ptr};
-
+    msg = std::shared_ptr<void*>{local_message, &data_ptr};
     return bytes_received;
   }
 
