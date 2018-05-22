@@ -77,7 +77,7 @@ install:
       which cmake || brew install cmake
     fi
   - |
-    if [[ "${CXX}" == "g++-5" ]]; then
+    if [[ "${BUILD_TYPE}" == "Coverage" ]]; then
       # Install LCOV 1.11
       cd ${DEPS_DIR}
       wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.11.orig.tar.gz
@@ -100,7 +100,7 @@ install:
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
   - |
-    if [[ "${CXX}" == "g++-5" ]]; then
+    if [[ "${BUILD_TYPE}" == "Coverage" ]]; then
       lcov --directory . --zerocounters
     fi
   - mkdir -p build && cd build
@@ -112,7 +112,7 @@ script:
   
 after_success:
   - |
-      if [ "${CXX}" == "g++-5" ]; then
+      if [ "${BUILD_TYPE}" == "Coverage" ]; then
         # Generate code coverage information & send to Coveralls
         lcov --gcov-tool gcov-5 --directory ${TRAVIS_BUILD_DIR}/build --capture --output-file coverage.info
         lcov --remove coverage.info 'tests/*' 'msgs/include/simple_msgs/generated/*' '/usr/*' --output-file coverage.info
