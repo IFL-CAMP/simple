@@ -1,9 +1,24 @@
 language: cpp
 sudo: true
 
+os: linux
+compiler:
+- gcc
+- clang
+addons:
+- &gcc5
+- &clang38
+apt:
+- sources: ['ubuntu-toolchain-r-test'] packages: ['gcc-5', 'g++-5']
+- sources: ['llvm-toolchain-precise-3.8', 'ubuntu-toolchain-r-test'] packages: ['clang-3.8']
+env:
+- MATRIX_EVAL="CC='gcc-5' && CXX='g++-5'"
+- MATRIX_EVAL="CXX='clang++-3.8'"
+- CMAKE_BUILD_TYPE="Debug"
+- CMAKE_BUILD_TYPE="Release"
+
 matrix:
   include:
-
     # Linux C++11 GCC build
     - os: linux
       compiler: gcc
@@ -11,32 +26,13 @@ matrix:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['gcc-5', 'g++-5']
-      env: MATRIX_EVAL="CC='gcc-5' && CXX='g++-5'"
-      matrix:
-        - env: BUILD_TYPE='Debug'
-        - env: BUILD_TYPE='Release'
-        - env: BUILD_TYPE='Coverage'
-
-    # Linux C++11 Clang build
-    - os: linux
-      compiler: clang
-      addons: &clang38
-        apt:
-          sources: ['llvm-toolchain-precise-3.8', 'ubuntu-toolchain-r-test']
-          packages: ['clang-3.8']
-      env: MATRIX_EVAL="CXX='clang++-3.8'" 
-      matrix:
-        - env: BUILD_TYPE='Debug'
-        - env: BUILD_TYPE='Release'
+      env: MATRIX_EVAL="CC='gcc-5' && CXX='g++-5'" CMAKE_BUILD_TYPE="Coverage"
         
     # OSX C++11 Clang Builds
     - os: osx
       osx_image: xcode8.3
       compiler: clang
       env:MATRIX_EVAL="CXX='clang++'" 
-      matrix:
-        - env: BUILD_TYPE='Debug'
-        - env: BUILD_TYPE='Release'
       
 before_install:
   - | 
