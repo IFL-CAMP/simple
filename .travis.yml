@@ -12,6 +12,14 @@ matrix:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['gcc-5', 'g++-5']
       env: MATRIX_EVAL="CC='gcc-5' && CXX='g++-5'" BUILD_TYPE='Release'
+      
+    - os: linux
+      compiler: gcc
+      addons: &gcc5
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['gcc-5', 'g++-5']
+      env: MATRIX_EVAL="CC='gcc-5' && CXX='g++-5'" BUILD_TYPE='Coverage'
 
     # Linux C++11 Clang build
     - os: linux
