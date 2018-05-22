@@ -21,7 +21,7 @@
 namespace simple_msgs {
 Bool::Bool(bool data) : data_{data} {}
 
-Bool::Bool(const uint8_t* data) : data_{GetBoolFbs(data)->data()} {}
+Bool::Bool(const void* data) : data_{GetBoolFbs(data)->data()} {}
 
 Bool::Bool(const Bool& other) : Bool{other.data_} {}
 

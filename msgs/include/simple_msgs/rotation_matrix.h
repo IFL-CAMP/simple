@@ -37,7 +37,7 @@ public:
   RotationMatrix(double, double, double, double, double, double, double, double, double);
   RotationMatrix(const std::array<double, 9>&);
   RotationMatrix(std::array<double, 9>&&) noexcept;
-  RotationMatrix(const uint8_t*);
+  RotationMatrix(const void*);
   RotationMatrix(const RotationMatrix&);
   RotationMatrix(RotationMatrix&&) noexcept;
 

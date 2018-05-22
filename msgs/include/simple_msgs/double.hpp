@@ -26,7 +26,7 @@ namespace simple_msgs {
 using Double = NumericType<double>;
 
 template <>
-NumericType<double>::NumericType(const uint8_t* data) : data_{GetDoubleFbs(data)->data()} {}
+NumericType<double>::NumericType(const void* data) : data_{GetDoubleFbs(data)->data()} {}
 
 template <>
 NumericType<double>& NumericType<double>::operator=(std::shared_ptr<void*> data) {

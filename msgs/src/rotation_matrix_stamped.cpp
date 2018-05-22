@@ -27,7 +27,7 @@ RotationMatrixStamped::RotationMatrixStamped(const Header& header, const Rotatio
 RotationMatrixStamped::RotationMatrixStamped(Header&& header, RotationMatrix&& rotation_matrix)
   : header_{std::move(header)}, rotation_matrix_{std::move(rotation_matrix)} {}
 
-RotationMatrixStamped::RotationMatrixStamped(const uint8_t* data)
+RotationMatrixStamped::RotationMatrixStamped(const void* data)
   : header_{GetRotationMatrixStampedFbs(data)->header()->data()}
   , rotation_matrix_{GetRotationMatrixStampedFbs(data)->rotation_matrix()->data()} {}
 

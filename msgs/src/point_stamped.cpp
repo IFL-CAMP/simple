@@ -25,7 +25,7 @@ PointStamped::PointStamped(const Header& header, const Point& point) : header_{h
 
 PointStamped::PointStamped(Header&& header, Point&& point) : header_{std::move(header)}, point_{std::move(point)} {}
 
-PointStamped::PointStamped(const uint8_t* data)
+PointStamped::PointStamped(const void* data)
   : header_{GetPointStampedFbs(data)->header()->data()}, point_{GetPointStampedFbs(data)->point()->data()} {}
 
 PointStamped::PointStamped(const PointStamped& other) : PointStamped{other.header_, other.point_} {}

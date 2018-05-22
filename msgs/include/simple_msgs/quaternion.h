@@ -35,7 +35,7 @@ public:
   Quaternion(double, double, double, double);
   Quaternion(const std::array<double, 4>&);
   Quaternion(std::array<double, 4>&&) noexcept;
-  Quaternion(const uint8_t*);
+  Quaternion(const void*);
   Quaternion(const Quaternion&);
   Quaternion(Quaternion&&) noexcept;
 

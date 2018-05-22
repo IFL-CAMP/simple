@@ -32,7 +32,7 @@ class Header : public GenericMessage {
 public:
   Header() = default;
   Header(int, const std::string&, long long);
-  Header(const uint8_t*);
+  Header(const void*);
   Header(const Header&);
   Header(Header&&) noexcept;
 

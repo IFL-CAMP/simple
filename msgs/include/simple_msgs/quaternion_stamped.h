@@ -36,7 +36,7 @@ public:
   QuaternionStamped() = default;
   QuaternionStamped(const Header&, const Quaternion&);
   QuaternionStamped(Header&&, Quaternion&&);
-  QuaternionStamped(const uint8_t*);
+  QuaternionStamped(const void*);
   QuaternionStamped(const QuaternionStamped&);
   QuaternionStamped(QuaternionStamped&&) noexcept;
 

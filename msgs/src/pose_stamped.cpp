@@ -25,7 +25,7 @@ PoseStamped::PoseStamped(const Header& header, const Pose& pose) : header_{heade
 
 PoseStamped::PoseStamped(Header&& header, Pose&& pose) : header_{std::move(header)}, pose_{std::move(pose)} {}
 
-PoseStamped::PoseStamped(const uint8_t* data)
+PoseStamped::PoseStamped(const void* data)
   : header_{GetPoseStampedFbs(data)->header()->data()}  // namespace simple_msgs
   , pose_{GetPoseStampedFbs(data)->pose()->data()} {}
 
@@ -55,13 +55,8 @@ PoseStamped& PoseStamped::operator=(PoseStamped&& p) noexcept {
 PoseStamped& PoseStamped::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
   auto p = GetPoseStampedFbs(*data);
-
-  auto header_ptr = static_cast<const void*>(p->header()->data());
-  header_ = std::make_shared<void*>(const_cast<void*>(header_ptr));
-
-  auto pose_ptr = static_cast<const void*>(p->pose()->data());
-  pose_ = std::make_shared<void*>(const_cast<void*>(pose_ptr));
-
+  header_ = p->header()->data();
+  pose_ = p->pose()->data();
   return *this;
 }
 

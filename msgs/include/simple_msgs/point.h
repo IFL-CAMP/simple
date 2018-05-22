@@ -36,7 +36,7 @@ public:
   Point(double, double, double);
   Point(const std::array<double, 3>&);
   Point(std::array<double, 3>&&) noexcept;
-  Point(const uint8_t*);
+  Point(const void*);
   Point(const Point&);
   Point(Point&&) noexcept;
 

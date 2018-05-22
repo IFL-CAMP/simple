@@ -24,7 +24,7 @@ namespace simple_msgs {
 Header::Header(int seq_n, const std::string& frame_id, long long timestamp)
   : seq_n_{seq_n}, frame_id_{frame_id}, timestamp_{timestamp} {}
 
-Header::Header(const uint8_t* data)
+Header::Header(const void* data)
   : seq_n_{GetHeaderFbs(data)->sequence_number()}
   , frame_id_{GetHeaderFbs(data)->frame_id()->c_str()}
   , timestamp_{static_cast<long long>(GetHeaderFbs(data)->timestamp())} {}

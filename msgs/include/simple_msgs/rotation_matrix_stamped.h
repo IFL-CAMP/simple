@@ -36,7 +36,7 @@ public:
   RotationMatrixStamped() = default;
   RotationMatrixStamped(const Header&, const RotationMatrix&);
   RotationMatrixStamped(Header&&, RotationMatrix&&);
-  RotationMatrixStamped(const uint8_t*);
+  RotationMatrixStamped(const void*);
   RotationMatrixStamped(const RotationMatrixStamped&);
   RotationMatrixStamped(RotationMatrixStamped&&) noexcept;
 

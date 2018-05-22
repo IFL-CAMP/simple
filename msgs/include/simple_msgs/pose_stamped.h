@@ -31,7 +31,7 @@ public:
   PoseStamped() = default;
   PoseStamped(const Header&, const Pose&);
   PoseStamped(Header&&, Pose&&);
-  PoseStamped(const uint8_t*);
+  PoseStamped(const void*);
   PoseStamped(const PoseStamped&);
   PoseStamped(PoseStamped&&) noexcept;
 

@@ -26,7 +26,7 @@ namespace simple_msgs {
 class Bool : public GenericMessage {
 public:
   Bool() = default;
-  Bool(const uint8_t*);
+  Bool(const void*);
   Bool(bool);
   Bool(const Bool&);
   Bool(Bool&&) noexcept;

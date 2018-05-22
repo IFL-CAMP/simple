@@ -28,7 +28,7 @@ String::String(std::string&& data) : data_{std::move(data)} {}
 
 String::String(const char* data) : data_{data} {}
 
-String::String(const uint8_t* data) : data_{GetStringFbs(data)->data()->c_str()} {}
+String::String(const void* data) : data_{GetStringFbs(data)->data()->c_str()} {}
 
 String::String(const String& other) : String{other.data_} {}
 

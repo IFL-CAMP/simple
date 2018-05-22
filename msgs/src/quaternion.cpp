@@ -25,7 +25,7 @@ Quaternion::Quaternion(const std::array<double, 4>& array) : data_{array} {}
 
 Quaternion::Quaternion(std::array<double, 4>&& array) noexcept : data_{std::move(array)} {}
 
-Quaternion::Quaternion(const uint8_t* data) {
+Quaternion::Quaternion(const void* data) {
   auto q = GetQuaternionFbs(data);
   data_[0] = q->x();
   data_[1] = q->y();

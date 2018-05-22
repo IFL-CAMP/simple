@@ -27,7 +27,7 @@ Point::Point(const std::array<double, 3>& array) : data_{array} {}
 
 Point::Point(std::array<double, 3>&& array) noexcept : data_{std::move(array)} {}
 
-Point::Point(const uint8_t* data) {
+Point::Point(const void* data) {
   auto p = GetPointFbs(data);
   data_[0] = p->x();
   data_[1] = p->y();

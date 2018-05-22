@@ -37,7 +37,7 @@ public:
   /**
    * @brief Constructor from the buffer data, implementation is specific to the template specialization.
    */
-  NumericType(const uint8_t* data);
+  NumericType(const void* data);
 
   // Copy operations.
 

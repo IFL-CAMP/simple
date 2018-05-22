@@ -26,7 +26,7 @@ namespace simple_msgs {
 using Int = NumericType<int>;
 
 template <>
-NumericType<int>::NumericType(const uint8_t* data) : data_{GetIntFbs(data)->data()} {}
+NumericType<int>::NumericType(const void* data) : data_{GetIntFbs(data)->data()} {}
 
 template <>
 NumericType<int>& NumericType<int>::operator=(std::shared_ptr<void*> data) {

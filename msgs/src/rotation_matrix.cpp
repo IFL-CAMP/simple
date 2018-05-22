@@ -29,7 +29,7 @@ RotationMatrix::RotationMatrix(const std::array<double, 9>& array) : data_{array
 
 RotationMatrix::RotationMatrix(std::array<double, 9>&& array) noexcept : data_{std::move(array)} {}
 
-RotationMatrix::RotationMatrix(const uint8_t* data)
+RotationMatrix::RotationMatrix(const void* data)
   : data_{{
         GetRotationMatrixFbs(data)->r11(),
         GetRotationMatrixFbs(data)->r12(),

@@ -31,7 +31,7 @@ public:
   Pose() = default;
   Pose(const Point&, const Quaternion&);
   Pose(Point&&, Quaternion&&);
-  Pose(const uint8_t*);
+  Pose(const void*);
   Pose(const Pose&);
   Pose(Pose&&) noexcept;
 

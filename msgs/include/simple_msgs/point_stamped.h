@@ -35,7 +35,7 @@ public:
   PointStamped() = default;
   PointStamped(const Header&, const Point&);
   PointStamped(Header&&, Point&&);
-  PointStamped(const uint8_t*);
+  PointStamped(const void*);
   PointStamped(const PointStamped&);
   PointStamped(PointStamped&&) noexcept;
 

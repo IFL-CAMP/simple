@@ -27,7 +27,7 @@ QuaternionStamped::QuaternionStamped(const Header& header, const Quaternion& qua
 QuaternionStamped::QuaternionStamped(Header&& header, Quaternion&& quaternion)
   : header_{std::move(header)}, quaternion_{std::move(quaternion)} {}
 
-QuaternionStamped::QuaternionStamped(const uint8_t* data)
+QuaternionStamped::QuaternionStamped(const void* data)
   : header_{GetQuaternionStampedFbs(data)->header()->data()}
   , quaternion_{GetQuaternionStampedFbs(data)->quaternion()->data()} {}
 

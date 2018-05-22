@@ -26,7 +26,7 @@ Pose::Pose(const Point& position, const Quaternion& quaternion) : position_{posi
 Pose::Pose(Point&& position, Quaternion&& quaternion)
   : position_{std::move(position)}, quaternion_{std::move(quaternion)} {}
 
-Pose::Pose(const uint8_t* data)
+Pose::Pose(const void* data)
   : position_{GetPoseFbs(data)->position()->data()}, quaternion_{GetPoseFbs(data)->quaternion()->data()} {}
 
 Pose::Pose(const Pose& other) : Pose{other.position_, other.quaternion_} {}
@@ -53,10 +53,8 @@ Pose& Pose::operator=(Pose&& p) noexcept {
 
 Pose& Pose::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
-  auto position = static_cast<const void*>(GetPoseFbs(*data)->position()->data());
-  position_ = std::make_shared<void*>(const_cast<void*>(position));
-  auto quaternion = static_cast<const void*>(GetPoseFbs(*data)->quaternion()->data());
-  quaternion_ = std::make_shared<void*>(const_cast<void*>(quaternion));
+  position_ = GetPoseFbs(*data)->position()->data();
+  quaternion_ = GetPoseFbs(*data)->quaternion()->data();
   return *this;
 }
 

@@ -32,7 +32,7 @@ public:
   String(const std::string&);
   String(std::string&&);
   String(const char*);
-  String(const uint8_t*);
+  String(const void*);
   String(const String&);
   String(String&&) noexcept;
 
