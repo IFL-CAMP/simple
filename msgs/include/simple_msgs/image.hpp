@@ -230,18 +230,22 @@ public:
 private:
   class InternalData {
   public:
-    const T* getData() const { return is_data_owner_ ? owning_data_.get() : not_owning_data_; }
+    const T* getData() const {
+      if (owning_data_) {
+        return owning_data_.get();
+      } else {
+        return not_owning_data_;
+      }
+    }
 
     bool empty() const { return (owning_data_ == nullptr && not_owning_data_ == nullptr); }
 
     void setData(const T* data) {
-      is_data_owner_ = false;
       not_owning_data_ = data;
       owning_data_.reset();
     }
 
     void setData(std::shared_ptr<const T> data) {
-      is_data_owner_ = true;
       owning_data_ = data;
       not_owning_data_ = nullptr;
     }
@@ -249,7 +253,6 @@ private:
   private:
     std::shared_ptr<const T> owning_data_{nullptr};
     const T* not_owning_data_{nullptr};
-    bool is_data_owner_{false};
   };
 
   void fillPartialImage(const simple_msgs::ImageFbs* imageData) {
@@ -280,7 +283,7 @@ private:
   double resX_{0.0}, resY_{0.0}, resZ_{0.0};
   int width_{0}, height_{0}, depth_{0}, data_size_{0}, num_channels_{1};
   InternalData data_{};
-};
+};  // namespace simple_msgs
 
 }  // Namespace simple_msgs.
 

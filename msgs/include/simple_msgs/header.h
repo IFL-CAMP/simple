@@ -43,6 +43,7 @@ public:
   inline bool operator==(const Header& rhs) const {
     return (seq_n_ == rhs.seq_n_ && frame_id_ == rhs.frame_id_ && timestamp_ == rhs.timestamp_);
   }
+
   inline bool operator!=(const Header& rhs) const { return !(*this == rhs); }
 
   friend std::ostream& operator<<(std::ostream& out, const Header& h);

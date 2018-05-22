@@ -72,7 +72,7 @@ Image<uint8_t>& Image<uint8_t>::operator=(std::shared_ptr<void*> data) {
 
   // Set the Image data according to the right date type.
   if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE)) {
-    const uint8_t* local_data = (image_data->image_as_uint8_type())->raw()->data();
+    auto local_data = (image_data->image_as_uint8_type())->raw()->data();
     data_.setData({data, local_data});
   }
   return *this;
