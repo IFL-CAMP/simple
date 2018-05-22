@@ -11,7 +11,11 @@ matrix:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['gcc-5', 'g++-5']
-      env: MATRIX_EVAL="CC='gcc-5' && CXX='g++-5'" BUILD_TYPE='Release'
+      env: MATRIX_EVAL="CC='gcc-5' && CXX='g++-5'" 
+      matrix: 
+        - BUILD_TYPE='Debug'
+        - BUILD_TYPE='Release'
+        - BUILD_TYPE='Coverage'
 
     # Linux C++11 Clang build
     - os: linux
@@ -20,13 +24,19 @@ matrix:
         apt:
           sources: ['llvm-toolchain-precise-3.8', 'ubuntu-toolchain-r-test']
           packages: ['clang-3.8']
-      env: MATRIX_EVAL="CXX='clang++-3.8'" BUILD_TYPE='Release'
+      env: MATRIX_EVAL="CXX='clang++-3.8'" 
+      matrix:
+        - BUILD_TYPE='Debug'
+        - BUILD_TYPE='Release'
 
     # OSX C++11 Clang Builds
     - os: osx
       osx_image: xcode8.3
       compiler: clang
-      env: MATRIX_EVAL="CXX='clang++'" BUILD_TYPE='Release'
+      env: MATRIX_EVAL="CXX='clang++'" 
+      matrix:
+        - BUILD_TYPE='Debug'
+        - BUILD_TYPE='Release'
       
 before_install:
   - | 
