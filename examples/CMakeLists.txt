@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.3)
 project(simple_examples)
 
-option(BUILD_SIMPLE_OPENCV_EXAMPLES "Build SIMPLE Examples that use OpenCV" FALSE)
+option(SIMPLE_BUILD_OPENCV_EXAMPLES "Build SIMPLE Examples that use OpenCV" FALSE)
 
-if (${BUILD_SIMPLE_OPENCV_EXAMPLES})
+if (${SIMPLE_BUILD_OPENCV_EXAMPLES})
   find_package(OpenCV REQUIRED)
   include_directories(${OpenCV_INCLUDE_DIRS})
   set(LIBRARIES simple-static ${OpenCV_LIBS})

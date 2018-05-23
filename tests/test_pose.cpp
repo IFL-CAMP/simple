@@ -37,13 +37,13 @@ SCENARIO("Using a Pose Message") {
   double double_5 = static_cast<double>(rand()) / RAND_MAX;
   double double_6 = static_cast<double>(rand()) / RAND_MAX;
   double double_7 = static_cast<double>(rand()) / RAND_MAX;
-  simple_msgs::Point point_(double_1, double_2, double_3);
-  simple_msgs::Quaternion quaternion_(double_4, double_5, double_6, double_7);
+  simple_msgs::Point point{double_1, double_2, double_3};
+  simple_msgs::Quaternion quaternion{double_4, double_5, double_6, double_7};
   // Test the constructors.
   GIVEN("A Pose created from an empty constructor") {
-    simple_msgs::Pose empty_pose;
+    simple_msgs::Pose empty_pose{};
     WHEN("It is constructed") {
-      THEN("It's elements have to be zero") {
+      THEN("Its elements have to be zero") {
         REQUIRE(empty_pose.getPosition().getX() == 0.0);
         REQUIRE(empty_pose.getPosition().getY() == 0.0);
         REQUIRE(empty_pose.getPosition().getZ() == 0.0);
@@ -56,65 +56,62 @@ SCENARIO("Using a Pose Message") {
   }
 
   GIVEN("A Pose created from a point and a quaternion") {
-    simple_msgs::Pose pose(point_, quaternion_);
-    WHEN("I check the Pose's elements") {
+    simple_msgs::Pose pose{point, quaternion};
+    WHEN("I check its elements") {
       THEN("They all have to be equal to the parameters from the constructor") {
-        REQUIRE(pose.getPosition() == point_);
-        REQUIRE(pose.getQuaternion() == quaternion_);
+        REQUIRE(pose.getPosition() == point);
+        REQUIRE(pose.getQuaternion() == quaternion);
       }
-    }
-  }
-
-  GIVEN("A Pose created from the serialized data of an existing Pose") {
-    simple_msgs::Pose pose(point_, quaternion_);
-    simple_msgs::Pose buffer_pose(pose.getBufferData()->data());
-    WHEN("I check the Pose's elements") {
-      THEN("The new Pose has to be equal to the other") { REQUIRE(buffer_pose == pose); }
     }
   }
 
   // Testing copy constructors.
   GIVEN("A Pose") {
-    simple_msgs::Pose pose(point_, quaternion_);
+    simple_msgs::Pose pose{point, quaternion};
+    WHEN("Another Pose is created from the its serialized data") {
+      simple_msgs::Pose buffer_pose{pose.getBufferData()->data()};
+      THEN("The new Pose has to be equal to the other") { REQUIRE(buffer_pose == pose); }
+    }
     WHEN("I copy-construct a new Pose") {
-      const simple_msgs::Pose& copy_pose(pose);
+      const simple_msgs::Pose& copy_pose{pose};
       THEN("The new Pose is equal to the other") { REQUIRE(copy_pose == pose); }
     }
     WHEN("I move-construct a new Pose") {
-      simple_msgs::Pose move_pose(std::move(pose));
-      THEN("The new Pose's elements are equal to the previous' ones") {
-        REQUIRE(move_pose.getPosition() == point_);
-        REQUIRE(move_pose.getQuaternion() == quaternion_);
+      simple_msgs::Pose move_pose{std::move(pose)};
+      THEN("The new Pose elements are equal to the previous' ones") {
+        REQUIRE(move_pose.getPosition() == point);
+        REQUIRE(move_pose.getQuaternion() == quaternion);
       }
     }
   }
 
   // Testing Copy-assignments.
   GIVEN("A Pose") {
-    simple_msgs::Pose pose(point_, quaternion_);
+    simple_msgs::Pose pose{point, quaternion};
     WHEN("I copy-assign from that Pose's buffer") {
-      simple_msgs::Pose copy_assigned_buffer_pose;
-      copy_assigned_buffer_pose = pose.getBufferData()->data();
+      simple_msgs::Pose copy_assigned_buffer_pose{};
+      auto data_ptr = std::make_shared<void*>(pose.getBufferData()->data());
+      copy_assigned_buffer_pose = data_ptr;
       THEN("The new Pose has to be same as the original") { REQUIRE(copy_assigned_buffer_pose == pose); }
     }
     WHEN("I copy-assign from that Pose") {
-      simple_msgs::Pose copy_assigned_pose;
+      simple_msgs::Pose copy_assigned_pose{};
       copy_assigned_pose = pose;
       THEN("The new Pose has to be same as the original") { REQUIRE(copy_assigned_pose == pose); }
     }
     WHEN("I move-assign from that Pose") {
-      simple_msgs::Pose move_assigned_pose;
+      simple_msgs::Pose move_assigned_pose{};
       move_assigned_pose = std::move(pose);
       THEN("The new Pose has to be same as the original") {
-        REQUIRE(move_assigned_pose.getPosition() == point_);
-        REQUIRE(move_assigned_pose.getQuaternion() == quaternion_);
+        REQUIRE(move_assigned_pose.getPosition() == point);
+        REQUIRE(move_assigned_pose.getQuaternion() == quaternion);
       }
     }
   }
 
   // Testing coordinates setters/getters.
   GIVEN("An instance of a Pose.") {
-    simple_msgs::Pose pose(point_, quaternion_);
+    simple_msgs::Pose pose{point, quaternion};
     WHEN("I set the X coordinate of the Pose's position") {
       pose.getPosition().setX(double_7);
       THEN("The data Pose's position has the correct coordinate") { REQUIRE(pose.getPosition().getX() == double_7); }
@@ -154,21 +151,21 @@ SCENARIO("Using a Pose Message") {
   }
 
   GIVEN("A Pose") {
-    simple_msgs::Pose pose;
+    simple_msgs::Pose pose{};
     WHEN("I set the position of the pose") {
-      pose.setPosition(point_);
-      THEN("The position is correct") { REQUIRE(pose.getPosition() == point_); }
+      pose.setPosition(point);
+      THEN("The position is correct") { REQUIRE(pose.getPosition() == point); }
     }
     WHEN("I set the quaternion of the pose") {
-      pose.setQuaternion(quaternion_);
-      THEN("The quaternion is correct") { REQUIRE(pose.getQuaternion() == quaternion_); }
+      pose.setQuaternion(quaternion);
+      THEN("The quaternion is correct") { REQUIRE(pose.getQuaternion() == quaternion); }
     }
   }
 
   // Testing operations.
   GIVEN("Two identical Poses") {
-    simple_msgs::Pose first_pose(point_, quaternion_);
-    simple_msgs::Pose second_pose(point_, quaternion_);
+    simple_msgs::Pose first_pose{point, quaternion};
+    simple_msgs::Pose second_pose{point, quaternion};
     WHEN("I compare these Poses") {
       THEN("They have to be equal") { REQUIRE(first_pose == second_pose); }
     }
@@ -180,7 +177,7 @@ SCENARIO("Using a Pose Message") {
 
   // Testing Topic
   GIVEN("A point") {
-    simple_msgs::Pose pose;
+    simple_msgs::Pose pose{};
     WHEN("I get the message topic") {
       std::string topic_name = pose.getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "POSE"); }

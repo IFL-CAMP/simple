@@ -34,10 +34,10 @@ SCENARIO("Using a Point Message") {
   std::array<double, 3> twisted_double_array{{double_3, double_1, double_2}};
 
   // Testing Constructors.
-  GIVEN("An empty point") {
-    simple_msgs::Point empty_point;
+  GIVEN("An empty Point") {
+    simple_msgs::Point empty_point{};
     WHEN("It is constructed") {
-      THEN("The point coordinates have to be zero") {
+      THEN("The Point coordinates have to be zero") {
         REQUIRE(empty_point.getX() == 0);
         REQUIRE(empty_point.getY() == 0);
         REQUIRE(empty_point.getZ() == 0);
@@ -45,9 +45,9 @@ SCENARIO("Using a Point Message") {
     }
   }
 
-  GIVEN("A point created from a double") {
-    simple_msgs::Point single_double_point(double_1);
-    WHEN("We check the points coordinates") {
+  GIVEN("A Point created from a double") {
+    simple_msgs::Point single_double_point{double_1};
+    WHEN("We check the Point coordinates") {
       THEN("They all have to be equal to the given value") {
         REQUIRE(single_double_point.getX() == double_1);
         REQUIRE(single_double_point.getY() == double_1);
@@ -56,9 +56,9 @@ SCENARIO("Using a Point Message") {
     }
   }
 
-  GIVEN("A point created from 3 double") {
-    simple_msgs::Point three_double_point(double_1, double_2, double_3);
-    WHEN("We check the points coordinates") {
+  GIVEN("A Point created from 3 double") {
+    simple_msgs::Point three_double_point{double_1, double_2, double_3};
+    WHEN("We check the Point coordinates") {
       THEN("They have to be equal to the given values") {
         REQUIRE(three_double_point.getX() == double_1);
         REQUIRE(three_double_point.getY() == double_2);
@@ -67,9 +67,9 @@ SCENARIO("Using a Point Message") {
     }
   }
 
-  GIVEN("A point created from an array of a double") {
-    simple_msgs::Point double_array_point(double_array);
-    WHEN("We check the points coordinates") {
+  GIVEN("A Point created from an array of 3 double") {
+    simple_msgs::Point double_array_point{double_array};
+    WHEN("We check the Point coordinates") {
       THEN("They all have to be equal to the array content") {
         REQUIRE(double_array_point.getX() == double_1);
         REQUIRE(double_array_point.getY() == double_2);
@@ -78,9 +78,9 @@ SCENARIO("Using a Point Message") {
     }
   }
 
-  GIVEN("A point created from moving an array of a double") {
-    simple_msgs::Point moved_array_point(std::move(double_array));
-    WHEN("We check the points coordinates") {
+  GIVEN("A Point created from moving an array of 3 double") {
+    simple_msgs::Point moved_array_point{std::move(double_array)};
+    WHEN("We check the Point coordinates") {
       THEN("They all have to be equal to the array content") {
         REQUIRE(moved_array_point.getX() == double_1);
         REQUIRE(moved_array_point.getY() == double_2);
@@ -90,21 +90,20 @@ SCENARIO("Using a Point Message") {
   }
 
   // Testing Copy-constructors.
-  GIVEN("A point") {
-    simple_msgs::Point single_point(double_array);
-    simple_msgs::Point reference_point(single_point);
-    WHEN("I construct a new point from the serialized data of the existing "
-         "point") {
-      simple_msgs::Point buffer_point(single_point.getBufferData()->data());
-      THEN("The new point has to be equal to the other") { REQUIRE(buffer_point == single_point); }
+  GIVEN("A Point") {
+    simple_msgs::Point single_point{double_array};
+    simple_msgs::Point reference_point{single_point};
+    WHEN("I construct a new Point from the serialized data of the existing Point") {
+      simple_msgs::Point buffer_point{single_point.getBufferData()->data()};
+      THEN("The new Point has to be equal to the other") { REQUIRE(buffer_point == single_point); }
     }
-    WHEN("I copy-construct a new point") {
-      const simple_msgs::Point& copied_point(single_point);
-      THEN("The new point is equal to the other") { REQUIRE(copied_point == single_point); }
+    WHEN("I copy-construct a new Point") {
+      simple_msgs::Point copied_point{single_point};
+      THEN("The new Point is equal to the other") { REQUIRE(copied_point == single_point); }
     }
-    WHEN("I move-construct a new point") {
-      simple_msgs::Point moved_point(std::move(single_point));
-      THEN("The new point's coordinates are equal to the previous' ones") {
+    WHEN("I move-construct a new Point") {
+      simple_msgs::Point moved_point{std::move(single_point)};
+      THEN("The new Point coordinates are equal to the previous' ones") {
         REQUIRE(moved_point.getX() == reference_point.getX());
         REQUIRE(moved_point.getY() == reference_point.getY());
         REQUIRE(moved_point.getZ() == reference_point.getZ());
@@ -113,34 +112,36 @@ SCENARIO("Using a Point Message") {
   }
 
   // Testing Copy-assignments.
-  GIVEN("A point") {
-    simple_msgs::Point single_point(double_1);
-    simple_msgs::Point reference_point(double_1);
-    WHEN("I copy-assign from that point") {
-      simple_msgs::Point copy_assign_point;
+  GIVEN("A Point") {
+    simple_msgs::Point single_point{double_1};
+    simple_msgs::Point reference_point{double_1};
+    WHEN("I copy-assign from that Point") {
+      simple_msgs::Point copy_assign_point{};
       copy_assign_point = single_point;
-      THEN("The new point has to be same as the original") { REQUIRE(copy_assign_point == single_point); }
+      THEN("The new Point has to be same as the original") { REQUIRE(copy_assign_point == single_point); }
     }
-    WHEN("I move-assign from that point") {
-      simple_msgs::Point move_assign_point;
+    WHEN("I move-assign from that Point") {
+      simple_msgs::Point move_assign_point{};
       move_assign_point = std::move(single_point);
-      THEN("The new point has to be same as the original") { REQUIRE(move_assign_point == reference_point); }
+      THEN("The new Point has to be same as the original") { REQUIRE(move_assign_point == reference_point); }
     }
-    WHEN("I copy-assign from that point's buffer") {
-      simple_msgs::Point copy_buffer_point = reference_point.getBufferData()->data();
-      THEN("The new point has to be same as the original") { REQUIRE(copy_buffer_point == reference_point); }
+    WHEN("I copy-assign from that Point's buffer") {
+      simple_msgs::Point copy_buffer_point{};
+      auto data_ptr = std::make_shared<void*>(reference_point.getBufferData()->data());
+      copy_buffer_point = data_ptr;
+      THEN("The new Point has to be same as the original") { REQUIRE(copy_buffer_point == reference_point); }
     }
     WHEN("I copy-assign a double array to that point") {
       single_point = twisted_double_array;
-      THEN("The point coordinates are equal to the array") {
+      THEN("The Point coordinates are equal to the array") {
         REQUIRE(single_point.getX() == twisted_double_array[0]);
         REQUIRE(single_point.getY() == twisted_double_array[1]);
         REQUIRE(single_point.getZ() == twisted_double_array[2]);
       }
     }
-    WHEN("I move-assign from an array to that point") {
+    WHEN("I move-assign from an array to that Point") {
       single_point = std::move(twisted_double_array);
-      THEN("The point coordinates are equal to the array") {
+      THEN("The Point coordinates are equal to the array") {
         REQUIRE(single_point.getX() == twisted_double_array[0]);
         REQUIRE(single_point.getY() == twisted_double_array[1]);
         REQUIRE(single_point.getZ() == twisted_double_array[2]);
@@ -149,22 +150,19 @@ SCENARIO("Using a Point Message") {
   }
 
   // Testing operations.
-  GIVEN("Two points") {
-    simple_msgs::Point first_point(double_array);
-    simple_msgs::Point second_point(double_1 + double_2);
+  GIVEN("Two Points") {
+    simple_msgs::Point first_point{double_array};
+    simple_msgs::Point second_point{double_1 + double_2};
     WHEN("They contain the same values") {
       second_point = first_point;
-      THEN("Their comparison is correct") { REQUIRE(first_point == second_point); }
+      THEN("They are equal") { REQUIRE(first_point == second_point); }
     }
     WHEN("They contain different values") {
-      THEN("Their comparison is correct") { REQUIRE(first_point != second_point); }
-    }
-    WHEN("I compare these points") {
-      THEN("They have to be different") { REQUIRE(first_point != second_point); }
+      THEN("They are different") { REQUIRE(first_point != second_point); }
     }
     WHEN("I add them") {
       simple_msgs::Point sum_point = first_point + second_point;
-      THEN("The difference should be correct") {
+      THEN("The sum should be correct") {
         REQUIRE(sum_point.getX() == (first_point.getX() + second_point.getX()));
         REQUIRE(sum_point.getY() == (first_point.getY() + second_point.getY()));
         REQUIRE(sum_point.getZ() == (first_point.getZ() + second_point.getZ()));
@@ -172,7 +170,7 @@ SCENARIO("Using a Point Message") {
     }
     WHEN("I add the second to the first one") {
       first_point += second_point;
-      THEN("The first point should have increased by the second point") {
+      THEN("The first Point should have increased by the second Point") {
         REQUIRE(first_point.getX() == (double_1 + second_point.getX()));
         REQUIRE(first_point.getY() == (double_2 + second_point.getX()));
         REQUIRE(first_point.getZ() == (double_3 + second_point.getX()));
@@ -188,7 +186,7 @@ SCENARIO("Using a Point Message") {
     }
     WHEN("I subtract the second to the first one") {
       first_point -= second_point;
-      THEN("The first point should have decreased by the second point") {
+      THEN("The first Point should have decreased by the second Point") {
         REQUIRE(first_point.getX() == double_1 - second_point.getX());
         REQUIRE(first_point.getY() == double_2 - second_point.getY());
         REQUIRE(first_point.getZ() == double_3 - second_point.getZ());
@@ -229,25 +227,25 @@ SCENARIO("Using a Point Message") {
   }
 
   // Testing coordinates setters/getters.
-  GIVEN("A point") {
-    simple_msgs::Point single_point;
-    WHEN("I set the X coordinate of the point") {
+  GIVEN("A Point") {
+    simple_msgs::Point single_point{};
+    WHEN("I set the X coordinate of the Point") {
       single_point.setX(double_3);
       THEN("The data point has the correct coordinate") { REQUIRE(single_point.getX() == double_3); }
     }
-    WHEN("I set the Y coordinate of the point") {
+    WHEN("I set the Y coordinate of the Point") {
       single_point.setY(double_1);
       THEN("The data point has the correct coordinate") { REQUIRE(single_point.getY() == double_1); }
     }
-    WHEN("I set the Z coordinate of the point") {
+    WHEN("I set the Z coordinate of the Point") {
       single_point.setZ(double_2);
-      THEN("The data point has the correct coordinate") { REQUIRE(single_point.getZ() == double_2); }
+      THEN("The data Point has the correct coordinate") { REQUIRE(single_point.getZ() == double_2); }
     }
   }
 
-  GIVEN("A point") {
-    simple_msgs::Point single_point(double_array);
-    WHEN("I get the double array from the point") {
+  GIVEN("A Point") {
+    simple_msgs::Point single_point{double_array};
+    WHEN("I get the double array from the Point") {
       auto array = single_point.toVector();
       THEN("The array elements are correct") {
         REQUIRE(array[0] == single_point.getX());

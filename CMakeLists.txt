@@ -34,11 +34,11 @@ endif()
 
 ###### OPTIONAL BUILDS
 
-option(SIMPE_BUILD_EXAMPLES "Build SIMPLE Examples" FALSE)
+option(SIMPLE_BUILD_EXAMPLES "Build SIMPLE Examples" FALSE)
 option(SIMPLE_BUILD_TESTS "Build SIMPLE Tests" FALSE)
 
 # Examples
-if (${SIMPE_BUILD_EXAMPLES})
+if (${SIMPLE_BUILD_EXAMPLES})
   add_subdirectory(examples)
 endif()
 

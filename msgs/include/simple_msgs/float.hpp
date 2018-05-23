@@ -26,29 +26,27 @@ namespace simple_msgs {
 using Float = NumericType<float>;
 
 template <>
-NumericType<float>::NumericType(const uint8_t* data) : GenericMessage(), data_(GetFloatFbs(data)->data()) {}
+NumericType<float>::NumericType(const void* data) : data_{GetFloatFbs(data)->data()} {}
 
 template <>
-NumericType<float>& NumericType<float>::operator=(const uint8_t* data) {
-  std::lock_guard<std::mutex> lock(mutex_);
-  data_ = GetFloatFbs(data)->data();
+NumericType<float>& NumericType<float>::operator=(std::shared_ptr<void*> data) {
+  std::lock_guard<std::mutex> lock{mutex_};
+  data_ = GetFloatFbs(*data)->data();
   return *this;
 }
 
 template <>
 std::shared_ptr<flatbuffers::DetachedBuffer> NumericType<float>::getBufferData() const {
-  std::lock_guard<std::mutex> lock(mutex_);
-  auto builder = std::unique_ptr<flatbuffers::FlatBufferBuilder>(new flatbuffers::FlatBufferBuilder(1024));
-
-  FloatFbsBuilder tmp_builder(*builder);
+  std::lock_guard<std::mutex> lock{mutex_};
+  flatbuffers::FlatBufferBuilder builder{1024};
+  FloatFbsBuilder tmp_builder{builder};
   tmp_builder.add_data(data_);
-  FinishFloatFbsBuffer(*builder, tmp_builder.Finish());
-
-  return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
+  FinishFloatFbsBuffer(builder, tmp_builder.Finish());
+  return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
 
 template <>
-inline const char* NumericType<float>::getTopic() {
+inline std::string NumericType<float>::getTopic() {
   return FloatFbsIdentifier();
 }
 }  // Namespace simple_msgs.

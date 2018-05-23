@@ -29,20 +29,20 @@ long long getTimeNow() {
 }
 
 int main() {
-  const int N_RUN = 30000;
-  const int SLEEP_TIME = 1;  //<  Milliseconds.
-  int sequence_num = 1;
+  const int N_RUN{3000};
+  const int SLEEP_TIME{1};  //<  Milliseconds.
+  int sequence_num{1};
 
   auto beginning = getTimeNow();  //< Time at the start of this program.
 
-  simple_msgs::Header my_header(sequence_num, "root", 0);  //< Build a Header.
-  simple_msgs::Point my_point(1.0, 2.0, 3.0);              //< Build a Point.
-  simple_msgs::Quaternion my_quaternion;                   //< Identity Quaternion.
+  simple_msgs::Header my_header{sequence_num, "root", 0};  //< Build a Header.
+  simple_msgs::Point my_point{1.0, 2.0, 3.0};              //< Build a Point.
+  simple_msgs::Quaternion my_quaternion{};                 //< Identity Quaternion.
 
   // Create a PoseStamped message from the Header, Point and Quaternion.
-  simple_msgs::PoseStamped my_pose_stamped(my_header, simple_msgs::Pose(my_point, my_quaternion));
+  simple_msgs::PoseStamped my_pose_stamped{my_header, {my_point, my_quaternion}};
   // Create a Publisher, it will send messages to any Subscriber listening on port 5555 from any IP address.
-  simple::Publisher<simple_msgs::PoseStamped> publisher("tcp://*:5555");
+  simple::Publisher<simple_msgs::PoseStamped> publisher{"tcp://*:5555"};
 
   std::cout << "Starting publishing " << N_RUN << " messages." << std::endl;
 

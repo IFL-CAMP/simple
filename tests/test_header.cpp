@@ -34,8 +34,8 @@ SCENARIO("Using a Header Message") {
   std::string string_1 = std::to_string(long_1);
   // Testing constructors.
   GIVEN("A Header created from an empty constructor") {
-    simple_msgs::Header empty_header;
-    WHEN("We check the Header's fields") {
+    simple_msgs::Header empty_header{};
+    WHEN("We check its fields") {
       THEN("They have to be the default ones") {
         REQUIRE(empty_header.getSequenceNumber() == 0);
         REQUIRE(empty_header.getFrameID().empty());
@@ -44,9 +44,9 @@ SCENARIO("Using a Header Message") {
     }
   }
 
-  GIVEN("A Header created from a int, a string and a long") {
-    simple_msgs::Header normal_header(int_1, string_1, long_1);
-    WHEN("We check the Header's fields") {
+  GIVEN("A Header created from an int, a string and a long") {
+    simple_msgs::Header normal_header{int_1, string_1, long_1};
+    WHEN("We check its fields") {
       THEN("It has to be equal to the params from the constructor") {
         REQUIRE(normal_header.getSequenceNumber() == int_1);
         REQUIRE(normal_header.getFrameID() == string_1);
@@ -57,27 +57,18 @@ SCENARIO("Using a Header Message") {
 
   // Testing copy-constructors.
   GIVEN("A header") {
-    simple_msgs::Header normal_header(int_1, string_1, long_1);
-    WHEN("I construct a new Header from the serialized data of the existing "
-         "Header") {
-      simple_msgs::Header buffer_copy_header(normal_header.getBufferData()->data());
-      THEN("The new Header has to be equal to the other") {
-        REQUIRE(buffer_copy_header.getSequenceNumber() == int_1);
-        REQUIRE(buffer_copy_header.getFrameID() == string_1);
-        REQUIRE(buffer_copy_header.getTimestamp() == long_1);
-      }
+    simple_msgs::Header original_header{int_1, string_1, long_1};
+    WHEN("I construct a new Header from the serialized data of the existing Header") {
+      simple_msgs::Header buffer_copy_header{original_header.getBufferData()->data()};
+      THEN("The new Header is equal to the other") { REQUIRE(buffer_copy_header == original_header); }
     }
     WHEN("I copy-construct a new Header") {
-      simple_msgs::Header copy_header(normal_header);
-      THEN("The new Header is equal to the other") {
-        REQUIRE(copy_header.getSequenceNumber() == int_1);
-        REQUIRE(copy_header.getFrameID() == string_1);
-        REQUIRE(copy_header.getTimestamp() == long_1);
-      }
+      simple_msgs::Header copy_header{original_header};
+      THEN("The new Header is equal to the other") { REQUIRE(copy_header == original_header); }
     }
     WHEN("I move-construct a new Header") {
-      simple_msgs::Header moved_header(std::move(normal_header));
-      THEN("The new Header's fields are equal to the previous' one") {
+      simple_msgs::Header moved_header{std::move(original_header)};
+      THEN("The new Header contains the same elements that the moved Header had") {
         REQUIRE(moved_header.getSequenceNumber() == int_1);
         REQUIRE(moved_header.getFrameID() == string_1);
         REQUIRE(moved_header.getTimestamp() == long_1);
@@ -87,21 +78,22 @@ SCENARIO("Using a Header Message") {
 
   // Testing copy-assignments.
   GIVEN("A Header") {
-    simple_msgs::Header normal_header(int_1, string_1, long_1);
+    simple_msgs::Header original_header(int_1, string_1, long_1);
     WHEN("I copy-assign from that Header's buffer") {
-      simple_msgs::Header copy_assigned_buffer_header;
-      copy_assigned_buffer_header = normal_header.getBufferData()->data();
-      THEN("The new Header has to be same as the original") { REQUIRE(copy_assigned_buffer_header == normal_header); }
+      simple_msgs::Header copy_assigned_buffer_header{};
+      auto data_ptr = std::make_shared<void*>(original_header.getBufferData()->data());
+      copy_assigned_buffer_header = data_ptr;
+      THEN("The new Header is equal to the other") { REQUIRE(copy_assigned_buffer_header == original_header); }
     }
     WHEN("I copy-assign from that Header") {
-      simple_msgs::Header copy_assigned_header;
-      copy_assigned_header = normal_header;
-      THEN("The new Header has to be same as the original") { REQUIRE(copy_assigned_header == normal_header); }
+      simple_msgs::Header copy_assigned_header{};
+      copy_assigned_header = original_header;
+      THEN("The new Header is equal to the other") { REQUIRE(copy_assigned_header == original_header); }
     }
     WHEN("I move-assign from that Header") {
-      simple_msgs::Header move_assigned_header;
-      move_assigned_header = std::move(normal_header);
-      THEN("The new Header has to be same as the original") {
+      simple_msgs::Header move_assigned_header{};
+      move_assigned_header = std::move(original_header);
+      THEN("The new Header contains the same elements that the moved Header had") {
         REQUIRE(move_assigned_header.getSequenceNumber() == int_1);
         REQUIRE(move_assigned_header.getFrameID() == string_1);
         REQUIRE(move_assigned_header.getTimestamp() == long_1);
@@ -111,8 +103,7 @@ SCENARIO("Using a Header Message") {
 
   // Testing getters and setters.
   GIVEN("An empty Header.") {
-    simple_msgs::Header empty_header;
-
+    simple_msgs::Header empty_header{};
     WHEN("I set the time stamp of the Header") {
       empty_header.setTimestamp(long_1);
       THEN("The Header's time stamp is correct") { REQUIRE(empty_header.getTimestamp() == long_1); }
@@ -129,8 +120,8 @@ SCENARIO("Using a Header Message") {
 
   // Testing operations.
   GIVEN("Two identical Headers") {
-    simple_msgs::Header header1(int_1, string_1, long_1);
-    simple_msgs::Header header2(int_1, string_1, long_1);
+    simple_msgs::Header header1{int_1, string_1, long_1};
+    simple_msgs::Header header2{int_1, string_1, long_1};
     WHEN("I compare these Headers") {
       THEN("They have to be equal") { REQUIRE(header1 == header2); }
     }
