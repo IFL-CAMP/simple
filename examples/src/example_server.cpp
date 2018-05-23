@@ -30,11 +30,11 @@ void example_callback(simple_msgs::Pose& p) {
 }
 
 int main() {
-  const int SLEEP_TIME = 60000;  //< Milliseconds.
+  const int SLEEP_TIME{60000};  //< Milliseconds.
 
   // A Server listening on port 5555 for requests from any IP address.
   std::cout << "Creating a server." << std::endl;
-  simple::Server<simple_msgs::Pose> server("tcp://*:5555", example_callback);
+  simple::Server<simple_msgs::Pose> server{"tcp://*:5555", example_callback};
 
   // Wait for 60 seconds. The Service callback is called asynchronously.
   std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_TIME));
