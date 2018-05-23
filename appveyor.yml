@@ -7,7 +7,6 @@ os:
 skip_tags: true
 
 configuration:
-  - Debug
   - Release
 
 environment:
