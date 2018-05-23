@@ -29,12 +29,12 @@ install:
   - git clone https://github.com/google/flatbuffers.git # Checkout master (for the moment)
   - cd flatbuffers && mkdir flatbuffer_build && cd flatbuffer_build
   - cmake -G "%CMAKE_GENERATOR% Win64" -DCMAKE_BUILD_TYPE=%CONFIGURATION% ..
-  - cmake --build . --target install --config Release
+  - cmake --build . --target install --config %CONFIGURATION%
   - cd %APPVEYOR_BUILD_FOLDER%/deps
   - git clone https://github.com/zeromq/libzmq.git # Checkout master (for the moment)
   - cd libzmq && mkdir libzmq_build && cd libzmq_build
   - cmake -G "%CMAKE_GENERATOR% Win64" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DZMQ_BUILD_TESTS=OFF ..
-  - cmake --build . --target install --config Release
+  - cmake --build . --target install --config %CONFIGURATION%
 
 before_build:
   - cd %APPVEYOR_BUILD_FOLDER%
@@ -43,7 +43,7 @@ before_build:
   - cmake -G "%CMAKE_GENERATOR% Win64" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DSIMPLE_BUILD_TESTS=ON -DSIMPLE_BUILD_EXAMPLES=ON ..
 
 build_script:
-  - cmake --build . --config Release -- /verbosity:minimal
+  - cmake --build . --config %CONFIGURATION% -- /verbosity:minimal
 
 test_script:
   - ctest -R simple_tests -C %CONFIGURATION% --output-on-failure
