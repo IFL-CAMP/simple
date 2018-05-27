@@ -63,7 +63,7 @@ int main() {
 
   // Create a Publisher that will send Image messages to any Subscriber listening on port 5555.
   // In this example images are treated as uint8.
-  simple::Publisher<simple_msgs::Image<uint8_t>> pub{"tcp://*:5555"};
+  simple::Publisher<simple_msgs::Image<uint8_t>> pub("tcp://127.0.0.1:5558", "Image");
 
   // Publish an image from the pool of images we read from files, for a total of N_RUN times.
   for (int i = 0; i < N_RUN; i++) {

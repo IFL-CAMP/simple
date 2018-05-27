@@ -20,6 +20,8 @@
 #ifndef SIMPLE_SERVER_HPP
 #define SIMPLE_SERVER_HPP
 
+#define ZMQ_BUILD_DRAFT_API 1
+
 #include <zmq.h>
 #include <memory>
 #include <string>
@@ -48,35 +50,38 @@ public:
    * is closed. Default -1 (infinite).
    */
   Server(const std::string& address, const std::function<void(T&)>& callback, int timeout = 100, int linger = -1)
-    : GenericSocket<T>(ZMQ_REP), callback_(callback) {
-    initServer(address, timeout, linger);
+    : GenericSocket<T>(ZMQ_SERVER, address, ""), callback_(callback) {
+    initServer(timeout, linger);
   }
 
-  Server(const Server& other) : GenericSocket<T>(ZMQ_REP), callback_(other.callback_) {
-    initServer(other.address_, other.timeout_, other.linger_);
+  Server(const Server& other)
+    : GenericSocket<T>(ZMQ_SERVER, other.address_, other.group_name_), callback_(other.callback_) {
+    initServer(other.timeout_, other.linger_);
   }
 
   Server& operator=(const Server& other) {
-    GenericSocket<T>::renewSocket(ZMQ_REP);
+    GenericSocket<T>::renewSocket(ZMQ_SERVER, other.address_, other.group_name_);
     callback_ = other.callback_;
-    initServer(other.address_, other.timeout_, other.linger_);
+    initServer(other.timeout_, other.linger_);
     return *this;
   }
 
   ~Server() {
-    alive_ = false;         //< Stop the request/reply loop.
-    server_thread_.join();  //< Wait for the server thead.
+    alive_ = false;  //< Stop the request/reply loop.
+    if (server_thread_.joinable()) {
+      server_thread_.join();  //< Wait for the server thead.
+    }
   }
 
 private:
-  void initServer(const std::string& address, int timeout, int linger) {
-    GenericSocket<T>::bind(address);
-    GenericSocket<T>::filter();
+  void initServer(int timeout, int linger) {
+    GenericSocket<T>::bind();
     GenericSocket<T>::setTimeout(timeout);
     GenericSocket<T>::setLinger(linger);
 
-    // Start the thread of the server if not yet done: wait for requests on the
-    // dedicated thread.
+    // Start the thread of the server if not yet done.
+    // The Server waits for requests of the specific thread, such that they are eleborated asynchronously by the
+    // callback function.
     if (!server_thread_.joinable()) { server_thread_ = std::thread(&Server::awaitRequest, this); }
   }
 
@@ -87,7 +92,7 @@ private:
   void awaitRequest() {
     while (alive_) {
       T msg;
-      if (GenericSocket<T>::receiveMsg(msg, "[SIMPLE Server] - ") != -1) {
+      if (GenericSocket<T>::receive(msg, "[SIMPLE Server] - ") != -1) {
         callback_(msg);
         reply(msg);
       }
@@ -98,8 +103,8 @@ private:
    * @brief Sends the message back to the client who requested it.
    * @param msg The message to be sent.
    */
-  void reply(const T& msg) { GenericSocket<T>::sendMsg(msg.getBufferData(), "[SIMPLE Server] - "); }
-  std::thread server_thread_;
+  void reply(const T& msg) { GenericSocket<T>::send(msg.getBufferData(), "[SIMPLE Server] - "); }
+  std::thread server_thread_{};
   bool alive_{true};
   std::function<void(T&)> callback_;
 };

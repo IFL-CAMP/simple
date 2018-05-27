@@ -20,6 +20,8 @@
 #ifndef SIMPLE_PUBLISHER_HPP
 #define SIMPLE_PUBLISHER_HPP
 
+#define ZMQ_BUILD_DRAFT_API 1
+
 #include <zmq.h>
 #include <memory>
 #include <string>
@@ -33,37 +35,49 @@ template <typename T>
 class Publisher : public GenericSocket<T> {
 public:
   Publisher() = default;
+  ~Publisher() = default;
+
   /**
    * @brief Class constructor. Creates a ZMQ_PUB socket and binds it to the
    * port.
    * @param port string for the connection port.
    */
-  explicit Publisher<T>(const std::string& address) : GenericSocket<T>(ZMQ_PUB) { GenericSocket<T>::bind(address); }
+  explicit Publisher<T>(const std::string& address, const std::string& group_name)
+    : GenericSocket<T>(ZMQ_RADIO, address, group_name) {
+    GenericSocket<T>::connect();
+  }
 
-  Publisher(const Publisher& other) : GenericSocket<T>(ZMQ_PUB) { GenericSocket<T>::bind(other.address_); }
+  Publisher(const Publisher& other) : Publisher<T>(other.address_, other.group_name_) {}
 
+  /**
+   * @brief Copy assignment for a Publisher socket.
+   */
   Publisher& operator=(const Publisher& other) {
-    GenericSocket<T>::renewSocket(ZMQ_PUB);
-    GenericSocket<T>::bind(other.address_);
+    GenericSocket<T>::renewSocket(ZMQ_RADIO, other.address_, other.group_name_);
+    GenericSocket<T>::connect();
     return *this;
   }
 
-  ~Publisher() = default;
+  /**
+   * @brief Allows the user to change the group name used to publish messages.
+   * Listening Subscribers will have to use the same group name to receive the messages.
+   * @param group_name: the group name of accepted messages. Max length is 16 characters.
+   */
+  void changeGroup(const std::string& group_name) {
+    if (group_name.length() <= GenericSocket<T>::MAX_GROUP_NAME_CHARS) {
+      GenericSocket<T>::group_name_ = group_name;
+    } else {
+      std::cerr << "[SIMPLE Publisher] - Given group name is too long. Max length of a group name is "
+                << std::to_string(GenericSocket<T>::MAX_GROUP_NAME_CHARS) << " characters." << std::endl;
+    }
+  }
 
   /**
    * @brief Publishes the message through the open socket.
    * @param msg: SIMPLE class wrapper for Flatbuffer messages.
    * @return size of the message, in bytes, published. Returns -1 if send fails.
    */
-  int publish(const T& msg) { return publish(msg.getBufferData()); }
-  /**
-   * @brief Publishes the message through the open socket.
-   * @param buffer: buffer containing the data to be published.
-   * @return size of the message, in bytes, published. Returns -1 if send fails.
-   */
-  int publish(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer) {
-    return GenericSocket<T>::sendMsg(buffer, "[Simple Publisher] - ");
-  }
+  int publish(const T& msg) { return GenericSocket<T>::send(msg.getBufferData()); }
 };
 }  // Namespace simple.
 

@@ -24,19 +24,16 @@
 // Callback function for a Subscriber object.
 // Whenever the Subscriber receives a message (a PoseStamped in this example), it is elaborated by this function.
 // In this trivial case, the PoseStamped message is just printed to screen.
-void example_callback(const simple_msgs::PoseStamped& p) {
-  std::cout << p << std::endl;  //< Just print the content of the message.
-}
-
 int main() {
-  const int SLEEP_TIME{60000};  //< Milliseconds.
+  const int SLEEP_TIME = 60;  //< Seconds
 
   // A Subscriber listening on port 5555 to messages coming from the IP address "localhost"
   std::cout << "Creating a subscriber." << std::endl;
-  simple::Subscriber<simple_msgs::PoseStamped> subscriber{"tcp://localhost:5555", example_callback};
+  simple::Subscriber<simple_msgs::PoseStamped> subscriber{
+      "udp://127.0.0.1:5558", "foo", [](const simple_msgs::PoseStamped& ps) { std::cout << ps << std::endl; }};
 
   // Run this thread for 60 seconds. The subscriber callback is called asynchronously.
-  std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_TIME));
+  std::this_thread::sleep_for(std::chrono::seconds(SLEEP_TIME));
 
   std::cout << "Subscribing ended." << std::endl;
   return 0;

@@ -48,7 +48,7 @@ int main() {
   // Created a Subscriber that listens to Images sent by a Publisher on the IP address "localhost" on port 5555.
   std::cout << "Creating a subscriber for Image messages." << std::endl;
 
-  simple::Subscriber<simple_msgs::Image<uint8_t>> sub{"tcp://localhost:5555", example_callback};
+  simple::Subscriber<simple_msgs::Image<uint8_t>> sub("tcp://*:5558", "Image", example_callback);
 
   cv::waitKey(0);
   std::cout << "Subscribing ended." << std::endl;

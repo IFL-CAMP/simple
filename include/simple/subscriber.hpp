@@ -20,6 +20,8 @@
 #ifndef SIMPLE_SUBSCRIBER_HPP
 #define SIMPLE_SUBSCRIBER_HPP
 
+#define ZMQ_BUILD_DRAFT_API 1
+
 #include <zmq.h>
 #include <memory>
 #include <string>
@@ -44,36 +46,61 @@ public:
    * @param Time the subscriber will block the thread waiting for a message. In
    * milliseconds.
    */
-  Subscriber<T>(const std::string& address, const std::function<void(const T&)>& callback, int timeout = 100)
-    : GenericSocket<T>(ZMQ_SUB), callback_(callback) {
-    initSubscriber(address, timeout);
+  Subscriber<T>(const std::string& address, const std::string& group_name,
+                const std::function<void(const T&)>& callback, int timeout = 100)
+    : GenericSocket<T>(ZMQ_DISH, address, group_name), callback_(callback) {
+    initSubscriber(timeout);
   }
 
-  Subscriber(const Subscriber& other) : GenericSocket<T>(ZMQ_SUB), callback_(other.callback_) {
-    initSubscriber(other.address_, other.timeout_);
-  }
+  Subscriber(const Subscriber& other) : Subscriber(other.address_, other.group_name_, other.callback_) {}
 
   Subscriber& operator=(const Subscriber& other) {
-    GenericSocket<T>::renewSocket(ZMQ_SUB);
+    GenericSocket<T>::renewSocket(ZMQ_DISH, other.address_, other.group_name_);
     callback_ = other.callback_;
-    initSubscriber(other.address_, other.timeout_);
+    initSubscriber(other.timeout_);
     return *this;
   }
 
-  ~Subscriber<T>() {  // Teeeee
-    alive_ = false;   //< Stop the subscription loop.
+  ~Subscriber() {
+    alive_ = false;  //< Stop the subscription loop.
     if (subscriber_thread_.joinable()) {
       subscriber_thread_.join();  //< Wait for the subscriber thread.
+    }
+    // Stop filtering the incoming messages using the given group_name.
+    zmq_leave(GenericSocket<T>::socket_, GenericSocket<T>::group_name_.c_str());
+  }
+
+  /**
+   * @brief Allows the user to change the message group name the Subscriber uses to filter incoming messages.
+   * Accepted messages have to be sent by a Publisher using the given group name.
+   * @param group_name: the group name of accepted messages. Max length is 16 characters.
+   */
+  void changeGroup(const std::string& group_name) {
+    if (group_name.length() <= GenericSocket<T>::MAX_GROUP_NAME_CHARS) {
+      GenericSocket<T>::group_name_ = group_name;
+      alive_ = false;
+      zmq_leave(GenericSocket<T>::socket_, GenericSocket<T>::group_name_.c_str());
+      zmq_join(GenericSocket<T>::socket_, GenericSocket<T>::group_name_.c_str());
+      alive_ = true;
+    } else {
+      std::cerr << "[SIMPLE Subscriber] - Given group name is too long. Max length of a group name is "
+                << std::to_string(GenericSocket<T>::MAX_GROUP_NAME_CHARS) << " characters." << std::endl;
     }
   }
 
 private:
-  void initSubscriber(const std::string& address, int timeout) {
-    GenericSocket<T>::connect(address);
-    GenericSocket<T>::filter();
-    GenericSocket<T>::setTimeout(timeout);
+  /**
+   * @brief Initiaze the Subscriber with the given parameters.
+   */
+  void initSubscriber(int timeout) {
+    GenericSocket<T>::bind();
+    // Filter the incoming messages by the given group name.
+    zmq_join(GenericSocket<T>::socket_, GenericSocket<T>::group_name_.c_str());
+    GenericSocket<T>::setTimeout(timeout);  //< Set how many milliseconds the subscriber will wait for messages.
 
     // Start the callback thread if not yet done.
+    // The Subscriber waits for messages of the specific thread, such that they are eleborated asynchronously by the
+    // callback function.
     if (!subscriber_thread_.joinable()) { subscriber_thread_ = std::thread(&Subscriber::subscribe, this); }
   }
 
@@ -84,7 +111,7 @@ private:
   void subscribe() {
     while (alive_) {
       T msg;
-      if (GenericSocket<T>::receiveMsg(msg, "[SIMPLE Subscriber] - ") != -1) { callback_(msg); }
+      if (GenericSocket<T>::receive(msg, "[SIMPLE Subscriber] - ") != -1) { callback_(msg); }
     }
   }
 

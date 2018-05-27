@@ -30,8 +30,8 @@
 
 SCENARIO("Publish and subscribe to a Bool message.") {
   GIVEN("An instance of a subscriber.") {
-    simple::Publisher<simple_msgs::Bool> pub("tcp://*:5555");
-    simple::Subscriber<simple_msgs::Bool> sub("tcp://localhost:5555", callbackFunctionConstBool);
+    simple::Publisher<simple_msgs::Bool> pub("tcp://127.0.0.1:5555", "bool");
+    simple::Subscriber<simple_msgs::Bool> sub("tcp://127.0.0.1:5555", "bool", callbackFunctionConstBool);
     std::this_thread::sleep_for(std::chrono::seconds(2));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
@@ -50,8 +50,8 @@ SCENARIO("Publish and subscribe to a Bool message.") {
 
 SCENARIO("Publish and subscribe to a Int message.") {
   GIVEN("An instance of a subscriber.") {
-    simple::Publisher<simple_msgs::Int> pub("tcp://*:5556");
-    simple::Subscriber<simple_msgs::Int> sub("tcp://localhost:5556", callbackFunctionConstInt);
+    simple::Publisher<simple_msgs::Int> pub("tcp://127.0.0.1:5556", "int");
+    simple::Subscriber<simple_msgs::Int> sub("tcp://127.0.0.1:5556", "int", callbackFunctionConstInt);
     std::this_thread::sleep_for(std::chrono::seconds(2));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
@@ -70,8 +70,8 @@ SCENARIO("Publish and subscribe to a Int message.") {
 
 SCENARIO("Publish and subscribe to a Float message.") {
   GIVEN("An instance of a subscriber.") {
-    simple::Publisher<simple_msgs::Float> pub("tcp://*:5557");
-    simple::Subscriber<simple_msgs::Float> sub("tcp://localhost:5557", callbackFunctionConstFloat);
+    simple::Publisher<simple_msgs::Float> pub("tcp://127.0.0.1:5557", "float");
+    simple::Subscriber<simple_msgs::Float> sub("tcp://127.0.0.1:5557", "float", callbackFunctionConstFloat);
     std::this_thread::sleep_for(std::chrono::seconds(2));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
@@ -90,8 +90,8 @@ SCENARIO("Publish and subscribe to a Float message.") {
 
 SCENARIO("Publish and subscribe to a Double message.") {
   GIVEN("An instance of a subscriber.") {
-    simple::Publisher<simple_msgs::Double> pub("tcp://*:5558");
-    simple::Subscriber<simple_msgs::Double> sub("tcp://localhost:5558", callbackFunctionConstDouble);
+    simple::Publisher<simple_msgs::Double> pub("tcp://127.0.0.1:5558", "double");
+    simple::Subscriber<simple_msgs::Double> sub("tcp://127.0.0.1:5558", "double", callbackFunctionConstDouble);
     std::this_thread::sleep_for(std::chrono::seconds(2));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
@@ -110,8 +110,8 @@ SCENARIO("Publish and subscribe to a Double message.") {
 
 SCENARIO("Publish and subscribe to a String message.") {
   GIVEN("An instance of a subscriber.") {
-    simple::Publisher<simple_msgs::String> pub("tcp://*:5559");
-    simple::Subscriber<simple_msgs::String> sub("tcp://localhost:5559", callbackFunctionConstString);
+    simple::Publisher<simple_msgs::String> pub("tcp://127.0.0.1:5559", "string");
+    simple::Subscriber<simple_msgs::String> sub("tcp://127.0.0.1:5559", "string", callbackFunctionConstString);
     std::this_thread::sleep_for(std::chrono::seconds(2));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
@@ -130,8 +130,8 @@ SCENARIO("Publish and subscribe to a String message.") {
 
 SCENARIO("Publish and subscribe to a Header message.") {
   GIVEN("An instance of a subscriber.") {
-    simple::Publisher<simple_msgs::Header> pub("tcp://*:5560");
-    simple::Subscriber<simple_msgs::Header> sub("tcp://localhost:5560", callbackFunctionConstHeader);
+    simple::Publisher<simple_msgs::Header> pub("tcp://127.0.0.1:5560", "header");
+    simple::Subscriber<simple_msgs::Header> sub("tcp://127.0.0.1:5560", "header", callbackFunctionConstHeader);
     std::this_thread::sleep_for(std::chrono::seconds(2));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
@@ -150,8 +150,8 @@ SCENARIO("Publish and subscribe to a Header message.") {
 
 SCENARIO("Publish and subscribe to a Point message.") {
   GIVEN("An instance of a subscriber.") {
-    simple::Publisher<simple_msgs::Point> pub("tcp://*:5561");
-    simple::Subscriber<simple_msgs::Point> sub("tcp://localhost:5561", callbackFunctionConstPoint);
+    simple::Publisher<simple_msgs::Point> pub("tcp://127.0.0.1:5561", "point");
+    simple::Subscriber<simple_msgs::Point> sub("tcp://127.0.0.1:5561", "point", callbackFunctionConstPoint);
     std::this_thread::sleep_for(std::chrono::seconds(2));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
@@ -170,8 +170,8 @@ SCENARIO("Publish and subscribe to a Point message.") {
 
 SCENARIO("Publish and subscribe to a Quaternion message.") {
   GIVEN("An instance of a subscriber.") {
-    simple::Publisher<simple_msgs::Quaternion> pub("tcp://*:5562");
-    simple::Subscriber<simple_msgs::Quaternion> sub("tcp://localhost:5562", callbackFunctionConstQuaternion);
+    simple::Publisher<simple_msgs::Quaternion> pub("tcp://127.0.0.1:5562", "quat");
+    simple::Subscriber<simple_msgs::Quaternion> sub("tcp://127.0.0.1:5562", "quat", callbackFunctionConstQuaternion);
     std::this_thread::sleep_for(std::chrono::seconds(2));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
@@ -190,8 +190,8 @@ SCENARIO("Publish and subscribe to a Quaternion message.") {
 
 SCENARIO("Publish and subscribe to a Pose message.") {
   GIVEN("An instance of a subscriber.") {
-    simple::Publisher<simple_msgs::Pose> pub("tcp://*:5563");
-    simple::Subscriber<simple_msgs::Pose> sub("tcp://localhost:5563", callbackFunctionConstPose);
+    simple::Publisher<simple_msgs::Pose> pub("tcp://127.0.0.1:5563", "pose");
+    simple::Subscriber<simple_msgs::Pose> sub("tcp://127.0.0.1:5563", "pose", callbackFunctionConstPose);
     std::this_thread::sleep_for(std::chrono::seconds(2));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
@@ -210,8 +210,9 @@ SCENARIO("Publish and subscribe to a Pose message.") {
 
 SCENARIO("Publish and subscribe to a Rotation Matrix message.") {
   GIVEN("An instance of a subscriber.") {
-    simple::Publisher<simple_msgs::RotationMatrix> pub("tcp://*:5564");
-    simple::Subscriber<simple_msgs::RotationMatrix> sub("tcp://localhost:5564", callbackFunctionConstRotationMatrix);
+    simple::Publisher<simple_msgs::RotationMatrix> pub("tcp://127.0.0.1:5564", "rot_matrix");
+    simple::Subscriber<simple_msgs::RotationMatrix> sub("tcp://127.0.0.1:5564", "rot_matrix",
+                                                        callbackFunctionConstRotationMatrix);
     std::this_thread::sleep_for(std::chrono::seconds(2));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
@@ -230,8 +231,9 @@ SCENARIO("Publish and subscribe to a Rotation Matrix message.") {
 
 SCENARIO("Publish and subscribe to a PointStamped message.") {
   GIVEN("An instance of a subscriber.") {
-    simple::Publisher<simple_msgs::PointStamped> pub("tcp://*:5565");
-    simple::Subscriber<simple_msgs::PointStamped> sub("tcp://localhost:5565", callbackFunctionConstPointStamped);
+    simple::Publisher<simple_msgs::PointStamped> pub("tcp://127.0.0.1:5565", "pose_stamped");
+    simple::Subscriber<simple_msgs::PointStamped> sub("tcp://127.0.0.1:5565", "pose_stamped",
+                                                      callbackFunctionConstPointStamped);
     std::this_thread::sleep_for(std::chrono::seconds(2));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
@@ -250,8 +252,8 @@ SCENARIO("Publish and subscribe to a PointStamped message.") {
 
 SCENARIO("Publish and subscribe to a QuaternionStamped message.") {
   GIVEN("An instance of a subscriber.") {
-    simple::Publisher<simple_msgs::QuaternionStamped> pub("tcp://*:5566");
-    simple::Subscriber<simple_msgs::QuaternionStamped> sub("tcp://localhost:5566",
+    simple::Publisher<simple_msgs::QuaternionStamped> pub("tcp://127.0.0.1:5566", "quat_stamped");
+    simple::Subscriber<simple_msgs::QuaternionStamped> sub("tcp://127.0.0.1:5566", "quat_stamped",
                                                            callbackFunctionConstQuaternionStamped);
     std::this_thread::sleep_for(std::chrono::seconds(2));
     WHEN("A publisher publishes data") {
@@ -271,8 +273,9 @@ SCENARIO("Publish and subscribe to a QuaternionStamped message.") {
 
 SCENARIO("Publish and subscribe to a PoseStamped message.") {
   GIVEN("An instance of a subscriber.") {
-    simple::Publisher<simple_msgs::PoseStamped> pub("tcp://*:5567");
-    simple::Subscriber<simple_msgs::PoseStamped> sub("tcp://localhost:5567", callbackFunctionConstPoseStamped);
+    simple::Publisher<simple_msgs::PoseStamped> pub("tcp://127.0.0.1:5567", "pose_stamped");
+    simple::Subscriber<simple_msgs::PoseStamped> sub("tcp://127.0.0.1:5567", "pose_stamped",
+                                                     callbackFunctionConstPoseStamped);
     std::this_thread::sleep_for(std::chrono::seconds(2));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
@@ -291,8 +294,8 @@ SCENARIO("Publish and subscribe to a PoseStamped message.") {
 
 SCENARIO("Publish and subscribe to a RotationMatrixStamped message.") {
   GIVEN("An instance of a subscriber.") {
-    simple::Publisher<simple_msgs::RotationMatrixStamped> pub("tcp://*:5568");
-    simple::Subscriber<simple_msgs::RotationMatrixStamped> sub("tcp://localhost:5568",
+    simple::Publisher<simple_msgs::RotationMatrixStamped> pub("tcp://127.0.0.1:5568", "rot_mat_stamped");
+    simple::Subscriber<simple_msgs::RotationMatrixStamped> sub("tcp://127.0.0.1:5568", "rot_mat_stamped",
                                                                callbackFunctionConstRotationMatrixStamped);
     std::this_thread::sleep_for(std::chrono::seconds(2));
     WHEN("A publisher publishes data") {
@@ -314,8 +317,8 @@ SCENARIO("Publish and subscribe to a RotationMatrixStamped message.") {
 SCENARIO("Publish a Pose and subscribe to a Point message") {
   GIVEN("An instance of a subscriber") {
     num_received_point = 0;  // Reset this variable;
-    simple::Publisher<simple_msgs::Pose> pub("tcp://*:5569");
-    simple::Subscriber<simple_msgs::Point> sub("tcp://localhost:5569", callbackFunctionConstPoint);
+    simple::Publisher<simple_msgs::Pose> pub("tcp://127.0.0.1:5569", "pose");
+    simple::Subscriber<simple_msgs::Point> sub("tcp://127.0.0.1:5569", "point", callbackFunctionConstPoint);
 
     std::this_thread::sleep_for(std::chrono::seconds(1));
     WHEN("A publisher publishes data") {

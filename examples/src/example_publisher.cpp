@@ -42,12 +42,12 @@ int main() {
   // Create a PoseStamped message from the Header, Point and Quaternion.
   simple_msgs::PoseStamped my_pose_stamped{my_header, {my_point, my_quaternion}};
   // Create a Publisher, it will send messages to any Subscriber listening on port 5555 from any IP address.
-  simple::Publisher<simple_msgs::PoseStamped> publisher{"tcp://*:5555"};
+  simple::Publisher<simple_msgs::PoseStamped> publisher("udp://127.0.0.1:5558", "foo");
 
   std::cout << "Starting publishing " << N_RUN << " messages." << std::endl;
 
   // Publishing message for N_RUN times every SLEEP_TIME milliseconds.
-  for (; sequence_num <= N_RUN; ++sequence_num) {
+  for (; sequence_num < N_RUN; ++sequence_num) {
     publisher.publish(my_pose_stamped);  // Publish the current PoseStamped message.
 
     // Modify the pose at each iteration.
@@ -56,7 +56,6 @@ int main() {
     my_pose_stamped.getHeader().setSequenceNumber(sequence_num + 1);
     my_pose_stamped.getHeader().setTimestamp(getTimeNow() - beginning);
 
-    std::cout << "Time: " << my_pose_stamped.getHeader().getTimestamp() << std::endl;
     std::cout << "Message #" << (my_pose_stamped.getHeader().getSequenceNumber()) << " has been published."
               << std::endl;
     std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_TIME));

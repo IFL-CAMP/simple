@@ -29,7 +29,7 @@ int main() {
   // Create a pose message
   simple_msgs::Pose pose({5.0, 6.0, 7.0}, {1.0, 2.0, 3.0, 4.0});
   // Create a Client that will send request to a Server on "localhost" and on port "5555".
-  simple::Client<simple_msgs::Pose> client{"tcp://localhost:5555"};
+  simple::Client<simple_msgs::Pose> client("tcp://127.0.0.1:5555");
 
   // Send a request every SLEEP_TIME milliseconds for N_RUN times.
   // The request is a Pose message, the reply is the modified Pose message.
