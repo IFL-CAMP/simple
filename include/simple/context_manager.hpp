@@ -23,19 +23,36 @@
 #include <zmq.h>
 
 namespace simple {
+/**
+ * @class ContextManager context_manager.hpp.
+ * @brief The ContextManager handles a singleton ZMQ Context that is shared between Sockets objects.
+ *
+ * Any Socket object (Publisher/Subscriber/Client/Server) created within one unit work on a single instance of a ZMQ
+ * Context, since it is not recommended to create more than one context in that case.
+ * A ContextManager cannot be instantiated, a Socket object can only access the internal instance of the ZMQ Context.
+ */
 class ContextManager {
 public:
   ContextManager() = delete;
   ContextManager(const ContextManager&) = delete;
   ContextManager& operator=(const ContextManager&) = delete;
 
+  /**
+   * @brief ContextManager destructor
+   * The internal ZMQ Context is terminated and set to nullptr.
+   */
   ~ContextManager() {
     zmq_ctx_term(context_);
     context_ = nullptr;
   }
 
+  /**
+   * @brief Returns a raw pointer to the unique instance of the internal ZMQ Context.
+   */
   static void* instance() {
+    // If the ZMQ Context instance is has not been yet created, a new one is instantiated.
     if (context_ == nullptr) { context_ = zmq_ctx_new(); }
+    // Else, the current instance is returned
     return context_;
   }
 
@@ -44,6 +61,6 @@ private:
 };
 }  // Namespace simple.
 
-void* simple::ContextManager::context_ = nullptr;
+void* simple::ContextManager::context_ = nullptr;  //< The static ZMQ context is initialized to nullptr.
 
 #endif  // SIMPLE_CONTEXT_MANAGER_HPP
