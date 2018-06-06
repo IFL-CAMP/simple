@@ -43,7 +43,7 @@ public:
    * @brief Creates a ZMQ_PUB socket and binds it to the given address.
    *
    * Subscribers can subscribe to a Publisher connecting to its address.
-   * @param[in] address - in the form <PROTOCOL>://<IP_ADDRESS:<PORT>, e.g. tcp://127.0.0.1:5555.
+   * @param[in] address - in the form \<PROTOCOL\>://\<IP_ADDRESS\>:\<PORT\>, e.g. tcp://127.0.0.1:5555.
    */
   explicit Publisher<T>(const std::string& address) : GenericSocket<T>(ZMQ_PUB) { GenericSocket<T>::bind(address); }
 

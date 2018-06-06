@@ -27,7 +27,7 @@ namespace simple {
  * @class ContextManager context_manager.hpp.
  * @brief The ContextManager handles a singleton ZMQ Context that is shared between Sockets objects.
  *
- * Any Socket object (Publisher/Subscriber/Client/Server) created within one unit work on a single instance of a ZMQ
+ * Any Socket object (Publisher/Subscriber/Client/Server), created within one unit, works on a single instance of a ZMQ
  * Context, since it is not recommended to create more than one context in that case.
  * A ContextManager cannot be instantiated, a Socket object can only access the internal instance of the ZMQ Context.
  */

@@ -34,7 +34,8 @@ public:
   Client() = default;
   /**
    * @brief Default constructor for a socket of type Client.
-   * @param address where the client connects to, in the form: tcp://HOSTNAME:PORT. e.g tcp://localhost:5555.
+   * @param address address the client connects to, in the form: \<PROTOCOL\>://\<HOSTNAME\>:\<PORT\>. e.g
+   * tcp://localhost:5555.
    * @param timeout Time, in msec, the client shall wait for a reply. Default 30 seconds.
    * @param linger Time, in msec, unsent messages linger in memory after socket is closed. Default -1 (infinite).
    */
@@ -45,8 +46,9 @@ public:
   }
 
   /**
-   * @brief Copy constructor for Client.
-   * Opens a new socket of the same type, connected to the same address, with the same timeout and linger.
+   * @brief Copy constructor of a Client object.
+   * Opens a new socket of the same type, connected to the same address, with the same timeout and linger as the one of
+   * the Client object passed.
    */
   Client(const Client& other) : GenericSocket<T>(ZMQ_REQ) {
     GenericSocket<T>::setTimeout(other.timeout_);
@@ -54,6 +56,11 @@ public:
     GenericSocket<T>::connect(other.address_);
   }
 
+  /**
+   * @brief Copy assignment of a Client object,
+   * Opens a new socket of the same type, connected to the same address, with the same timeout and linger as the one of
+   * the Client object passed.
+   */
   Client& operator=(const Client& other) {
     GenericSocket<T>::renewSocket(ZMQ_REQ);
     GenericSocket<T>::setTimeout(other.timeout_);

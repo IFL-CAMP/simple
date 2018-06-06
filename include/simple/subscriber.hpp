@@ -38,10 +38,10 @@ public:
   /**
    * @brief Creates a ZMQ_SUB socket and connects it to the given address.
    * The given callback runs on a dedicated thread.s
-   * @param Address to subscriber to, in the form: tcp://HOSTNAME:PORT. e.g
+   * @param address address to subscriber to, in the form: tcp://HOSTNAME:PORT. e.g
    * tcp://localhost:5555.
-   * @param User defined callback function for incoming messages.
-   * @param Time the subscriber will block the thread waiting for a message. In
+   * @param callback user defined callback function for incoming messages.
+   * @param timeout Time the subscriber will block the thread waiting for a message. In
    * milliseconds.
    */
   Subscriber<T>(const std::string& address, const std::function<void(const T&)>& callback, int timeout = 100)

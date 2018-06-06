@@ -31,12 +31,10 @@
 namespace simple {
 /**
  * @class GenericSocket generic_socket.hpp.
- * @brief The GenericSocket class .
- * @tparam T The simple_msgs type to send or receive.
+ * @brief The GenericSocket class.
+ * @tparam T is the simple_msgs type to send or receive.
  *
- * Any Socket object (Publisher/Subscriber/Client/Server) created within one unit work on a single instance of a ZMQ
- * Context, since it is not recommended to create more than one context in that case.
- * A ContextManager cannot be instantiated, a Socket object can only access the internal instance of the ZMQ Context.
+ * TODO
  */
 template <typename T>
 class GenericSocket {
@@ -71,7 +69,7 @@ protected:
 
   /**
    * @brief Binds the ZMQ Socket to the given address.
-   * @param[in] address - in the form <PROTOCOL>://<IP_ADDRESS:<PORT>, e.g. tcp://127.0.0.1:5555.
+   * @param[in] address - in the form \<PROTOCOL\>://\<IP_ADDRESS\>:\<PORT\>, e.g. tcp://127.0.0.1:5555.
    * @throws std::runtime_error.
    */
   void bind(const std::string& address) {
@@ -86,7 +84,7 @@ protected:
 
   /**
    * @brief Connect the ZMQ Socket to the given address.
-   * @param[in] address - in the form <PROTOCOL>://<IP_ADDRESS:<PORT>, e.g. tcp://127.0.0.1:5555.
+   * @param[in] address - in the form \<PROTOCOL\>://\<IP_ADDRESS\>:\<PORT\>, e.g. tcp://127.0.0.1:5555.
    * @throws std::runtime_error.
    */
   void connect(const std::string& address) {
@@ -254,11 +252,11 @@ protected:
    */
   void renewSocket(int type) { socket_ = zmq_socket(ContextManager::instance(), type); }
 
-  void* socket_{nullptr};             //< The ZMQ Socket itself.
-  std::string topic_{T::getTopic()};  //< Topic of the simple_msgs of type T that is passed as template parameter.
-  std::string address_{""};           //< The address used by the ZMQ Socket to connect or to bind to.
-  int timeout_{0};                    //< The socket timeout time set by setTimeout(int).
-  int linger_{30000};                 //< The socket linger time set by setLinger(int).
+  void* socket_{nullptr};             ///< The ZMQ Socket itself.
+  std::string topic_{T::getTopic()};  ///< Topic of the simple_msgs of type T that is passed as template parameter.
+  std::string address_{""};           ///< The address used by the ZMQ Socket to connect or to bind to.
+  int timeout_{0};                    ///< The socket timeout time set by setTimeout(int).
+  int linger_{30000};                 ///< The socket linger time set by setLinger(int).
 };
 }  // Namespace simple.
 
