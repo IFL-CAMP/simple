@@ -19,3 +19,5 @@ simpleConfigVersion.cmake
 *.files
 
 *.includes
+
+\.idea/
