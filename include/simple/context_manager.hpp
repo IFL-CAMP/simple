@@ -21,29 +21,52 @@
 #define SIMPLE_CONTEXT_MANAGER_HPP
 
 #include <zmq.h>
+#include <atomic>
+#include <iostream>
+#include <memory>
 
 namespace simple {
 class ContextManager {
 public:
-  ContextManager() = delete;
   ContextManager(const ContextManager&) = delete;
   ContextManager& operator=(const ContextManager&) = delete;
 
-  ~ContextManager() {
-    zmq_ctx_term(context_);
-    context_ = nullptr;
-  }
+  ~ContextManager() = default;
 
   static void* instance() {
-    if (context_ == nullptr) { context_ = zmq_ctx_new(); }
-    return context_;
+    if (context_ == nullptr) {  // If we are the first ones to get context instance.
+      context_ = std::unique_ptr<std::atomic<void*>, decltype(&ContextManager::deleteContext)>(
+          new std::atomic<void*>, &ContextManager::deleteContext);
+      // Make a new context and atomically swap it with the member context.
+      void* tmp = nullptr;
+      auto new_context = zmq_ctx_new();
+      context_->compare_exchange_strong(tmp, new_context);
+
+      if (context_.get() == new_context) {
+        // We were the first one to perform the atomic exchange.
+        // We instanciate a ContextManager object, just so that the dctor is called and terminates the context when
+        // necessary.
+      } else {
+        // We were late, someone else already created the context, we throw away the one we just created.
+        zmq_ctx_term(new_context);
+      }
+    }
+    return context_.get();
   }
 
 private:
-  static void* context_;
+  ContextManager() = default;
+
+  static void deleteContext(std::atomic<void*> context) {
+    void* instanceToDelete = context;
+    context.compare_exchange_strong(instanceToDelete, nullptr);
+    if (instanceToDelete != nullptr) { zmq_ctx_term(instanceToDelete); }
+  }
+
+  static std::unique_ptr<std::atomic<void*>, decltype(&ContextManager::deleteContext)> context_;
+  //  static std::atomic<void*> context_;
+  //  static std::unique_ptr<ContextManager> manager_;
 };
 }  // Namespace simple.
-
-void* simple::ContextManager::context_ = nullptr;
 
 #endif  // SIMPLE_CONTEXT_MANAGER_HPP
