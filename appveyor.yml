@@ -32,7 +32,7 @@ install:
   - cd %APPVEYOR_BUILD_FOLDER%/deps
   - git clone https://github.com/zeromq/libzmq.git # Checkout master (for the moment)
   - cd libzmq && mkdir libzmq_build && cd libzmq_build
-  - cmake -G "%CMAKE_GENERATOR% Win64" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DZMQ_BUILD_TESTS=OFF ..
+  - cmake -G "%CMAKE_GENERATOR% Win64" -DCMAKE_BUILD_TYPE=%CONFIGURATION -DENABLE_CURVE=OFF -DZMQ_BUILD_TESTS=OFF ..
   - cmake --build . --target install --config Release
 
 before_build:
