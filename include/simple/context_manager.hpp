@@ -31,45 +31,71 @@ public:
   ContextManager() = delete;
   ContextManager(const ContextManager&) = delete;
   ContextManager& operator=(const ContextManager&) = delete;
+  ContextManager(ContextManager&&) = delete;
+  ContextManager& operator=(ContextManager&&) = delete;
   ~ContextManager() = default;
 
+  /**
+   * @brief Returns the static instance of the ZMQ context.
+   *
+   * During the first call, a new ZMQContext object is instantiated.
+   * That instantiation performs thread-safe operations to create/dispose the underlying ZMQ context object.
+   */
   static void* instance() {
-    if (context_ == nullptr) {
-      context_ = std::unique_ptr<ZMQContext>(new ZMQContext);
-    }
+    if (context_ == nullptr) { context_ = std::unique_ptr<ZMQContext>(new ZMQContext); }
     return context_->getContext();
   }
 
 private:
+  /**
+   * @brief The ZMQContext class handles the lifetime of a static ZMQ context instance with thread safe operations.
+   *
+   * The ZMQ context is instatiated only once and automatically terminated when the objects lifetime is over.
+   */
   class ZMQContext {
   public:
+    /**
+     * @brief Atomically instantiate a new ZMQ context if none was yet created.
+     */
     ZMQContext() {
-      if (context_ == nullptr) {  // If we are the first ones to get context instance.
+      if (context_ == nullptr) {  // If we are the first ones to ask for the context instance.
         // Make a new context and atomically swap it with the member context.
         void* tmp = nullptr;
         auto new_context = zmq_ctx_new();
-        context_.compare_exchange_strong(tmp, new_context);
+        internal_context_.compare_exchange_strong(tmp, new_context);
 
-        if (context_ != new_context) {
-          // We were late, someone else already created the context, we throw away the one we just created.
+        if (internal_context_ != new_context) {
+          // Someone else already created the context, we throw away the one we just created.
           zmq_ctx_term(new_context);
         }
       }
     }
 
+    ZMQContext(const ZMQContext&) = delete;
+    ZMQContext& operator=(const ZMQContext&) = delete;
+    ZMQContext(ZMQContext&&) = delete;
+    ZMQContext& operator=(ZMQContext&&) = delete;
+
+    /// Atomically terminate the static ZMQ context instance.
     ~ZMQContext() {
-      void* context_to_delete = context_;
-      context_.compare_exchange_strong(context_to_delete, nullptr);
+      // First we swap the static member context to nullptr with a local variable.
+      void* context_to_delete = internal_context_;
+      internal_context_.compare_exchange_strong(context_to_delete, nullptr);
+      // Then we terminate the local copy of the context.
       zmq_ctx_term(context_to_delete);
     }
 
-    void* getContext() { return context_;}
+    /**
+     * @brief Returns the ZMQ context instance.
+     */
+    void* getContext() { return internal_context_; }
 
   private:
-    static std::atomic<void*> context_;
+    static std::atomic<void*> internal_context_;  //< Atomic static ZMQ Context.
   };
 
-  static std::unique_ptr<ZMQContext> context_;
+  static std::unique_ptr<ZMQContext> context_;  //< This allows to automatically dispose (and therefore, terminate) the
+                                                // static ZMQ context handled by the ZMQContext class.
 };
 }  // Namespace simple.
 
