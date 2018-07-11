@@ -40,7 +40,7 @@ public:
 protected:
   GenericSocket() = default;
 
-  explicit GenericSocket(int type) { socket_ = zmq_socket(ContextManager::instance(), type); }
+  explicit GenericSocket(int type) { initSocket(type); }
 
   void bind(const std::string& address) {
     address_ = address;
@@ -147,7 +147,9 @@ protected:
     linger_ = linger;
   }
 
-  void renewSocket(int type) { socket_ = zmq_socket(ContextManager::instance(), type); }
+  void initSocket(int type) {
+    if (socket_ == nullptr) { socket_ = zmq_socket(ContextManager::instance(), type); }
+  }
 
   void* socket_{nullptr};
   std::string topic_{T::getTopic()}, address_{""};

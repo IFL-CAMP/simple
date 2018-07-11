@@ -55,7 +55,7 @@ public:
   }
 
   Client& operator=(const Client& other) {
-    GenericSocket<T>::renewSocket(ZMQ_REQ);
+    GenericSocket<T>::initSocket(ZMQ_REQ);
     GenericSocket<T>::setTimeout(other.timeout_);
     GenericSocket<T>::setLinger(other.linger_);
     GenericSocket<T>::connect(other.address_);
@@ -81,7 +81,7 @@ private:
         std::cerr << "[SIMPLE Client] - No reply received. Aborting this request." << std::endl;
         // Delete the existing socket and create a new one.
         zmq_close(GenericSocket<T>::socket_);
-        GenericSocket<T>::renewSocket(ZMQ_REQ);
+        GenericSocket<T>::initSocket(ZMQ_REQ);
         GenericSocket<T>::setTimeout(GenericSocket<T>::timeout_);
         GenericSocket<T>::setLinger(GenericSocket<T>::linger_);
         GenericSocket<T>::connect(GenericSocket<T>::address_);
