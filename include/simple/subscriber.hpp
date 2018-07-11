@@ -46,7 +46,7 @@ public:
    * @param Time the subscriber will block the thread waiting for a message. In
    * milliseconds.
    */
-  Subscriber<T>(const std::string& address, const std::function<void(const T&)>& callback, int timeout = 100)
+  Subscriber<T>(const std::string& address, const std::function<void(const T&)>& callback, int timeout = 1000)
     : callback_{callback} {
     this->address_ = address;
     this->timeout_ = timeout;
