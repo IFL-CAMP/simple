@@ -66,7 +66,9 @@ private:
     ZMQContext& operator=(ZMQContext&&) = delete;
 
     /// Atomically terminate the static ZMQ context instance.
-    ~ZMQContext() { zmq_ctx_term(internal_context_); }
+    ~ZMQContext() {
+      if (internal_context_ != nullptr) { zmq_ctx_term(internal_context_); }
+    }
 
     /**
      * @brief Returns the ZMQ context instance.

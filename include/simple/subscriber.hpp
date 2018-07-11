@@ -21,10 +21,12 @@
 #define SIMPLE_SUBSCRIBER_HPP
 
 #include <zmq.h>
+#include <atomic>
 #include <memory>
 #include <string>
 #include <thread>
 #include "simple/generic_socket.hpp"
+#include "socket_configuration.hpp"
 
 namespace simple {
 /**
@@ -32,7 +34,7 @@ namespace simple {
  */
 
 template <typename T>
-class Subscriber : public GenericSocket<T> {
+class Subscriber : public SocketConfiguration<T> {
 public:
   Subscriber() = default;
   /**
@@ -45,52 +47,75 @@ public:
    * milliseconds.
    */
   Subscriber<T>(const std::string& address, const std::function<void(const T&)>& callback, int timeout = 100)
-    : GenericSocket<T>(ZMQ_SUB), callback_(callback) {
+    : callback_{callback} {
+    this->address_ = address;
+    this->timeout_ = timeout;
     initSubscriber(address, timeout);
   }
 
-  Subscriber(const Subscriber& other) : GenericSocket<T>(ZMQ_SUB), callback_(other.callback_) {
-    initSubscriber(other.address_, other.timeout_);
+  Subscriber(const Subscriber&) = delete;
+  Subscriber& operator=(const Subscriber&) = delete;
+
+  Subscriber(Subscriber&& other) : callback_{std::move(other.callback_)} {
+    other.stop();
+    initSubscriber(std::move(other.address_), other.timeout_);
   }
 
-  Subscriber& operator=(const Subscriber& other) {
-    GenericSocket<T>::renewSocket(ZMQ_SUB);
-    callback_ = other.callback_;
-    initSubscriber(other.address_, other.timeout_);
+  Subscriber& operator=(Subscriber&& other) {
+    stop();
+    if (other.isValid()) {
+      other.stop();
+      callback_ = std::move(other.callback_);
+      initSubscriber(std::move(other.address_), other.timeout_);
+    }
     return *this;
   }
 
-  ~Subscriber<T>() {  // Teeeee
-    alive_ = false;   //< Stop the subscription loop.
-    if (subscriber_thread_.joinable()) {
-      subscriber_thread_.join();  //< Wait for the subscriber thread.
+  ~Subscriber<T>() { stop(); }
+
+  /**
+   * @brief Stop the subscriber loop. No further messages will be received.
+   */
+  inline void stop() {
+    if (isValid()) {
+      *alive_ = false;
+      if (subscriber_thread_.joinable()) { subscriber_thread_.detach(); }
     }
   }
 
 private:
+  bool isValid() const { return alive_ == nullptr ? false : alive_->load(); }
+
   void initSubscriber(const std::string& address, int timeout) {
-    GenericSocket<T>::connect(address);
-    GenericSocket<T>::filter();
-    GenericSocket<T>::setTimeout(timeout);
+    alive_ = std::make_shared<std::atomic<bool>>(true);
+
+    auto socket = std::unique_ptr<GenericSocket<T>>(new GenericSocket<T>{ZMQ_SUB});
+    socket->connect(address);
+    socket->filter();
+    socket->setTimeout(timeout);
 
     // Start the callback thread if not yet done.
-    if (!subscriber_thread_.joinable()) { subscriber_thread_ = std::thread(&Subscriber::subscribe, this); }
+    if (!subscriber_thread_.joinable()) {
+      subscriber_thread_ = std::thread(&Subscriber::subscribe, this, alive_, std::move(socket));
+    }
   }
 
   /**
    * @brief Waits for a message to be published to the connected port,
    * Calls the user callback with an instance of T obtained by a publisher.
    */
-  void subscribe() {
-    while (alive_) {
+  void subscribe(std::shared_ptr<std::atomic<bool>> alive, std::unique_ptr<GenericSocket<T>> socket) {
+    while (*alive) {
       T msg;
-      if (GenericSocket<T>::receiveMsg(msg, "[SIMPLE Subscriber] - ") != -1) { callback_(msg); }
+      if (socket->receiveMsg(msg, "[SIMPLE Subscriber] - ") != -1) {
+        if (*alive) { callback_(msg); }
+      }
     }
   }
 
-  std::thread subscriber_thread_;
-  bool alive_{true};
-  std::function<void(const T&)> callback_;
+  std::shared_ptr<std::atomic<bool>> alive_{nullptr};
+  std::function<void(const T&)> callback_{};
+  mutable std::thread subscriber_thread_{};
 };
 }  // Namespace simple.
 
