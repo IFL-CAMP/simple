@@ -73,6 +73,10 @@ target_link_libraries(test_rotation_matrix_stamped simple-static ${coverage_lib}
 add_test(NAME simple_tests.rotation_matrix_stamped COMMAND $<TARGET_FILE:test_rotation_matrix_stamped>)
 
 # PUBLISHER / SUBSCRIBER TESTS
+add_executable(test_publisher test_publisher.cpp)
+target_link_libraries(test_publisher simple-static ${coverage_lib})
+add_test(NAME simple_tests.publisher COMMAND $<TARGET_FILE:test_publisher>)
+
 add_executable(test_subscriber test_subscriber.cpp)
 target_link_libraries(test_subscriber simple-static ${coverage_lib})
 add_test(NAME simple_tests.subscriber COMMAND $<TARGET_FILE:test_subscriber>)
