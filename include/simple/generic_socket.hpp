@@ -28,7 +28,6 @@
 #include <string>
 
 #include "context_manager.hpp"
-#include "socket_configuration.hpp"
 
 namespace simple {
 
