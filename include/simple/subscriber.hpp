@@ -26,7 +26,6 @@
 #include <string>
 #include <thread>
 #include "simple/generic_socket.hpp"
-#include "socket_configuration.hpp"
 
 namespace simple {
 /**
@@ -34,7 +33,7 @@ namespace simple {
  */
 
 template <typename T>
-class Subscriber : public SocketConfiguration<T> {
+class Subscriber {
 public:
   Subscriber() = default;
   /**
@@ -46,19 +45,18 @@ public:
    * @param Time the subscriber will block the thread waiting for a message. In
    * milliseconds.
    */
-  Subscriber<T>(const std::string& address, const std::function<void(const T&)>& callback, int timeout = 1000)
-    : callback_{callback} {
-    this->address_ = address;
-    this->timeout_ = timeout;
-    initSubscriber(address, timeout);
+  Subscriber<T>(std::string address, const std::function<void(const T&)>& callback, int timeout = 1000)
+    : callback_{callback}, address_{std::move(address)}, timeout_{timeout} {
+    initSubscriber(address_, timeout_);
   }
 
   Subscriber(const Subscriber&) = delete;
   Subscriber& operator=(const Subscriber&) = delete;
 
-  Subscriber(Subscriber&& other) : callback_{std::move(other.callback_)} {
+  Subscriber(Subscriber&& other)
+    : callback_{std::move(other.callback_)}, address_{std::move(other.address_)}, timeout_{other.timeout_} {
     other.stop();
-    initSubscriber(std::move(other.address_), other.timeout_);
+    initSubscriber(address_, timeout_);
   }
 
   Subscriber& operator=(Subscriber&& other) {
@@ -66,7 +64,9 @@ public:
     if (other.isValid()) {
       other.stop();
       callback_ = std::move(other.callback_);
-      initSubscriber(std::move(other.address_), other.timeout_);
+      address_ = std::move(other.address_);
+      timeout_ = other.timeout_;
+      initSubscriber(address_, timeout_);
     }
     return *this;
   }
@@ -84,19 +84,21 @@ public:
   }
 
 private:
-  bool isValid() const { return alive_ == nullptr ? false : alive_->load(); }
+  inline bool isValid() const { return alive_ == nullptr ? false : alive_->load(); }
 
   void initSubscriber(const std::string& address, int timeout) {
-    alive_ = std::make_shared<std::atomic<bool>>(true);
+    if (!address.empty()) {
+      alive_ = std::make_shared<std::atomic<bool>>(true);
 
-    auto socket = std::unique_ptr<GenericSocket<T>>(new GenericSocket<T>{ZMQ_SUB});
-    socket->connect(address);
-    socket->filter();
-    socket->setTimeout(timeout);
+      auto socket = std::unique_ptr<GenericSocket<T>>(new GenericSocket<T>{ZMQ_SUB});
+      socket->connect(address);
+      socket->filter();
+      socket->setTimeout(timeout);
 
-    // Start the callback thread if not yet done.
-    if (!subscriber_thread_.joinable()) {
-      subscriber_thread_ = std::thread(&Subscriber::subscribe, this, alive_, std::move(socket));
+      // Start the callback thread if not yet done.
+      if (!subscriber_thread_.joinable()) {
+        subscriber_thread_ = std::thread(&Subscriber::subscribe, this, alive_, std::move(socket));
+      }
     }
   }
 
@@ -115,7 +117,9 @@ private:
 
   std::shared_ptr<std::atomic<bool>> alive_{nullptr};
   std::function<void(const T&)> callback_{};
-  mutable std::thread subscriber_thread_{};
+  std::thread subscriber_thread_{};
+  std::string address_{""};
+  int timeout_{0};
 };
 }  // Namespace simple.
 

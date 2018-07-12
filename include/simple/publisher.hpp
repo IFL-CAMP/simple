@@ -30,7 +30,7 @@ namespace simple {
  * @brief Creates a publisher socket for a specific type of message.
  */
 template <typename T>
-class Publisher : public GenericSocket<T> {
+class Publisher {
 public:
   Publisher() = default;
   /**
@@ -38,13 +38,22 @@ public:
    * port.
    * @param port string for the connection port.
    */
-  explicit Publisher<T>(const std::string& address) : GenericSocket<T>(ZMQ_PUB) { GenericSocket<T>::bind(address); }
+  explicit Publisher<T>(const std::string& address) : socket_{ZMQ_PUB} { socket_.bind(address); }
 
-  Publisher(const Publisher& other) : GenericSocket<T>(ZMQ_PUB) { GenericSocket<T>::bind(other.address_); }
+  Publisher(const Publisher& other) = delete;
+  Publisher& operator=(const Publisher& other) = delete;
 
-  Publisher& operator=(const Publisher& other) {
-    GenericSocket<T>::renewSocket(ZMQ_PUB);
-    GenericSocket<T>::bind(other.address_);
+  Publisher(Publisher&& other) : socket_(ZMQ_PUB), address_{std::move(other.address_)} {
+    other.socket_.closeSocket();
+    initPublisher();
+  }
+
+  Publisher& operator=(Publisher&& other) {
+    if (other.isValid()) {
+      address_ = std::move(other.address);
+      other.socket_.closeSocket();
+      initPublisher();
+    }
     return *this;
   }
 
@@ -62,8 +71,21 @@ public:
    * @return size of the message, in bytes, published. Returns -1 if send fails.
    */
   int publish(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer) {
-    return GenericSocket<T>::sendMsg(buffer, "[Simple Publisher] - ");
+    return socket_.sendMsg(buffer, "[Simple Publisher] - ");
   }
+
+private:
+  inline bool isValid() { return !address_.empty(); }
+
+  void initPublisher() {
+    if (!address_.empty()) {
+      if (!socket_.isValid()) { socket_.initSocket(ZMQ_PUB); }
+      socket_.bind(address_);
+    }
+  }
+
+  GenericSocket<T> socket_{};
+  std::string address_{""};
 };
 }  // Namespace simple.
 
