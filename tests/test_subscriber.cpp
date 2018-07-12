@@ -23,16 +23,12 @@
 #include "simple/publisher.hpp"
 #include "simple/subscriber.hpp"
 #include "simple_msgs/bool.h"
-#include "test_utils.hpp"
 
 // Test: Subscriber interface.
 
 //< A dummy callback used to build the subscribers in this test.
 int n_received_msg{0};
-auto dummy_callback = [](const simple_msgs::Bool& /*unused*/) {
-  ++n_received_msg;
-  std::cout << "I Received a Messages! N = " << std::to_string(n_received_msg) << std::endl;
-};
+auto dummy_callback = [](const simple_msgs::Bool& /*unused*/) { ++n_received_msg; };
 
 SCENARIO("SIMPLE Subscriber interface") {
   GIVEN("A SIMPLE Subscriber object") {
@@ -48,50 +44,57 @@ SCENARIO("SIMPLE Subscriber interface") {
       }
     }
 
-    // Copy ctor.
-    WHEN("It is copy-constructed") {
+    // Move ctor.
+    WHEN("It is move-constructed") {
       simple::Subscriber<simple_msgs::Bool> copy_subscriber{"tcp://127.0.0.1:6667", dummy_callback};
-      THEN("It constructed correctly.") {
+      THEN("It is moved correctly.") {
         REQUIRE_NOTHROW(simple::Subscriber<simple_msgs::Bool>{std::move(copy_subscriber)});
       }
-      THEN("The copy works properly.") {
+      THEN("It works properly.") {
         simple::Publisher<simple_msgs::Bool> publisher{"tcp://*:6667"};
         simple::Subscriber<simple_msgs::Bool> subscriber{std::move(copy_subscriber)};
         std::this_thread::sleep_for(std::chrono::seconds(2));  //< Wait a bit so that the subcriber is connected.
-        n_received_msg = 0;
-        std::cout << "Sending..." << std::endl;
-        //< Reset the global variable.
+        n_received_msg = 0;                                    //< Reset the global variable.
         for (int i = 0; i < 10; ++i) {
-          publisher.publish(createRandomBool());
+          publisher.publish(simple_msgs::Bool{false});
           std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
-        std::cout << "I should have received 10 messages, N = " << std::to_string(n_received_msg) << std::endl;
-
         REQUIRE(n_received_msg == 10);
       }
     }
 
-    // Copy assignment.
-    WHEN("It is copy-constructed") {
-      simple::Subscriber<simple_msgs::Bool> copy_subscriber{"tcp://127.0.0.1:6668", dummy_callback};
+    WHEN("Is is move-constructed from a default constructed Subscriber") {
+      simple::Subscriber<simple_msgs::Bool> subscriber{};
       THEN("It constructed correctly.") {
+        REQUIRE_NOTHROW(simple::Subscriber<simple_msgs::Bool>{std::move(subscriber)});
+      }
+    }
+
+    // Move assignment.
+    WHEN("It is move-constructed") {
+      simple::Subscriber<simple_msgs::Bool> copy_subscriber{"tcp://127.0.0.1:6668", dummy_callback};
+      THEN("It is moved correctly.") {
         simple::Subscriber<simple_msgs::Bool> subscriber;
         REQUIRE_NOTHROW(subscriber = std::move(copy_subscriber));
       }
-      THEN("The copy works properly.") {
+      THEN("It works properly.") {
         simple::Publisher<simple_msgs::Bool> publisher{"tcp://*:6668"};
         simple::Subscriber<simple_msgs::Bool> subscriber = std::move(copy_subscriber);
         std::this_thread::sleep_for(std::chrono::seconds(2));  //< Wait a bit so that the subcriber is connected.
-        n_received_msg = 0;
-        std::cout << "Sending..." << std::endl;
-        //< Reset the global variable.
+        n_received_msg = 0;                                    //< Reset the global variable.
         for (int i = 0; i < 10; ++i) {
-          publisher.publish(createRandomBool());
+          publisher.publish(simple_msgs::Bool{true});
           std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
-        std::cout << "I should have received 10 messages, N = " << std::to_string(n_received_msg) << std::endl;
-
         REQUIRE(n_received_msg == 10);
+      }
+    }
+
+    WHEN("Is is move assigned from a default constructed Subscriber") {
+      simple::Subscriber<simple_msgs::Bool> subscriber{};
+      THEN("It assigned correctly.") {
+        simple::Subscriber<simple_msgs::Bool> another_subscriber{};
+        REQUIRE_NOTHROW(another_subscriber = std::move(subscriber));
       }
     }
 
@@ -102,30 +105,24 @@ SCENARIO("SIMPLE Subscriber interface") {
       n_received_msg = 0;                                    //< Reset the global variable.
       std::this_thread::sleep_for(std::chrono::seconds(2));  //< Wait a bit so that the subcriber is connected.
 
-      std::cout << "Sending..." << std::endl;
       for (int i = 0; i < 5; ++i) {
-        publisher.publish(createRandomBool());
+        publisher.publish(simple_msgs::Bool{false});
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
       }
-      std::cout << "I should have received 5 messages, N = " << std::to_string(n_received_msg) << std::endl;
       REQUIRE(n_received_msg == 5);
 
-      subscriber.stop();
-      std::cout << "Sending..." << std::endl;
+      subscriber.stop();  //< The subscriber is stopped, no messages should be received now.
       for (int i = 0; i < 5; ++i) {
-        publisher.publish(createRandomBool());
+        publisher.publish(simple_msgs::Bool{true});
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
       }
-      std::cout << "I should have STILL received 5 messages, N = " << std::to_string(n_received_msg) << std::endl;
       REQUIRE(n_received_msg == 5);
 
       subscriber = simple::Subscriber<simple_msgs::Bool>{"tcp://127.0.0.1:6669", dummy_callback};
       std::this_thread::sleep_for(std::chrono::seconds(2));  //< Wait a bit so that the subcriber is connected.
 
-      std::cout << "Sending 10 messages..." << std::endl;
-      std::cout << "So far I received " << std::to_string(n_received_msg) << " messages.." << std::endl;
       for (int i = 0; i < 10; ++i) {
-        publisher.publish(createRandomBool());
+        publisher.publish(simple_msgs::Bool{false});
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
       }
       REQUIRE(n_received_msg == 15);
