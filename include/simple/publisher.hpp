@@ -38,21 +38,19 @@ public:
    * port.
    * @param port string for the connection port.
    */
-  explicit Publisher<T>(const std::string& address) : socket_{ZMQ_PUB} { socket_.bind(address); }
+  explicit Publisher<T>(std::string address) : socket_{ZMQ_PUB}, address_{std::move(address)} {
+    socket_.bind(address_);
+  }
 
   Publisher(const Publisher& other) = delete;
   Publisher& operator=(const Publisher& other) = delete;
 
-  Publisher(Publisher&& other) : socket_(ZMQ_PUB), address_{std::move(other.address_)} {
-    other.socket_.closeSocket();
-    initPublisher();
-  }
+  Publisher(Publisher&& other) : socket_{std::move(other.socket_)}, address_{std::move(other.address_)} {}
 
   Publisher& operator=(Publisher&& other) {
     if (other.isValid()) {
-      address_ = std::move(other.address);
-      other.socket_.closeSocket();
-      initPublisher();
+      socket_ = std::move(other.socket_);
+      address_ = std::move(other.address_);
     }
     return *this;
   }
@@ -76,13 +74,6 @@ public:
 
 private:
   inline bool isValid() { return !address_.empty(); }
-
-  void initPublisher() {
-    if (!address_.empty()) {
-      if (!socket_.isValid()) { socket_.initSocket(ZMQ_PUB); }
-      socket_.bind(address_);
-    }
-  }
 
   GenericSocket<T> socket_{};
   std::string address_{""};
