@@ -18,6 +18,8 @@
  */
 
 #define CATCH_CONFIG_MAIN
+#include <thread>
+
 #include "catch.hpp"
 
 #include "simple/publisher.hpp"
@@ -50,6 +52,7 @@ SCENARIO("SIMPLE Publisher interface") {
 
     // Move ctor.
     WHEN("It is move-constructed") {
+      std::this_thread::sleep_for(std::chrono::seconds(1));  //< Wait a bit so that the subcriber is connected.
       simple::Publisher<simple_msgs::Bool> copy_publisher{"tcp://*:6667"};
       simple::Publisher<simple_msgs::Bool> publisher{std::move(copy_publisher)};
       THEN("It correctly sends messages.") {
@@ -62,15 +65,17 @@ SCENARIO("SIMPLE Publisher interface") {
       }
     }
 
-    WHEN("Is is move-constructed from a default constructed Publish") {
+    WHEN("Is is move-constructed from a default constructed Publisher") {
       simple::Publisher<simple_msgs::Bool> publisher{};
       THEN("It constructed correctly.") { REQUIRE_NOTHROW(simple::Publisher<simple_msgs::Bool>{std::move(publisher)}); }
     }
 
     // Copy assignment.
     WHEN("It is move-assigned") {
+      std::this_thread::sleep_for(std::chrono::seconds(1));  //< Wait a bit so that the subcriber is connected.
       simple::Publisher<simple_msgs::Bool> copy_publisher{"tcp://*:6668"};
-      simple::Publisher<simple_msgs::Bool> publisher = std::move(copy_publisher);
+      simple::Publisher<simple_msgs::Bool> publisher;
+      publisher = std::move(copy_publisher);
       THEN("It correctly sends messages.") {
         auto result = publisher.publish(dummy);
         REQUIRE(result != -1);
@@ -79,6 +84,12 @@ SCENARIO("SIMPLE Publisher interface") {
         auto result = copy_publisher.publish(dummy);
         REQUIRE(result == -1);
       }
+    }
+
+    WHEN("Is is move-assigned from a default constructed Publisher") {
+      simple::Publisher<simple_msgs::Bool> copy_publisher{};
+      simple::Publisher<simple_msgs::Bool> publisher{};
+      THEN("It constructed correctly.") { REQUIRE_NOTHROW(publisher = std::move(copy_publisher)); }
     }
 
     // Failure case.
