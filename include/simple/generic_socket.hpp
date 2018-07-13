@@ -50,14 +50,14 @@ public:
   GenericSocket& operator=(const GenericSocket&) = delete;
 
   GenericSocket(GenericSocket&& other) {
-    socket_.exchange(other.socket_);
-    other.socket_.store(nullptr);
+    socket_ = other.socket_;
+    other.socket_ = nullptr;
   }
 
   GenericSocket& operator=(GenericSocket&& other) {
     if (other.isValid()) {
-      socket_.store(other.socket_);
-      other.socket_.store(nullptr);
+      socket_ = other.socket_;
+      other.socket_ = nullptr;
     }
     return *this;
   }
@@ -184,7 +184,7 @@ protected:
 
 private:
   std::string topic_{T::getTopic()};
-  std::atomic<void*> socket_{nullptr};
+  void* socket_{nullptr};
 };
 }  // Namespace simple.
 
