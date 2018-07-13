@@ -48,8 +48,19 @@ public:
 
   GenericSocket(const GenericSocket&) = delete;
   GenericSocket& operator=(const GenericSocket&) = delete;
-  GenericSocket(GenericSocket&&) = delete;
-  GenericSocket& operator=(GenericSocket&&) = delete;
+
+  GenericSocket(GenericSocket&& other) {
+    socket_.exchange(other.socket_);
+    other.socket_.store(nullptr);
+  }
+
+  GenericSocket& operator=(GenericSocket&& other) {
+    if (other.isValid()) {
+      socket_.store(other.socket_);
+      other.socket_.store(nullptr);
+    }
+    return *this;
+  }
 
   friend class Publisher<T>;
   friend class Subscriber<T>;
@@ -65,8 +76,8 @@ protected:
     auto success = zmq_bind(socket_, address.c_str());
     if (success != 0) {
       throw std::runtime_error("[SIMPLE Error] - Cannot bind to the given "
-                               "address/port. ZMQ Error: " +
-                               std::string(zmq_strerror(zmq_errno())));
+                               "address/port: " +
+                               address + ". ZMQ Error: " + std::string(zmq_strerror(zmq_errno())));
     }
   }
 
@@ -74,8 +85,8 @@ protected:
     auto success = zmq_connect(socket_, address.c_str());
     if (success != 0) {
       throw std::runtime_error("[SIMPLE Error] - Cannot connect to the given "
-                               "address/port. ZMQ Error: " +
-                               std::string(zmq_strerror(zmq_errno())));
+                               "address/port " +
+                               address + ". ZMQ Error: " + std::string(zmq_strerror(zmq_errno())));
     }
   }
 
@@ -173,7 +184,7 @@ protected:
 
 private:
   std::string topic_{T::getTopic()};
-  void* socket_{nullptr};
+  std::atomic<void*> socket_{nullptr};
 };
 }  // Namespace simple.
 
