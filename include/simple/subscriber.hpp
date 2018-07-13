@@ -119,7 +119,7 @@ private:
   std::function<void(const T&)> callback_{};
   std::thread subscriber_thread_{};
   std::string address_{""};
-  int timeout_{0};
+  int timeout_{1000};
 };
 }  // Namespace simple.
 
