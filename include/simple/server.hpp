@@ -48,32 +48,30 @@ public:
    * @param linger Time, in msec, unsent messages linger in memory after socket
    * is closed. Default -1 (infinite).
    */
-  Server(std::string address, const std::function<void(T&)>& callback, int timeout = 1000, int linger = -1)
-    : callback_{callback}, address_{std::move(address)}, timeout_{timeout}, linger_{linger} {
-    initServer(address_, timeout_, linger_);
+  Server(const std::string& address, const std::function<void(T&)>& callback, int timeout = 1000, int linger = -1)
+    : socket_{new GenericSocket<T>(ZMQ_REP)}, callback_{callback} {
+    socket_->filter();
+    socket_->setTimeout(timeout);
+    socket_->setLinger(linger);
+    socket_->bind(address);
+    initServer();
   }
 
   Server(const Server& other) = delete;
   Server& operator=(const Server& other) = delete;
 
-  Server(Server&& other)
-    : callback_{std::move(other.callback_)}
-    , address_{std::move(other.address_)}
-    , timeout_{other.timeout_}
-    , linger_{other.linger_} {
+  Server(Server&& other) : socket_{std::move(other.socket_)}, callback_{std::move(other.callback_)} {
     other.stop();
-    initServer(address_, timeout_, linger_);
+    initServer();
   }
 
   Server& operator=(Server&& other) {
     stop();
     if (other.isValid()) {
       other.stop();
+      socket_ = std::move(other.socket_);
       callback_ = std::move(other.callback_);
-      address_ = std::move(other.address_);
-      timeout_ = other.timeout_;
-      linger_ = other.linger_;
-      initServer(address_, timeout_, linger_);
+      initServer();
     }
     return *this;
   }
@@ -90,29 +88,19 @@ public:
 private:
   inline bool isValid() const { return alive_ == nullptr ? false : alive_->load(); }
 
-  void initServer(const std::string& address, int timeout, int linger) {
-    if (!address.empty()) {
-      alive_ = std::make_shared<std::atomic<bool>>(true);
+  void initServer() {
+    alive_ = std::make_shared<std::atomic<bool>>(true);
 
-      auto socket = std::unique_ptr<GenericSocket<T>>(new GenericSocket<T>{ZMQ_REP});
-      socket->bind(address);
-      socket->filter();
-      socket->setTimeout(timeout);
-      socket->setLinger(linger);
-
-      // Start the thread of the server if not yet done: wait for requests on the
-      // dedicated thread.
-      if (!server_thread_.joinable()) {
-        server_thread_ = std::thread(&Server::awaitRequest, this, alive_, std::move(socket));
-      }
-    }
+    // Start the thread of the server if not yet done: wait for requests on the
+    // dedicated thread.
+    if (!server_thread_.joinable()) { server_thread_ = std::thread(&Server::awaitRequest, this, alive_, socket_); }
   }
 
   /**
    * @brief Keep waiting for a request to arrive. Process the request with the
    * callback function and reply.
    */
-  void awaitRequest(std::shared_ptr<std::atomic<bool>> alive, std::unique_ptr<GenericSocket<T>> socket) {
+  void awaitRequest(std::shared_ptr<std::atomic<bool>> alive, std::shared_ptr<GenericSocket<T>> socket) {
     while (*alive) {
       T msg;
       if (socket->receiveMsg(msg, "[SIMPLE Server] - ") != -1) {
@@ -129,11 +117,9 @@ private:
   void reply(GenericSocket<T>* socket, const T& msg) { socket->sendMsg(msg.getBufferData(), "[SIMPLE Server] - "); }
 
   std::shared_ptr<std::atomic<bool>> alive_{nullptr};
+  std::shared_ptr<GenericSocket<T>> socket_{};
   std::function<void(T&)> callback_;
   std::thread server_thread_{};
-  std::string address_{""};
-  int timeout_{1000};
-  int linger_{-1};
 };
 }  // Namespace simple.
 

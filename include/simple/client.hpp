@@ -32,42 +32,26 @@ template <typename T>
 class Client {
 public:
   Client() = default;
+
   /**
    * @brief Default constructor for a socket of type Client.
    * @param address where the client connects to, in the form: tcp://HOSTNAME:PORT. e.g tcp://localhost:5555.
    * @param timeout Time, in msec, the client shall wait for a reply. Default 30 seconds.
    * @param linger Time, in msec, unsent messages linger in memory after socket is closed. Default -1 (infinite).
    */
-  explicit Client(std::string address, int timeout = 30000, int linger = -1)
-    : socket_{ZMQ_REQ}, address_{std::move(address)}, timeout_{timeout}, linger_{linger} {
+  explicit Client(const std::string& address, int timeout = 30000, int linger = -1)
+    : socket_{ZMQ_REQ}, address_{address}, timeout_{timeout}, linger_{linger} {
     initClient();
   }
 
   Client(const Client& other) = delete;
   Client& operator=(const Client& other) = delete;
 
-  /**
-   * @brief Copy constructor for Client.
-   * Opens a new socket of the same type, connected to the same address, with the same timeout and linger.
-   */
-  Client(Client&& other)
-    : socket_{ZMQ_REQ}, address_{std::move(other.address_)}, timeout_{other.timeout_}, linger_{other.linger_} {
-    other.socket_.closeSocket();
-    initClient();
-  }
-
-  Client& operator=(Client&& other) {
-    if (other.isValid()) {
-      address_ = std::move(other.address_);
-      timeout_ = other.timeout_;
-      linger_ = other.linger_;
-      other.socket_.closeSocket();
-      initClient();
-    }
-    return *this;
-  }
+  Client(Client&& other) = default;
+  Client& operator=(Client&& other) = default;
 
   ~Client() = default;
+
   /**
    * @brief Sends the request to a server and waits for an answer.
    * @param msg: SIMPLE class wrapper for Flatbuffer messages.
@@ -75,15 +59,11 @@ public:
   bool request(T& msg) { return request(msg.getBufferData(), msg); }
 
 private:
-  inline bool isValid() { return !address_.empty(); }
-
   void initClient() {
-    if (!address_.empty()) {
-      if (!socket_.isValid()) { socket_.initSocket(ZMQ_REQ); }
-      socket_.setTimeout(timeout_);
-      socket_.setLinger(linger_);
-      socket_.connect(address_);
-    }
+    if (!socket_.isValid()) { socket_.initSocket(ZMQ_REQ); }
+    socket_.setTimeout(timeout_);
+    socket_.setLinger(linger_);
+    socket_.connect(address_);
   }
 
   bool request(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer, T& msg) {

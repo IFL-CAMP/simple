@@ -33,27 +33,19 @@ template <typename T>
 class Publisher {
 public:
   Publisher() = default;
+
   /**
    * @brief Class constructor. Creates a ZMQ_PUB socket and binds it to the
    * port.
    * @param port string for the connection port.
    */
-  explicit Publisher<T>(std::string address) : socket_{ZMQ_PUB}, address_{std::move(address)} {
-    socket_.bind(address_);
-  }
+  explicit Publisher<T>(const std::string& address) : socket_{ZMQ_PUB} { socket_.bind(address); }
 
   Publisher(const Publisher& other) = delete;
   Publisher& operator=(const Publisher& other) = delete;
 
-  Publisher(Publisher&& other) : socket_{std::move(other.socket_)}, address_{std::move(other.address_)} {}
-
-  Publisher& operator=(Publisher&& other) {
-    if (other.isValid()) {
-      socket_ = std::move(other.socket_);
-      address_ = std::move(other.address_);
-    }
-    return *this;
-  }
+  Publisher(Publisher&& other) = default;
+  Publisher& operator=(Publisher&& other) = default;
 
   ~Publisher() = default;
 
@@ -73,10 +65,7 @@ public:
   }
 
 private:
-  inline bool isValid() { return !address_.empty(); }
-
   GenericSocket<T> socket_{};
-  std::string address_{""};
 };
 }  // Namespace simple.
 
