@@ -22,7 +22,7 @@
 
 #include <flatbuffers/flatbuffers.h>
 #include <zmq.h>
-#include <cstring>
+#include <atomic>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -50,13 +50,13 @@ public:
   GenericSocket& operator=(const GenericSocket&) = delete;
 
   GenericSocket(GenericSocket&& other) {
-    socket_ = other.socket_;
+    socket_.store(other.socket_);
     other.socket_ = nullptr;
   }
 
   GenericSocket& operator=(GenericSocket&& other) {
     if (other.isValid()) {
-      socket_ = other.socket_;
+      socket_.store(other.socket_);
       other.socket_ = nullptr;
     }
     return *this;
@@ -184,7 +184,7 @@ protected:
 
 private:
   std::string topic_{T::getTopic()};
-  void* socket_{nullptr};
+  std::atomic<void*> socket_{nullptr};
 };
 }  // Namespace simple.
 
