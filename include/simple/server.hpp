@@ -80,7 +80,7 @@ public:
 
   inline void stop() {
     if (isValid()) {
-      *alive_ = false;
+      alive_->store(false);
       if (server_thread_.joinable()) { server_thread_.detach(); }
     }
   }
@@ -93,7 +93,7 @@ private:
 
     // Start the thread of the server if not yet done: wait for requests on the
     // dedicated thread.
-    if (!server_thread_.joinable()) { server_thread_ = std::thread(&Server::awaitRequest, this, alive_, socket_); }
+    if (!server_thread_.joinable() && socket_ != nullptr) { server_thread_ = std::thread(&Server::awaitRequest, this, alive_, socket_); }
   }
 
   /**
@@ -101,11 +101,11 @@ private:
    * callback function and reply.
    */
   void awaitRequest(std::shared_ptr<std::atomic<bool>> alive, std::shared_ptr<GenericSocket<T>> socket) {
-    while (*alive) {
+    while (alive->load()) {
       T msg;
       if (socket->receiveMsg(msg, "[SIMPLE Server] - ") != -1) {
-        if (*alive) { callback_(msg); }
-        if (*alive) { reply(socket.get(), msg); }
+        if (alive->load()) { callback_(msg); }
+        if (alive->load()) { reply(socket.get(), msg); }
       }
     }
   }
@@ -117,7 +117,7 @@ private:
   void reply(GenericSocket<T>* socket, const T& msg) { socket->sendMsg(msg.getBufferData(), "[SIMPLE Server] - "); }
 
   std::shared_ptr<std::atomic<bool>> alive_{nullptr};
-  std::shared_ptr<GenericSocket<T>> socket_{};
+  std::shared_ptr<GenericSocket<T>> socket_{nullptr};
   std::function<void(T&)> callback_;
   std::thread server_thread_{};
 };

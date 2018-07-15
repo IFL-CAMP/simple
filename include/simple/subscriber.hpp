@@ -80,7 +80,7 @@ public:
    */
   inline void stop() {
     if (isValid()) {
-      *alive_ = false;
+      alive_->store(false);
       if (subscriber_thread_.joinable()) { subscriber_thread_.detach(); }
     }
   }
@@ -92,8 +92,8 @@ private:
     alive_ = std::make_shared<std::atomic<bool>>(true);
 
     // Start the callback thread if not yet done.
-    if (!subscriber_thread_.joinable()) {
-      subscriber_thread_ = std::thread(&Subscriber::subscribe, this, alive_, socket_);
+    if (!subscriber_thread_.joinable() && socket_ != nullptr) {
+	  subscriber_thread_ = std::thread(&Subscriber::subscribe, this, alive_, socket_);
     }
   }
 
@@ -102,16 +102,16 @@ private:
    * Calls the user callback with an instance of T obtained by a publisher.
    */
   void subscribe(std::shared_ptr<std::atomic<bool>> alive, std::shared_ptr<GenericSocket<T>> socket) {
-    while (*alive) {
+    while (alive->load()) {
       T msg;
       if (socket->receiveMsg(msg, "[SIMPLE Subscriber] - ") != -1) {
-        if (*alive) { callback_(msg); }
+        if (alive->load()) { callback_(msg); }
       }
     }
   }
 
   std::shared_ptr<std::atomic<bool>> alive_{nullptr};
-  std::shared_ptr<GenericSocket<T>> socket_{};
+  std::shared_ptr<GenericSocket<T>> socket_{nullptr};
   std::function<void(const T&)> callback_{};
   std::thread subscriber_thread_{};
 };
