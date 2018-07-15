@@ -73,6 +73,28 @@ Point& Point::operator=(std::shared_ptr<void*> data) {
   return *this;
 }
 
+Point& Point::operator++() {
+  std::transform(std::begin(data_), std::end(data_), std::begin(data_), [](double e) { return ++e; });
+  return *this;
+}
+
+Point Point::operator++(int) {
+  Point tmp(*this);
+  operator++();
+  return tmp;
+}
+
+Point& Point::operator--() {
+  std::transform(std::begin(data_), std::end(data_), std::begin(data_), [](double e) { return --e; });
+  return *this;
+}
+
+Point Point::operator--(int) {
+  Point tmp(*this);
+  operator++();
+  return tmp;
+}
+
 Point& Point::operator+=(const Point& rhs) {
   std::lock_guard<std::mutex> lock{mutex_};
   std::transform(std::begin(data_), std::end(data_), std::begin(rhs.data_), std::begin(data_), std::plus<double>());
