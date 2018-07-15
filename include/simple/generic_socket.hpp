@@ -75,18 +75,16 @@ protected:
   void bind(const std::string& address) {
     auto success = zmq_bind(socket_, address.c_str());
     if (success != 0) {
-      throw std::runtime_error("[SIMPLE Error] - Cannot bind to the given "
-                               "address/port: " +
-                               address + ". ZMQ Error: " + std::string(zmq_strerror(zmq_errno())));
+      throw std::runtime_error("[SIMPLE Error] - Cannot bind to the address/port: " + address +
+                               ". ZMQ Error: " + std::string(zmq_strerror(zmq_errno())));
     }
   }
 
   void connect(const std::string& address) {
     auto success = zmq_connect(socket_, address.c_str());
     if (success != 0) {
-      throw std::runtime_error("[SIMPLE Error] - Cannot connect to the given "
-                               "address/port " +
-                               address + ". ZMQ Error: " + std::string(zmq_strerror(zmq_errno())));
+      throw std::runtime_error("[SIMPLE Error] - Cannot connect to the address/port: " + address +
+                               ". ZMQ Error: " + std::string(zmq_strerror(zmq_errno())));
     }
   }
 
