@@ -78,7 +78,8 @@ public:
 
   ~Server() { stop(); }
 
-  inline void stop() {
+private:
+  void stop() {
     if (isValid()) {
       alive_->store(false);
       if (socket_ != nullptr) { socket_->closeSocket(); }
@@ -86,7 +87,6 @@ public:
     }
   }
 
-private:
   inline bool isValid() const { return alive_ == nullptr ? false : alive_->load(); }
 
   void initServer() {
