@@ -39,7 +39,7 @@ public:
    * @param timeout Time, in msec, the client shall wait for a reply. Default 30 seconds.
    * @param linger Time, in msec, unsent messages linger in memory after socket is closed. Default -1 (infinite).
    */
-  explicit Client(const std::string& address, int timeout = 2000, int linger = -1)
+  explicit Client(const std::string& address, int timeout = 30000, int linger = -1)
     : socket_{ZMQ_REQ}, address_{address}, timeout_{timeout}, linger_{linger} {
     initClient();
   }
@@ -85,7 +85,7 @@ private:
 
   GenericSocket<T> socket_{};
   std::string address_{""};
-  int timeout_{2000};  // ms.
+  int timeout_{30000};
   int linger_{-1};
 };
 }  // Namespace simple.

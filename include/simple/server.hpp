@@ -82,7 +82,6 @@ private:
   void stop() {
     if (isValid()) {
       alive_->store(false);
-      if (socket_ != nullptr) { socket_->closeSocket(); }
       if (server_thread_.joinable()) { server_thread_.detach(); }
     }
   }
@@ -104,11 +103,11 @@ private:
    * callback function and reply.
    */
   void awaitRequest(std::shared_ptr<std::atomic<bool>> alive, std::shared_ptr<GenericSocket<T>> socket) {
-    while (alive->load()) {
+    while (*alive) {
       T msg;
       if (socket->receiveMsg(msg, "[SIMPLE Server] - ") != -1) {
-        if (alive->load()) { callback_(msg); }
-        if (alive->load()) { reply(socket.get(), msg); }
+        if (*alive) { callback_(msg); }
+        if (*alive) { reply(socket.get(), msg); }
       }
     }
   }
