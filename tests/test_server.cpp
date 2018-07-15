@@ -69,7 +69,7 @@ SCENARIO("SIMPLE Server interface") {
     }
 
     // Move assignment.
-    WHEN("It is move-constructed") {
+    WHEN("It is move-assigned") {
       std::this_thread::sleep_for(std::chrono::seconds(2));
       simple::Server<simple_msgs::Point> copy_server{"tcp://*:6668", dummy_callback};
       THEN("It is moved correctly.") {

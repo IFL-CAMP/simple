@@ -71,7 +71,7 @@ SCENARIO("SIMPLE Subscriber interface") {
     }
 
     // Move assignment.
-    WHEN("It is move-constructed") {
+    WHEN("It is move-assigned") {
       simple::Subscriber<simple_msgs::Bool> copy_subscriber{"tcp://127.0.0.1:6668", dummy_callback};
       THEN("It is moved correctly.") {
         simple::Subscriber<simple_msgs::Bool> subscriber;
