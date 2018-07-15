@@ -81,6 +81,7 @@ public:
   inline void stop() {
     if (isValid()) {
       alive_->store(false);
+      if (socket_ != nullptr) { socket_->closeSocket(); }
       if (server_thread_.joinable()) { server_thread_.detach(); }
     }
   }
@@ -93,7 +94,9 @@ private:
 
     // Start the thread of the server if not yet done: wait for requests on the
     // dedicated thread.
-    if (!server_thread_.joinable() && socket_ != nullptr) { server_thread_ = std::thread(&Server::awaitRequest, this, alive_, socket_); }
+    if (!server_thread_.joinable() && socket_ != nullptr) {
+      server_thread_ = std::thread(&Server::awaitRequest, this, alive_, socket_);
+    }
   }
 
   /**
