@@ -85,7 +85,7 @@ private:
 
   GenericSocket<T> socket_{};
   std::string address_{""};
-  int timeout_{30000};
+  int timeout_{30000};  // ms.
   int linger_{-1};
 };
 }  // Namespace simple.
