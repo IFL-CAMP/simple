@@ -29,12 +29,10 @@
 // Test: Client interface
 
 auto dummy_callback = [](simple_msgs::Point& msg) { ++msg; };
+simple_msgs::Point dummy{0, 0, 0};
 
 SCENARIO("SIMPLE Client interface") {
   GIVEN("A SIMPLE Client object") {
-    // Dummy simple_msgs to test the request method.
-    simple_msgs::Point dummy{0, 0, 0};
-
     // Default ctor.
     WHEN("It is default constructed.") {
       simple::Client<simple_msgs::Point> client;
@@ -63,10 +61,11 @@ SCENARIO("SIMPLE Client interface") {
       simple::Server<simple_msgs::Point> server{"tcp://*:5556", dummy_callback};
       simple::Client<simple_msgs::Point> copy_client{"tcp://localhost:5556"};
       simple::Client<simple_msgs::Point> client{std::move(copy_client)};
-      THEN("It correctly sends its request and receives a reply.") {
+      std::this_thread::sleep_for(std::chrono::seconds(2));
+      THEN("It can send a request") {
         auto result = client.request(dummy);
         REQUIRE(result == true);
-        REQUIRE(dummy == simple_msgs::Point{1, 1, 1});
+        REQUIRE(dummy == simple_msgs::Point{2, 2, 2});
       }
       THEN("The moved one is not able to send requests.") {
         auto result = copy_client.request(dummy);
@@ -85,12 +84,12 @@ SCENARIO("SIMPLE Client interface") {
       simple::Server<simple_msgs::Point> server{"tcp://*:5557", dummy_callback};
       simple::Client<simple_msgs::Point> copy_client{"tcp://localhost:5557"};
       simple::Client<simple_msgs::Point> client;
-
+      std::this_thread::sleep_for(std::chrono::seconds(2));
       client = std::move(copy_client);
       THEN("It correctly sends its request and receives a reply.") {
         auto result = client.request(dummy);
         REQUIRE(result == true);
-        REQUIRE(dummy == simple_msgs::Point{1, 1, 1});
+        REQUIRE(dummy == simple_msgs::Point{3, 3, 3});
       }
       THEN("The moved one is not able to send requests.") {
         auto result = copy_client.request(dummy);

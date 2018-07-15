@@ -52,7 +52,7 @@ SCENARIO("SIMPLE Server interface") {
       THEN("It is moved correctly.") { REQUIRE_NOTHROW(simple::Server<simple_msgs::Point>{std::move(copy_server)}); }
       THEN("It works properly.") {
         simple::Client<simple_msgs::Point> client{"tcp://localhost:6667"};
-        simple::Server<simple_msgs::Point> subscriber{std::move(copy_server)};
+        simple::Server<simple_msgs::Point> server{std::move(copy_server)};
         std::this_thread::sleep_for(std::chrono::seconds(2));
         n_received_requests = 0;  //< Reset the global variable.
         for (int i = 0; i < 10; ++i) {
@@ -98,33 +98,33 @@ SCENARIO("SIMPLE Server interface") {
     }
 
     // Stop.
-    WHEN("A server is stopped") {
-      std::this_thread::sleep_for(std::chrono::seconds(2));
-      simple::Client<simple_msgs::Point> client{"tcp://localhost:6669", 10};
-      simple::Server<simple_msgs::Point> server{"tcp://*:6669", dummy_callback, 100};
-      n_received_requests = 0;  //< Reset the global variable.
-      std::this_thread::sleep_for(std::chrono::seconds(2));
+    //    WHEN("A server is stopped") {
+    //      std::this_thread::sleep_for(std::chrono::seconds(2));
+    //      simple::Client<simple_msgs::Point> client{"tcp://localhost:6669", 10};
+    //      simple::Server<simple_msgs::Point> server{"tcp://*:6669", dummy_callback, 100};
+    //      n_received_requests = 0;  //< Reset the global variable.
+    //      std::this_thread::sleep_for(std::chrono::seconds(2));
 
-      for (int i = 0; i < 5; ++i) {
-        client.request(dummy);
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-      }
-      REQUIRE(n_received_requests == 5);
+    //      for (int i = 0; i < 5; ++i) {
+    //        client.request(dummy);
+    //        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    //      }
+    //      REQUIRE(n_received_requests == 5);
 
-      server.stop();  //< The subscriber is stopped, no messages should be received now.
-      for (int i = 0; i < 5; ++i) {
-        client.request(dummy);
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-      }
-      REQUIRE(n_received_requests == 5);
-      server = simple::Server<simple_msgs::Point>{"tcp://*:6669", dummy_callback, 10};
+    //      server.stop();  //< The subscriber is stopped, no messages should be received now.
+    //      for (int i = 0; i < 5; ++i) {
+    //        client.request(dummy);
+    //        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    //      }
+    //      REQUIRE(n_received_requests == 5);
+    //      server = simple::Server<simple_msgs::Point>{"tcp://*:6669", dummy_callback, 10};
 
-      for (int i = 0; i < 10; ++i) {
-        client.request(dummy);
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-      }
-      REQUIRE(n_received_requests == 15);
-    }
+    //      for (int i = 0; i < 10; ++i) {
+    //        client.request(dummy);
+    //        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    //      }
+    //      REQUIRE(n_received_requests == 15);
+    //    }
 
     // Failure case.
     WHEN("It is constructed passing an invalid address.") {
