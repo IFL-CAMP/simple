@@ -91,7 +91,7 @@ Point& Point::operator--() {
 
 Point Point::operator--(int) {
   Point tmp(*this);
-  operator++();
+  operator--();
   return tmp;
 }
 
