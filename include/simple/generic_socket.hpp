@@ -72,7 +72,6 @@ protected:
   // Class ctors are protected.
   // A GenericSocket cannot be directly initialized but only used within a specialized subclass.
   GenericSocket() = default;
-
   explicit GenericSocket(int type) { initSocket(type); }
 
   /**
