@@ -27,24 +27,14 @@
 const std::string DATA_DIRECTORY{DATA_DIR};
 
 // Create a vector containing OpenCV images.
-std::vector<std::pair<cv::Mat, int>> readImage() {
+std::vector<cv::Mat> readImages() {
   const std::string lena_path = DATA_DIRECTORY + "lena.ascii.pgm";
   const std::string barbara_path = DATA_DIRECTORY + "barbara.ascii.pgm";
   const std::string baboon_path = DATA_DIRECTORY + "baboon.ascii.pgm";
   const std::string lena_color_path = DATA_DIRECTORY + "lena512color.tiff";
 
-  cv::Mat lena = cv::imread(lena_path, CV_LOAD_IMAGE_COLOR);
-  cv::Mat barbara = cv::imread(barbara_path, CV_LOAD_IMAGE_COLOR);
-  cv::Mat baboon = cv::imread(baboon_path, CV_LOAD_IMAGE_COLOR);
-  cv::Mat lena_color = cv::imread(lena_color_path, CV_LOAD_IMAGE_COLOR);
-
-  std::vector<std::pair<cv::Mat, int>> return_vector{
-      std::make_pair(lena, lena.rows * lena.cols * lena.channels()),
-      std::make_pair(barbara, barbara.rows * barbara.cols * barbara.channels()),
-      std::make_pair(baboon, baboon.rows * baboon.cols * baboon.channels()),
-      std::make_pair(lena_color, lena_color.rows * lena_color.cols * lena_color.channels())};
-
-  return return_vector;
+  return {cv::imread(lena_path, CV_LOAD_IMAGE_COLOR), cv::imread(barbara_path, CV_LOAD_IMAGE_COLOR),
+          cv::imread(baboon_path, CV_LOAD_IMAGE_COLOR), cv::imread(lena_color_path, CV_LOAD_IMAGE_COLOR)};
 }
 
 int main() {
@@ -52,7 +42,7 @@ int main() {
   const int SLEEP_TIME{200};  //<  Milliseconds.
 
   // Obtain the images.
-  auto images = readImage();
+  auto images = readImages();
 
   // Add dummy Header and Origin to the image message.
   simple_msgs::Header h{1, "Image", 0};
@@ -70,11 +60,12 @@ int main() {
     // At each iteration pick one of the images in rotation.
     auto image = images[i % 4];
     // Set the image dimensions (e.g. 512x512x1).
-    img.setImageDimensions(image.first.rows, image.first.cols, 1);
-    // Set the image data, giving also the total size in bytes and the number of channels (3 in this case).
-    img.setImageData(image.first.data, image.second, 3);
+    img.setImageDimensions(image.cols, image.rows, 1);
+    // Set the image data, giving also the total size in bytes and the number of channels
+    img.setImageData(image.data, static_cast<int>(image.total() * image.elemSize()), image.channels());
     // Publish the image.
     pub.publish(img);
+
     std::cout << "Message #" << i + 1 << " has been published. " << std::endl;
     std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_TIME));
     img.getHeader().setSequenceNumber(i + 1);
