@@ -94,7 +94,7 @@ install:
   - cd ${DEPS_DIR}
   - git clone https://github.com/zeromq/libzmq.git # Pull libzmq (currently from master) and build it
   - cd libzmq && mkdir -p libzmq_build && cd libzmq_build
-  - cmake -DCMAKE_BUILD_TYPE=Release -DZMQ_BUILD_TESTS=OFF ..
+  - cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_CURVE=OFF -DZMQ_BUILD_TESTS=OFF ..
   - sudo make -j8 install
 
 before_script:

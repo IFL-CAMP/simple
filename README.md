@@ -15,8 +15,8 @@ ___
 
 - A C++11 compiler (tested on **gcc-5**, **clang-3.8**, **msvc14** and **msvc15**.)
 - CMake 3.3+
-- [ZeroMQ](https://github.com/zeromq/libzmq)
-- [FlatBuffers](https://github.com/google/flatbuffers)
+- [ZeroMQ](https://github.com/zeromq/libzmq) 4.2.4+
+- [FlatBuffers](https://github.com/google/flatbuffers) 1.9.0+
 
 ___
 

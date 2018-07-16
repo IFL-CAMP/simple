@@ -50,7 +50,13 @@ public:
   inline bool operator!=(const Point& rhs) const { return !(*this == rhs); }
   friend std::ostream& operator<<(std::ostream&, const Point&);
 
-  // Binary arithmetic operatorss
+  // Unary arithmetic operators.
+  Point& operator++();
+  Point operator++(int);
+  Point& operator--();
+  Point operator--(int);
+
+  // Binary arithmetic operators.
   Point& operator+=(const Point&);
   friend Point operator+(Point, const Point&);
   Point& operator-=(const Point&);
