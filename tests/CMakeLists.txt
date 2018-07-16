@@ -73,11 +73,26 @@ target_link_libraries(test_rotation_matrix_stamped simple-static ${coverage_lib}
 add_test(NAME simple_tests.rotation_matrix_stamped COMMAND $<TARGET_FILE:test_rotation_matrix_stamped>)
 
 # PUBLISHER / SUBSCRIBER TESTS
+add_executable(test_publisher test_publisher.cpp)
+target_link_libraries(test_publisher simple-static ${coverage_lib})
+add_test(NAME simple_tests.publisher COMMAND $<TARGET_FILE:test_publisher>)
+
+add_executable(test_subscriber test_subscriber.cpp)
+target_link_libraries(test_subscriber simple-static ${coverage_lib})
+add_test(NAME simple_tests.subscriber COMMAND $<TARGET_FILE:test_subscriber>)
+
 add_executable(test_pub_sub test_pub_sub.cpp)
 target_link_libraries(test_pub_sub simple-static ${coverage_lib})
 add_test(NAME simple_tests.pub_sub COMMAND $<TARGET_FILE:test_pub_sub>)
 
 # CLIENT / SERVER TESTS
+add_executable(test_client test_client.cpp)
+target_link_libraries(test_client simple-static ${coverage_lib})
+add_test(NAME simple_tests.client COMMAND $<TARGET_FILE:test_client>)
+
+add_executable(test_server test_server.cpp)
+target_link_libraries(test_server simple-static ${coverage_lib})
+add_test(NAME simple_tests.server COMMAND $<TARGET_FILE:test_server>)
 
 add_executable(test_req_rep test_single_req_rep.cpp)
 target_link_libraries(test_req_rep simple-static ${coverage_lib})

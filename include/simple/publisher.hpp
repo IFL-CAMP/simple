@@ -30,23 +30,22 @@ namespace simple {
  * @brief Creates a publisher socket for a specific type of message.
  */
 template <typename T>
-class Publisher : public GenericSocket<T> {
+class Publisher {
 public:
   Publisher() = default;
+
   /**
    * @brief Class constructor. Creates a ZMQ_PUB socket and binds it to the
    * port.
    * @param port string for the connection port.
    */
-  explicit Publisher<T>(const std::string& address) : GenericSocket<T>(ZMQ_PUB) { GenericSocket<T>::bind(address); }
+  explicit Publisher<T>(const std::string& address) : socket_{ZMQ_PUB} { socket_.bind(address); }
 
-  Publisher(const Publisher& other) : GenericSocket<T>(ZMQ_PUB) { GenericSocket<T>::bind(other.address_); }
+  Publisher(const Publisher& other) = delete;
+  Publisher& operator=(const Publisher& other) = delete;
 
-  Publisher& operator=(const Publisher& other) {
-    GenericSocket<T>::renewSocket(ZMQ_PUB);
-    GenericSocket<T>::bind(other.address_);
-    return *this;
-  }
+  Publisher(Publisher&& other) = default;
+  Publisher& operator=(Publisher&& other) = default;
 
   ~Publisher() = default;
 
@@ -62,8 +61,11 @@ public:
    * @return size of the message, in bytes, published. Returns -1 if send fails.
    */
   int publish(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer) {
-    return GenericSocket<T>::sendMsg(buffer, "[Simple Publisher] - ");
+    return socket_.sendMsg(buffer, "[Simple Publisher] - ");
   }
+
+private:
+  GenericSocket<T> socket_{};
 };
 }  // Namespace simple.
 

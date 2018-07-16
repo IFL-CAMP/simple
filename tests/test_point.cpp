@@ -150,6 +150,28 @@ SCENARIO("Using a Point Message") {
   }
 
   // Testing operations.
+  GIVEN("One point") {
+    simple_msgs::Point point{double_array};
+    WHEN("I use the unary ++ operator") {
+      point++;
+      ++point;
+      THEN("The point has the correct values") {
+        REQUIRE(point.getX() == Approx(double_array[0] + 2));
+        REQUIRE(point.getY() == Approx(double_array[1] + 2));
+        REQUIRE(point.getZ() == Approx(double_array[2] + 2));
+      }
+    }
+    WHEN("I use the unary -- operator") {
+      point--;
+      --point;
+      THEN("The point has the correct values") {
+        REQUIRE(point.getX() == Approx(double_array[0] - 2));
+        REQUIRE(point.getY() == Approx(double_array[1] - 2));
+        REQUIRE(point.getZ() == Approx(double_array[2] - 2));
+      }
+    }
+  }
+
   GIVEN("Two Points") {
     simple_msgs::Point first_point{double_array};
     simple_msgs::Point second_point{double_1 + double_2};
