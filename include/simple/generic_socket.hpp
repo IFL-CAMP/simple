@@ -48,9 +48,7 @@ public:
 
   // A GenericSocket cannot be copied or moved.
   GenericSocket(const GenericSocket&) = delete;
-  GenericSocket(GenericSocket&&) = delete;
   GenericSocket& operator=(const GenericSocket&) = delete;
-  GenericSocket& operator=(GenericSocket&&) = delete;
 
   GenericSocket(GenericSocket&& other) {
     socket_.store(other.socket_);
