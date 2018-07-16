@@ -34,7 +34,9 @@ void example_callback(const simple_msgs::Image<uint8_t>& i) {
   // Get the image dimensions, e.g. 512x512x1.
   const auto dimensions = i.getImageDimensions();
   // Build an OpenCV Mat from those.
-  cv::Mat received_img{dimensions[1], dimensions[0], CV_8UC(i.getNumChannels()), img};
+  cv::Mat received_img{static_cast<int>(dimensions[1]), static_cast<int>(dimensions[0]), CV_8UC(i.getNumChannels()),
+                       img};
+  cv::Mat();
   received_img.copyTo(buffer);
 
   cv::imshow(window_name, buffer);
