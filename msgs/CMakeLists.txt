@@ -9,7 +9,12 @@ find_program(FLATBUFFERS_FLATC_EXECUTABLE flatc
   /usr/bin
   "$ENV{PROGRAMFILES}/FlatBuffers/bin"
   "${Flatbuffers_DIR}/../../../bin"
+  "${Flatbuffers_DIR}/../../tools/flatbuffers"
   NO_DEFAULT_PATH)
+
+if(NOT FLATBUFFERS_FLATC_EXECUTABLE)
+	message(FATAL_ERROR "Flatbuffers' flatc could not be found. Please set FLATBUFFERS_FLATC_EXECUTABLE manually!")
+endif()
 
 function(flatbuffers_generate_c_headers NAME FBS_DIR OUTPUT_DIR)
   set(FLATC_OUTPUTS)

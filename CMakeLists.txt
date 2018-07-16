@@ -73,26 +73,26 @@ find_package(ZeroMQ REQUIRED)
 file(GLOB SIMPLE_HEADERS "include/simple/*.hpp")
 add_custom_target(${PROJECT_NAME}-ide SOURCES ${SIMPLE_HEADERS})
 
-add_library(${PROJECT_NAME} INTERFACE)
+add_library(${PROJECT_NAME} src/context_manager.cpp)
 
-target_include_directories(${PROJECT_NAME} INTERFACE
+target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/msgs/include>
   $<BUILD_INTERFACE:${ZeroMQ_INCLUDE_DIR}>
   $<INSTALL_INTERFACE:include>)
 
-target_link_libraries(${PROJECT_NAME} INTERFACE
+target_link_libraries(${PROJECT_NAME}
   libzmq ${CMAKE_THREAD_LIBS_INIT} simple_msgs ${coverage_lib})
 
-add_library(${PROJECT_NAME}-static INTERFACE)
+add_library(${PROJECT_NAME}-static src/context_manager.cpp)
 
-target_include_directories(${PROJECT_NAME}-static INTERFACE
+target_include_directories(${PROJECT_NAME}-static PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/msgs/include>
   $<BUILD_INTERFACE:${ZeroMQ_INCLUDE_DIR}>
   $<INSTALL_INTERFACE:include>)
 
-target_link_libraries(${PROJECT_NAME}-static INTERFACE
+target_link_libraries(${PROJECT_NAME}-static
   libzmq-static ${CMAKE_THREAD_LIBS_INIT} simple_msgs ${coverage_lib})
 
 ###### INSTALLATION

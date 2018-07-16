@@ -36,35 +36,23 @@ namespace simple {
  * types T that can be received by any number of Subscribers.
  */
 template <typename T>
-class Publisher : public GenericSocket<T> {
+class Publisher {
 public:
   Publisher() = default;
+
   /**
    * @brief Creates a ZMQ_PUB socket and binds it to the given address.
    *
    * Subscribers can subscribe to a Publisher connecting to its address.
    * @param[in] address - in the form \<PROTOCOL\>://\<IP_ADDRESS\>:\<PORT\>, e.g. tcp://127.0.0.1:5555.
    */
-  explicit Publisher<T>(const std::string& address) : GenericSocket<T>(ZMQ_PUB) { GenericSocket<T>::bind(address); }
+  explicit Publisher<T>(const std::string& address) : socket_{ZMQ_PUB} { socket_.bind(address); }
 
-  /**
-   * @brief Publisher copy constructor.
-   * @param other Publisher to construct from. The newly constructred Publisher will find to the same address.
-   */
-  Publisher(const Publisher& other) : GenericSocket<T>(ZMQ_PUB) { GenericSocket<T>::bind(other.address_); }
+  Publisher(const Publisher& other) = delete;
+  Publisher& operator=(const Publisher& other) = delete;
 
-  /**
-   * @brief Publisher copy assignment operator.
-   * @param other Publisher to construct from. The newly constructred Publisher will find to the same address.
-   * @return
-   */
-  Publisher& operator=(const Publisher& other) {
-    // A Publisher that is copy assigned could be constructed by the default ctor.
-    // In that case its ZMQ Socket was never initialized. GenericSocket<T>::renewSocket() is used to do so.
-    GenericSocket<T>::renewSocket(ZMQ_PUB);
-    GenericSocket<T>::bind(other.address_);
-    return *this;
-  }
+  Publisher(Publisher&& other) = default;
+  Publisher& operator=(Publisher&& other) = default;
 
   ~Publisher() = default;
 
@@ -82,8 +70,11 @@ private:
    * @return size of the published message, in bytes. Returns -1 if send fails.
    */
   int publish(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer) {
-    return GenericSocket<T>::sendMsg(buffer, "[Simple Publisher] - ");
+    return socket_.sendMsg(buffer, "[Simple Publisher] - ");
   }
+
+private:
+  GenericSocket<T> socket_{};
 };
 }  // Namespace simple.
 

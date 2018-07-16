@@ -29,9 +29,10 @@ namespace simple {
  * @brief Creates a Client socket for a specific type of message.
  */
 template <typename T>
-class Client : public GenericSocket<T> {
+class Client {
 public:
   Client() = default;
+
   /**
    * @brief Default constructor for a socket of type Client.
    * @param address address the client connects to, in the form: \<PROTOCOL\>://\<HOSTNAME\>:\<PORT\>. e.g
@@ -39,37 +40,19 @@ public:
    * @param timeout Time, in msec, the client shall wait for a reply. Default 30 seconds.
    * @param linger Time, in msec, unsent messages linger in memory after socket is closed. Default -1 (infinite).
    */
-  explicit Client(const std::string& address, int timeout = 30000, int linger = -1) : GenericSocket<T>(ZMQ_REQ) {
-    GenericSocket<T>::setTimeout(timeout);
-    GenericSocket<T>::setLinger(linger);
-    GenericSocket<T>::connect(address);
+  explicit Client(const std::string& address, int timeout = 30000, int linger = -1)
+    : socket_{ZMQ_REQ}, address_{address}, timeout_{timeout}, linger_{linger} {
+    initClient();
   }
 
-  /**
-   * @brief Copy constructor of a Client object.
-   * Opens a new socket of the same type, connected to the same address, with the same timeout and linger as the one of
-   * the Client object passed.
-   */
-  Client(const Client& other) : GenericSocket<T>(ZMQ_REQ) {
-    GenericSocket<T>::setTimeout(other.timeout_);
-    GenericSocket<T>::setLinger(other.linger_);
-    GenericSocket<T>::connect(other.address_);
-  }
+  Client(const Client& other) = delete;
+  Client& operator=(const Client& other) = delete;
 
-  /**
-   * @brief Copy assignment of a Client object,
-   * Opens a new socket of the same type, connected to the same address, with the same timeout and linger as the one of
-   * the Client object passed.
-   */
-  Client& operator=(const Client& other) {
-    GenericSocket<T>::renewSocket(ZMQ_REQ);
-    GenericSocket<T>::setTimeout(other.timeout_);
-    GenericSocket<T>::setLinger(other.linger_);
-    GenericSocket<T>::connect(other.address_);
-    return *this;
-  }
+  Client(Client&& other) = default;
+  Client& operator=(Client&& other) = default;
 
   ~Client() = default;
+
   /**
    * @brief Sends the request to a server and waits for an answer.
    * @param msg: SIMPLE class wrapper for Flatbuffer messages.
@@ -77,25 +60,34 @@ public:
   bool request(T& msg) { return request(msg.getBufferData(), msg); }
 
 private:
+  void initClient() {
+    if (!socket_.isValid()) { socket_.initSocket(ZMQ_REQ); }
+    socket_.setTimeout(timeout_);
+    socket_.setLinger(linger_);
+    socket_.connect(address_);
+  }
+
   bool request(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer, T& msg) {
     bool success{false};
 
-    if (GenericSocket<T>::sendMsg(buffer, "[SIMPLE Client] - ") != -1) {
-      if (GenericSocket<T>::receiveMsg(msg, "[SIMPLE Client] - ") != -1) {
+    if (socket_.sendMsg(buffer, "[SIMPLE Client] - ") != -1) {
+      if (socket_.receiveMsg(msg, "[SIMPLE Client] - ") != -1) {
         success = true;
 
       } else {
         std::cerr << "[SIMPLE Client] - No reply received. Aborting this request." << std::endl;
         // Delete the existing socket and create a new one.
-        zmq_close(GenericSocket<T>::socket_);
-        GenericSocket<T>::renewSocket(ZMQ_REQ);
-        GenericSocket<T>::setTimeout(GenericSocket<T>::timeout_);
-        GenericSocket<T>::setLinger(GenericSocket<T>::linger_);
-        GenericSocket<T>::connect(GenericSocket<T>::address_);
+        socket_.closeSocket();
+        initClient();
       }
     }
     return success;
   }
+
+  GenericSocket<T> socket_{};
+  std::string address_{""};
+  int timeout_{30000};
+  int linger_{-1};
 };
 }  // Namespace simple.
 

@@ -34,12 +34,12 @@ void example_callback(const simple_msgs::Image<uint8_t>& i) {
   // Get the image dimensions, e.g. 512x512x1.
   const auto dimensions = i.getImageDimensions();
   // Build an OpenCV Mat from those.
-  cv::Mat received_img{dimensions[0], dimensions[1], CV_8UC3, img};
+  cv::Mat received_img{dimensions[1], dimensions[0], CV_8UC(i.getNumChannels()), img};
   received_img.copyTo(buffer);
 
   cv::imshow(window_name, buffer);
 
-  std::cout << "Message received!" << std::endl;
+  std::cout << "Message # " << i.getHeader().getSequenceNumber() << " received !" << std::endl;
 }
 
 int main() {

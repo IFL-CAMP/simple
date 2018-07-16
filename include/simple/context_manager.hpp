@@ -21,6 +21,8 @@
 #define SIMPLE_CONTEXT_MANAGER_HPP
 
 #include <zmq.h>
+#include <memory>
+#include <mutex>
 
 namespace simple {
 /**
@@ -36,31 +38,58 @@ public:
   ContextManager() = delete;
   ContextManager(const ContextManager&) = delete;
   ContextManager& operator=(const ContextManager&) = delete;
+  ContextManager(ContextManager&&) = delete;
+  ContextManager& operator=(ContextManager&&) = delete;
+  ~ContextManager() = default;
 
   /**
-   * @brief ContextManager destructor
-   * The internal ZMQ Context is terminated and set to nullptr.
-   */
-  ~ContextManager() {
-    zmq_ctx_term(context_);
-    context_ = nullptr;
-  }
-
-  /**
-   * @brief Returns a raw pointer to the unique instance of the internal ZMQ Context.
+   * @brief Returns the static instance of the ZMQ context.
+   *
+   * During the first call, a new ZMQContext object is instantiated.
+   * That instantiation performs thread-safe operations to create/dispose the underlying ZMQ context object.
    */
   static void* instance() {
-    // If the ZMQ Context instance is has not been yet created, a new one is instantiated.
-    if (context_ == nullptr) { context_ = zmq_ctx_new(); }
-    // Else, the current instance is returned
-    return context_;
+    std::lock_guard<std::mutex> lock(context_creation_mutex_);
+    // Make a new context and atomically swap it with the member context.
+    if (context_ == nullptr) { context_ = std::make_shared<ZMQContext>(); }
+    return context_->getContext();
   }
 
 private:
-  static void* context_;
+  /**
+   * @brief The ZMQContext class handles the lifetime of a static ZMQ context instance.
+   *
+   * The ZMQ context is instatiated only on construction and automatically terminated when the objects lifetime is over.
+   */
+  class ZMQContext {
+  public:
+    /**
+     * @brief Atomically instantiate a new ZMQ context if none was yet created.
+     */
+    ZMQContext() { internal_context_ = zmq_ctx_new(); }
+
+    ZMQContext(const ZMQContext&) = delete;
+    ZMQContext& operator=(const ZMQContext&) = delete;
+    ZMQContext(ZMQContext&&) = delete;
+    ZMQContext& operator=(ZMQContext&&) = delete;
+
+    // Terminate the static ZMQ context instance.
+    ~ZMQContext() {
+      if (internal_context_ != nullptr) { zmq_ctx_term(internal_context_); }
+    }
+
+    /**
+     * @brief Returns the ZMQ context instance.
+     */
+    void* getContext() { return internal_context_; }
+
+  private:
+    void* internal_context_{nullptr};  //< Atomic static ZMQ Context.
+  };
+  static std::mutex context_creation_mutex_;
+  static std::shared_ptr<ZMQContext> context_;  //< This allows to automatically dispose (and therefore, terminate) the
+                                                // ZMQ context handled by the ZMQContext class.
 };
 }  // Namespace simple.
-
-void* simple::ContextManager::context_ = nullptr;  //< The static ZMQ context is initialized to nullptr.
 
 #endif  // SIMPLE_CONTEXT_MANAGER_HPP
