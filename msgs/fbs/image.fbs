@@ -9,7 +9,7 @@ table uint8_type{
 }
 
 table int16_type{
-	raw:[short];
+	raw:[int16];
 }
 
 table float_type{
@@ -25,15 +25,15 @@ table ImageFbs{
 	header:[ubyte];
 	origin:[ubyte];
 	encoding:string;
-	resX:double;
-	resY:double;
-	resZ:double;
-	width:int;
-	height:int;
-	depth:int;
+	spacing_x:double;
+	spacing_y:double;
+	spacing_z:double;
+	width:uint32;
+	height:uint32;
+	depth:uint32;
 	image:data;
-	image_size:int;
-	num_channels:int;
+	image_size:uint64;
+	num_channels:ushort;
 }
 
 root_type ImageFbs;
