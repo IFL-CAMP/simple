@@ -46,7 +46,11 @@ public:
   Point& operator=(const std::array<double, 3>&);
   Point& operator=(std::array<double, 3>&&) noexcept;
 
-  inline bool operator==(const Point& rhs) const { return data_ == rhs.data_; }
+  inline bool operator==(const Point& rhs) const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return data_ == rhs.data_;
+  }
+
   inline bool operator!=(const Point& rhs) const { return !(*this == rhs); }
   friend std::ostream& operator<<(std::ostream&, const Point&);
 
@@ -75,19 +79,31 @@ public:
   /**
    * @brief Returns the point as an array of 3 elements.
    */
-  inline std::array<double, 3> toVector() const { return data_; }
+  inline std::array<double, 3> toVector() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return data_;
+  }
   /**
    * @brief Returns of the x point coordinate.
    */
-  inline double getX() const { return data_[0]; }
+  inline double getX() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return data_[0];
+  }
   /**
    * @brief Returns of the y point coordinate.
    */
-  inline double getY() const { return data_[1]; }
+  inline double getY() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return data_[1];
+  }
   /**
    * @brief Returns of the z point coordinate.
    */
-  inline double getZ() const { return data_[2]; }
+  inline double getZ() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return data_[2];
+  }
   /**
    * @brief Modifies the x coordinate of the point.
    */
