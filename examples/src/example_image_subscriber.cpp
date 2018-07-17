@@ -38,7 +38,7 @@ void example_callback(const simple_msgs::Image<uint8_t>& i) {
   // We need to cast the image dimensions, since OpenCV takes signed ints :(
   cv::Mat received_img{static_cast<int>(dimensions[1]), static_cast<int>(dimensions[0]), CV_8UC(i.getNumChannels()),
                        img};
-  cv::Mat();
+
   received_img.copyTo(buffer);
 
   cv::imshow(window_name, buffer);
