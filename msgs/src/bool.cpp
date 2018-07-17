@@ -33,7 +33,7 @@ Bool& Bool::operator=(const Bool& other) {
 }
 
 Bool& Bool::operator=(Bool&& other) noexcept {
-  if (this != std::addressof(other)) { data_.store(std::move(other.data_)); }
+  if (this != std::addressof(other)) { data_.store(other.data_.load()); }
   return *this;
 }
 Bool& Bool::operator=(std::shared_ptr<void*> data) {
