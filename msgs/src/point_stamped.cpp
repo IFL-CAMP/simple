@@ -36,6 +36,7 @@ PointStamped::PointStamped(PointStamped&& other) noexcept
 PointStamped& PointStamped::operator=(const PointStamped& other) {
   if (this != std::addressof(other)) {
     std::lock_guard<std::mutex> lock{mutex_};
+    std::lock_guard<std::mutex> other_lock{other.mutex_};
     header_ = other.header_;
     point_ = other.point_;
   }
@@ -45,6 +46,7 @@ PointStamped& PointStamped::operator=(const PointStamped& other) {
 PointStamped& PointStamped::operator=(PointStamped&& other) noexcept {
   if (this != std::addressof(other)) {
     std::lock_guard<std::mutex> lock{mutex_};
+    std::lock_guard<std::mutex> other_lock{other.mutex_};
     header_ = std::move(other.header_);
     point_ = std::move(other.point_);
   }
@@ -87,6 +89,7 @@ void PointStamped::setPoint(const Point& p) {
 }
 
 std::ostream& operator<<(std::ostream& out, const PointStamped& p) {
+  std::lock_guard<std::mutex> lock{p.mutex_};
   out << p.header_ << p.point_;
   return out;
 }

@@ -43,7 +43,10 @@ public:
   PointStamped& operator=(PointStamped&&) noexcept;
   PointStamped& operator=(std::shared_ptr<void*>);
 
-  inline bool operator==(const PointStamped& rhs) const { return (point_ == rhs.point_ && header_ == rhs.header_); }
+  inline bool operator==(const PointStamped& rhs) const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return (point_ == rhs.point_ && header_ == rhs.header_);
+  }
   inline bool operator!=(const PointStamped& rhs) const { return !(*this == rhs); }
   friend std::ostream& operator<<(std::ostream&, const PointStamped&);
 
@@ -56,13 +59,19 @@ public:
   /**
    * @brief Returns message Header.
    */
-  inline Header& getHeader() { return header_; }
+  inline Header& getHeader() {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return header_;
+  }
   inline const Header& getHeader() const { return header_; }
 
   /**
    * @brief Returns the point as an array of 3 elements.
    */
-  inline Point& getPoint() { return point_; }
+  inline Point& getPoint() {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return point_;
+  }
   inline const Point& getPoint() const { return point_; }
 
   /**
