@@ -48,7 +48,8 @@ public:
    * @param linger Time, in msec, unsent messages linger in memory after socket
    * is closed. Default -1 (infinite).
    */
-  Server(const std::string& address, const std::function<void(T&)>& callback, int timeout = 1000, int linger = -1)
+  explicit Server(const std::string& address, const std::function<void(T&)>& callback, int timeout = 1000,
+                  int linger = -1)
     : socket_{new GenericSocket<T>(ZMQ_REP)}, callback_{callback} {
     socket_->filter();
     socket_->setTimeout(timeout);
