@@ -37,7 +37,7 @@ Header::Header(Header&& other) noexcept
 Header& Header::operator=(const Header& other) {
   if (this != std::addressof(other)) {
     std::lock_guard<std::mutex> lock{frame_id_mutex_};
-    std::lock_guard<std::mutex> lock{other.frame_id_mutex_};
+    std::lock_guard<std::mutex> other_lock{other.frame_id_mutex_};
     seq_n_.store(other.seq_n_.load());
     frame_id_ = other.frame_id_;
     timestamp_.store(other.timestamp_.load());
@@ -48,7 +48,7 @@ Header& Header::operator=(const Header& other) {
 Header& Header::operator=(Header&& other) noexcept {
   if (this != std::addressof(other)) {
     std::lock_guard<std::mutex> lock{frame_id_mutex_};
-    std::lock_guard<std::mutex> lock{other.frame_id_mutex_};
+    std::lock_guard<std::mutex> other_lock{other.frame_id_mutex_};
     seq_n_.store(other.seq_n_.load());
     frame_id_ = std::move(other.frame_id_);
     timestamp_.store(other.timestamp_.load());
