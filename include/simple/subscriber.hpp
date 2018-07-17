@@ -46,7 +46,7 @@ public:
    * @param Time the subscriber will block the thread waiting for a message. In
    * milliseconds.
    */
-  Subscriber<T>(const std::string& address, const std::function<void(const T&)>& callback, int timeout = 1000)
+  explicit Subscriber<T>(const std::string& address, const std::function<void(const T&)>& callback, int timeout = 1000)
     : socket_{new GenericSocket<T>(ZMQ_SUB)}, callback_{callback} {
     socket_->filter();
     socket_->setTimeout(timeout);
@@ -93,7 +93,7 @@ private:
 
     // Start the callback thread if not yet done.
     if (!subscriber_thread_.joinable() && socket_ != nullptr) {
-	  subscriber_thread_ = std::thread(&Subscriber::subscribe, this, alive_, socket_);
+      subscriber_thread_ = std::thread(&Subscriber::subscribe, this, alive_, socket_);
     }
   }
 
