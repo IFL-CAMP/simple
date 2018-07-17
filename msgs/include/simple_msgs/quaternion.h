@@ -45,7 +45,11 @@ public:
   Quaternion& operator=(const std::array<double, 4>&);
   Quaternion& operator=(std::array<double, 4>&&) noexcept;
 
-  inline bool operator==(const Quaternion& rhs) const { return data_ == rhs.data_; }
+  inline bool operator==(const Quaternion& rhs) const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return data_ == rhs.data_;
+  }
+
   inline bool operator!=(const Quaternion& rhs) const { return !(*this == rhs); }
   friend std::ostream& operator<<(std::ostream&, const Quaternion&);
 
@@ -58,23 +62,38 @@ public:
    * @brief Returns the quaternion as an array for 4 elements.
    * @return
    */
-  std::array<double, 4> toVector() const { return data_; }
+  std::array<double, 4> toVector() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return data_;
+  }
   /**
    * @brief Returns of the x quaternion component.
    */
-  double getX() const { return data_[0]; }
+  double getX() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return data_[0];
+  }
   /**
    * @brief Returns of the y quaternion component.
    */
-  double getY() const { return data_[1]; }
+  double getY() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return data_[1];
+  }
   /**
    * @brief Returns of the z quaternion component.
    */
-  double getZ() const { return data_[2]; }
+  double getZ() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return data_[2];
+  }
   /**
    * @brief Returns of the w quaternion component.
    */
-  double getW() const { return data_[3]; }
+  double getW() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return data_[3];
+  }
   /**
    * @brief Modifies the x component of the quaternion.
    */
