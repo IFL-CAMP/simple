@@ -161,7 +161,7 @@ public:
   const Pose& getImageOrigin() const { return origin_; }
   Pose& getImageOrigin() { return origin_; }
   std::string getImageEncoding() const { return encoding_; }
-  unsigned int getNumChannels() const { return num_channels_; }
+  uint16_t getNumChannels() const { return num_channels_; }
 
   void setImageEncoding(const std::string& encoding) {
     std::lock_guard<std::mutex> lock{mutex_};
@@ -208,14 +208,14 @@ public:
    * @param data_size Total length of the data (already contemplating the number of channels)
    * @param num_channels Number of channels in the image
    */
-  void setImageData(const T* data, uint64_t data_size, unsigned short num_channels = 1) {
+  void setImageData(const T* data, uint64_t data_size, uint16_t num_channels = 1) {
     std::lock_guard<std::mutex> lock{mutex_};
     data_.setData(data);
     data_size_ = data_size;
     num_channels_ = num_channels;
   }
 
-  void setImageData(std::shared_ptr<const T> data, uint64_t data_size, unsigned short num_channels = 1) {
+  void setImageData(std::shared_ptr<const T> data, uint64_t data_size, uint16_t num_channels = 1) {
     std::lock_guard<std::mutex> lock{mutex_};
     data_.setData(data);
     data_size_ = data_size;
@@ -283,7 +283,7 @@ private:
   double spacing_x_{0.0}, spacing_y_{0.0}, spacing_z_{0.0};
   uint32_t width_{0}, height_{0}, depth_{0};
   uint64_t data_size_{0};
-  unsigned short num_channels_{1};
+  uint16_t num_channels_{1};
   InternalData data_{};
 };  // namespace simple_msgs
 
