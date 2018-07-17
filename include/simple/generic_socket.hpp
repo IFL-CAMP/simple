@@ -140,7 +140,8 @@ protected:
     if (bytes_received == -1) { return bytes_received; }
 
     std::string received_message_type = static_cast<char*>(zmq_msg_data(local_message.get()));
-    if (received_message_type != topic_) {
+
+    if (strncmp(received_message_type.c_str(), topic_.c_str(), 4) != 0) {
       std::cerr << custom_error << "Received message type " << received_message_type << " while expecting " << topic_
                 << "." << std::endl;
       return -1;
