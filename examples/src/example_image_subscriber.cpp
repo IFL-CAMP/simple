@@ -36,9 +36,7 @@ void example_callback(const simple_msgs::Image<uint8_t>& i) {
   // Build an OpenCV Mat from those.
   cv::Mat received_img{dimensions[1], dimensions[0], CV_8UC(i.getNumChannels()), img};
   received_img.copyTo(buffer);
-
   cv::imshow(window_name, buffer);
-
   std::cout << "Message # " << i.getHeader().getSequenceNumber() << " received !" << std::endl;
 }
 
