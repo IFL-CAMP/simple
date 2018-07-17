@@ -33,20 +33,22 @@ Pose::Pose(const Pose& other) : Pose{other.position_, other.quaternion_} {}
 
 Pose::Pose(Pose&& other) noexcept : Pose{std::move(other.position_), std::move(other.quaternion_)} {}
 
-Pose& Pose::operator=(const Pose& p) {
-  if (this != std::addressof(p)) {
+Pose& Pose::operator=(const Pose& other) {
+  if (this != std::addressof(other)) {
     std::lock_guard<std::mutex> lock{mutex_};
-    position_ = p.position_;
-    quaternion_ = p.quaternion_;
+    std::lock_guard<std::mutex> other_lock{other.mutex_};
+    position_ = other.position_;
+    quaternion_ = other.quaternion_;
   }
   return *this;
 }
 
-Pose& Pose::operator=(Pose&& p) noexcept {
-  if (this != std::addressof(p)) {
+Pose& Pose::operator=(Pose&& other) noexcept {
+  if (this != std::addressof(other)) {
     std::lock_guard<std::mutex> lock{mutex_};
-    position_ = std::move(p.position_);
-    quaternion_ = std::move(p.quaternion_);
+    std::lock_guard<std::mutex> other_lock{other.mutex_};
+    position_ = std::move(other.position_);
+    quaternion_ = std::move(other.quaternion_);
   }
   return *this;
 }
@@ -86,6 +88,7 @@ void Pose::setPosition(const Point& position) {
 }
 
 std::ostream& operator<<(std::ostream& out, const Pose& p) {
+  std::lock_guard<std::mutex> lock{p.mutex_};
   out << "Pose \n \t" << p.position_ << p.quaternion_;
   return out;
 }

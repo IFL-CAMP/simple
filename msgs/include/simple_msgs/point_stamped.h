@@ -63,7 +63,11 @@ public:
     std::lock_guard<std::mutex> lock{mutex_};
     return header_;
   }
-  inline const Header& getHeader() const { return header_; }
+
+  inline const Header& getHeader() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return header_;
+  }
 
   /**
    * @brief Returns the point as an array of 3 elements.
@@ -72,7 +76,11 @@ public:
     std::lock_guard<std::mutex> lock{mutex_};
     return point_;
   }
-  inline const Point& getPoint() const { return point_; }
+
+  inline const Point& getPoint() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return point_;
+  }
 
   /**
    * @brief Modifies the message header.

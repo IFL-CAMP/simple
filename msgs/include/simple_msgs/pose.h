@@ -40,6 +40,7 @@ public:
   Pose& operator=(std::shared_ptr<void*>);
 
   inline bool operator==(const Pose& rhs) const {
+    std::lock_guard<std::mutex> lock{mutex_};
     return (position_ == rhs.position_ && quaternion_ == rhs.quaternion_);
   }
   inline bool operator!=(const Pose& rhs) const { return !(*this == rhs); }
@@ -54,14 +55,28 @@ public:
   /**
    * @brief Returns the translational part of the Pose as a Point message.
    */
-  inline Point& getPosition() { return position_; }
-  inline const Point& getPosition() const { return position_; }
+  inline Point& getPosition() {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return position_;
+  }
+
+  inline const Point& getPosition() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return position_;
+  }
 
   /**
    * @brief Returns the rotational part of the Pose as a Quaternion message.
    */
-  inline Quaternion& getQuaternion() { return quaternion_; }
-  inline const Quaternion& getQuaternion() const { return quaternion_; }
+  inline Quaternion& getQuaternion() {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return quaternion_;
+  }
+
+  inline const Quaternion& getQuaternion() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return quaternion_;
+  }
 
   /**
    * @brief Modifies the rotational part of the Pose.
