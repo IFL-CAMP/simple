@@ -155,13 +155,13 @@ public:
   std::array<double, 3> getSpacing() const { return {{spacing_x_, spacing_y_, spacing_z_}}; }
   std::array<uint32_t, 3> getImageDimensions() const { return {{width_, height_, depth_}}; }
   const T* getImageData() const { return data_.getData(); }
-  int getImageSize() const { return data_size_; }
+  uint64_t getImageSize() const { return data_size_; }
   const Header& getHeader() const { return header_; }
   Header& getHeader() { return header_; }
   const Pose& getImageOrigin() const { return origin_; }
   Pose& getImageOrigin() { return origin_; }
   std::string getImageEncoding() const { return encoding_; }
-  int getNumChannels() const { return num_channels_; }
+  unsigned int getNumChannels() const { return num_channels_; }
 
   void setImageEncoding(const std::string& encoding) {
     std::lock_guard<std::mutex> lock{mutex_};
@@ -175,7 +175,7 @@ public:
     spacing_z_ = spacing_z;
   }
 
-  void setImageDimensions(int width, int height, int depth) {
+  void setImageDimensions(uint32_t width, uint32_t height, uint32_t depth) {
     std::lock_guard<std::mutex> lock{mutex_};
     width_ = width;
     height_ = height;
@@ -208,14 +208,14 @@ public:
    * @param data_size Total length of the data (already contemplating the number of channels)
    * @param num_channels Number of channels in the image
    */
-  void setImageData(const T* data, int data_size, int num_channels = 1) {
+  void setImageData(const T* data, uint64_t data_size, unsigned short num_channels = 1) {
     std::lock_guard<std::mutex> lock{mutex_};
     data_.setData(data);
     data_size_ = data_size;
     num_channels_ = num_channels;
   }
 
-  void setImageData(std::shared_ptr<const T> data, int data_size, int num_channels = 1) {
+  void setImageData(std::shared_ptr<const T> data, uint64_t data_size, unsigned short num_channels = 1) {
     std::lock_guard<std::mutex> lock{mutex_};
     data_.setData(data);
     data_size_ = data_size;
