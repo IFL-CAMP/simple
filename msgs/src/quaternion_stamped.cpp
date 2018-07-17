@@ -40,6 +40,7 @@ QuaternionStamped::QuaternionStamped(QuaternionStamped&& other) noexcept
 QuaternionStamped& QuaternionStamped::operator=(const QuaternionStamped& other) {
   if (this != std::addressof(other)) {
     std::lock_guard<std::mutex> lock{mutex_};
+    std::lock_guard<std::mutex> other_lock{other.mutex_};
     header_ = other.header_;
     quaternion_ = other.quaternion_;
   }
@@ -49,6 +50,7 @@ QuaternionStamped& QuaternionStamped::operator=(const QuaternionStamped& other) 
 QuaternionStamped& QuaternionStamped::operator=(QuaternionStamped&& other) noexcept {
   if (this != std::addressof(other)) {
     std::lock_guard<std::mutex> lock{mutex_};
+    std::lock_guard<std::mutex> other_lock{other.mutex_};
     quaternion_ = std::move(other.quaternion_);
     header_ = std::move(other.header_);
   }
@@ -91,8 +93,8 @@ void QuaternionStamped::setQuaternion(const Quaternion& quaternion) {
 }
 
 std::ostream& operator<<(std::ostream& out, const QuaternionStamped& q) {
+  std::lock_guard<std::mutex> lock{q.mutex_};
   out << q.header_ << q.quaternion_;
-
   return out;
 }
 }  // namespace simple_msgs

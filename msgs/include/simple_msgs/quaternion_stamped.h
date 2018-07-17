@@ -45,6 +45,7 @@ public:
   QuaternionStamped& operator=(std::shared_ptr<void*>);
 
   inline bool operator==(const QuaternionStamped& rhs) const {
+    std::lock_guard<std::mutex> lock{mutex_};
     return (quaternion_ == rhs.quaternion_ && header_ == rhs.header_);
   }
   inline bool operator!=(const QuaternionStamped& rhs) const { return !(*this == rhs); }
@@ -58,15 +59,29 @@ public:
   /**
    * @brief Returns the message Hader.
    */
-  inline Header& getHeader() { return header_; }
-  inline const Header& getHeader() const { return header_; }
+  inline Header& getHeader() {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return header_;
+  }
+
+  inline const Header& getHeader() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return header_;
+  }
 
   /**
    * @brief Returns the message Quaternion.
    * @return
    */
-  inline Quaternion& getQuaternion() { return quaternion_; }
-  inline const Quaternion& getQuaternion() const { return quaternion_; }
+  inline Quaternion& getQuaternion() {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return quaternion_;
+  }
+
+  inline const Quaternion& getQuaternion() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return quaternion_;
+  }
 
   /**
    * @brief Modifies the message Header.
