@@ -19,6 +19,7 @@
 #ifndef SIMPLE_MSGS_HEADER_H
 #define SIMPLE_MSGS_HEADER_H
 
+#include <atomic>
 #include <ostream>
 
 #include "generated/header_generated.h"
@@ -41,14 +42,11 @@ public:
   Header& operator=(std::shared_ptr<void*>);
 
   inline bool operator==(const Header& rhs) const {
-    std::lock_guard<std::mutex> lock{mutex_};
+    std::lock_guard<std::mutex> lock{frame_id_mutex_};
     return (seq_n_ == rhs.seq_n_ && frame_id_ == rhs.frame_id_ && timestamp_ == rhs.timestamp_);
   }
 
-  inline bool operator!=(const Header& rhs) const {
-    std::lock_guard<std::mutex> lock{mutex_};
-    return !(*this == rhs);
-  }
+  inline bool operator!=(const Header& rhs) const { return !(*this == rhs); }
 
   friend std::ostream& operator<<(std::ostream& out, const Header& h);
 
@@ -60,24 +58,18 @@ public:
   /**
    * @brief Returns the sequence number of the message.
    */
-  inline int getSequenceNumber() const {
-    std::lock_guard<std::mutex> lock{mutex_};
-    return seq_n_;
-  }
+  inline int getSequenceNumber() const { return seq_n_.load(); }
   /**
    * @brief Returns the frame id of the message.
    */
   inline std::string getFrameID() const {
-    std::lock_guard<std::mutex> lock{mutex_};
+    std::lock_guard<std::mutex> lock{frame_id_mutex_};
     return frame_id_;
   }
   /**
    * @brief Returns the timestamp of the message.
    */
-  inline long long getTimestamp() const {
-    std::lock_guard<std::mutex> lock{mutex_};
-    return timestamp_;
-  }
+  inline long long getTimestamp() const { return timestamp_.load(); }
   /**
    * @brief Modifies the sequence number of the message.
    */
@@ -100,10 +92,10 @@ public:
   static inline std::string getTopic() { return HeaderFbsIdentifier(); }
 
 private:
-  mutable std::mutex mutex_{};
-  int seq_n_{0};
+  mutable std::mutex frame_id_mutex_{};
+  std::atomic<int> seq_n_{0};
   std::string frame_id_{""};
-  long long timestamp_{0};
+  std::atomic<long long> timestamp_{0};
 };
 }  // Namespace simple_msgs.
 
