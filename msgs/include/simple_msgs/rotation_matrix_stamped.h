@@ -45,8 +45,10 @@ public:
   RotationMatrixStamped& operator=(std::shared_ptr<void*>);
 
   inline bool operator==(const RotationMatrixStamped& rhs) const {
+    std::lock_guard<std::mutex> lock{mutex_};
     return (rotation_matrix_ == rhs.rotation_matrix_ && header_ == rhs.header_);
   }
+
   inline bool operator!=(const RotationMatrixStamped& rhs) const { return !(*this == rhs); }
   friend std::ostream& operator<<(std::ostream&, const RotationMatrixStamped&);
 
@@ -59,14 +61,28 @@ public:
   /**
    * @brief Returns the message Header.
    */
-  inline Header& getHeader() { return header_; }
-  inline const Header& getHeader() const { return header_; }
+  inline Header& getHeader() {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return header_;
+  }
+
+  inline const Header& getHeader() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return header_;
+  }
 
   /**
    * @brief Returns the rotation matrix.
    */
-  inline RotationMatrix& getRotationMatrix() { return rotation_matrix_; }
-  inline const RotationMatrix& getRotationMatrix() const { return rotation_matrix_; }
+  inline RotationMatrix& getRotationMatrix() {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return rotation_matrix_;
+  }
+
+  inline const RotationMatrix& getRotationMatrix() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return rotation_matrix_;
+  }
 
   /**
    * @brief Mofidies the header.

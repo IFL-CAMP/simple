@@ -40,6 +40,7 @@ RotationMatrixStamped::RotationMatrixStamped(RotationMatrixStamped&& other) noex
 RotationMatrixStamped& RotationMatrixStamped::operator=(const RotationMatrixStamped& other) {
   if (this != std::addressof(other)) {
     std::lock_guard<std::mutex> lock{mutex_};
+    std::lock_guard<std::mutex> other_lock{other.mutex_};
     rotation_matrix_ = other.rotation_matrix_;
     header_ = other.header_;
   }
@@ -49,6 +50,7 @@ RotationMatrixStamped& RotationMatrixStamped::operator=(const RotationMatrixStam
 RotationMatrixStamped& RotationMatrixStamped::operator=(RotationMatrixStamped&& other) noexcept {
   if (this != std::addressof(other)) {
     std::lock_guard<std::mutex> lock{mutex_};
+    std::lock_guard<std::mutex> other_lock{other.mutex_};
     rotation_matrix_ = std::move(other.rotation_matrix_);
     header_ = std::move(other.header_);
   }
@@ -91,8 +93,9 @@ void RotationMatrixStamped::setRotationMatrix(const RotationMatrix& rotation_mat
   rotation_matrix_ = rotation_matrix;
 }
 
-std::ostream& operator<<(std::ostream& out, const RotationMatrixStamped& q) {
-  out << q.header_ << q.rotation_matrix_;
+std::ostream& operator<<(std::ostream& out, const RotationMatrixStamped& matrix) {
+  std::lock_guard<std::mutex> lock{matrix.mutex_};
+  out << matrix.header_ << matrix.rotation_matrix_;
   return out;
 }
 }  // namespace simple_msgs
