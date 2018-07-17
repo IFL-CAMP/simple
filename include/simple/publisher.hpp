@@ -54,13 +54,13 @@ public:
    * @param msg: SIMPLE class wrapper for Flatbuffer messages.
    * @return size of the message, in bytes, published. Returns -1 if send fails.
    */
-  int publish(const T& msg) { return publish(msg.getBufferData()); }
+  int publish(const T& msg) const { return publish(msg.getBufferData()); }
   /**
    * @brief Publishes the message through the open socket.
    * @param buffer: buffer containing the data to be published.
    * @return size of the message, in bytes, published. Returns -1 if send fails.
    */
-  int publish(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer) {
+  int publish(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer) const {
     return socket_.sendMsg(buffer, "[Simple Publisher] - ");
   }
 

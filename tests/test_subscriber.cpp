@@ -53,7 +53,7 @@ SCENARIO("SIMPLE Subscriber interface") {
       THEN("It works properly.") {
         simple::Publisher<simple_msgs::Bool> publisher{"tcp://*:6667"};
         simple::Subscriber<simple_msgs::Bool> subscriber{std::move(copy_subscriber)};
-        std::this_thread::sleep_for(std::chrono::seconds(2));  //< Wait a bit so that the subcriber is connected.
+        std::this_thread::sleep_for(std::chrono::seconds(3));  //< Wait a bit so that the subcriber is connected.
         n_received_msg = 0;                                    //< Reset the global variable.
         for (int i = 0; i < 10; ++i) {
           publisher.publish(simple_msgs::Bool{false});

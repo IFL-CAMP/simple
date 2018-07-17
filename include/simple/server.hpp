@@ -104,11 +104,11 @@ private:
    * callback function and reply.
    */
   void awaitRequest(std::shared_ptr<std::atomic<bool>> alive, std::shared_ptr<GenericSocket<T>> socket) {
-    while (*alive) {
+    while (alive->load()) {
       T msg;
       if (socket->receiveMsg(msg, "[SIMPLE Server] - ") != -1) {
-        if (*alive) { callback_(msg); }
-        if (*alive) { reply(socket.get(), msg); }
+        if (alive->load()) { callback_(msg); }
+        if (alive->load()) { reply(socket.get(), msg); }
       }
     }
   }

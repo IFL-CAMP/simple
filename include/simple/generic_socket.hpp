@@ -50,13 +50,13 @@ public:
   GenericSocket& operator=(const GenericSocket&) = delete;
 
   GenericSocket(GenericSocket&& other) {
-    socket_.store(other.socket_);
+    socket_.store(other.socket_.load());
     other.socket_ = nullptr;
   }
 
   GenericSocket& operator=(GenericSocket&& other) {
     if (other.isValid()) {
-      socket_.store(other.socket_);
+      socket_.store(other.socket_.load());
       other.socket_ = nullptr;
     }
     return *this;
@@ -73,7 +73,7 @@ protected:
   explicit GenericSocket(int type) { initSocket(type); }
 
   void bind(const std::string& address) {
-    auto success = zmq_bind(socket_, address.c_str());
+    auto success = zmq_bind(socket_.load(), address.c_str());
     if (success != 0) {
       throw std::runtime_error("[SIMPLE Error] - Cannot bind to the address/port: " + address +
                                ". ZMQ Error: " + std::string(zmq_strerror(zmq_errno())));
@@ -81,7 +81,7 @@ protected:
   }
 
   void connect(const std::string& address) {
-    auto success = zmq_connect(socket_, address.c_str());
+    auto success = zmq_connect(socket_.load(), address.c_str());
     if (success != 0) {
       throw std::runtime_error("[SIMPLE Error] - Cannot connect to the address/port: " + address +
                                ". ZMQ Error: " + std::string(zmq_strerror(zmq_errno())));
@@ -89,7 +89,7 @@ protected:
   }
 
   int sendMsg(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer,
-              const std::string& custom_error = "[SIMPLE Error] - ") {
+              const std::string& custom_error = "[SIMPLE Error] - ") const {
     // Send the topic first and add the rest of the message after it.
 
     zmq_msg_t topic_message{};
@@ -109,8 +109,8 @@ protected:
     zmq_msg_init_data(&message, buffer->data(), buffer->size(), free_function, buffer_pointer);
 
     // Send the topic first and add the rest of the message after it.
-    auto topic_sent = zmq_msg_send(&topic_message, socket_, ZMQ_SNDMORE);
-    auto message_sent = zmq_msg_send(&message, socket_, ZMQ_DONTWAIT);
+    auto topic_sent = zmq_msg_send(&topic_message, socket_.load(), ZMQ_SNDMORE);
+    auto message_sent = zmq_msg_send(&message, socket_.load(), ZMQ_DONTWAIT);
 
     if (topic_sent == -1 || message_sent == -1) {
       // If send is not successful, close the message.
@@ -121,7 +121,7 @@ protected:
     return message_sent;
   }
 
-  int receiveMsg(T& msg, const std::string& custom_error = "") {
+  int receiveMsg(T& msg, const std::string& custom_error = "") const {
     int data_past_topic{0};
     auto data_past_topic_size{sizeof(data_past_topic)};
 
@@ -132,7 +132,7 @@ protected:
 
     zmq_msg_init(local_message.get());
 
-    int bytes_received = zmq_msg_recv(local_message.get(), socket_, 0);
+    int bytes_received = zmq_msg_recv(local_message.get(), socket_.load(), 0);
 
     if (bytes_received == -1) { return bytes_received; }
 
@@ -148,7 +148,7 @@ protected:
       return -1;
     }
 
-    bytes_received = zmq_msg_recv(local_message.get(), socket_, 0);
+    bytes_received = zmq_msg_recv(local_message.get(), socket_.load(), 0);
 
     if (bytes_received == -1 || zmq_msg_size(local_message.get()) == 0) {
       std::cerr << custom_error << "Failed to receive the message. ZMQ Error: " << zmq_strerror(zmq_errno())
@@ -161,28 +161,28 @@ protected:
     return bytes_received;
   }
 
-  inline void filter() { zmq_setsockopt(socket_, ZMQ_SUBSCRIBE, topic_.c_str(), topic_.size()); }
+  inline void filter() { zmq_setsockopt(socket_.load(), ZMQ_SUBSCRIBE, topic_.c_str(), topic_.size()); }
 
-  inline void setTimeout(int timeout) { zmq_setsockopt(socket_, ZMQ_RCVTIMEO, &timeout, sizeof(timeout)); }
+  inline void setTimeout(int timeout) { zmq_setsockopt(socket_.load(), ZMQ_RCVTIMEO, &timeout, sizeof(timeout)); }
 
-  inline void setLinger(int linger) { zmq_setsockopt(socket_, ZMQ_LINGER, &linger, sizeof(linger)); }
+  inline void setLinger(int linger) { zmq_setsockopt(socket_.load(), ZMQ_LINGER, &linger, sizeof(linger)); }
 
   inline void initSocket(int type) {
-    if (socket_ == nullptr) { socket_ = zmq_socket(ContextManager::instance(), type); }
+    if (socket_.load() == nullptr) { socket_.store(zmq_socket(ContextManager::instance(), type)); }
   }
 
   inline void closeSocket() {
-    if (socket_ != nullptr) {
-      zmq_close(socket_);
-      socket_ = nullptr;
+    if (socket_.load() != nullptr) {
+      zmq_close(socket_.load());
+      socket_.store(nullptr);
     }
   }
 
-  inline bool isValid() { return static_cast<bool>(socket_ != nullptr); }
+  inline bool isValid() { return static_cast<bool>(socket_.load() != nullptr); }
 
 private:
   std::string topic_{T::getTopic()};
-  std::atomic<void*> socket_{nullptr};
+  mutable std::atomic<void*> socket_{nullptr};
 };
 }  // Namespace simple.
 
