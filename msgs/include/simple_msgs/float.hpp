@@ -30,17 +30,15 @@ NumericType<float>::NumericType(const void* data) : data_{GetFloatFbs(data)->dat
 
 template <>
 NumericType<float>& NumericType<float>::operator=(std::shared_ptr<void*> data) {
-  std::lock_guard<std::mutex> lock{mutex_};
-  data_ = GetFloatFbs(*data)->data();
+  data_.store(GetFloatFbs(*data)->data());
   return *this;
 }
 
 template <>
 std::shared_ptr<flatbuffers::DetachedBuffer> NumericType<float>::getBufferData() const {
-  std::lock_guard<std::mutex> lock{mutex_};
   flatbuffers::FlatBufferBuilder builder{1024};
   FloatFbsBuilder tmp_builder{builder};
-  tmp_builder.add_data(data_);
+  tmp_builder.add_data(data_.load());
   FinishFloatFbsBuffer(builder, tmp_builder.Finish());
   return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
