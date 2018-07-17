@@ -172,7 +172,7 @@ public:
     std::lock_guard<std::mutex> lock{mutex_};
     spacing_x_ = spacing_x;
     spacing_y_ = spacing_y;
-    spacing_y_ = spacing_z;
+    spacing_z_ = spacing_z;
   }
 
   void setImageDimensions(int width, int height, int depth) {
