@@ -30,17 +30,15 @@ NumericType<int>::NumericType(const void* data) : data_{GetIntFbs(data)->data()}
 
 template <>
 NumericType<int>& NumericType<int>::operator=(std::shared_ptr<void*> data) {
-  std::lock_guard<std::mutex> lock{mutex_};
-  data_ = GetIntFbs(*data)->data();
+  data_.store(GetIntFbs(*data)->data());
   return *this;
 }
 
 template <>
 std::shared_ptr<flatbuffers::DetachedBuffer> NumericType<int>::getBufferData() const {
-  std::lock_guard<std::mutex> lock{mutex_};
   flatbuffers::FlatBufferBuilder builder{1024};
   IntFbsBuilder tmp_builder{builder};
-  tmp_builder.add_data(data_);
+  tmp_builder.add_data(data_.load());
   FinishIntFbsBuffer(builder, tmp_builder.Finish());
   return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
