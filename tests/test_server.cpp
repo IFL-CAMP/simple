@@ -49,10 +49,11 @@ SCENARIO("SIMPLE Server interface") {
     WHEN("It is move-constructed") {
       std::this_thread::sleep_for(std::chrono::seconds(2));
       simple::Server<simple_msgs::Point> copy_server{"tcp://*:6667", dummy_callback};
+      simple::Server<simple_msgs::Point> another_server{"tcp://*:6671", dummy_callback};
       THEN("It is moved correctly.") { REQUIRE_NOTHROW(simple::Server<simple_msgs::Point>{std::move(copy_server)}); }
       THEN("It works properly.") {
-        simple::Client<simple_msgs::Point> client{"tcp://localhost:6667"};
-        simple::Server<simple_msgs::Point> server{std::move(copy_server)};
+        simple::Client<simple_msgs::Point> client{"tcp://localhost:6671"};
+        simple::Server<simple_msgs::Point> server{std::move(another_server)};
         std::this_thread::sleep_for(std::chrono::seconds(2));
         n_received_requests = 0;  //< Reset the global variable.
         for (int i = 0; i < 10; ++i) {
@@ -72,13 +73,14 @@ SCENARIO("SIMPLE Server interface") {
     WHEN("It is move-assigned") {
       std::this_thread::sleep_for(std::chrono::seconds(2));
       simple::Server<simple_msgs::Point> copy_server{"tcp://*:6668", dummy_callback};
+      simple::Server<simple_msgs::Point> another_server{"tcp://*:6670", dummy_callback};
       THEN("It is moved correctly.") {
         simple::Server<simple_msgs::Point> server;
         REQUIRE_NOTHROW(server = std::move(copy_server));
       }
       THEN("It works properly.") {
-        simple::Client<simple_msgs::Point> client{"tcp://localhost:6668"};
-        simple::Server<simple_msgs::Point> server = std::move(copy_server);
+        simple::Client<simple_msgs::Point> client{"tcp://localhost:6670"};
+        simple::Server<simple_msgs::Point> server = std::move(another_server);
         std::this_thread::sleep_for(std::chrono::seconds(2));
         n_received_requests = 0;  //< Reset the global variable.
         for (int i = 0; i < 10; ++i) {
