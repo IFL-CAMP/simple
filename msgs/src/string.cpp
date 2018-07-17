@@ -37,6 +37,7 @@ String::String(String&& other) noexcept : data_{std::move(other.data_)} {}
 String& String::operator=(const String& other) {
   if (this != std::addressof(other)) {
     std::lock_guard<std::mutex> lock{mutex_};
+    std::lock_guard<std::mutex> other_lock{other.mutex_};
     data_ = other.data_;
   }
   return *this;
@@ -45,6 +46,7 @@ String& String::operator=(const String& other) {
 String& String::operator=(String&& other) noexcept {
   if (this != std::addressof(other)) {
     std::lock_guard<std::mutex> lock{mutex_};
+    std::lock_guard<std::mutex> other_lock{other.mutex_};
     data_ = std::move(other.data_);
     other.data_.clear();
   }
@@ -81,6 +83,7 @@ std::shared_ptr<flatbuffers::DetachedBuffer> String::getBufferData() const {
 }
 
 std::ostream& operator<<(std::ostream& out, const String& s) {
+  std::lock_guard<std::mutex> lock{s.mutex_};
   out << s.data_;
   return out;
 }
