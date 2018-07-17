@@ -46,6 +46,7 @@ Header& Header::operator=(const Header& other) {
 
 Header& Header::operator=(Header&& other) noexcept {
   if (this != std::addressof(other)) {
+    std::lock_guard<std::mutex> lock{mutex_};
     seq_n_ = std::move(other.seq_n_);
     frame_id_ = std::move(other.frame_id_);
     timestamp_ = std::move(other.timestamp_);
@@ -89,6 +90,7 @@ void Header::setTimestamp(long long timestamp) {
 }
 
 std::ostream& operator<<(std::ostream& out, const Header& h) {
+  std::lock_guard<std::mutex> lock{h.mutex_};
   out << "Header\n \t"
       << "seq_n: " << std::to_string(h.seq_n_) << "\n \t"
       << "frame_id: " << h.frame_id_ << "\n \t"
