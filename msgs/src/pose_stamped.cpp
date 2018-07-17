@@ -34,20 +34,22 @@ PoseStamped::PoseStamped(const PoseStamped& other) : PoseStamped{other.header_, 
 PoseStamped::PoseStamped(PoseStamped&& other) noexcept
   : PoseStamped{std::move(other.header_), std::move(other.pose_)} {}
 
-PoseStamped& PoseStamped::operator=(const PoseStamped& p) {
-  if (this != std::addressof(p)) {
+PoseStamped& PoseStamped::operator=(const PoseStamped& other) {
+  if (this != std::addressof(other)) {
     std::lock_guard<std::mutex> lock{mutex_};
-    header_ = p.header_;
-    pose_ = p.pose_;
+    std::lock_guard<std::mutex> other_lock{other.mutex_};
+    header_ = other.header_;
+    pose_ = other.pose_;
   }
   return *this;
 }
 
-PoseStamped& PoseStamped::operator=(PoseStamped&& p) noexcept {
-  if (this != std::addressof(p)) {
+PoseStamped& PoseStamped::operator=(PoseStamped&& other) noexcept {
+  if (this != std::addressof(other)) {
     std::lock_guard<std::mutex> lock{mutex_};
-    header_ = std::move(p.header_);
-    pose_ = std::move(p.pose_);
+    std::lock_guard<std::mutex> other_lock{other.mutex_};
+    header_ = std::move(other.header_);
+    pose_ = std::move(other.pose_);
   }
   return *this;
 }
@@ -88,6 +90,7 @@ void PoseStamped::setPose(const Pose& pose) {
 }
 
 std::ostream& operator<<(std::ostream& out, const PoseStamped& p) {
+  std::lock_guard<std::mutex> lock{p.mutex_};
   out << p.header_ << p.pose_;
   return out;
 }

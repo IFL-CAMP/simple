@@ -39,7 +39,10 @@ public:
   PoseStamped& operator=(PoseStamped&&) noexcept;
   PoseStamped& operator=(std::shared_ptr<void*>);
 
-  inline bool operator==(const PoseStamped& rhs) const { return (pose_ == rhs.pose_ && header_ == rhs.header_); }
+  inline bool operator==(const PoseStamped& rhs) const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return (pose_ == rhs.pose_ && header_ == rhs.header_);
+  }
   inline bool operator!=(const PoseStamped& rhs) const { return !(*this == rhs); }
   friend std::ostream& operator<<(std::ostream&, const PoseStamped&);
 
@@ -52,14 +55,28 @@ public:
   /**
    * @brief Returns message Header.
    */
-  inline Header& getHeader() { return header_; }
-  inline const Header& getHeader() const { return header_; }
+  inline Header& getHeader() {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return header_;
+  }
+
+  inline const Header& getHeader() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return header_;
+  }
 
   /**
    * @brief Returns the message Pose.
    */
-  inline Pose& getPose() { return pose_; }
-  inline const Pose& getPose() const { return pose_; }
+  inline Pose& getPose() {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return pose_;
+  }
+
+  inline const Pose& getPose() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return pose_;
+  }
 
   /**
    * @brief Modifies the message Header.
