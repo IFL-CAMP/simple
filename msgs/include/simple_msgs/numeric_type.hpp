@@ -49,8 +49,8 @@ public:
 
   NumericType(const NumericType& other) : NumericType{other.data_.load()} {}
 
-  NumericType& operator=(const NumericType& rhs) {
-    data_.store(rhs.data_);
+  NumericType& operator=(const NumericType& other) {
+    if (this != std::addressof(other)) { data_.store(other.data_); }
     return *this;
   }
 
@@ -60,8 +60,8 @@ public:
 
   NumericType(NumericType&& other) noexcept : data_(other.data_.load()) {}
 
-  NumericType& operator=(NumericType&& rhs) noexcept {
-    data_.store(rhs.data_);
+  NumericType& operator=(NumericType&& other) noexcept {
+    if (this != std::addressof(other)) { data_.store(other.data_); }
     return *this;
   }
 
