@@ -52,14 +52,12 @@ public:
   GenericSocket(GenericSocket&& other) {
     socket_.store(other.socket_);
     other.socket_ = nullptr;
-    topic_ = std::move(other.topic_);
   }
 
   GenericSocket& operator=(GenericSocket&& other) {
     if (other.isValid()) {
       socket_.store(other.socket_);
       other.socket_ = nullptr;
-      topic_ = std::move(other.topic_);
     }
     return *this;
   }
