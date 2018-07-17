@@ -79,6 +79,7 @@ public:
   static inline std::string getTopic() { return PoseFbsIdentifier(); }
 
 private:
+  mutable std::mutex mutex_{};
   Point position_{};
   Quaternion quaternion_{};
 };

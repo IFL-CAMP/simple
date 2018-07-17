@@ -40,9 +40,6 @@ public:
   virtual ~GenericMessage() = default;
 
   virtual std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const = 0;
-
-protected:
-  mutable std::mutex mutex_{};
 };
 }  // Namespace simple_msgs.
 

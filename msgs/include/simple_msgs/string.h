@@ -82,6 +82,7 @@ public:
   static inline std::string getTopic() { return StringFbsIdentifier(); }
 
 private:
+  mutable std::mutex mutex_{};
   std::string data_{""};
 };
 }  // Namespace simple_msgs.

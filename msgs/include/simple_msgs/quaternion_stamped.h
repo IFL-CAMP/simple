@@ -85,6 +85,7 @@ public:
   static inline std::string getTopic() { return QuaternionStampedFbsIdentifier(); }
 
 private:
+  mutable std::mutex mutex_{};
   Header header_{};
   Quaternion quaternion_{};
 };

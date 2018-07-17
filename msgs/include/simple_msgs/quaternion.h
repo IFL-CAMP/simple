@@ -101,6 +101,7 @@ public:
   static inline std::string getTopic() { return QuaternionFbsIdentifier(); }
 
 private:
+  mutable std::mutex mutex_{};
   std::array<double, 4> data_{{0, 0, 0, 1}};
 };
 }  // Namespace simple_msgs.

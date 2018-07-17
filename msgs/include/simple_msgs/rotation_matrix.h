@@ -102,6 +102,7 @@ public:
   }
 
 private:
+  mutable std::mutex mutex_{};
   std::array<double, 9> data_{{0, 0, 0, 0, 0, 0, 0, 0, 0}};
 };
 }  // Namespace simple_msgs.

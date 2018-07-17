@@ -86,6 +86,7 @@ public:
   static inline std::string getTopic() { return RotationMatrixStampedFbsIdentifier(); }
 
 private:
+  mutable std::mutex mutex_{};
   Header header_{};
   RotationMatrix rotation_matrix_{};
 };

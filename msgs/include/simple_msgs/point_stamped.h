@@ -79,6 +79,7 @@ public:
   static inline std::string getTopic() { return PointStampedFbsIdentifier(); }
 
 private:
+  mutable std::mutex mutex_{};
   Header header_{};
   Point point_{};
 };

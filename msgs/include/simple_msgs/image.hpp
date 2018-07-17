@@ -277,6 +277,7 @@ private:
   simple_msgs::data getDataUnionType() const;
   flatbuffers::Offset<void> getDataUnionElem(std::shared_ptr<flatbuffers::FlatBufferBuilder> builder) const;
 
+  mutable std::mutex mutex_{};
   simple_msgs::Header header_{};
   simple_msgs::Pose origin_{};
   std::string encoding_{""};

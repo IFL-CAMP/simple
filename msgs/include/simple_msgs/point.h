@@ -109,6 +109,7 @@ public:
   static inline std::string getTopic() { return PointFbsIdentifier(); }
 
 private:
+  mutable std::mutex mutex_{};
   std::array<double, 3> data_{{0, 0, 0}};
 };
 }  // Namespace simple_msgs.

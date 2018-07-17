@@ -77,6 +77,7 @@ public:
   static inline std::string getTopic() { return PoseStampedFbsIdentifier(); }
 
 private:
+  mutable std::mutex mutex_{};
   Header header_{};
   Pose pose_{};
 };
