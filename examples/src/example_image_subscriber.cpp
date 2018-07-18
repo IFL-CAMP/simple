@@ -40,9 +40,7 @@ void example_callback(const simple_msgs::Image<uint8_t>& i) {
                        img};
 
   received_img.copyTo(buffer);
-
   cv::imshow(window_name, buffer);
-
   std::cout << "Message # " << i.getHeader().getSequenceNumber() << " received !" << std::endl;
 }
 
