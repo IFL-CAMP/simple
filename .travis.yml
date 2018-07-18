@@ -11,9 +11,33 @@ matrix:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['gcc-5', 'g++-5']
+      env: MATRIX_EVAL="CC='gcc-5' && CXX='g++-5'" BUILD_TYPE='Debug'
+      
+    - os: linux
+      compiler: gcc
+      addons: &gcc5
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['gcc-5', 'g++-5']
       env: MATRIX_EVAL="CC='gcc-5' && CXX='g++-5'" BUILD_TYPE='Release'
+      
+    - os: linux
+      compiler: gcc
+      addons: &gcc5
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['gcc-5', 'g++-5']
+      env: MATRIX_EVAL="CC='gcc-5' && CXX='g++-5'" BUILD_TYPE='Coverage'
 
     # Linux C++11 Clang build
+    - os: linux
+      compiler: clang
+      addons: &clang38
+        apt:
+          sources: ['llvm-toolchain-precise-3.8', 'ubuntu-toolchain-r-test']
+          packages: ['clang-3.8']
+      env: MATRIX_EVAL="CXX='clang++-3.8'" BUILD_TYPE='Debug'
+      
     - os: linux
       compiler: clang
       addons: &clang38
@@ -23,6 +47,11 @@ matrix:
       env: MATRIX_EVAL="CXX='clang++-3.8'" BUILD_TYPE='Release'
 
     # OSX C++11 Clang Builds
+    - os: osx
+      osx_image: xcode8.3
+      compiler: clang
+      env: MATRIX_EVAL="CXX='clang++'" BUILD_TYPE='Debug'
+      
     - os: osx
       osx_image: xcode8.3
       compiler: clang
@@ -48,7 +77,7 @@ install:
       which cmake || brew install cmake
     fi
   - |
-    if [[ "${CXX}" == "g++-5" ]]; then
+    if [[ "${BUILD_TYPE}" == "Coverage" ]]; then
       # Install LCOV 1.11
       cd ${DEPS_DIR}
       wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.11.orig.tar.gz
@@ -71,7 +100,7 @@ install:
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
   - |
-    if [[ "${CXX}" == "g++-5" ]]; then
+    if [[ "${BUILD_TYPE}" == "Coverage" ]]; then
       lcov --directory . --zerocounters
     fi
   - mkdir -p build && cd build
@@ -83,7 +112,7 @@ script:
   
 after_success:
   - |
-      if [ "${CXX}" == "g++-5" ]; then
+      if [ "${BUILD_TYPE}" == "Coverage" ]; then
         # Generate code coverage information & send to Coveralls
         lcov --gcov-tool gcov-5 --directory ${TRAVIS_BUILD_DIR}/build --capture --output-file coverage.info
         lcov --remove coverage.info 'tests/*' 'msgs/include/simple_msgs/generated/*' '/usr/*' --output-file coverage.info
