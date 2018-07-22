@@ -179,8 +179,11 @@ protected:
     // Check that some data has been received and that it matches the right message topic.
     if (bytes_received == -1) { return bytes_received; }
 
-    if (std::string{static_cast<char*>(zmq_msg_data(local_message.get()))} == topic_) {
-      std::cerr << custom_error << "Received the wrong message type." << std::endl;
+    std::string received_message_type = static_cast<char*>(zmq_msg_data(local_message.get()));
+
+    if (strncmp(received_message_type.c_str(), topic_.c_str(), strlen(topic_.c_str())) != 0) {
+      std::cerr << custom_error << "Received message type " << received_message_type << " while expecting " << topic_
+                << "." << std::endl;
       return -1;
     }
 

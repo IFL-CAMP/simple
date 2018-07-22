@@ -46,7 +46,7 @@ endif()
 # Tests
 if (${SIMPLE_BUILD_TESTS})
   include(CTest)
-  if (CMAKE_CXX_COMPILER_ID MATCHES "GNU") # Coverage flags for GCC
+  if (CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND CMAKE_BUILD_TYPE MATCHES "Coverage") # Coverage flags for GCC
     add_compile_options(-g -O0 -fprofile-arcs -ftest-coverage)
     set(coverage_lib gcov)
   endif()

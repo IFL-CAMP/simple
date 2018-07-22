@@ -36,9 +36,9 @@ public:
     : header_{other.header_}
     , origin_{other.origin_}
     , encoding_{other.encoding_}
-    , resX_{other.resX_}
-    , resY_{other.resY_}
-    , resZ_{other.resZ_}
+    , spacing_x_{other.spacing_x_}
+    , spacing_y_{other.spacing_y_}
+    , spacing_z_{other.spacing_z_}
     , width_{other.width_}
     , height_{other.height_}
     , depth_{other.depth_}
@@ -50,9 +50,9 @@ public:
     : header_{std::move(other.header_)}
     , origin_{std::move(other.origin_)}
     , encoding_{std::move(other.encoding_)}
-    , resX_{std::move(other.resX_)}
-    , resY_{std::move(other.resY_)}
-    , resZ_{std::move(other.resZ_)}
+    , spacing_x_{std::move(other.spacing_x_)}
+    , spacing_y_{std::move(other.spacing_y_)}
+    , spacing_z_{std::move(other.spacing_z_)}
     , width_{std::move(other.width_)}
     , height_{std::move(other.height_)}
     , depth_{std::move(other.depth_)}
@@ -66,9 +66,9 @@ public:
       header_ = other.header_;
       origin_ = other.origin_;
       encoding_ = other.encoding_;
-      resX_ = other.resX_;
-      resY_ = other.resY_;
-      resZ_ = other.resZ_;
+      spacing_x_ = other.spacing_x_;
+      spacing_y_ = other.spacing_y_;
+      spacing_z_ = other.spacing_z_;
       width_ = other.width_;
       height_ = other.height_;
       depth_ = other.depth_;
@@ -85,9 +85,9 @@ public:
       header_ = std::move(other.header_);
       origin_ = std::move(other.origin_);
       encoding_ = std::move(other.encoding_);
-      resX_ = std::move(other.resX_);
-      resY_ = std::move(other.resY_);
-      resZ_ = std::move(other.resZ_);
+      spacing_x_ = std::move(other.spacing_x_);
+      spacing_y_ = std::move(other.spacing_y_);
+      spacing_z_ = std::move(other.spacing_z_);
       width_ = std::move(other.width_);
       height_ = std::move(other.height_);
       depth_ = std::move(other.depth_);
@@ -101,10 +101,10 @@ public:
   Image& operator=(std::shared_ptr<void*> data);
 
   bool operator==(const Image& rhs) const {
-    bool compare =
-        ((header_ == rhs.header_) && (origin_ == rhs.origin_) && (encoding_ == rhs.encoding_) && (resX_ == rhs.resX_) &&
-         (resY_ == rhs.resY_) && (resZ_ == rhs.resZ_) && (width_ == rhs.width_) && (height_ == rhs.height_) &&
-         (depth_ == rhs.depth_) && (data_size_ == rhs.data_size_) && (num_channels_ == rhs.num_channels_));
+    bool compare = ((header_ == rhs.header_) && (origin_ == rhs.origin_) && (encoding_ == rhs.encoding_) &&
+                    (spacing_x_ == rhs.spacing_x_) && (spacing_y_ == rhs.spacing_y_) &&
+                    (spacing_z_ == rhs.spacing_z_) && (width_ == rhs.width_) && (height_ == rhs.height_) &&
+                    (depth_ == rhs.depth_) && (data_size_ == rhs.data_size_) && (num_channels_ == rhs.num_channels_));
 
     if (!data_.empty() && !rhs.data_.empty()) {
       compare = compare && (memcmp(data_.getData(), (rhs.data_.getData()), data_size_) == 0);
@@ -141,9 +141,9 @@ public:
     if (!data_.empty()) { tmp_builder.add_image(elem); }
     tmp_builder.add_image_type(type);
     tmp_builder.add_image_size(data_size_);
-    tmp_builder.add_resX(resX_);
-    tmp_builder.add_resY(resY_);
-    tmp_builder.add_resZ(resZ_);
+    tmp_builder.add_spacing_x(spacing_x_);
+    tmp_builder.add_spacing_y(spacing_y_);
+    tmp_builder.add_spacing_z(spacing_z_);
     tmp_builder.add_height(height_);
     tmp_builder.add_width(width_);
     tmp_builder.add_depth(depth_);
@@ -152,30 +152,30 @@ public:
     return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
   }
 
-  std::array<double, 3> getResolution() const { return {{resX_, resY_, resZ_}}; }
-  std::array<int, 3> getImageDimensions() const { return {{width_, height_, depth_}}; }
+  std::array<double, 3> getSpacing() const { return {{spacing_x_, spacing_y_, spacing_z_}}; }
+  std::array<uint32_t, 3> getImageDimensions() const { return {{width_, height_, depth_}}; }
   const T* getImageData() const { return data_.getData(); }
-  int getImageSize() const { return data_size_; }
+  uint64_t getImageSize() const { return data_size_; }
   const Header& getHeader() const { return header_; }
   Header& getHeader() { return header_; }
   const Pose& getImageOrigin() const { return origin_; }
   Pose& getImageOrigin() { return origin_; }
   std::string getImageEncoding() const { return encoding_; }
-  int getNumChannels() const { return num_channels_; }
+  uint16_t getNumChannels() const { return num_channels_; }
 
   void setImageEncoding(const std::string& encoding) {
     std::lock_guard<std::mutex> lock{mutex_};
     encoding_ = encoding;
   }
 
-  void setImageResolution(double resX, double resY, double resZ) {
+  void setImageSpacing(double spacing_x, double spacing_y, double spacing_z) {
     std::lock_guard<std::mutex> lock{mutex_};
-    resX_ = resX;
-    resY_ = resY;
-    resZ_ = resZ;
+    spacing_x_ = spacing_x;
+    spacing_y_ = spacing_y;
+    spacing_z_ = spacing_z;
   }
 
-  void setImageDimensions(int width, int height, int depth) {
+  void setImageDimensions(uint32_t width, uint32_t height, uint32_t depth) {
     std::lock_guard<std::mutex> lock{mutex_};
     width_ = width;
     height_ = height;
@@ -208,14 +208,14 @@ public:
    * @param data_size Total length of the data (already contemplating the number of channels)
    * @param num_channels Number of channels in the image
    */
-  void setImageData(const T* data, int data_size, int num_channels = 1) {
+  void setImageData(const T* data, uint64_t data_size, uint16_t num_channels = 1) {
     std::lock_guard<std::mutex> lock{mutex_};
     data_.setData(data);
     data_size_ = data_size;
     num_channels_ = num_channels;
   }
 
-  void setImageData(std::shared_ptr<const T> data, int data_size, int num_channels = 1) {
+  void setImageData(std::shared_ptr<const T> data, uint64_t data_size, uint16_t num_channels = 1) {
     std::lock_guard<std::mutex> lock{mutex_};
     data_.setData(data);
     data_size_ = data_size;
@@ -260,10 +260,10 @@ private:
     header_ = imageData->header()->data();
     // Set Origin.
     origin_ = imageData->origin()->data();
-    // Set Image Resolution.
-    resX_ = imageData->resX();
-    resY_ = imageData->resY();
-    resZ_ = imageData->resZ();
+    // Set Image Spacing.
+    spacing_x_ = imageData->spacing_x();
+    spacing_y_ = imageData->spacing_y();
+    spacing_z_ = imageData->spacing_z();
     // Set Image Dimensions.
     width_ = imageData->width();
     height_ = imageData->height();
@@ -280,8 +280,10 @@ private:
   simple_msgs::Header header_{};
   simple_msgs::Pose origin_{};
   std::string encoding_{""};
-  double resX_{0.0}, resY_{0.0}, resZ_{0.0};
-  int width_{0}, height_{0}, depth_{0}, data_size_{0}, num_channels_{1};
+  double spacing_x_{0.0}, spacing_y_{0.0}, spacing_z_{0.0};
+  uint32_t width_{0}, height_{0}, depth_{0};
+  uint64_t data_size_{0};
+  uint16_t num_channels_{1};
   InternalData data_{};
 };  // namespace simple_msgs
 
