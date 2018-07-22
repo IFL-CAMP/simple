@@ -31,7 +31,7 @@
 
 namespace simple {
 
-// Forward declarations.
+// Forward declarations. Only necessary for friend declarations later on.
 template <typename T>
 class Subscriber;
 template <typename T>
@@ -41,12 +41,17 @@ class Client;
 template <typename T>
 class Server;
 
+/**
+ * @class GenericSocket generic_socket.hpp.
+ * @brief The GenericSocket class implements the logic to transmit Flatbuffers data over ZMQ sockets.
+ * @tparam T The simple_msgs type to handle.
+ */
 template <typename T>
 class GenericSocket {
 public:
-  virtual ~GenericSocket() { closeSocket(); }
+  virtual ~GenericSocket() { closeSocket(); }  //< The socket is closed.
 
-  // A GenericSocket cannot be copied or moved.
+  // A GenericSocket cannot be copied, only moved.
   GenericSocket(const GenericSocket&) = delete;
   GenericSocket& operator=(const GenericSocket&) = delete;
 
@@ -63,14 +68,14 @@ public:
     return *this;
   }
 
+  // Only friend  classes can instantiate a GenericSocket.
   friend class Publisher<T>;
   friend class Subscriber<T>;
   friend class Client<T>;
   friend class Server<T>;
 
 protected:
-  // Class ctors are protected.
-  // A GenericSocket cannot be directly initialized but only used within a specialized subclass.
+  // Class ctors are protected. A user cannot instantiate one GenericSocket.
   GenericSocket() = default;
   explicit GenericSocket(int type) { initSocket(type); }
 
@@ -80,8 +85,7 @@ protected:
    * @throws std::runtime_error.
    */
   void bind(const std::string& address) {
-    auto success = zmq_bind(socket_, address.c_str());
-    if (success != 0) {
+    if (zmq_bind(socket_, address.c_str()) != 0) {
       throw std::runtime_error("[SIMPLE Error] - Cannot bind to the address/port: " + address +
                                ". ZMQ Error: " + std::string(zmq_strerror(zmq_errno())));
     }
@@ -93,8 +97,7 @@ protected:
    * @throws std::runtime_error.
    */
   void connect(const std::string& address) {
-    auto success = zmq_connect(socket_, address.c_str());
-    if (success != 0) {
+    if (zmq_connect(socket_, address.c_str()) != 0) {
       throw std::runtime_error("[SIMPLE Error] - Cannot connect to the address/port: " + address +
                                ". ZMQ Error: " + std::string(zmq_strerror(zmq_errno())));
     }
@@ -108,9 +111,8 @@ protected:
    */
   int sendMsg(std::shared_ptr<flatbuffers::DetachedBuffer> buffer,
               const std::string& custom_error = "[SIMPLE Error] - ") {
-    // Send the topic first and add the rest of the message after it.
-
     zmq_msg_t topic_message{};
+    // This is ugly, but we need a void* from the const char*.
     auto topic_ptr = const_cast<void*>(static_cast<const void*>(topic_.c_str()));
     zmq_msg_init_data(&topic_message, topic_ptr, topic_.size(), nullptr, nullptr);
 
@@ -152,9 +154,9 @@ protected:
 
   /**
    * @brief Receive a message of type T from the ZMQ Socket.
-   * @param[in,out] msg The message of type T to populate with the data incoming from the ZMQ Socket.
+   * @param[in,out] msg - The message of type T to populate with the data incoming from the ZMQ Socket.
    * @param[in] custom_error - a string to prefix to the error messages printed in failure cases.
-   * @return
+   * @return the number of bytes received by the ZMQ Socket. -1 for failure.
    */
   int receiveMsg(T& msg, const std::string& custom_error = "") {
     // Local variables to check if data after the topic message is available and its size.
@@ -168,19 +170,20 @@ protected:
       zmq_msg_close(disposable_msg);
       delete disposable_msg;
     });
+
     // ZMQ Messages have to be initialized.
     zmq_msg_init(local_message.get());
 
     // Receive the first bytes, this should match the topic message and can be used to check if the right topic (the
     // right message type) has been received. i.e. the received topic message should match the one of the template
     // argument of this socket (stored in the topic_ member variable).
-    int bytes_received = zmq_msg_recv(local_message.get(), socket_, 0);
+    int bytes_received = zmq_msg_recv(local_message.get(), socket_.load(), 0);
 
     // Check that some data has been received and that it matches the right message topic.
     if (bytes_received == -1) { return bytes_received; }
 
+    // Check if the received topic matches the right message topic.
     std::string received_message_type = static_cast<char*>(zmq_msg_data(local_message.get()));
-
     if (strncmp(received_message_type.c_str(), topic_.c_str(), strlen(topic_.c_str())) != 0) {
       std::cerr << custom_error << "Received message type " << received_message_type << " while expecting " << topic_
                 << "." << std::endl;
@@ -209,40 +212,71 @@ protected:
     // not empty.
 
     // Set the T msg to the data that has been just received.
-    // A shared_ptr to the internal data of the ZMQ message that shares the same reference counter as local_message is
-    // passed. This allows to keep local_message alive until the T msg is alive, thus keeping the pointer inside the T
-    // msg valid.
     void* data_ptr = zmq_msg_data(local_message.get());  //< Internal data of the ZMQ message.
-    // Shared pointer to the inten data that shares ref counter with local_message. Since it is passed by value to the
-    // operator= of T, the ref counter is increased and local_message will stay alive until T needs the data.
+    // Shared pointer to the internal data that shares ref counter with local_message. Since it is passed by value to
+    // the operator= of T, the ref counter is increased and local_message will stay alive until T needs the data.
     msg = std::shared_ptr<void*>{local_message, &data_ptr};
 
     // Return the number of bytes received.
     return bytes_received;
   }
 
-  inline void filter() { zmq_setsockopt(socket_, ZMQ_SUBSCRIBE, topic_.c_str(), topic_.size()); }
+  /**
+   * @brief Set the ZMQ socket to accept only messages with the correct topic name.
+   *
+   * The topic name is set to the one privded by the template argument of this socket.
+   */
+  void filter() { zmq_setsockopt(socket_, ZMQ_SUBSCRIBE, topic_.c_str(), topic_.size()); }
 
-  inline void setTimeout(int timeout) { zmq_setsockopt(socket_, ZMQ_RCVTIMEO, &timeout, sizeof(timeout)); }
+  /**
+   * @brief Set the timeout of the ZMQ socket.
+   * @param [in] timeout - in milliseconds.
+   *
+   * The timeout is used by Subscriber, Server and Client  sockets as the maximum allowed time to wait for an incoming
+   * message, request or reply (respectively).
+   */
+  void setTimeout(int timeout) { zmq_setsockopt(socket_, ZMQ_RCVTIMEO, &timeout, sizeof(timeout)); }
 
-  inline void setLinger(int linger) { zmq_setsockopt(socket_, ZMQ_LINGER, &linger, sizeof(linger)); }
+  /**
+   * @brief Set the linger time of the ZMQ socket.
+   * @param [in] linger - in milliseconds.
+   *
+   * After a socket is closed, unsent messages linger in memory to the given amount of time.
+   */
+  void setLinger(int linger) { zmq_setsockopt(socket_, ZMQ_LINGER, &linger, sizeof(linger)); }
 
-  inline void initSocket(int type) {
+  /**
+   * @brief Initialize the ZMQ socket given its type.
+   * @param [in] type - the ZMQ type.
+   *
+   * Accepted types are:
+   * ZMQ_PUB - for a Publisher.
+   * ZMQ_SUB - for a Subscriber.
+   * ZMQ_REQ - for a Client.
+   * ZMQ_REP - for a Server.
+   */
+  void initSocket(int type) {
     if (socket_ == nullptr) { socket_ = zmq_socket(ContextManager::instance(), type); }
   }
 
-  inline void closeSocket() {
+  /**
+   * @brief Closes the ZMQ socket.
+   */
+  void closeSocket() {
     if (socket_ != nullptr) {
       zmq_close(socket_);
       socket_ = nullptr;
     }
   }
 
-  inline bool isValid() { return static_cast<bool>(socket_ != nullptr); }
+  /**
+   * @brief Returns if the ZMQ socket has been initialized (is valid) or not.
+   */
+  bool isValid() { return static_cast<bool>(socket_ != nullptr); }
 
 private:
-  std::string topic_{T::getTopic()};
-  std::atomic<void*> socket_{nullptr};
+  std::string topic_{T::getTopic()};    //< The message topic, internally defined for each SIMPLE message.
+  std::atomic<void*> socket_{nullptr};  //< The internal ZMQ socket.
 };
 }  // Namespace simple.
 
