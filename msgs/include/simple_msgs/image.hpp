@@ -231,11 +231,8 @@ private:
   class InternalData {
   public:
     const T* getData() const {
-      if (owning_data_) {
-        return owning_data_.get();
-      } else {
-        return not_owning_data_;
-      }
+      if (owning_data_) { return owning_data_.get(); }
+      return not_owning_data_;
     }
 
     bool empty() const { return (owning_data_ == nullptr && not_owning_data_ == nullptr); }
