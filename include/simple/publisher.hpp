@@ -48,6 +48,7 @@ public:
    */
   explicit Publisher<T>(const std::string& address) : socket_{ZMQ_PUB} { socket_.bind(address); }
 
+  // A Publisher cannot be copied.
   Publisher(const Publisher& other) = delete;
   Publisher& operator=(const Publisher& other) = delete;
 
@@ -58,7 +59,7 @@ public:
 
   /**
    * @brief Publishes the given message of type T through the open socket.
-   * @param msg simple_msgs class wrapper for Flatbuffer messages.
+   * @param [in] msg - simple_msgs class wrapper for Flatbuffer messages.
    * @return size of the published message, in bytes. Returns -1 if send fails.
    */
   int publish(const T& msg) { return publish(msg.getBufferData()); }
@@ -66,7 +67,7 @@ public:
 private:
   /**
    * @brief Publishes the given message through the open socket.
-   * @param buffer Flatbuffers buffer containing the data to be published.
+   * @param [in] buffer - Flatbuffers buffer containing the data to be published.
    * @return size of the published message, in bytes. Returns -1 if send fails.
    */
   int publish(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer) {
@@ -74,7 +75,7 @@ private:
   }
 
 private:
-  GenericSocket<T> socket_{};
+  GenericSocket<T> socket_{};  //< The internal socket.
 };
 }  // Namespace simple.
 
