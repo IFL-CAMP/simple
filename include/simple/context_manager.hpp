@@ -20,6 +20,8 @@
 #ifndef SIMPLE_CONTEXT_MANAGER_HPP
 #define SIMPLE_CONTEXT_MANAGER_HPP
 
+#include "simple_export.h"
+
 #include <zmq.h>
 #include <memory>
 #include <mutex>
@@ -45,6 +47,11 @@ public:
     // Make a new context and atomically swap it with the member context.
     if (context_ == nullptr) { context_ = std::make_shared<ZMQContext>(); }
     return context_->getContext();
+  }
+
+  static void destroy() {
+	  // TODO lock?
+	  context_ = nullptr;
   }
 
 private:
@@ -78,8 +85,8 @@ private:
   private:
     void* internal_context_{nullptr};  //< Atomic static ZMQ Context.
   };
-  static std::mutex context_creation_mutex_;
-  static std::shared_ptr<ZMQContext> context_;  //< This allows to automatically dispose (and therefore, terminate) the
+  static SIMPLE_EXPORT std::mutex context_creation_mutex_;
+  static SIMPLE_EXPORT std::shared_ptr<ZMQContext> context_;  //< This allows to automatically dispose (and therefore, terminate) the
                                                 // ZMQ context handled by the ZMQContext class.
 };
 }  // Namespace simple.
