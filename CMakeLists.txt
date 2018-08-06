@@ -23,6 +23,11 @@ endif(WIN32)
 
 set(CMAKE_DEBUG_POSTFIX "-d")
 
+# output all binaries and libs into a common folder across all libraries
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 if(MSVC)
   add_compile_options(/W4 /w44640 /WX)
   if (MSVC_VERSION GREATER 1900)

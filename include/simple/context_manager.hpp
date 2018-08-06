@@ -49,9 +49,16 @@ public:
     return context_->getContext();
   }
 
+  /**
+   * @brief Destroys the current instance of the ZMQ context
+   *
+   * It is sometimes required to control the lifetime of the zmq context object explicitly, most notably
+   * when using simple as (or from a) dynamic library. In such a case, the context needs to be destroyed
+   * _before_ the DLL gets unloaded.
+   */
   static void destroy() {
-	  // TODO lock?
-	  context_ = nullptr;
+	std::lock_guard<std::mutex> lock(context_creation_mutex_);
+    context_ = nullptr;
   }
 
 private:
@@ -86,8 +93,8 @@ private:
     void* internal_context_{nullptr};  //< Atomic static ZMQ Context.
   };
   static SIMPLE_EXPORT std::mutex context_creation_mutex_;
-  static SIMPLE_EXPORT std::shared_ptr<ZMQContext> context_;  //< This allows to automatically dispose (and therefore, terminate) the
-                                                // ZMQ context handled by the ZMQContext class.
+  static SIMPLE_EXPORT std::shared_ptr<ZMQContext> context_;	//< This allows to automatically dispose (and therefore, terminate) the
+																// ZMQ context handled by the ZMQContext class.
 };
 }  // Namespace simple.
 
