@@ -26,17 +26,17 @@ namespace simple_msgs {
 using Int = NumericType<int>;
 
 template <>
-NumericType<int>::NumericType(const void* data) : data_{GetIntFbs(data)->data()} {}
+inline NumericType<int>::NumericType(const void* data) : data_{GetIntFbs(data)->data()} {}
 
 template <>
-NumericType<int>& NumericType<int>::operator=(std::shared_ptr<void*> data) {
+inline NumericType<int>& NumericType<int>::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
   data_ = GetIntFbs(*data)->data();
   return *this;
 }
 
 template <>
-std::shared_ptr<flatbuffers::DetachedBuffer> NumericType<int>::getBufferData() const {
+inline std::shared_ptr<flatbuffers::DetachedBuffer> NumericType<int>::getBufferData() const {
   std::lock_guard<std::mutex> lock{mutex_};
   flatbuffers::FlatBufferBuilder builder{1024};
   IntFbsBuilder tmp_builder{builder};
