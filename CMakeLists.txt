@@ -93,8 +93,7 @@ generate_export_header(${PROJECT_NAME})
 add_library(${PROJECT_NAME}-static src/context_manager.cpp)
 
 # required for the generated export header
-set_target_properties(${PROJECT_NAME}-static PROPERTIES
-  COMPILE_FLAGS -DSIMPLE_STATIC_DEFINE)
+target_compile_definitions(${PROJECT_NAME}-static PUBLIC SIMPLE_STATIC_DEFINE)
 
 target_include_directories(${PROJECT_NAME}-static PUBLIC
   $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
