@@ -76,7 +76,7 @@ add_custom_target(${PROJECT_NAME}-ide SOURCES ${SIMPLE_HEADERS})
 add_library(${PROJECT_NAME} SHARED src/context_manager.cpp)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
-  $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/msgs/include>
   $<BUILD_INTERFACE:${ZeroMQ_INCLUDE_DIR}>
@@ -96,7 +96,7 @@ add_library(${PROJECT_NAME}-static src/context_manager.cpp)
 target_compile_definitions(${PROJECT_NAME}-static PUBLIC SIMPLE_STATIC_DEFINE)
 
 target_include_directories(${PROJECT_NAME}-static PUBLIC
-  $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/msgs/include>
   $<BUILD_INTERFACE:${ZeroMQ_INCLUDE_DIR}>
@@ -117,7 +117,7 @@ install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}-static
 
 # Install SIMPLE includes
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-install(FILES ${PROJECT_BINARY_DIR}/${PROJECT_NAME}_export.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_export.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file("${CMAKE_CURRENT_SOURCE_DIR}/simpleConfigVersion.cmake"
