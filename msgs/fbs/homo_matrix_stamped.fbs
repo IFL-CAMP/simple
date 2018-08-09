@@ -1,0 +1,11 @@
+// Schema for S.I.M.P.L.E. Stamped Homogeneous Transformation
+
+namespace simple_msgs;
+
+table HomoMatrixStampedFbs {
+	matrix:[ubyte];
+	header:[ubyte];
+}
+
+root_type HomoMatrixStampedFbs;
+file_identifier "HOST";

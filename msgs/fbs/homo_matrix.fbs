@@ -1,0 +1,11 @@
+// Schema for S.I.M.P.L.E. Homogeneous Transformation
+
+namespace simple_msgs;
+
+table HomoMatrixFbs {
+	point:[ubyte];
+	matrix:[ubyte];
+}
+
+root_type HomoMatrixFbs;
+file_identifier "HOMO";
