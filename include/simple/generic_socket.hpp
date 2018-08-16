@@ -78,6 +78,12 @@ protected:
       throw std::runtime_error("[SIMPLE Error] - Cannot bind to the address/port: " + address +
                                ". ZMQ Error: " + std::string(zmq_strerror(zmq_errno())));
     }
+
+    // query the bound endpoint from the API
+    char lastEndpoint[1024];
+    size_t bufferSize = sizeof(lastEndpoint);
+    zmq_getsockopt(socket_, ZMQ_LAST_ENDPOINT, &lastEndpoint, &bufferSize);
+    endpoint_ = lastEndpoint;
   }
 
   void connect(const std::string& address) {
@@ -184,9 +190,12 @@ protected:
 
   inline bool isValid() { return static_cast<bool>(socket_ != nullptr); }
 
+  inline const std::string& endpoint() { return endpoint_; }
+
 private:
   std::string topic_{T::getTopic()};
   std::atomic<void*> socket_{nullptr};
+  std::string endpoint_{};
 };
 }  // Namespace simple.
 
