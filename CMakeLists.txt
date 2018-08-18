@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.3)
 project(simple)
 
-# Set the project version
+# Set the project version.
 set(PROJECT_VER_PATCH 0)
 set(PROJECT_VER_MINOR 0)
 set(PROJECT_VER_MAJOR 1)
@@ -12,18 +12,18 @@ include(GNUInstallDirs)
 
 ###### GLOBAL PARAMETERS AND SETTINGS
 
-# Here all the compiler options for all projects created are set
+# Here all the compiler options for all projects created are set.
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Allows all symbols generated from the dynamic library to be exported
+# Allows all symbols generated from the dynamic library to be exported.
 if (WIN32)
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 endif(WIN32)
 
 set(CMAKE_DEBUG_POSTFIX "-d")
 
-# output all binaries and libs into a common folder across all libraries
+# Output all binaries and libs into a common folder across all libraries.
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -42,12 +42,12 @@ endif()
 option(SIMPLE_BUILD_EXAMPLES "Build SIMPLE Examples" FALSE)
 option(SIMPLE_BUILD_TESTS "Build SIMPLE Tests" FALSE)
 
-# Examples
+# Examples.
 if (${SIMPLE_BUILD_EXAMPLES})
   add_subdirectory(examples)
 endif()
 
-# Tests
+# Tests.
 if (${SIMPLE_BUILD_TESTS})
   include(CTest)
   if (CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND CMAKE_BUILD_TYPE MATCHES "Coverage") # Coverage flags for GCC
@@ -72,7 +72,7 @@ find_package(ZeroMQ REQUIRED)
 file(GLOB SIMPLE_HEADERS "include/simple/*.hpp")
 add_custom_target(${PROJECT_NAME}-ide SOURCES ${SIMPLE_HEADERS})
 
-# SHARED library
+# SHARED library.
 add_library(${PROJECT_NAME} SHARED src/context_manager.cpp)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -85,14 +85,14 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 target_link_libraries(${PROJECT_NAME}
   libzmq ${CMAKE_THREAD_LIBS_INIT} simple_msgs ${coverage_lib})
 
-# generate the export header for the shared library
+# Generate the export header for the shared library.
 include(GenerateExportHeader)
 generate_export_header(${PROJECT_NAME})
 
-# STATIC library
+# STATIC library.
 add_library(${PROJECT_NAME}-static src/context_manager.cpp)
 
-# required for the generated export header
+# Required for the generated export header.
 target_compile_definitions(${PROJECT_NAME}-static PUBLIC SIMPLE_STATIC_DEFINE)
 
 target_include_directories(${PROJECT_NAME}-static PUBLIC
@@ -107,7 +107,7 @@ target_link_libraries(${PROJECT_NAME}-static
 
 ###### INSTALLATION
 
-# Install SIMPLE in the desired folder
+# Install SIMPLE in the desired folder.
 install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}-static
   EXPORT "simpleTargets"
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -115,7 +115,7 @@ install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}-static
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
-# Install SIMPLE includes
+# Install SIMPLE includes.
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_export.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
