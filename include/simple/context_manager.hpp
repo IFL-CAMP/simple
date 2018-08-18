@@ -43,7 +43,7 @@ public:
    * That instantiation performs thread-safe operations to create/dispose the underlying ZMQ context object.
    */
   static void* instance() {
-    std::lock_guard<std::mutex> lock(context_creation_mutex_);
+    std::lock_guard<std::mutex> lock{context_creation_mutex_};
     // Make a new context and atomically swap it with the member context.
     if (context_ == nullptr) { context_ = std::make_shared<ZMQContext>(); }
     return context_->getContext();
@@ -57,7 +57,7 @@ public:
    * _before_ the DLL gets unloaded.
    */
   static void destroy() {
-	std::lock_guard<std::mutex> lock(context_creation_mutex_);
+    std::lock_guard<std::mutex> lock{context_creation_mutex_};
     context_ = nullptr;
   }
 
@@ -79,7 +79,7 @@ private:
     ZMQContext(ZMQContext&&) = delete;
     ZMQContext& operator=(ZMQContext&&) = delete;
 
-    // Terminate the static ZMQ context instance.
+    // Terminate the ZMQ context instance.
     ~ZMQContext() {
       if (internal_context_ != nullptr) { zmq_ctx_term(internal_context_); }
     }
@@ -90,7 +90,7 @@ private:
     void* getContext() { return internal_context_; }
 
   private:
-    void* internal_context_{nullptr};  //< Atomic static ZMQ Context.
+    void* internal_context_{nullptr};  //< ZMQ Context.
   };
   static SIMPLE_EXPORT std::mutex context_creation_mutex_;
   static SIMPLE_EXPORT std::shared_ptr<ZMQContext> context_;	//< This allows to automatically dispose (and therefore, terminate) the
