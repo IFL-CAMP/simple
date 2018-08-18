@@ -29,8 +29,8 @@
 SCENARIO("SIMPLE ContextManager lifetime using dynamic linkage") {
   GIVEN("A SIMPLE object.") {
     simple::Publisher<simple_msgs::Bool> publisher{"tcp://*:6666"};
-    WHEN("The application exits.") {
-      THEN("The ContextManager has to be destroyed before the dynamic library is unloaded.") {}
+    WHEN("The application exits and the ContextManager is destroyed before the dynamic library is unloaded.") {
+      THEN("The applications exits cleanly.") {}
     }
   }
   simple::ContextManager::destroy();
