@@ -82,7 +82,7 @@ private:
   void stop() {
     if (isValid()) {
       alive_->store(false);
-      if (server_thread_.joinable()) { server_thread_.detach(); }
+      if (server_thread_.joinable()) { server_thread_.join(); }
     }
   }
 
