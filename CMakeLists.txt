@@ -83,7 +83,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<INSTALL_INTERFACE:include>)
 
 target_link_libraries(${PROJECT_NAME}
-  libzmq ${CMAKE_THREAD_LIBS_INIT} simple_msgs ${coverage_lib})
+  libzmq-static ${CMAKE_THREAD_LIBS_INIT} simple_msgs ${coverage_lib})
 
 # Generate the export header for the shared library.
 include(GenerateExportHeader)
