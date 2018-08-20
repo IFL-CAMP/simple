@@ -54,7 +54,10 @@ public:
    *
    * It is sometimes required to control the lifetime of the zmq context object explicitly, most notably
    * when using simple as (or from a) dynamic library. In such a case, the context needs to be destroyed
-   * _before_ the DLL gets unloaded.
+   * _before_ the DLL gets unloaded, but _after_ any other SIMPLE objects are destroyed.
+   * @Note Under normal circumstances, using this function is not necessary as the context normally will
+   *       be destroyed at static object destruction. Use this only when necessary and be aware that 
+   *       early destruction can result in application crashes or hangs.
    */
   static void destroy() {
     std::lock_guard<std::mutex> lock{context_creation_mutex_};
