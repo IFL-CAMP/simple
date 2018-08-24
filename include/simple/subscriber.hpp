@@ -81,7 +81,7 @@ public:
   inline void stop() {
     if (isValid()) {
       alive_->store(false);
-      if (subscriber_thread_.joinable()) { subscriber_thread_.detach(); }
+      if (subscriber_thread_.joinable()) { subscriber_thread_.join(); }
     }
   }
 
