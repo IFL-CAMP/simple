@@ -59,7 +59,7 @@ if (${SIMPLE_BUILD_TESTS})
   add_subdirectory(tests)
 endif()
 
-# Documentation
+# Documentation.
 if (${SIMPLE_BUILD_DOC})
   add_subdirectory(doc)
 endif()
