@@ -80,6 +80,9 @@ std::shared_ptr<flatbuffers::DetachedBuffer> String::getBufferData() const {
   return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
 
+/**
+ * @brief Stream extraction operator.
+ */
 std::ostream& operator<<(std::ostream& out, const String& s) {
   out << s.data_;
   return out;

@@ -25,30 +25,82 @@
 #include "generic_message.h"
 
 namespace simple_msgs {
+/**
+ * @class String string.h
+ * @brief Wrappen for a Flatbuffers String message, as defined in string.fbs.
+ */
 class String : public GenericMessage {
 public:
-  // Constructors,
   String() = default;
+
+  /**
+   * @brief Construct a String message using the given text.
+   */
   String(const std::string&);
+
+  /**
+   * @brief Construct a String message using the given text.
+   */
   String(std::string&&);
+
+  /**
+   * @brief Construct a String message using the given text.
+   */
   String(const char*);
+
+  /**
+   * @brief Construct a String message using a raw memory coming from network.
+   */
   String(const void*);
+
+  /**
+   * @brief Copy constructor.
+   */
   String(const String&);
+
+  /**
+   * @brief Move constructor.
+   */
   String(String&&) noexcept;
 
-  // Copy operations.
+  /**
+   * @brief Copy assignment.
+   */
   String& operator=(const String&);
+
+  /**
+   * @brief Move assignment.
+   */
   String& operator=(String&&) noexcept;
+
+  /**
+   * @brief Copy assignment operator that uses raw memory coming from the network.
+   */
   String& operator=(std::shared_ptr<void*>);
 
-  // Relational operators.
+  /**
+   * @brief Returns true if lhs is equal to rhs, false otherwise.
+   */
   inline bool operator==(const String& rhs) const { return (data_ == rhs.data_); }
+
+  /**
+   * @brief Returns true if lhs is not equal to rhs, false otherwise.
+   */
   inline bool operator!=(const String& rhs) const { return !(*this == rhs); }
-  // Binary arithmetic operators
+
+  /**
+   * @brief Concatenate a String to the current one.
+   */
   String& operator+=(const String&);
+
+  /**
+   * @brief Concatenates two Strings.
+   */
   friend String operator+(String, const String&);
 
-  // Stream extraction.
+  /**
+   * @brief Stream extraction.
+   */
   friend std::ostream& operator<<(std::ostream& out, const String& s);
 
   /**
@@ -70,10 +122,14 @@ public:
   }
 
   /**
-   * @brief Set the content to an empty string.
+   * @brief Set the message content to an empty string.
    */
   inline void clear() { data_.clear(); }
 
+  /**
+   * @brief Returns true if the message is empty, false otherwise.
+   * @return
+   */
   inline bool empty() { return data_.empty(); }
 
   /**
