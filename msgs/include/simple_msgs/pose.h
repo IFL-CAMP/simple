@@ -19,7 +19,7 @@
 #ifndef SIMPLE_MSGS_POSE_H
 #define SIMPLE_MSGS_POSE_H
 
-#include <iostream>
+#include <ostream>
 
 #include "generated/pose_generated.h"
 #include "point.h"

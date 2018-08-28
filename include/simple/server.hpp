@@ -22,9 +22,11 @@
 
 #include <zmq.h>
 #include <atomic>
+#include <functional>
 #include <memory>
 #include <string>
 #include <thread>
+
 #include "simple/generic_socket.hpp"
 
 namespace simple {

@@ -25,6 +25,7 @@
 #include <memory>
 #include <string>
 #include <thread>
+
 #include "simple/generic_socket.hpp"
 
 namespace simple {

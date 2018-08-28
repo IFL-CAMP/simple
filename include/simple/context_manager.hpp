@@ -20,11 +20,11 @@
 #ifndef SIMPLE_CONTEXT_MANAGER_HPP
 #define SIMPLE_CONTEXT_MANAGER_HPP
 
-#include "simple_export.h"
-
 #include <zmq.h>
 #include <memory>
 #include <mutex>
+
+#include "simple_export.h"
 
 namespace simple {
 /**

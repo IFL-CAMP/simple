@@ -19,6 +19,8 @@
 #ifndef SIMPLE_MSGS_BOOL_H
 #define SIMPLE_MSGS_BOOL_H
 
+#include <ostream>
+
 #include "generated/bool_generated.h"
 #include "generic_message.h"
 

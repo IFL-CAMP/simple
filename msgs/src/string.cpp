@@ -16,9 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <algorithm>
-#include <utility>
-
 #include "simple_msgs/string.h"
 
 namespace simple_msgs {

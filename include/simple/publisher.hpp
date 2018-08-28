@@ -23,6 +23,7 @@
 #include <zmq.h>
 #include <memory>
 #include <string>
+
 #include "simple/generic_socket.hpp"
 
 namespace simple {

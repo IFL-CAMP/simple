@@ -19,7 +19,6 @@
 #ifndef SIMPLE_MSGS_NUMERIC_TYPE_HPP
 #define SIMPLE_MSGS_NUMERIC_TYPE_HPP
 
-#include <algorithm>
 #include <ostream>
 
 #include "generic_message.h"

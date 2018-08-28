@@ -16,8 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <utility>
-
 #include "simple_msgs/pose.h"
 
 namespace simple_msgs {

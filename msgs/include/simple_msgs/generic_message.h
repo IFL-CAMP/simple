@@ -20,22 +20,9 @@
 #define SIMPLE_MSGS_GENERIC_MESSAGE_H
 
 #include <flatbuffers/flatbuffers.h>
-#include <iostream>
-#include <memory>
 #include <mutex>
 
 namespace simple_msgs {
-// Custom make_unique method since supporting C++11
-
-#if defined(__cpp_lib_make_unique)
-using simple_msgs::make_unique = std::make_unique;
-#else
-template <typename T, typename... Args>
-std::unique_ptr<T> make_unique(Args&&... args) {
-  return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
-}
-#endif
-
 /**
  * @class GenericMessage generic_message.h.
  * @brief Base class for simple_msgs wrappers around Flatbuffers messages.

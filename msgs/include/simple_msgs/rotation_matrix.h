@@ -20,7 +20,7 @@
 #define SIMPLE_MSGS_ROTATION_MATRIX_H
 
 #include <array>
-#include <iostream>
+#include <ostream>
 
 #include "generated/rotation_matrix_generated.h"
 #include "generic_message.h"
