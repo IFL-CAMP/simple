@@ -30,14 +30,14 @@ long long getTimeNow() {
 
 int main() {
   const int N_RUN{3000};
-  const int SLEEP_TIME{1};  //<  Milliseconds.
+  const int SLEEP_TIME{1};  //!  Milliseconds.
   int sequence_num{1};
 
-  auto beginning = getTimeNow();  //< Time at the start of this program.
+  auto beginning = getTimeNow();  //! Time at the start of this program.
 
-  simple_msgs::Header my_header{sequence_num, "root", 0};  //< Build a Header.
-  simple_msgs::Point my_point{1.0, 2.0, 3.0};              //< Build a Point.
-  simple_msgs::Quaternion my_quaternion{};                 //< Identity Quaternion.
+  simple_msgs::Header my_header{sequence_num, "root", 0};  //! Build a Header.
+  simple_msgs::Point my_point{1.0, 2.0, 3.0};              //! Build a Point.
+  simple_msgs::Quaternion my_quaternion{};                 //! Identity Quaternion.
 
   // Create a PoseStamped message from the Header, Point and Quaternion.
   simple_msgs::PoseStamped my_pose_stamped{my_header, {my_point, my_quaternion}};
@@ -51,7 +51,7 @@ int main() {
     publisher.publish(my_pose_stamped);  // Publish the current PoseStamped message.
 
     // Modify the pose at each iteration.
-    my_point += 1.0;  //< The translation part of the Pose is modified.
+    my_point += 1.0;  //! The translation part of the Pose is modified.
     my_pose_stamped.getPose().setPosition(my_point);
     my_pose_stamped.getHeader().setSequenceNumber(sequence_num + 1);
     my_pose_stamped.getHeader().setTimestamp(getTimeNow() - beginning);

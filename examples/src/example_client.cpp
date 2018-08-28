@@ -24,7 +24,7 @@
 
 int main() {
   const int N_RUN{25};
-  const int SLEEP_TIME{1000};  //<  Milliseconds.
+  const int SLEEP_TIME{1000};  //!  Milliseconds.
 
   // Create a pose message
   simple_msgs::Pose pose({5.0, 6.0, 7.0}, {1.0, 2.0, 3.0, 4.0});

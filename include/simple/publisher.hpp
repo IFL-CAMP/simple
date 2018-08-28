@@ -82,7 +82,7 @@ private:
   }
 
 private:
-  GenericSocket<T> socket_{};  //< The internal socket.
+  GenericSocket<T> socket_{};  //! The internal socket.
 };
 }  // Namespace simple.
 

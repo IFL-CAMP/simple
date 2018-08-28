@@ -49,7 +49,7 @@ class Server;
 template <typename T>
 class GenericSocket {
 public:
-  virtual ~GenericSocket() { closeSocket(); }  //< The socket is closed.
+  virtual ~GenericSocket() { closeSocket(); }  //! The socket is closed.
 
   // A GenericSocket cannot be copied, only moved.
   GenericSocket(const GenericSocket&) = delete;
@@ -229,7 +229,7 @@ protected:
     // not empty.
 
     // Set the T msg to the data that has been just received.
-    void* data_ptr = zmq_msg_data(local_message.get());  //< Internal data of the ZMQ message.
+    void* data_ptr = zmq_msg_data(local_message.get());  //! Internal data of the ZMQ message.
     // Shared pointer to the internal data that shares ref counter with local_message. Since it is passed by value to
     // the operator= of T, the ref counter is increased and local_message will stay alive until the object T needs the
     // data.
@@ -293,8 +293,8 @@ protected:
   bool isValid() { return static_cast<bool>(socket_ != nullptr); }
 
 private:
-  std::string topic_{T::getTopic()};    //< The message topic, internally defined for each SIMPLE message.
-  std::atomic<void*> socket_{nullptr};  //< The internal ZMQ socket.
+  std::string topic_{T::getTopic()};    //! The message topic, internally defined for each SIMPLE message.
+  std::atomic<void*> socket_{nullptr};  //! The internal ZMQ socket.
 };
 }  // Namespace simple.
 

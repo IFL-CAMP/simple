@@ -62,7 +62,7 @@ public:
    */
   Server(const std::string& address, const std::function<void(T&)>& callback, int timeout = 1000, int linger = -1)
     : socket_{new GenericSocket<T>(ZMQ_REP)}, callback_{callback} {
-    socket_->filter();  //< Filter the type of message that can be received, only the type T is accepted.
+    socket_->filter();  //! Filter the type of message that can be received, only the type T is accepted.
     socket_->setTimeout(timeout);
     socket_->setLinger(linger);
     socket_->bind(address);
@@ -77,7 +77,7 @@ public:
    * @brief Move constructor.
    */
   Server(Server&& other) : socket_{std::move(other.socket_)}, callback_{std::move(other.callback_)} {
-    other.stop();  //< The moved Subscribed has to be stopped.
+    other.stop();  //! The moved Subscribed has to be stopped.
     initServer();
   }
 
@@ -85,9 +85,9 @@ public:
    * @brief Move assignment operator.
    */
   Server& operator=(Server&& other) {
-    stop();                 //< Stop the current Subscriber object.
-    if (other.isValid()) {  //< Move the Subscriber only if it's a valid one, e.g. if it was not default constructed.
-      other.stop();         //< The moved Subscribed has to be stopped.
+    stop();                 //! Stop the current Subscriber object.
+    if (other.isValid()) {  //! Move the Subscriber only if it's a valid one, e.g. if it was not default constructed.
+      other.stop();         //! The moved Subscribed has to be stopped.
       socket_ = std::move(other.socket_);
       callback_ = std::move(other.callback_);
       initServer();
@@ -146,10 +146,10 @@ private:
    */
   void reply(GenericSocket<T>* socket, const T& msg) { socket->sendMsg(msg.getBufferData(), "[SIMPLE Server] - "); }
 
-  std::shared_ptr<std::atomic<bool>> alive_{nullptr};  //< Flag keeping track of the internal thread's state.
-  std::shared_ptr<GenericSocket<T>> socket_{nullptr};  //< The internal socket.
-  std::function<void(T&)> callback_;                   //< The callback function called at each message arrival.
-  std::thread server_thread_{};                        //< The internal Server thread on which the given callback runs.
+  std::shared_ptr<std::atomic<bool>> alive_{nullptr};  //! Flag keeping track of the internal thread's state.
+  std::shared_ptr<GenericSocket<T>> socket_{nullptr};  //! The internal socket.
+  std::function<void(T&)> callback_;                   //! The callback function called at each message arrival.
+  std::thread server_thread_{};                        //! The internal Server thread on which the given callback runs.
 };
 }  // Namespace simple.
 

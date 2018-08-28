@@ -30,7 +30,7 @@ void example_callback(simple_msgs::Pose& p) {
 }
 
 int main() {
-  const int SLEEP_TIME{60000};  //< Milliseconds.
+  const int SLEEP_TIME{60000};  //! Milliseconds.
 
   // A Server listening on port 5555 for requests from any IP address.
   std::cout << "Creating a server." << std::endl;

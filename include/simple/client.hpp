@@ -101,10 +101,10 @@ private:
     return success;
   }
 
-  GenericSocket<T> socket_{};  //< The internal socket.
-  std::string address_{""};    //< The address the Client is connected to.
-  int timeout_{30000};         //< Milliseconds the Client should wait for a reply from a Server.
-  int linger_{-1};             //< Milliseconds the messages linger in memory after the socket is closed.
+  GenericSocket<T> socket_{};  //! The internal socket.
+  std::string address_{""};    //! The address the Client is connected to.
+  int timeout_{30000};         //! Milliseconds the Client should wait for a reply from a Server.
+  int linger_{-1};             //! Milliseconds the messages linger in memory after the socket is closed.
 };
 }  // Namespace simple.
 

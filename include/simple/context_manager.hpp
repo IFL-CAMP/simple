@@ -98,12 +98,12 @@ private:
     void* getContext() { return internal_context_; }
 
   private:
-    void* internal_context_{nullptr};  //< The actual ZMQ Context.
+    void* internal_context_{nullptr};  //! The actual ZMQ Context.
   };
 
   static SIMPLE_EXPORT std::mutex context_creation_mutex_;
   static SIMPLE_EXPORT std::shared_ptr<ZMQContext>
-      context_;  //< This allows to automatically dispose (and therefore, terminate) the
+      context_;  //! This allows to automatically dispose (and therefore, terminate) the
                  // ZMQ context handled by the ZMQContext class.
 };
 }  // Namespace simple.

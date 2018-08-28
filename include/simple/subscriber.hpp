@@ -61,7 +61,7 @@ public:
    */
   Subscriber<T>(const std::string& address, const std::function<void(const T&)>& callback, int timeout = 1000)
     : socket_{new GenericSocket<T>(ZMQ_SUB)}, callback_{callback} {
-    socket_->filter();  //< Filter the type of message that can be received, only the type T is accepted.
+    socket_->filter();  //! Filter the type of message that can be received, only the type T is accepted.
     socket_->setTimeout(timeout);
     socket_->connect(address);
     initSubscriber();
@@ -75,7 +75,7 @@ public:
    * @brief Move constructor.
    */
   Subscriber(Subscriber&& other) : socket_{std::move(other.socket_)}, callback_{std::move(other.callback_)} {
-    other.stop();  //< The moved Subscribed has to be stopped.
+    other.stop();  //! The moved Subscribed has to be stopped.
     initSubscriber();
   }
 
@@ -83,9 +83,9 @@ public:
    * @brief Move assignment operator.
    */
   Subscriber& operator=(Subscriber&& other) {
-    stop();                 //< Stop the current Subscriber object.
-    if (other.isValid()) {  //< Move the Subscriber only if it's a valid one, e.g. if it was not default constructed.
-      other.stop();         //< The moved Subscribed has to be stopped.
+    stop();                 //! Stop the current Subscriber object.
+    if (other.isValid()) {  //! Move the Subscriber only if it's a valid one, e.g. if it was not default constructed.
+      other.stop();         //! The moved Subscribed has to be stopped.
       socket_ = std::move(other.socket_);
       callback_ = std::move(other.callback_);
       initSubscriber();
@@ -130,7 +130,7 @@ private:
    * Calls the user callback with an instance of T obtained by a simple Publisher.
    */
   void subscribe(std::shared_ptr<std::atomic<bool>> alive, std::shared_ptr<GenericSocket<T>> socket) {
-    while (alive->load()) {  //< Run this in a loop until the Subscriber is stopped.
+    while (alive->load()) {  //! Run this in a loop until the Subscriber is stopped.
       T msg;
       if (socket->receiveMsg(msg, "[SIMPLE Subscriber] - ") != -1) {
         if (alive->load()) { callback_(msg); }
@@ -138,10 +138,10 @@ private:
     }
   }
 
-  std::shared_ptr<std::atomic<bool>> alive_{nullptr};  //< Flag keeping track of the internal thread's state.
-  std::shared_ptr<GenericSocket<T>> socket_{nullptr};  //< The internal socket.
-  std::function<void(const T&)> callback_{};           //< The callback function called at each message arrival.
-  std::thread subscriber_thread_{};  //< The internal Subscriber thread on which the given callback runs.
+  std::shared_ptr<std::atomic<bool>> alive_{nullptr};  //! Flag keeping track of the internal thread's state.
+  std::shared_ptr<GenericSocket<T>> socket_{nullptr};  //! The internal socket.
+  std::function<void(const T&)> callback_{};           //! The callback function called at each message arrival.
+  std::thread subscriber_thread_{};  //! The internal Subscriber thread on which the given callback runs.
 };
 }  // Namespace simple.
 
