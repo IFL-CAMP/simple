@@ -60,7 +60,6 @@ public:
    */
   Header(Header&&) noexcept;
 
-  // Copy/Move operators.
   /**
    * @brief Copy assignment operator.
    */
