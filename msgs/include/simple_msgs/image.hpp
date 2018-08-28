@@ -329,6 +329,10 @@ public:
   static inline std::string getTopic() { return ImageFbsIdentifier(); }
 
 private:
+  /**
+   * @brief Utility class that handles the internal image data.
+   * It holds either an owning pointer or a raw pointer to the data and returns the correct one when requested.
+   */
   class InternalData {
   public:
     const T* getData() const {
@@ -353,6 +357,9 @@ private:
     const T* not_owning_data_{nullptr};
   };
 
+  /**
+   * @brief Adds every component of the image message from a Flatbuffer object, except for the image data itself.
+   */
   void fillPartialImage(const simple_msgs::ImageFbs* imageData) {
     // Set Header.
     header_ = imageData->header()->data();
@@ -372,7 +379,14 @@ private:
     num_channels_ = imageData->num_channels();
   }
 
+  /**
+   * @brief Returns the correct data type that is used for a specific template specialization of an Image message.
+   */
   simple_msgs::data getDataUnionType() const;
+
+  /**
+   * @brief Returns the image data as the correct type according to the template specialization of an Image message.
+   */
   flatbuffers::Offset<void> getDataUnionElem(std::shared_ptr<flatbuffers::FlatBufferBuilder> builder) const;
 
   simple_msgs::Header header_{};
@@ -383,7 +397,7 @@ private:
   uint64_t data_size_{0};
   uint16_t num_channels_{1};
   InternalData data_{};
-};  // namespace simple_msgs
+};
 
 }  // Namespace simple_msgs.
 
