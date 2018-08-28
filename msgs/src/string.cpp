@@ -63,6 +63,9 @@ String& String::operator+=(const String& rhs) {
   return *this;
 }
 
+/**
+ * @brief Concatenates two Strings.
+ */
 String operator+(String lhs, const String& rhs) {
   lhs += rhs;
   return lhs;

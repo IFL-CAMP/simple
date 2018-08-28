@@ -36,7 +36,6 @@ namespace simple_msgs {
 template <typename T>
 class NumericType : public GenericMessage {
 public:
-  // Constructors.
   NumericType() = default;
 
   /**
@@ -67,8 +66,6 @@ public:
    * @brief Copy assignment operator that uses raw memory coming from the network.
    */
   NumericType& operator=(std::shared_ptr<void*> data);
-
-  // Move operations.
 
   /**
    * @brief Move constructor.
@@ -214,7 +211,6 @@ public:
 
   /**
    * @brief Builds and returns the buffer accordingly to the values currently stored.
-   * @return the buffer data.
    */
   std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const override;
 
@@ -243,7 +239,7 @@ public:
   friend std::ostream& operator<<(std::ostream& out, const NumericType<Tn>& obj);
 
 private:
-  T data_{0};  //< The internal data.
+  T data_{0};  //! The internal data.
 };
 
 /**

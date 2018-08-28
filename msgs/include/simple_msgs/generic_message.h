@@ -51,7 +51,7 @@ public:
   virtual std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const = 0;
 
 protected:
-  mutable std::mutex mutex_{};  //< Mutex to implement thread-safe message classes.
+  mutable std::mutex mutex_{};  ///< Mutex to implement thread-safe message classes.
 };
 }  // Namespace simple_msgs.
 

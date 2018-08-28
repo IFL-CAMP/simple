@@ -25,19 +25,19 @@
 namespace simple_msgs {
 /**
  * @class Bool bool.h.
- * @brief Wrappen for a Flatbuffers Bool message. Contains a boolean value.
+ * @brief Wrapper for a Flatbuffers Bool message. Contains a boolean value.
  */
 class Bool : public GenericMessage {
 public:
   Bool() = default;
 
   /**
-   * @brief Construct a Header message using a raw memory coming from network.
+   * @brief Construct a Bool message using a raw memory coming from network.
    */
   Bool(const void*);
 
   /**
-   * @brief Construct a Header message using the given parameter.
+   * @brief Construct a Bool message using the given parameter.
    */
   Bool(bool);
 
@@ -110,7 +110,7 @@ public:
   static inline std::string getTopic() { return BoolFbsIdentifier(); }
 
 private:
-  bool data_{false};  //< Internal boolean data.
+  bool data_{false};  //! Internal boolean data.
 };
 }  // Namespace simple_msgs.
 

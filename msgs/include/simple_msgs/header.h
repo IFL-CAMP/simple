@@ -27,7 +27,7 @@
 namespace simple_msgs {
 /**
  * @class Header header.h
- * @brief Wrappen for a Flatbuffers Header message, as defined in header.fbs.
+ * @brief Wrapper for a Flatbuffers Header message, as defined in header.fbs.
  *
  * A Header contains metadata information for other messages types. \n
  * It is composed of: \n

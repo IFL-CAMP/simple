@@ -144,21 +144,21 @@ void callbackFunctionRotationMatrix(simple_msgs::RotationMatrix& r) {
 }
 
 void callbackFunctionBool(simple_msgs::Bool& b) {
-  b = !b;  //< Invert the value of the Bool message.
+  b = !b;  //! Invert the value of the Bool message.
 }
 
 void callbackFunctionInt(simple_msgs::Int& i) {
-  i += 1;  //< Add 1.
+  i += 1;  //! Add 1.
 }
 
 // define callback function
 void callbackFunctionDouble(simple_msgs::Double& d) {
-  d += 1.0;  //< Add 1.
+  d += 1.0;  //! Add 1.
 }
 
 // define callback function
 void callbackFunctionFloat(simple_msgs::Float& f) {
-  f += 1.0f;  //< Add 1.
+  f += 1.0f;  //! Add 1.
 }
 
 void callbackFunctionPointStamped(simple_msgs::PointStamped& p) {
