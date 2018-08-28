@@ -86,6 +86,9 @@ void PointStamped::setPoint(const Point& p) {
   point_ = p;
 }
 
+/**
+ * @brief Stream extraction operator.
+ */
 std::ostream& operator<<(std::ostream& out, const PointStamped& p) {
   out << p.header_ << p.point_;
   return out;

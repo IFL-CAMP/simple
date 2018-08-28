@@ -165,6 +165,9 @@ void Point::setZ(double z) {
   data_[2] = z;
 }
 
+/**
+ * @brief Stream extraction operator.
+ */
 std::ostream& operator<<(std::ostream& out, const Point& p) {
   out << "Point \n \t"
       << "x: " << std::to_string(p.data_[0]) << "\n \t"

@@ -107,6 +107,9 @@ void Quaternion::setW(double w) {
   data_[3] = w;
 }
 
+/**
+ * @brief Stream extraction operator.
+ */
 std::ostream& operator<<(std::ostream& out, const Quaternion& q) {
   out << "Quaternion \n \t"
       << "x: " << std::to_string(q.data_[0]) << "\n \t"

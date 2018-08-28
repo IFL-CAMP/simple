@@ -90,6 +90,9 @@ void QuaternionStamped::setQuaternion(const Quaternion& quaternion) {
   quaternion_ = quaternion;
 }
 
+/**
+ * @brief Stream extraction operator.
+ */
 std::ostream& operator<<(std::ostream& out, const QuaternionStamped& q) {
   out << q.header_ << q.quaternion_;
 

@@ -85,6 +85,9 @@ void Pose::setPosition(const Point& position) {
   position_ = position;
 }
 
+/**
+ * @brief Stream extraction operator.
+ */
 std::ostream& operator<<(std::ostream& out, const Pose& p) {
   out << "Pose \n \t" << p.position_ << p.quaternion_;
   return out;

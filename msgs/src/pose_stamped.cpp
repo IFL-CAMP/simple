@@ -87,6 +87,9 @@ void PoseStamped::setPose(const Pose& pose) {
   pose_ = pose;
 }
 
+/**
+ * @brief Stream extraction operator.
+ */
 std::ostream& operator<<(std::ostream& out, const PoseStamped& p) {
   out << p.header_ << p.pose_;
   return out;

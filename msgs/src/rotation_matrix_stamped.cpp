@@ -91,6 +91,9 @@ void RotationMatrixStamped::setRotationMatrix(const RotationMatrix& rotation_mat
   rotation_matrix_ = rotation_matrix;
 }
 
+/**
+ * @brief Stream extraction operator.
+ */
 std::ostream& operator<<(std::ostream& out, const RotationMatrixStamped& q) {
   out << q.header_ << q.rotation_matrix_;
   return out;
