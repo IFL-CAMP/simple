@@ -44,15 +44,22 @@ public:
    * @brief Creates a ZMQ_PUB socket and binds it to the given address.
    *
    * Subscribers can subscribe to a Publisher connecting to its address.
-   * @param[in] address - in the form \<PROTOCOL\>://\<IP_ADDRESS\>:\<PORT\>, e.g. tcp://127.0.0.1:5555.
+   * @param [in] address - in the form \<PROTOCOL\>://\<IP_ADDRESS\>:\<PORT\>, e.g. tcp://127.0.0.1:5555.
    */
   explicit Publisher<T>(const std::string& address) : socket_{ZMQ_PUB} { socket_.bind(address); }
 
-  // A Publisher cannot be copied.
+  // A Publisher cannot be copied, only moved.
   Publisher(const Publisher& other) = delete;
   Publisher& operator=(const Publisher& other) = delete;
 
+  /**
+   * @brief Move constructor.
+   */
   Publisher(Publisher&& other) = default;
+
+  /**
+   * @brief Move assignment operator.
+   */
   Publisher& operator=(Publisher&& other) = default;
 
   ~Publisher() = default;
