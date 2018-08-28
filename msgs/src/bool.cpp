@@ -61,8 +61,11 @@ void Bool::set(bool data) {
   data_ = data;
 }
 
+/**
+ * @brief Stream extraction operator.
+ */
 std::ostream& operator<<(std::ostream& out, const Bool& b) {
   out << b.data_;
   return out;
 }
-}  // namespace simple_msgs
+}  // Namespace simple_msgs.

@@ -23,18 +23,25 @@
 #include "generic_message.h"
 
 namespace simple_msgs {
+/**
+ * @class Bool bool.h.
+ * @brief Wrappen for a Flatbuffers Bool message. Contains a boolean value.
+ */
 class Bool : public GenericMessage {
 public:
+  // Constructors.
   Bool() = default;
   Bool(const void*);
   Bool(bool);
   Bool(const Bool&);
   Bool(Bool&&) noexcept;
 
+  // Assignments.
   Bool& operator=(const Bool&);
   Bool& operator=(Bool&&) noexcept;
   Bool& operator=(std::shared_ptr<void*> data);
 
+  // Relational operators.
   inline bool operator==(const Bool& rhs) const { return (data_ == rhs.data_); }
   inline bool operator!=(const Bool& rhs) const { return !(*this == rhs); }
   inline Bool& operator!() {
@@ -42,10 +49,11 @@ public:
     return *this;
   }
 
+  //  Stream extraction.
   friend std::ostream& operator<<(std::ostream& out, const Bool& b);
 
   /**
-   * @brief Builds and returns the buffer accordingly to the values currently stored.
+   * @brief Builds and returns the built buffer accordingly to the values currently stored.
    * @return the buffer data.
    */
   std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const override;
@@ -64,7 +72,7 @@ public:
   static inline std::string getTopic() { return BoolFbsIdentifier(); }
 
 private:
-  bool data_{false};
+  bool data_{false};  //< Internal boolean data.
 };
 }  // Namespace simple_msgs.
 
