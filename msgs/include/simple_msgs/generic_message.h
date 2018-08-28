@@ -26,23 +26,32 @@
 
 namespace simple_msgs {
 // Custom make_unique method since supporting C++11
+
+#if defined(__cpp_lib_make_unique)
+using simple_msgs::make_unique = std::make_unique;
+#else
 template <typename T, typename... Args>
 std::unique_ptr<T> make_unique(Args&&... args) {
   return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
 }
+#endif
 
 /**
- * @brief GenericMessageBase: base class for SIMPLE wrappers around flatbuffers messages.
+ * @class GenericMessage generic_message.h.
+ * @brief Base class for simple_msgs wrappers around Flatbuffers messages.
  */
 class GenericMessage {
 public:
   GenericMessage() = default;
   virtual ~GenericMessage() = default;
 
+  /**
+   * @brief Returns the built buffer. Each simple_msgs type implements its version of it.
+   */
   virtual std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const = 0;
 
 protected:
-  mutable std::mutex mutex_{};
+  mutable std::mutex mutex_{};  //< Mutex to implement thread-safe message classes.
 };
 }  // Namespace simple_msgs.
 
