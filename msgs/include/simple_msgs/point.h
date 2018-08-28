@@ -27,48 +27,151 @@
 
 namespace simple_msgs {
 /**
- * @brief Point: wrapper class around the PointFbs generated code from flatbuffers.
+ * @class Point point.h.
+ * @brief Wrapper for a Flatbuffers Point message.
+ * It represents a 3D Point by its x, y and z coordinates.
  */
 class Point : public GenericMessage {
 public:
   Point() = default;
+
+  /**
+   * @brief Construct a Point message, all the point coordinates are set to the given parameter.
+   */
   Point(double);
+
+  /**
+   * @brief Construct a Point message using the given parameters.
+   */
   Point(double, double, double);
+
+  /**
+   * @brief Copy construct a Point message using the given 3D array.
+   */
   Point(const std::array<double, 3>&);
+
+  /**
+   * @brief Move construct a Point message using the given 3D array.
+   */
   Point(std::array<double, 3>&&) noexcept;
+
+  /**
+   * @brief Construct a Point message using a raw memory coming from network.
+   */
   Point(const void*);
+
+  /**
+   * @brief Copy constructor.
+   */
   Point(const Point&);
+
+  /**
+   * @brief Move constructor.
+   */
   Point(Point&&) noexcept;
 
+  /**
+   * @brief Copy assignment operator.
+   */
   Point& operator=(const Point&);
+
+  /**
+   * @brief Move assignment operator.
+   */
   Point& operator=(Point&&) noexcept;
+
+  /**
+   * @brief Copy assignment operator that uses raw memory coming from the network.
+   */
   Point& operator=(std::shared_ptr<void*>);
+
+  /**
+   * @brief Copy assignment from a 3D array.
+   */
   Point& operator=(const std::array<double, 3>&);
+
+  /**
+   * @brief Move assignment from a 3D array.
+   */
   Point& operator=(std::array<double, 3>&&) noexcept;
 
+  /**
+   * @brief Returns true if lhs is equal to rhs, false otherwise.
+   */
   inline bool operator==(const Point& rhs) const { return data_ == rhs.data_; }
+
+  /**
+   * @brief Returns true if lhs is not equal to rhs, false otherwise.
+   */
   inline bool operator!=(const Point& rhs) const { return !(*this == rhs); }
+
+  /**
+   * @brief Stream extraction operator.
+   */
   friend std::ostream& operator<<(std::ostream&, const Point&);
 
-  // Unary arithmetic operators.
+  /**
+   * @brief Prefix increment operator.
+   */
   Point& operator++();
+
+  /**
+   * @brief Postfix increment operator.
+   */
   Point operator++(int);
+
+  /**
+   * @brief Prefix decrement operator.
+   */
   Point& operator--();
+
+  /**
+   * @brief Postfix decrement operator.
+   */
   Point operator--(int);
 
-  // Binary arithmetic operators.
+  /**
+   * @brief Addition operator.
+   */
   Point& operator+=(const Point&);
+
+  /**
+   * @brief Addition operator.
+   */
   friend Point operator+(Point, const Point&);
+
+  /**
+   * @brief Subtraction operator.
+   */
   Point& operator-=(const Point&);
+
+  /**
+   * @brief Subtraction operator.
+   */
   friend Point operator-(Point, const Point&);
+
+  /**
+   * @brief Multiplication operator.
+   */
   Point& operator*=(const Point&);
+
+  /**
+   * @brief Multiplication operator.
+   */
   friend Point operator*(Point, const Point&);
+
+  /**
+   * @brief Division operator.
+   */
   Point& operator/=(const Point&);
+
+  /**
+   * @brief Division operator.
+   */
   friend Point operator/(Point, const Point&);
 
   /**
    * @brief Builds and returns the buffer accordingly to the values currently stored.
-   * @return the buffer data.
    */
   std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const override;
 
@@ -76,18 +179,22 @@ public:
    * @brief Returns the point as an array of 3 elements.
    */
   inline std::array<double, 3> toVector() const { return data_; }
+
   /**
    * @brief Returns of the x point coordinate.
    */
   inline double getX() const { return data_[0]; }
+
   /**
    * @brief Returns of the y point coordinate.
    */
   inline double getY() const { return data_[1]; }
+
   /**
    * @brief Returns of the z point coordinate.
    */
   inline double getZ() const { return data_[2]; }
+
   /**
    * @brief Modifies the x coordinate of the point.
    */
@@ -109,7 +216,7 @@ public:
   static inline std::string getTopic() { return PointFbsIdentifier(); }
 
 private:
-  std::array<double, 3> data_{{0, 0, 0}};
+  std::array<double, 3> data_{{0, 0, 0}};  //! Internal array.
 };
 }  // Namespace simple_msgs.
 

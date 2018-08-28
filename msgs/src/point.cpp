@@ -101,6 +101,9 @@ Point& Point::operator+=(const Point& rhs) {
   return *this;
 }
 
+/**
+ * @brief Addition operator.
+ */
 Point operator+(Point lhs, const Point& rhs) {
   lhs += rhs;
   return lhs;
@@ -112,6 +115,9 @@ Point& Point::operator-=(const Point& rhs) {
   return *this;
 }
 
+/**
+ * @brief Subtraction operator.
+ */
 Point operator-(Point lhs, const Point& rhs) {
   lhs -= rhs;
   return lhs;
@@ -124,6 +130,9 @@ Point& Point::operator*=(const Point& rhs) {
   return *this;
 }
 
+/**
+ * @brief Multiplication operator.
+ */
 Point operator*(Point lhs, const Point& rhs) {
   lhs *= rhs;
   return lhs;
@@ -135,6 +144,9 @@ Point& Point::operator/=(const Point& rhs) {
   return *this;
 }
 
+/**
+ * @brief Division operator.
+ */
 Point operator/(Point lhs, const Point& rhs) {
   lhs /= rhs;
   return lhs;
