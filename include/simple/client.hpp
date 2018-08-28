@@ -52,10 +52,18 @@ public:
     initClient();
   }
 
+  // Copy operations are not available.
   Client(const Client& other) = delete;
   Client& operator=(const Client& other) = delete;
 
+  /**
+   * @brief Move constructor.
+   */
   Client(Client&& other) = default;
+
+  /**
+   * @brief Move assignment operator.
+   */
   Client& operator=(Client&& other) = default;
 
   ~Client() = default;
