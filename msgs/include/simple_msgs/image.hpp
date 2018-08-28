@@ -27,11 +27,27 @@
 #include "pose.h"
 
 namespace simple_msgs {
+/**
+ * @class Image image.hpp.
+ * @brief Wrapper for a Flatbuffers Image message.
+ * @tparam T Type of the internal image data: uint8, int16, float or double.
+ * It contains the data of a 2D or 3D image and its metadata:
+ * - the size of the image data
+ * - the image dimensions (widht, height, depth)
+ * - the number of color channels
+ * - the pixel (or voxel) spacing along the possible directions
+ * - the image encoding
+ * - a Pose message representing the image origin in space
+ * - a Header message
+ */
 template <typename T>
 class Image : public GenericMessage {
 public:
   Image() = default;
 
+  /**
+   * @brief Copy constructor.
+   */
   Image(const Image& other)
     : header_{other.header_}
     , origin_{other.origin_}
@@ -46,6 +62,9 @@ public:
     , num_channels_{other.num_channels_}
     , data_{other.data_} {}
 
+  /**
+   * @brief Move constructor.
+   */
   Image(Image&& other) noexcept
     : header_{std::move(other.header_)}
     , origin_{std::move(other.origin_)}
@@ -60,6 +79,9 @@ public:
     , num_channels_{std::move(other.num_channels_)}
     , data_{std::move(other.data_)} {}
 
+  /**
+   * @brief Copy assignment operator.
+   */
   Image& operator=(const Image& other) {
     if (this != std::addressof(other)) {
       std::lock_guard<std::mutex> lock{mutex_};
@@ -79,6 +101,9 @@ public:
     return *this;
   }
 
+  /**
+   * @brief Move assignment operator.
+   */
   Image& operator=(Image&& other) noexcept {
     if (this != std::addressof(other)) {
       std::lock_guard<std::mutex> lock{mutex_};
@@ -98,24 +123,33 @@ public:
     return *this;
   }
 
+  /**
+   * @brief Copy assignment operator that uses raw memory coming from the network.
+   */
   Image& operator=(std::shared_ptr<void*> data);
 
+  /**
+   * @brief Returns true if lhs is equal to rhs, false otherwise.
+   */
   bool operator==(const Image& rhs) const {
     bool compare = ((header_ == rhs.header_) && (origin_ == rhs.origin_) && (encoding_ == rhs.encoding_) &&
                     (spacing_x_ == rhs.spacing_x_) && (spacing_y_ == rhs.spacing_y_) &&
                     (spacing_z_ == rhs.spacing_z_) && (width_ == rhs.width_) && (height_ == rhs.height_) &&
                     (depth_ == rhs.depth_) && (data_size_ == rhs.data_size_) && (num_channels_ == rhs.num_channels_));
-
+    // The image data is actually compared only the all the other members are equal.
     if (!data_.empty() && !rhs.data_.empty()) {
       compare = compare && (memcmp(data_.getData(), (rhs.data_.getData()), data_size_) == 0);
     }
     return compare;
   }
 
-  bool operator!=(const Image& rhs) const { return !(*this == rhs); }
   /**
-   * @brief getBufferData
-   * @return
+   * @brief Returns true if lhs is not equal to rhs, false otherwise.
+   */
+  bool operator!=(const Image& rhs) const { return !(*this == rhs); }
+
+  /**
+   * @brief Builds and returns the buffer accordingly to the values currently stored.
    */
   std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const override {
     std::lock_guard<std::mutex> lock{mutex_};
@@ -152,22 +186,67 @@ public:
     return std::make_shared<flatbuffers::DetachedBuffer>(builder->Release());
   }
 
+  /**
+   * @brief Returns the pixel (or voxel) spacing.
+   */
   std::array<double, 3> getSpacing() const { return {{spacing_x_, spacing_y_, spacing_z_}}; }
+
+  /**
+   * @brief Returns of image dimensions (width, height and depth).
+   */
   std::array<uint32_t, 3> getImageDimensions() const { return {{width_, height_, depth_}}; }
+
+  /**
+   * @brief Returns the actually image raw data.
+   */
   const T* getImageData() const { return data_.getData(); }
+
+  /**
+   * @brief Returns the size of the image in bytes.
+   */
   uint64_t getImageSize() const { return data_size_; }
+
+  /**
+   * @brief Returns the message Header.
+   */
   const Header& getHeader() const { return header_; }
+
+  /**
+   * @brief Returns the message Header.
+   */
   Header& getHeader() { return header_; }
+
+  /**
+   * @brief Returns a Pose representing the origin of the image in space.
+   */
   const Pose& getImageOrigin() const { return origin_; }
+
+  /**
+   * @brief Returns a Pose representing the origin of the image in space.
+   */
   Pose& getImageOrigin() { return origin_; }
+
+  /**
+   * @brief Returns image encoding.
+   */
   std::string getImageEncoding() const { return encoding_; }
+
+  /**
+   * @brief Returns number of color channels.
+   */
   uint16_t getNumChannels() const { return num_channels_; }
 
+  /**
+   * @brief Modifies the image encoding.
+   */
   void setImageEncoding(const std::string& encoding) {
     std::lock_guard<std::mutex> lock{mutex_};
     encoding_ = encoding;
   }
 
+  /**
+   * @brief Modifies the pixel (or voxel) spacing.
+   */
   void setImageSpacing(double spacing_x, double spacing_y, double spacing_z) {
     std::lock_guard<std::mutex> lock{mutex_};
     spacing_x_ = spacing_x;
@@ -175,6 +254,9 @@ public:
     spacing_z_ = spacing_z;
   }
 
+  /**
+   * @brief Modifies the image dimensions (width, height and depth).
+   */
   void setImageDimensions(uint32_t width, uint32_t height, uint32_t depth) {
     std::lock_guard<std::mutex> lock{mutex_};
     width_ = width;
@@ -182,31 +264,44 @@ public:
     depth_ = depth;
   }
 
+  /**
+   * @brief Modifies the message Header.
+   */
   void setHeader(const Header& header) {
     std::lock_guard<std::mutex> lock{mutex_};
     header_ = header;
   }
 
+  /**
+   * @brief Modifies the message Header.
+   */
   void setHeader(Header&& header) {
     std::lock_guard<std::mutex> lock{mutex_};
     header_ = std::move(header);
   }
 
+  /**
+   * @brief Modifies the Pose representing the origin of the image in space.
+   */
   void setOrigin(const Pose& origin_pose) {
     std::lock_guard<std::mutex> lock{mutex_};
     origin_ = origin_pose;
   }
 
+  /**
+   * @brief Modifies the Pose representing the origin of the image in space.
+   */
   void setOrigin(Pose&& origin_pose) {
     std::lock_guard<std::mutex> lock{mutex_};
     origin_ = std::move(origin_pose);
   }
 
   /**
-   * @brief
-   * @param data Pointer to the beginning of the data
-   * @param data_size Total length of the data (already contemplating the number of channels)
-   * @param num_channels Number of channels in the image
+   * @brief Sets the internal image data.
+   * Ownership of the data is not handled by the message object, its lifetime has to be guaranteed by the user.
+   * @param [in] data: Raw pointer to the beginning of the data.
+   * @param [in] data_size: Total size of the data in bytes (already contemplating the number of channels).
+   * @param [in] num_channels: Number of channels in the image.
    */
   void setImageData(const T* data, uint64_t data_size, uint16_t num_channels = 1) {
     std::lock_guard<std::mutex> lock{mutex_};
@@ -215,6 +310,12 @@ public:
     num_channels_ = num_channels;
   }
 
+  /**
+   * @brief Sets the internal image data.
+   * @param [in] data: shared pointer to the beginning of the data.
+   * @param [in] data_size: Total size of the data in bytes (already contemplating the number of channels).
+   * @param [in] num_channels: Number of channels in the image.
+   */
   void setImageData(std::shared_ptr<const T> data, uint64_t data_size, uint16_t num_channels = 1) {
     std::lock_guard<std::mutex> lock{mutex_};
     data_.setData(data);

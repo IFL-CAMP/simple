@@ -63,6 +63,9 @@ flatbuffers::Offset<void> Image<double>::getDataUnionElem(
   return Createdouble_type(*builder, builder->CreateVector(data_.getData(), data_size_)).Union();
 }
 
+/**
+ * @brief Copy assignment operator that uses raw memory coming from the network.
+ */
 template <>
 Image<uint8_t>& Image<uint8_t>::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
@@ -78,6 +81,9 @@ Image<uint8_t>& Image<uint8_t>::operator=(std::shared_ptr<void*> data) {
   return *this;
 }
 
+/**
+ * @brief Copy assignment operator that uses raw memory coming from the network.
+ */
 template <>
 Image<int16_t>& Image<int16_t>::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
@@ -93,6 +99,9 @@ Image<int16_t>& Image<int16_t>::operator=(std::shared_ptr<void*> data) {
   return *this;
 }
 
+/**
+ * @brief Copy assignment operator that uses raw memory coming from the network.
+ */
 template <>
 Image<float>& Image<float>::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
@@ -108,6 +117,9 @@ Image<float>& Image<float>::operator=(std::shared_ptr<void*> data) {
   return *this;
 }
 
+/**
+ * @brief Copy assignment operator that uses raw memory coming from the network.
+ */
 template <>
 Image<double>& Image<double>::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
