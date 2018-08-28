@@ -28,31 +28,73 @@
 
 namespace simple_msgs {
 /**
- * @brief RotationMatrix: wrapper class arounf the RotationMatrixFbs generated code from flatbuffers.
- * The matrix is stored colo
+ * @class RotationMatrixStamped rotation_matrix_stamped.h.
+ * @brief Wrapper for a Flatbuffers RotationMatrixStamped message.
+ * It contains a RotationMatrix and a Header message.
  */
 class RotationMatrixStamped : public GenericMessage {
 public:
   RotationMatrixStamped() = default;
+
+  /**
+   * @brief Construct a RotationMatrixStamped message given its Header and RotationMatrix.
+   */
   RotationMatrixStamped(const Header&, const RotationMatrix&);
+
+  /**
+   * @brief Construct a RotationMatrixStamped message given its Header and RotationMatrix.
+   */
   RotationMatrixStamped(Header&&, RotationMatrix&&);
+
+  /**
+   * @brief Construct a RotationMatrixStamped message using a raw memory coming from network.
+   */
   RotationMatrixStamped(const void*);
+
+  /**
+   * @brief Copy constructor.
+   */
   RotationMatrixStamped(const RotationMatrixStamped&);
+
+  /**
+   * @brief Move constructor.
+   */
   RotationMatrixStamped(RotationMatrixStamped&&) noexcept;
 
+  /**
+   * @brief Copy assignment operator.
+   */
   RotationMatrixStamped& operator=(const RotationMatrixStamped&);
+
+  /**
+   * @brief Move assignment operator.
+   */
   RotationMatrixStamped& operator=(RotationMatrixStamped&&) noexcept;
+
+  /**
+   * @brief Copy assignment operator that uses raw memory coming from the network.
+   */
   RotationMatrixStamped& operator=(std::shared_ptr<void*>);
 
+  /**
+   * @brief Returns true if lhs is equal to rhs, false otherwise.
+   */
   inline bool operator==(const RotationMatrixStamped& rhs) const {
     return (rotation_matrix_ == rhs.rotation_matrix_ && header_ == rhs.header_);
   }
+
+  /**
+   * @brief Returns true if lhs is not equal to rhs, false otherwise.
+   */
   inline bool operator!=(const RotationMatrixStamped& rhs) const { return !(*this == rhs); }
+
+  /**
+   * @brief Stream extraction operator.
+   */
   friend std::ostream& operator<<(std::ostream&, const RotationMatrixStamped&);
 
   /**
    * @brief Builds and returns the buffer accordingly to the values currently stored.
-   * @return the buffer data.
    */
   std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const override;
 
@@ -60,23 +102,29 @@ public:
    * @brief Returns the message Header.
    */
   inline Header& getHeader() { return header_; }
+
+  /**
+   * @brief Returns the message Header.
+   */
   inline const Header& getHeader() const { return header_; }
 
   /**
    * @brief Returns the rotation matrix.
    */
   inline RotationMatrix& getRotationMatrix() { return rotation_matrix_; }
+
+  /**
+   * @brief Returns the rotation matrix.
+   */
   inline const RotationMatrix& getRotationMatrix() const { return rotation_matrix_; }
 
   /**
    * @brief Mofidies the header.
-   * @param header:
    */
   void setHeader(const Header&);
 
   /**
    * @brief Mofidies the matrix.
-   * @param rotation_matrix:
    */
   void setRotationMatrix(const RotationMatrix&);
 
