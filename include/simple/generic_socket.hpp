@@ -55,11 +55,17 @@ public:
   GenericSocket(const GenericSocket&) = delete;
   GenericSocket& operator=(const GenericSocket&) = delete;
 
+  /**
+   * @brief Move constructor.
+   */
   GenericSocket(GenericSocket&& other) {
     socket_.store(other.socket_);
     other.socket_ = nullptr;
   }
 
+  /**
+   * @brief Move assignment operator.
+   */
   GenericSocket& operator=(GenericSocket&& other) {
     if (other.isValid()) {
       socket_.store(other.socket_);
@@ -68,20 +74,31 @@ public:
     return *this;
   }
 
-  // Only friend  classes can instantiate a GenericSocket.
+  // Only friend classes can instantiate a GenericSocket.
   friend class Publisher<T>;
   friend class Subscriber<T>;
   friend class Client<T>;
   friend class Server<T>;
 
 protected:
-  // Class ctors are protected. A user cannot instantiate one GenericSocket.
+  // Class ctors are protected. A user cannot instantiate a GenericSocket.
   GenericSocket() = default;
+
+  /**
+   * @brief Constructs a socket with the given ZMQ socket type.
+   * @param [in] type - the ZMQ type.
+   *
+   * Accepted types are:
+   * ZMQ_PUB - for a Publisher.
+   * ZMQ_SUB - for a Subscriber.
+   * ZMQ_REQ - for a Client.
+   * ZMQ_REP - for a Server.
+   */
   explicit GenericSocket(int type) { initSocket(type); }
 
   /**
    * @brief Binds the ZMQ Socket to the given address.
-   * @param[in] address - in the form \<PROTOCOL\>://\<IP_ADDRESS\>:\<PORT\>, e.g. tcp://127.0.0.1:5555.
+   * @param [in] address - in the form \<PROTOCOL\>://\<IP_ADDRESS\>:\<PORT\>, e.g. tcp://127.0.0.1:5555.
    * @throws std::runtime_error.
    */
   void bind(const std::string& address) {
@@ -93,7 +110,7 @@ protected:
 
   /**
    * @brief Connect the ZMQ Socket to the given address.
-   * @param[in] address - in the form \<PROTOCOL\>://\<IP_ADDRESS\>:\<PORT\>, e.g. tcp://127.0.0.1:5555.
+   * @param [in] address - in the form \<PROTOCOL\>://\<IP_ADDRESS\>:\<PORT\>, e.g. tcp://127.0.0.1:5555.
    * @throws std::runtime_error.
    */
   void connect(const std::string& address) {
@@ -105,8 +122,8 @@ protected:
 
   /**
    * @brief Sends buffer data over the ZMQ Socket.
-   * @param[in] buffer - a pointer to the buffer data constructed using Flatbuffers.
-   * @param[in] custom_error - a string to prefix to the error messages printed in failure cases.
+   * @param [in] buffer - a pointer to the buffer data constructed using Flatbuffers.
+   * @param [in] custom_error - a string to prefix to the error messages printed in failure cases.
    * @return the number of bytes sent over the ZMQ Socket. -1 for failure.
    */
   int sendMsg(std::shared_ptr<flatbuffers::DetachedBuffer> buffer,
@@ -117,7 +134,7 @@ protected:
     zmq_msg_init_data(&topic_message, topic_ptr, topic_.size(), nullptr, nullptr);
 
     // Create a shared_ptr to the given buffer data, this allows to avoid disposing the data to be sent before the
-    // actual transmission is termianted. The zmq_msg_send() methos will return as soon as the message has been queued
+    // actual transmission is termianted. The zmq_msg_send() method will return as soon as the message has been queued
     // but there are no guaranteed that the data is yet transmitted. This pointer will keep the data alive and it will
     // be disposed when not necessary anymore.
     auto buffer_pointer = new std::shared_ptr<flatbuffers::DetachedBuffer>{buffer};
@@ -154,8 +171,8 @@ protected:
 
   /**
    * @brief Receive a message of type T from the ZMQ Socket.
-   * @param[in,out] msg - The message of type T to populate with the data incoming from the ZMQ Socket.
-   * @param[in] custom_error - a string to prefix to the error messages printed in failure cases.
+   * @param [in,out] msg - The message of type T to populate with the data incoming from the ZMQ Socket.
+   * @param [in] custom_error - a string to prefix to the error messages printed in failure cases.
    * @return the number of bytes received by the ZMQ Socket. -1 for failure.
    */
   int receiveMsg(T& msg, const std::string& custom_error = "") {
@@ -214,7 +231,8 @@ protected:
     // Set the T msg to the data that has been just received.
     void* data_ptr = zmq_msg_data(local_message.get());  //< Internal data of the ZMQ message.
     // Shared pointer to the internal data that shares ref counter with local_message. Since it is passed by value to
-    // the operator= of T, the ref counter is increased and local_message will stay alive until T needs the data.
+    // the operator= of T, the ref counter is increased and local_message will stay alive until the object T needs the
+    // data.
     msg = std::shared_ptr<void*>{local_message, &data_ptr};
 
     // Return the number of bytes received.
