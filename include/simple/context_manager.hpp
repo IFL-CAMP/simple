@@ -3,18 +3,9 @@
  * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy
  * Langsch - fernanda.langsch@tum.de
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser Public License for more details.
- *
- * You should have received a copy of the GNU Lesser Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 #ifndef SIMPLE_CONTEXT_MANAGER_HPP
@@ -56,7 +47,7 @@ public:
    * when using simple as (or from a) dynamic library. In such a case, the context needs to be destroyed
    * _before_ the DLL gets unloaded, but _after_ any other SIMPLE objects are destroyed.
    * @Note Under normal circumstances, using this function is not necessary as the context normally will
-   *       be destroyed at static object destruction. Use this only when necessary and be aware that 
+   *       be destroyed at static object destruction. Use this only when necessary and be aware that
    *       early destruction can result in application crashes or hangs.
    */
   static void destroy() {
@@ -96,8 +87,9 @@ private:
     void* internal_context_{nullptr};  //< ZMQ Context.
   };
   static SIMPLE_EXPORT std::mutex context_creation_mutex_;
-  static SIMPLE_EXPORT std::shared_ptr<ZMQContext> context_;	//< This allows to automatically dispose (and therefore, terminate) the
-																// ZMQ context handled by the ZMQContext class.
+  static SIMPLE_EXPORT std::shared_ptr<ZMQContext>
+      context_;  //< This allows to automatically dispose (and therefore, terminate) the
+                 // ZMQ context handled by the ZMQContext class.
 };
 }  // Namespace simple.
 
