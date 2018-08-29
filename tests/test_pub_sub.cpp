@@ -32,7 +32,7 @@ SCENARIO("Publish and subscribe to a Bool message.") {
   GIVEN("An instance of a subscriber.") {
     simple::Publisher<simple_msgs::Bool> pub("tcp://*:5555");
     simple::Subscriber<simple_msgs::Bool> sub("tcp://localhost:5555", callbackFunctionConstBool);
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
         auto p = createRandomBool();
@@ -52,7 +52,7 @@ SCENARIO("Publish and subscribe to a Int message.") {
   GIVEN("An instance of a subscriber.") {
     simple::Publisher<simple_msgs::Int> pub("tcp://*:5556");
     simple::Subscriber<simple_msgs::Int> sub("tcp://localhost:5556", callbackFunctionConstInt);
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
         auto p = createRandomInt();
@@ -72,7 +72,7 @@ SCENARIO("Publish and subscribe to a Float message.") {
   GIVEN("An instance of a subscriber.") {
     simple::Publisher<simple_msgs::Float> pub("tcp://*:5557");
     simple::Subscriber<simple_msgs::Float> sub("tcp://localhost:5557", callbackFunctionConstFloat);
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
         auto p = createRandomFloat();
@@ -92,7 +92,7 @@ SCENARIO("Publish and subscribe to a Double message.") {
   GIVEN("An instance of a subscriber.") {
     simple::Publisher<simple_msgs::Double> pub("tcp://*:5558");
     simple::Subscriber<simple_msgs::Double> sub("tcp://localhost:5558", callbackFunctionConstDouble);
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
         auto p = createRandomDouble();
@@ -112,7 +112,7 @@ SCENARIO("Publish and subscribe to a String message.") {
   GIVEN("An instance of a subscriber.") {
     simple::Publisher<simple_msgs::String> pub("tcp://*:5559");
     simple::Subscriber<simple_msgs::String> sub("tcp://localhost:5559", callbackFunctionConstString);
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
         auto p = createRandomString();
@@ -132,7 +132,7 @@ SCENARIO("Publish and subscribe to a Header message.") {
   GIVEN("An instance of a subscriber.") {
     simple::Publisher<simple_msgs::Header> pub("tcp://*:5560");
     simple::Subscriber<simple_msgs::Header> sub("tcp://localhost:5560", callbackFunctionConstHeader);
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
         auto p = createRandomHeader();
@@ -152,7 +152,7 @@ SCENARIO("Publish and subscribe to a Point message.") {
   GIVEN("An instance of a subscriber.") {
     simple::Publisher<simple_msgs::Point> pub("tcp://*:5561");
     simple::Subscriber<simple_msgs::Point> sub("tcp://localhost:5561", callbackFunctionConstPoint);
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
         auto p = createRandomPoint();
@@ -172,7 +172,7 @@ SCENARIO("Publish and subscribe to a Quaternion message.") {
   GIVEN("An instance of a subscriber.") {
     simple::Publisher<simple_msgs::Quaternion> pub("tcp://*:5562");
     simple::Subscriber<simple_msgs::Quaternion> sub("tcp://localhost:5562", callbackFunctionConstQuaternion);
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
         auto p = createRandomQuaternion();
@@ -192,7 +192,7 @@ SCENARIO("Publish and subscribe to a Pose message.") {
   GIVEN("An instance of a subscriber.") {
     simple::Publisher<simple_msgs::Pose> pub("tcp://*:5563");
     simple::Subscriber<simple_msgs::Pose> sub("tcp://localhost:5563", callbackFunctionConstPose);
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
         auto p = createRandomPose();
@@ -212,7 +212,7 @@ SCENARIO("Publish and subscribe to a Rotation Matrix message.") {
   GIVEN("An instance of a subscriber.") {
     simple::Publisher<simple_msgs::RotationMatrix> pub("tcp://*:5564");
     simple::Subscriber<simple_msgs::RotationMatrix> sub("tcp://localhost:5564", callbackFunctionConstRotationMatrix);
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
         auto p = createRandomRotationMatrix();
@@ -232,7 +232,7 @@ SCENARIO("Publish and subscribe to a PointStamped message.") {
   GIVEN("An instance of a subscriber.") {
     simple::Publisher<simple_msgs::PointStamped> pub("tcp://*:5565");
     simple::Subscriber<simple_msgs::PointStamped> sub("tcp://localhost:5565", callbackFunctionConstPointStamped);
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
         auto p = createRandomPointStamped();
@@ -253,7 +253,7 @@ SCENARIO("Publish and subscribe to a QuaternionStamped message.") {
     simple::Publisher<simple_msgs::QuaternionStamped> pub("tcp://*:5566");
     simple::Subscriber<simple_msgs::QuaternionStamped> sub("tcp://localhost:5566",
                                                            callbackFunctionConstQuaternionStamped);
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
         auto p = createRandomQuaternionStamped();
@@ -273,7 +273,7 @@ SCENARIO("Publish and subscribe to a PoseStamped message.") {
   GIVEN("An instance of a subscriber.") {
     simple::Publisher<simple_msgs::PoseStamped> pub("tcp://*:5567");
     simple::Subscriber<simple_msgs::PoseStamped> sub("tcp://localhost:5567", callbackFunctionConstPoseStamped);
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
         auto p = createRandomPoseStamped();
@@ -294,7 +294,7 @@ SCENARIO("Publish and subscribe to a RotationMatrixStamped message.") {
     simple::Publisher<simple_msgs::RotationMatrixStamped> pub("tcp://*:5568");
     simple::Subscriber<simple_msgs::RotationMatrixStamped> sub("tcp://localhost:5568",
                                                                callbackFunctionConstRotationMatrixStamped);
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
         auto p = createRandomRotationMatrixStamped();
