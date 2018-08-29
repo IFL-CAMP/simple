@@ -68,11 +68,9 @@ private:
 
   bool request(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer, T& msg) {
     bool success{false};
-
     if (socket_.sendMsg(buffer, "[SIMPLE Client] - ") != -1) {
       if (socket_.receiveMsg(msg, "[SIMPLE Client] - ") != -1) {
         success = true;
-
       } else {
         std::cerr << "[SIMPLE Client] - No reply received. Aborting this request." << std::endl;
         // Delete the existing socket and create a new one.
