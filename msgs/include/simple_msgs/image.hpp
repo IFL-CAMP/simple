@@ -32,13 +32,13 @@ namespace simple_msgs {
  * @brief Wrapper for a Flatbuffers Image message.
  * @tparam T Type of the internal image data: uint8, int16, float or double.
  * It contains the data of a 2D or 3D image and its metadata:
- * - the size of the image data
- * - the image dimensions (widht, height, depth)
- * - the number of color channels
- * - the pixel (or voxel) spacing along the possible directions
- * - the image encoding
- * - a Pose message representing the image origin in space
- * - a Header message
+ * - the size of the image data,
+ * - the image dimensions (widht, height, depth),
+ * - the number of color channels,
+ * - the pixel (or voxel) spacing along the possible directions,
+ * - the image encoding,
+ * - a Pose message representing the image origin in space,
+ * - a Header message.
  */
 template <typename T>
 class Image : public GenericMessage {
