@@ -69,21 +69,31 @@ find_package(ZeroMQ REQUIRED)
 
 ###### TARGETS
 
+# Collect all the headers.
 file(GLOB SIMPLE_HEADERS "include/simple/*.hpp")
+
+# Dummy target to visualize the header files in some IDE.
 add_custom_target(${PROJECT_NAME}-ide SOURCES ${SIMPLE_HEADERS})
 
 # SHARED library.
 add_library(${PROJECT_NAME} SHARED src/context_manager.cpp)
 
-target_include_directories(${PROJECT_NAME} PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/msgs/include>
-  $<BUILD_INTERFACE:${ZeroMQ_INCLUDE_DIR}>
-  $<INSTALL_INTERFACE:include>)
+target_include_directories(${PROJECT_NAME}
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/msgs/include>
+  PRIVATE
+    $<BUILD_INTERFACE:${ZeroMQ_INCLUDE_DIR}>
+)
 
 target_link_libraries(${PROJECT_NAME}
-  libzmq-static ${CMAKE_THREAD_LIBS_INIT} simple_msgs ${coverage_lib})
+  PUBLIC
+    simple_msgs
+    libzmq-static
+  PRIVATE
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${coverage_lib}
+)
 
 # Generate the export header for the shared library.
 include(GenerateExportHeader)
@@ -96,14 +106,21 @@ add_library(${PROJECT_NAME}-static src/context_manager.cpp)
 target_compile_definitions(${PROJECT_NAME}-static PUBLIC SIMPLE_STATIC_DEFINE)
 
 target_include_directories(${PROJECT_NAME}-static PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/msgs/include>
-  $<BUILD_INTERFACE:${ZeroMQ_INCLUDE_DIR}>
-  $<INSTALL_INTERFACE:include>)
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/msgs/include>
+  PRIVATE
+    $<BUILD_INTERFACE:${ZeroMQ_INCLUDE_DIR}>
+)
 
 target_link_libraries(${PROJECT_NAME}-static
-  libzmq-static ${CMAKE_THREAD_LIBS_INIT} simple_msgs ${coverage_lib})
+  PUBLIC
+    simple_msgs
+    libzmq-static
+  PRIVATE
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${coverage_lib}
+)
 
 ###### INSTALLATION
 

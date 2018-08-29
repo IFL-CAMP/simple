@@ -56,13 +56,14 @@ flatbuffers_generate_c_headers(simple_msgs ${PROJECT_SOURCE_DIR}/fbs ${PROJECT_S
 ###### TARGETS
 
 add_library(${PROJECT_NAME} STATIC ${SIMPLE_MSGS_SRCS})
-target_include_directories(${PROJECT_NAME} PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/generated>
-  $<INSTALL_INTERFACE:include>
+target_include_directories(${PROJECT_NAME}
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  PRIVATE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/generated>
 )
 
-target_link_libraries(${PROJECT_NAME} PUBLIC flatbuffers::flatbuffers)
+target_link_libraries(${PROJECT_NAME} PRIVATE flatbuffers::flatbuffers)
 
 ###### INSTALLATION
 
