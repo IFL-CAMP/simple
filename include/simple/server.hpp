@@ -32,7 +32,7 @@
 namespace simple {
 /**
  * @class Server server.hpp.
- * @brief The Server class creates a ZMQ socket of type ZMQ_REP that accept requests from CLient(s) and sends them back
+ * @brief The Server class creates a ZMQ socket of type ZMQ_REP that accept requests from Client(s) and sends them back
  * a reply according to the computation performed in the provided callback function.
  * @tparam T The simple_msgs type to use.
  *
