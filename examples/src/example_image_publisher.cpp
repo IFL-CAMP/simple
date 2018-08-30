@@ -52,9 +52,9 @@ int main() {
     // At each iteration pick one of the images in rotation.
     auto image = images[i % 4];
     // Set the image dimensions (e.g. 512x512x1).
-    img.setImageDimensions(image.cols, image.rows, 1);
+    img.setImageDimensions(static_cast<uint32_t>(image.cols), static_cast<uint32_t>(image.rows), 1);
     // Set the image data, giving also the total size in bytes and the number of channels
-    img.setImageData(image.data, static_cast<int>(image.total() * image.elemSize()),
+    img.setImageData(image.data, static_cast<uint64_t>(image.total() * image.elemSize()),
                      static_cast<uint16_t>(image.channels()));
     // Publish the image.
     pub.publish(img);
