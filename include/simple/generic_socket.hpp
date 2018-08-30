@@ -310,10 +310,7 @@ protected:
   /**
    * @brief Returns if the ZMQ socket has been initialized (is valid) or not.
    */
-  bool isValid() {
-    std::lock_guard<std::mutex> lock{mutex_};
-    return static_cast<bool>(socket_ != nullptr);
-  }
+  bool isValid() { return static_cast<bool>(socket_ != nullptr); }
 
   /**
    * @brief Query the endpoint that this object is bound to.
