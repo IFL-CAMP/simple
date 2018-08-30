@@ -98,11 +98,11 @@ protected:
                                ". ZMQ Error: " + std::string(zmq_strerror(zmq_errno())));
     }
 
-    // query the bound endpoint from the API
-    char lastEndpoint[1024];
-    size_t bufferSize = sizeof(lastEndpoint);
-    zmq_getsockopt(socket_, ZMQ_LAST_ENDPOINT, &lastEndpoint, &bufferSize);
-    endpoint_ = lastEndpoint;
+    // Query the bound endpoint from the ZMQ API.
+    char last_endpoint[1024];
+    size_t size = sizeof(last_endpoint);
+    zmq_getsockopt(socket_, ZMQ_LAST_ENDPOINT, &last_endpoint, &size);
+    endpoint_ = last_endpoint;
   }
 
   /**
@@ -289,6 +289,12 @@ protected:
    */
   bool isValid() { return static_cast<bool>(socket_ != nullptr); }
 
+  /**
+   * @brief Query the endpoint that this object is bound to.
+   *
+   * Can be used to find the bound port if binding to ephemeral ports.
+   * @return The endpoint in form of a ZMQ DSN string, i.e. "tcp://0.0.0.0:8000".
+   */
   inline const std::string& endpoint() { return endpoint_; }
 
 private:
