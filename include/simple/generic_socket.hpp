@@ -310,7 +310,7 @@ protected:
   }
 
 private:
-  std::mutex mutex_{};                //! Mutex for thread-safety.
+  mutable std::mutex mutex_{};        //! Mutex for thread-safety.
   std::string topic_{T::getTopic()};  //! The message topic, internally defined for each SIMPLE message.
   void* socket_{nullptr};             //! The internal ZMQ socket.
 };
