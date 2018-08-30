@@ -36,6 +36,9 @@ NumericType<double>& NumericType<double>::operator=(std::shared_ptr<void*> data)
   return *this;
 }
 
+/**
+ * @brief Builds and returns the buffer accordingly to the value currently stored.
+ */
 template <>
 std::shared_ptr<flatbuffers::DetachedBuffer> NumericType<double>::getBufferData() const {
   flatbuffers::FlatBufferBuilder builder{1024};
