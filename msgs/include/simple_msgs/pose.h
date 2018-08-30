@@ -1,54 +1,92 @@
 /**
  * S.I.M.P.L.E. - Smart Intuitive Messaging Platform with Less Effort
- * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
+ * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy
+ * Langsch - fernanda.langsch@tum.de
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser Public License for more details.
- *
- * You should have received a copy of the GNU Lesser Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 #ifndef SIMPLE_MSGS_POSE_H
 #define SIMPLE_MSGS_POSE_H
 
-#include <iostream>
+#include <ostream>
 
 #include "generated/pose_generated.h"
 #include "point.h"
 #include "quaternion.h"
 
 namespace simple_msgs {
+/**
+ * @class Pose pose.h.
+ * @brief Wrapper for a Flatbuffers Pose message.
+ * It represents a Pose in 3D space by its position and orientation.
+ */
 class Pose : public GenericMessage {
 public:
   Pose() = default;
+
+  /**
+   * @brief Construct a Pose message given its position and orientation.
+   */
   Pose(const Point&, const Quaternion&);
+
+  /**
+   * @brief Construct a Pose message given its position and orientation.
+   */
   Pose(Point&&, Quaternion&&);
+
+  /**
+   * @brief Construct a Pose message using a raw memory coming from network.
+   */
   Pose(const void*);
+
+  /**
+   * @brief Copy constructor.
+   */
   Pose(const Pose&);
+
+  /**
+   * @brief Move constructor.
+   */
   Pose(Pose&&) noexcept;
 
+  /**
+   * @brief Copy assignment operator.
+   */
   Pose& operator=(const Pose&);
+
+  /**
+   * @brief Move assignment operator.
+   */
   Pose& operator=(Pose&&) noexcept;
+
+  /**
+   * @brief Copy assignment operator that uses raw memory coming from the network.
+   */
   Pose& operator=(std::shared_ptr<void*>);
 
+  /**
+   * @brief Returns true if lhs is equal to rhs, false otherwise.
+   */
   inline bool operator==(const Pose& rhs) const {
     std::lock_guard<std::mutex> lock{mutex_};
     return (position_ == rhs.position_ && quaternion_ == rhs.quaternion_);
   }
+
+  /**
+   * @brief Returns true if lhs is not equal to rhs, false otherwise.
+   */
   inline bool operator!=(const Pose& rhs) const { return !(*this == rhs); }
+
+  /**
+   * @brief Stream extraction operator.
+   */
   friend std::ostream& operator<<(std::ostream&, const Pose&);
 
   /**
    * @brief Builds and returns the buffer accordingly to the values currently stored.
-   * @return the buffer data.
    */
   std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const override;
 

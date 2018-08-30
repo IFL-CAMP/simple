@@ -1,19 +1,11 @@
 /**
  * S.I.M.P.L.E. - Smart Intuitive Messaging Platform with Less Effort
- * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
+ * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy
+ * Langsch - fernanda.langsch@tum.de
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser Public License for more details.
- *
- * You should have received a copy of the GNU Lesser Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 #ifndef SIMPLE_MSGS_STRING_H
@@ -25,20 +17,57 @@
 #include "generic_message.h"
 
 namespace simple_msgs {
+/**
+ * @class String string.h
+ * @brief Wrappen for a Flatbuffers String message, as defined in string.fbs.
+ */
 class String : public GenericMessage {
 public:
-  // Constructors,
   String() = default;
+
+  /**
+   * @brief Construct a String message using the given text.
+   */
   String(const std::string&);
+
+  /**
+   * @brief Construct a String message using the given text.
+   */
   String(std::string&&);
+
+  /**
+   * @brief Construct a String message using the given text.
+   */
   String(const char*);
+
+  /**
+   * @brief Construct a String message using a raw memory coming from network.
+   */
   String(const void*);
+
+  /**
+   * @brief Copy constructor.
+   */
   String(const String&);
+
+  /**
+   * @brief Move constructor.
+   */
   String(String&&) noexcept;
 
-  // Copy operations.
+  /**
+   * @brief Copy assignment.
+   */
   String& operator=(const String&);
+
+  /**
+   * @brief Move assignment.
+   */
   String& operator=(String&&) noexcept;
+
+  /**
+   * @brief Copy assignment operator that uses raw memory coming from the network.
+   */
   String& operator=(std::shared_ptr<void*>);
 
   // Relational operators.
@@ -49,11 +78,19 @@ public:
 
   inline bool operator!=(const String& rhs) const { return !(*this == rhs); }
 
-  // Binary arithmetic operators
+  /**
+   * @brief Concatenate a String to the current one.
+   */
   String& operator+=(const String&);
+
+  /**
+   * @brief Concatenates two Strings.
+   */
   friend String operator+(String, const String&);
 
-  // Stream extraction.
+  /**
+   * @brief Stream extraction.
+   */
   friend std::ostream& operator<<(std::ostream& out, const String& s);
 
   /**
@@ -78,7 +115,7 @@ public:
   }
 
   /**
-   * @brief Set the content to an empty string.
+   * @brief Set the message content to an empty string.
    */
   inline void clear() {
     std::lock_guard<std::mutex> lock{mutex_};

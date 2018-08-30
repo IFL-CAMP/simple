@@ -1,48 +1,87 @@
 /**
  * S.I.M.P.L.E. - Smart Intuitive Messaging Platform with Less Effort
- * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
+ * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy
+ * Langsch - fernanda.langsch@tum.de
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser Public License for more details.
- *
- * You should have received a copy of the GNU Lesser Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 #ifndef SIMPLE_MSGS_QUATERNION_H
 #define SIMPLE_MSGS_QUATERNION_H
 
 #include <array>
-#include <iostream>
+#include <ostream>
 
 #include "generated/quaternion_generated.h"
 #include "generic_message.h"
 
 namespace simple_msgs {
 /**
- * @brief Quaternion: wrapper class around the QuaternionFbs generated code from flatbuffers.
+ * @class Quaternion quaternion.h.
+ * @brief Wrapper for a Flatbuffers Quaternion message.
  */
 class Quaternion : public GenericMessage {
 public:
   Quaternion() = default;
+
+  /**
+   * @brief Construct a Point message using the given parameters.
+   * Convention: x, y, z, w.
+   */
   Quaternion(double, double, double, double);
+
+  /**
+   * @brief Copy construct a Point message using the given 4D array.
+   * Convention: x, y, z, w.
+   */
   Quaternion(const std::array<double, 4>&);
+
+  /**
+   * @brief Move construct a Point message using the given 4D array.
+   * Convention: x, y, z, w.
+   */
   Quaternion(std::array<double, 4>&&) noexcept;
+
+  /**
+   * @brief Construct a Quaternion message using a raw memory coming from network.
+   */
   Quaternion(const void*);
+
+  /**
+   * @brief Copy constructor.
+   */
   Quaternion(const Quaternion&);
+
+  /**
+   * @brief Move constructor.
+   */
   Quaternion(Quaternion&&) noexcept;
 
+  /**
+   * @brief Copy assignment operator.
+   */
   Quaternion& operator=(const Quaternion&);
+
+  /**
+   * @brief Move assignment operator.
+   */
   Quaternion& operator=(Quaternion&&) noexcept;
+
+  /**
+   * @brief Copy assignment operator that uses raw memory coming from the network.
+   */
   Quaternion& operator=(std::shared_ptr<void*>);
+
+  /**
+   * @brief Copy assignment from a 4D array.
+   */
   Quaternion& operator=(const std::array<double, 4>&);
+
+  /**
+   * @brief Move assignment from a 4D array.
+   */
   Quaternion& operator=(std::array<double, 4>&&) noexcept;
 
   inline bool operator==(const Quaternion& rhs) const {
@@ -51,6 +90,10 @@ public:
   }
 
   inline bool operator!=(const Quaternion& rhs) const { return !(*this == rhs); }
+
+  /**
+   * @brief Stream extraction operator.
+   */
   friend std::ostream& operator<<(std::ostream&, const Quaternion&);
 
   /**
@@ -60,7 +103,6 @@ public:
 
   /**
    * @brief Returns the quaternion as an array for 4 elements.
-   * @return
    */
   std::array<double, 4> toVector() const {
     std::lock_guard<std::mutex> lock{mutex_};

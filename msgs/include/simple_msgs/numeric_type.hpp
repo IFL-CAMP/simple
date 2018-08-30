@@ -1,19 +1,11 @@
 /**
  * S.I.M.P.L.E. - Smart Intuitive Messaging Platform with Less Effort
- * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
+ * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy
+ * Langsch - fernanda.langsch@tum.de
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser Public License for more details.
- *
- * You should have received a copy of the GNU Lesser Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 #ifndef SIMPLE_MSGS_NUMERIC_TYPE_HPP
@@ -28,16 +20,21 @@
 
 namespace simple_msgs {
 
-template <typename T, typename Enable = void>
-class NumericType;
-
+/**
+ * @class NumericType numeric_type.hpp.
+ * @brief A generic wrapper for Flatbuffers messages that only contain a single numeric value.
+ * @tparam T A specific numeric type, e.g. int, float, double, ...
+ *
+ * Implements the generic functionalities that are commoon to the possible data types (int, float, double).
+ */
 template <typename T>
 class NumericType<T, typename std::enable_if<std::is_arithmetic<T>::value>::type> : public GenericMessage {
 public:
-  // Constructors.
-
   NumericType() = default;
 
+  /**
+   * @brief Construct the message with the given data.
+   */
   NumericType(T data) : data_{data} {}
 
   /**
@@ -54,6 +51,9 @@ public:
     return *this;
   }
 
+  /**
+   * @brief Copy assignment operator that uses raw memory coming from the network.
+   */
   NumericType& operator=(std::shared_ptr<void*> data);
 
   // Move operations.
@@ -65,74 +65,129 @@ public:
     return *this;
   }
 
-  // Relational operators.
+  /**
+   * @brief Returns true if lhs is equal to rhs, false otherwise.
+   */
   inline bool operator==(const NumericType& rhs) const { return data_ == rhs.data_; }
+
+  /**
+   * @brief Returns true if lhs is not equal to rhs, false otherwise.
+   */
   inline bool operator!=(const NumericType& rhs) const { return !(*this == rhs); }
+
+  /**
+   * @brief Returns true if lhs is less than rhs, false otherwise.
+   */
   inline bool operator<(const NumericType& rhs) const { return data_ < rhs.data_; }
+
+  /**
+   * @brief Returns true if lhs is greater than rhs, false otherwise.
+   */
   inline bool operator>(const NumericType& rhs) const { return rhs < *this; }
+
+  /**
+   * @brief Returns true if lhs is less than or equal to rhs, false otherwise.
+   */
   inline bool operator<=(const NumericType& rhs) const { return !(*this > rhs); }
+
+  /**
+   * @brief Returns true if lhs is greater than or equal to rhs, false otherwise.
+   */
   inline bool operator>=(const NumericType& rhs) const { return !(*this < rhs); }
 
-  // Increment and decrement operators.
+  /**
+   * @brief Prefix decrement operator.
+   */
   NumericType& operator--() {
     data_.exchange(data_.load() - 1);
     return *this;
   }
 
+  /**
+   * @brief Postfix decrement operator.
+   */
   const NumericType operator--(int) {
     const NumericType old(*this);
     --(*this);
     return old;
   }
 
+  /**
+   * @brief Prefix increment operator.
+   */
   NumericType& operator++() {
     data_.exchange(data_.load() + 1);
     return *this;
   }
 
+  /**
+   * @brief Postfix increment operator.
+   */
   const NumericType operator++(int) {
     const NumericType old(*this);
     ++(*this);
     return old;
   }
 
-  // Binary arithmetic operatorss
-
+  /**
+   * @brief Addition operator.
+   */
   NumericType& operator+=(const NumericType& rhs) {
     data_.exchange(data_.load() + rhs.data_.load());
     return *this;
   }
 
+  /**
+   * @brief Addition operator.
+   */
   friend NumericType operator+(NumericType lhs, const NumericType& rhs) {
     lhs += rhs;
     return lhs;
   }
 
+  /**
+   * @brief Subtraction operator.
+   */
   NumericType& operator-=(const NumericType& rhs) {
     data_.exchange(data_.load() - rhs.data_.load());
     return *this;
   }
 
+  /**
+   * @brief Subtraction operator.
+   */
   friend NumericType operator-(NumericType lhs, const NumericType& rhs) {
     lhs -= rhs;
     return lhs;
   }
 
+  /**
+   * @brief Multiplication operator.
+   */
   NumericType& operator*=(const NumericType& rhs) {
     data_.exchange(data_.load() * rhs.data_.load());
     return *this;
   }
 
+  /**
+   * @brief Multiplication operator.
+   */
   friend NumericType operator*(NumericType lhs, const NumericType& rhs) {
     lhs *= rhs;
     return lhs;
   }
 
+  /**
+   * @brief Division operator.
+   */
   NumericType& operator/=(const NumericType& rhs) {
     data_.exchange(data_.load() / rhs.data_.load());
     return *this;
   }
 
+  /**
+   * @brief Division operator.
+   */
   friend NumericType operator/(NumericType lhs, const NumericType& rhs) {
     lhs /= rhs;
     return lhs;
@@ -140,17 +195,16 @@ public:
 
   /**
    * @brief Builds and returns the buffer accordingly to the values currently stored.
-   * @return the buffer data.
    */
   std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const override;
 
   /**
-   * @brief Set the double value.
+   * @brief Set the numeric value.
    */
   inline void set(T data) { data_.store(data); }
 
   /**
-   * @brief Get the double value.
+   * @brief Get the numeric value.
    */
   inline T get() const { return data_.load(); }
 
@@ -159,7 +213,9 @@ public:
    */
   static inline std::string getTopic();
 
-  //  Stream extraction.
+  /**
+   * @brief Stream extraction operator.
+   */
   template <typename Tn>
   friend std::ostream& operator<<(std::ostream& out, const NumericType<Tn>& obj);
 
@@ -167,6 +223,9 @@ private:
   std::atomic<T> data_{0};
 };
 
+/**
+ * @brief Stream extraction operator.
+ */
 template <typename T>
 std::ostream& operator<<(std::ostream& out, const NumericType<T>& obj) {
   out << obj.data_.load();
