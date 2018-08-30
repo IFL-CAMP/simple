@@ -11,7 +11,7 @@
 #ifndef SIMPLE_MSGS_ROTATION_MATRIX_STAMPED_H
 #define SIMPLE_MSGS_ROTATION_MATRIX_STAMPED_H
 
-#include <array>
+#include <mutex>
 #include <ostream>
 
 #include "generated/rotation_matrix_stamped_generated.h"
@@ -22,7 +22,7 @@
 namespace simple_msgs {
 /**
  * @class RotationMatrixStamped rotation_matrix_stamped.h.
- * @brief Wrapper for a Flatbuffers RotationMatrixStamped message.
+ * @brief Thread-safe wrapper for a Flatbuffers RotationMatrixStamped message.
  * It contains a RotationMatrix and a Header message.
  */
 class RotationMatrixStamped : public GenericMessage {
@@ -100,6 +100,9 @@ public:
     return header_;
   }
 
+  /**
+   * @brief Returns the message Header.
+   */
   inline const Header& getHeader() const {
     std::lock_guard<std::mutex> lock{mutex_};
     return header_;
@@ -113,6 +116,9 @@ public:
     return rotation_matrix_;
   }
 
+  /**
+   * @brief Returns the rotation matrix.
+   */
   inline const RotationMatrix& getRotationMatrix() const {
     std::lock_guard<std::mutex> lock{mutex_};
     return rotation_matrix_;

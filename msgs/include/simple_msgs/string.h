@@ -11,6 +11,7 @@
 #ifndef SIMPLE_MSGS_STRING_H
 #define SIMPLE_MSGS_STRING_H
 
+#include <mutex>
 #include <ostream>
 
 #include "generated/string_generated.h"
@@ -19,7 +20,7 @@
 namespace simple_msgs {
 /**
  * @class String string.h
- * @brief Wrappen for a Flatbuffers String message, as defined in string.fbs.
+ * @brief Thread-safe wrapper for a Flatbuffers String message, as defined in string.fbs.
  */
 class String : public GenericMessage {
 public:
@@ -70,12 +71,17 @@ public:
    */
   String& operator=(std::shared_ptr<void*>);
 
-  // Relational operators.
+  /**
+   * @brief Returns true if lhs is equal to rhs, false otherwise.
+   */
   inline bool operator==(const String& rhs) const {
     std::lock_guard<std::mutex> lock{mutex_};
     return (data_ == rhs.data_);
   }
 
+  /**
+   * @brief Returns true if lhs is not equal to rhs, false otherwise.
+   */
   inline bool operator!=(const String& rhs) const { return !(*this == rhs); }
 
   /**
@@ -122,6 +128,9 @@ public:
     data_.clear();
   }
 
+  /**
+   * @brief Returns true if the message is empty, false otherwise.
+   */
   inline bool empty() {
     std::lock_guard<std::mutex> lock{mutex_};
     return data_.empty();

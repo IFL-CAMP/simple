@@ -12,7 +12,6 @@
 #define SIMPLE_MSGS_GENERIC_MESSAGE_H
 
 #include <flatbuffers/flatbuffers.h>
-#include <mutex>
 
 namespace simple_msgs {
 /**

@@ -21,7 +21,7 @@
 namespace simple_msgs {
 /**
  * @class Image image.hpp.
- * @brief Wrapper for a Flatbuffers Image message.
+ * @brief Thread-safe wrapper for a Flatbuffers Image message.
  * @tparam T Type of the internal image data: uint8, int16, float or double.
  * It contains the data of a 2D or 3D image and its metadata:
  * - the size of the image data,
@@ -77,6 +77,7 @@ public:
   Image& operator=(const Image& other) {
     if (this != std::addressof(other)) {
       std::lock_guard<std::mutex> lock{mutex_};
+      std::lock_guard<std::mutex> other_lock{other.mutex_};
       header_ = other.header_;
       origin_ = other.origin_;
       encoding_ = other.encoding_;
@@ -99,6 +100,7 @@ public:
   Image& operator=(Image&& other) noexcept {
     if (this != std::addressof(other)) {
       std::lock_guard<std::mutex> lock{mutex_};
+      std::lock_guard<std::mutex> other_lock{other.mutex_};
       header_ = std::move(other.header_);
       origin_ = std::move(other.origin_);
       encoding_ = std::move(other.encoding_);
@@ -124,6 +126,7 @@ public:
    * @brief Returns true if lhs is equal to rhs, false otherwise.
    */
   bool operator==(const Image& rhs) const {
+    std::lock_guard<std::mutex> lock{mutex_};
     bool compare = ((header_ == rhs.header_) && (origin_ == rhs.origin_) && (encoding_ == rhs.encoding_) &&
                     (spacing_x_ == rhs.spacing_x_) && (spacing_y_ == rhs.spacing_y_) &&
                     (spacing_z_ == rhs.spacing_z_) && (width_ == rhs.width_) && (height_ == rhs.height_) &&
@@ -181,52 +184,82 @@ public:
   /**
    * @brief Returns the pixel (or voxel) spacing.
    */
-  std::array<double, 3> getSpacing() const { return {{spacing_x_, spacing_y_, spacing_z_}}; }
+  std::array<double, 3> getSpacing() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return {{spacing_x_, spacing_y_, spacing_z_}};
+  }
 
   /**
    * @brief Returns of image dimensions (width, height and depth).
    */
-  std::array<uint32_t, 3> getImageDimensions() const { return {{width_, height_, depth_}}; }
+  std::array<uint32_t, 3> getImageDimensions() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return {{width_, height_, depth_}};
+  }
 
   /**
    * @brief Returns the actually image raw data.
    */
-  const T* getImageData() const { return data_.getData(); }
+  const T* getImageData() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return data_.getData();
+  }
 
   /**
    * @brief Returns the size of the image in bytes.
    */
-  uint64_t getImageSize() const { return data_size_; }
+  uint64_t getImageSize() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return data_size_;
+  }
 
   /**
    * @brief Returns the message Header.
    */
-  const Header& getHeader() const { return header_; }
+  const Header& getHeader() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return header_;
+  }
 
   /**
    * @brief Returns the message Header.
    */
-  Header& getHeader() { return header_; }
+  Header& getHeader() {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return header_;
+  }
 
   /**
    * @brief Returns a Pose representing the origin of the image in space.
    */
-  const Pose& getImageOrigin() const { return origin_; }
+  const Pose& getImageOrigin() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return origin_;
+  }
 
   /**
    * @brief Returns a Pose representing the origin of the image in space.
    */
-  Pose& getImageOrigin() { return origin_; }
+  Pose& getImageOrigin() {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return origin_;
+  }
 
   /**
    * @brief Returns image encoding.
    */
-  std::string getImageEncoding() const { return encoding_; }
+  std::string getImageEncoding() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return encoding_;
+  }
 
   /**
    * @brief Returns number of color channels.
    */
-  uint16_t getNumChannels() const { return num_channels_; }
+  uint16_t getNumChannels() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return num_channels_;
+  }
 
   /**
    * @brief Modifies the image encoding.

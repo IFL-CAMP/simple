@@ -34,7 +34,8 @@ class Server;
 
 /**
  * @class GenericSocket generic_socket.hpp.
- * @brief The GenericSocket class implements the logic to transmit Flatbuffers data over ZMQ sockets.
+ * @brief The GenericSocket class implements the logic to transmit Flatbuffers data over ZMQ sockets. It is a
+ * thread-safe class.
  * @tparam T The simple_msgs type to handle.
  */
 template <typename T>
@@ -93,7 +94,7 @@ protected:
    * @throws std::runtime_error.
    */
   void bind(const std::string& address) {
-    if (zmq_bind(socket_, address.c_str()) != 0) {
+    if (zmq_bind(socket_.load(), address.c_str()) != 0) {
       throw std::runtime_error("[SIMPLE Error] - Cannot bind to the address/port: " + address +
                                ". ZMQ Error: " + std::string(zmq_strerror(zmq_errno())));
     }
@@ -105,7 +106,7 @@ protected:
    * @throws std::runtime_error.
    */
   void connect(const std::string& address) {
-    if (zmq_connect(socket_, address.c_str()) != 0) {
+    if (zmq_connect(socket_.load(), address.c_str()) != 0) {
       throw std::runtime_error("[SIMPLE Error] - Cannot connect to the address/port: " + address +
                                ". ZMQ Error: " + std::string(zmq_strerror(zmq_errno())));
     }
@@ -118,7 +119,7 @@ protected:
    * @return the number of bytes sent over the ZMQ Socket. -1 for failure.
    */
   int sendMsg(std::shared_ptr<flatbuffers::DetachedBuffer> buffer,
-              const std::string& custom_error = "[SIMPLE Error] - ") {
+              const std::string& custom_error = "[SIMPLE Error] - ") const {
     zmq_msg_t topic_message{};
     // This is ugly, but we need a void* from the const char*.
     auto topic_ptr = const_cast<void*>(static_cast<const void*>(topic_.c_str()));
@@ -199,7 +200,7 @@ protected:
     }
 
     // If all is good, check that there is more data after the topic.
-    zmq_getsockopt(socket_, ZMQ_RCVMORE, &data_past_topic, &data_past_topic_size);
+    zmq_getsockopt(socket_.load(), ZMQ_RCVMORE, &data_past_topic, &data_past_topic_size);
 
     if (data_past_topic == 0 || data_past_topic_size == 0) {
       std::cerr << custom_error << "No data inside message." << std::endl;
@@ -207,7 +208,7 @@ protected:
     }
 
     // Receive the real message.
-    bytes_received = zmq_msg_recv(local_message.get(), socket_, 0);
+    bytes_received = zmq_msg_recv(local_message.get(), socket_.load(), 0);
 
     // Check if any data has been received.
     if (bytes_received == -1 || zmq_msg_size(local_message.get()) == 0) {
@@ -235,7 +236,7 @@ protected:
    *
    * The topic name is set to the one privded by the template argument of this socket.
    */
-  void filter() { zmq_setsockopt(socket_, ZMQ_SUBSCRIBE, topic_.c_str(), topic_.size()); }
+  void filter() { zmq_setsockopt(socket_.load(), ZMQ_SUBSCRIBE, topic_.c_str(), topic_.size()); }
 
   /**
    * @brief Set the timeout of the ZMQ socket.
@@ -244,7 +245,7 @@ protected:
    * The timeout is used by Subscriber, Server and Client  sockets as the maximum allowed time to wait for an incoming
    * message, request or reply (respectively).
    */
-  void setTimeout(int timeout) { zmq_setsockopt(socket_, ZMQ_RCVTIMEO, &timeout, sizeof(timeout)); }
+  void setTimeout(int timeout) { zmq_setsockopt(socket_.load(), ZMQ_RCVTIMEO, &timeout, sizeof(timeout)); }
 
   /**
    * @brief Set the linger time of the ZMQ socket.
@@ -252,7 +253,7 @@ protected:
    *
    * After a socket is closed, unsent messages linger in memory to the given amount of time.
    */
-  void setLinger(int linger) { zmq_setsockopt(socket_, ZMQ_LINGER, &linger, sizeof(linger)); }
+  void setLinger(int linger) { zmq_setsockopt(socket_.load(), ZMQ_LINGER, &linger, sizeof(linger)); }
 
   /**
    * @brief Initialize the ZMQ socket given its type.
@@ -265,23 +266,23 @@ protected:
    * ZMQ_REP - for a Server.
    */
   void initSocket(int type) {
-    if (socket_ == nullptr) { socket_ = zmq_socket(ContextManager::instance(), type); }
+    if (socket_.load() == nullptr) { socket_ = zmq_socket(ContextManager::instance(), type); }
   }
 
   /**
    * @brief Closes the ZMQ socket.
    */
   void closeSocket() {
-    if (socket_ != nullptr) {
-      zmq_close(socket_);
-      socket_ = nullptr;
+    if (socket_.load() != nullptr) {
+      zmq_close(socket_.load());
+      socket_.store(nullptr);
     }
   }
 
   /**
    * @brief Returns if the ZMQ socket has been initialized (is valid) or not.
    */
-  bool isValid() { return static_cast<bool>(socket_ != nullptr); }
+  bool isValid() { return static_cast<bool>(socket_.load() != nullptr); }
 
 private:
   std::string topic_{T::getTopic()};    //! The message topic, internally defined for each SIMPLE message.

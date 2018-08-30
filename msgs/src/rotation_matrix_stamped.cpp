@@ -83,6 +83,9 @@ void RotationMatrixStamped::setRotationMatrix(const RotationMatrix& rotation_mat
   rotation_matrix_ = rotation_matrix;
 }
 
+/**
+ * @brief Stream extraction operator.
+ */
 std::ostream& operator<<(std::ostream& out, const RotationMatrixStamped& matrix) {
   std::lock_guard<std::mutex> lock{matrix.mutex_};
   out << matrix.header_ << matrix.rotation_matrix_;

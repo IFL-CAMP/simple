@@ -12,6 +12,7 @@
 #define SIMPLE_MSGS_QUATERNION_H
 
 #include <array>
+#include <mutex>
 #include <ostream>
 
 #include "generated/quaternion_generated.h"
@@ -20,7 +21,7 @@
 namespace simple_msgs {
 /**
  * @class Quaternion quaternion.h.
- * @brief Wrapper for a Flatbuffers Quaternion message.
+ * @brief Thread-safe wrapper for a Flatbuffers Quaternion message.
  */
 class Quaternion : public GenericMessage {
 public:
@@ -84,11 +85,17 @@ public:
    */
   Quaternion& operator=(std::array<double, 4>&&) noexcept;
 
+  /**
+   * @brief Returns true if lhs is equal to rhs, false otherwise.
+   */
   inline bool operator==(const Quaternion& rhs) const {
     std::lock_guard<std::mutex> lock{mutex_};
     return data_ == rhs.data_;
   }
 
+  /**
+   * @brief Returns true if lhs is not equal to rhs, false otherwise.
+   */
   inline bool operator!=(const Quaternion& rhs) const { return !(*this == rhs); }
 
   /**

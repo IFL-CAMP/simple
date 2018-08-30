@@ -11,7 +11,7 @@
 #ifndef SIMPLE_MSGS_POINT_STAMPED_H
 #define SIMPLE_MSGS_POINT_STAMPED_H
 
-#include <array>
+#include <mutex>
 #include <ostream>
 
 #include "generated/point_stamped_generated.h"
@@ -22,7 +22,7 @@
 namespace simple_msgs {
 /**
  * @class PointStamped point_stamped.h.
- * @brief Wrapper for a Flatbuffers PointStamped message.
+ * @brief Thread-safe wrapper for a Flatbuffers PointStamped message.
  * It contains a Point and a Header message.
  */
 class PointStamped : public GenericMessage {
@@ -69,10 +69,17 @@ public:
    */
   PointStamped& operator=(std::shared_ptr<void*>);
 
+  /**
+   * @brief Returns true if lhs is equal to rhs, false otherwise.
+   */
   inline bool operator==(const PointStamped& rhs) const {
     std::lock_guard<std::mutex> lock{mutex_};
     return (point_ == rhs.point_ && header_ == rhs.header_);
   }
+
+  /**
+   * @brief Returns true if lhs is not equal to rhs, false otherwise.
+   */
   inline bool operator!=(const PointStamped& rhs) const { return !(*this == rhs); }
 
   /**
@@ -93,6 +100,9 @@ public:
     return header_;
   }
 
+  /**
+   * @brief Returns the message Header.
+   */
   inline const Header& getHeader() const {
     std::lock_guard<std::mutex> lock{mutex_};
     return header_;
@@ -106,6 +116,9 @@ public:
     return point_;
   }
 
+  /**
+   * @brief Returns the message Point.
+   */
   inline const Point& getPoint() const {
     std::lock_guard<std::mutex> lock{mutex_};
     return point_;

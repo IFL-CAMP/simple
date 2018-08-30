@@ -11,6 +11,7 @@
 #ifndef SIMPLE_MSGS_POSE_H
 #define SIMPLE_MSGS_POSE_H
 
+#include <mutex>
 #include <ostream>
 
 #include "generated/pose_generated.h"
@@ -20,7 +21,7 @@
 namespace simple_msgs {
 /**
  * @class Pose pose.h.
- * @brief Wrapper for a Flatbuffers Pose message.
+ * @brief Thread-safe wrapper for a Flatbuffers Pose message.
  * It represents a Pose in 3D space by its position and orientation.
  */
 class Pose : public GenericMessage {
@@ -98,6 +99,9 @@ public:
     return position_;
   }
 
+  /**
+   * @brief Returns the translational part of the Pose as a Point message.
+   */
   inline const Point& getPosition() const {
     std::lock_guard<std::mutex> lock{mutex_};
     return position_;
@@ -111,6 +115,9 @@ public:
     return quaternion_;
   }
 
+  /**
+   * @brief Returns the rotational part of the Pose as a Quaternion message.
+   */
   inline const Quaternion& getQuaternion() const {
     std::lock_guard<std::mutex> lock{mutex_};
     return quaternion_;

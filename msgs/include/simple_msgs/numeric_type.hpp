@@ -11,10 +11,8 @@
 #ifndef SIMPLE_MSGS_NUMERIC_TYPE_HPP
 #define SIMPLE_MSGS_NUMERIC_TYPE_HPP
 
-#include <algorithm>
 #include <atomic>
 #include <ostream>
-#include <type_traits>
 
 #include "generic_message.h"
 
@@ -22,13 +20,13 @@ namespace simple_msgs {
 
 /**
  * @class NumericType numeric_type.hpp.
- * @brief A generic wrapper for Flatbuffers messages that only contain a single numeric value.
+ * @brief A generic thread-safe wrapper for Flatbuffers messages that only contain a single numeric value.
  * @tparam T A specific numeric type, e.g. int, float, double, ...
  *
- * Implements the generic functionalities that are commoon to the possible data types (int, float, double).
+ * Implements the generic functionalities that are common to the possible data types (int, float, double).
  */
 template <typename T>
-class NumericType<T, typename std::enable_if<std::is_arithmetic<T>::value>::type> : public GenericMessage {
+class NumericType : public GenericMessage {
 public:
   NumericType() = default;
 
@@ -42,10 +40,14 @@ public:
    */
   NumericType(const void* data);
 
-  // Copy operations.
-
+  /**
+   * @brief Copy constructor.
+   */
   NumericType(const NumericType& other) : NumericType{other.data_.load()} {}
 
+  /**
+   * @brief Copy assignment.
+   */
   NumericType& operator=(const NumericType& other) {
     if (this != std::addressof(other)) { data_.store(other.data_); }
     return *this;
@@ -56,10 +58,14 @@ public:
    */
   NumericType& operator=(std::shared_ptr<void*> data);
 
-  // Move operations.
-
+  /**
+   * @brief Move constructor.
+   */
   NumericType(NumericType&& other) noexcept : data_(other.data_.load()) {}
 
+  /**
+   * @brief Move assignment.
+   */
   NumericType& operator=(NumericType&& other) noexcept {
     if (this != std::addressof(other)) { data_.store(other.data_); }
     return *this;
@@ -220,7 +226,7 @@ public:
   friend std::ostream& operator<<(std::ostream& out, const NumericType<Tn>& obj);
 
 private:
-  std::atomic<T> data_{0};
+  std::atomic<T> data_{0};  //! Internal data.
 };
 
 /**

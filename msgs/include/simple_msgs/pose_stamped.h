@@ -11,6 +11,7 @@
 #ifndef SIMPLE_MSGS_POSE_STAMPED_H
 #define SIMPLE_MSGS_POSE_STAMPED_H
 
+#include <mutex>
 #include <ostream>
 
 #include "generated/pose_stamped_generated.h"
@@ -20,7 +21,7 @@
 namespace simple_msgs {
 /**
  * @class PoseStamped pose_stamped.h.
- * @brief Wrapper for a Flatbuffers PoseStamped message.
+ * @brief Thread-safe wrapper for a Flatbuffers PoseStamped message.
  * It contains a Pose and a Header message.
  */
 class PoseStamped : public GenericMessage {
@@ -67,10 +68,17 @@ public:
    */
   PoseStamped& operator=(std::shared_ptr<void*>);
 
+  /**
+   * @brief Returns true if lhs is equal to rhs, false otherwise.
+   */
   inline bool operator==(const PoseStamped& rhs) const {
     std::lock_guard<std::mutex> lock{mutex_};
     return (pose_ == rhs.pose_ && header_ == rhs.header_);
   }
+
+  /**
+   * @brief Returns true if lhs is not equal to rhs, false otherwise.
+   */
   inline bool operator!=(const PoseStamped& rhs) const { return !(*this == rhs); }
 
   /**
@@ -91,6 +99,9 @@ public:
     return header_;
   }
 
+  /**
+   * @brief Returns message Header.
+   */
   inline const Header& getHeader() const {
     std::lock_guard<std::mutex> lock{mutex_};
     return header_;
@@ -104,6 +115,9 @@ public:
     return pose_;
   }
 
+  /**
+   * @brief Returns the message Pose.
+   */
   inline const Pose& getPose() const {
     std::lock_guard<std::mutex> lock{mutex_};
     return pose_;

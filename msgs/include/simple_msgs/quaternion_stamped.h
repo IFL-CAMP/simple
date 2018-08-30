@@ -11,7 +11,7 @@
 #ifndef SIMPLE_MSGS_QUATERNION_STAMPED_H
 #define SIMPLE_MSGS_QUATERNION_STAMPED_H
 
-#include <array>
+#include <mutex>
 #include <ostream>
 
 #include "generated/quaternion_stamped_generated.h"
@@ -22,7 +22,7 @@
 namespace simple_msgs {
 /**
  * @class QuaternionStamped quaternion_stamped.h.
- * @brief Wrapper for a Flatbuffers QuaternionStamped message.
+ * @brief Thread-safe wrapper for a Flatbuffers QuaternionStamped message.
  * It contains a Quaternion and a Header message.
  */
 class QuaternionStamped : public GenericMessage {
@@ -100,6 +100,9 @@ public:
     return header_;
   }
 
+  /**
+   * @brief Returns the message Hader.
+   */
   inline const Header& getHeader() const {
     std::lock_guard<std::mutex> lock{mutex_};
     return header_;
@@ -113,6 +116,9 @@ public:
     return quaternion_;
   }
 
+  /**
+   * @brief Returns the message Quaternion.
+   */
   inline const Quaternion& getQuaternion() const {
     std::lock_guard<std::mutex> lock{mutex_};
     return quaternion_;

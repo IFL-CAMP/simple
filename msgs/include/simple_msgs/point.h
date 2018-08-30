@@ -12,6 +12,7 @@
 #define SIMPLE_MSGS_POINT_H
 
 #include <array>
+#include <mutex>
 #include <ostream>
 
 #include "generated/point_generated.h"
@@ -20,7 +21,7 @@
 namespace simple_msgs {
 /**
  * @class Point point.h.
- * @brief Wrapper for a Flatbuffers Point message.
+ * @brief Thread-safe wrapper for a Flatbuffers Point message.
  * It represents a 3D Point by its x, y and z coordinates.
  */
 class Point : public GenericMessage {
@@ -87,11 +88,17 @@ public:
    */
   Point& operator=(std::array<double, 3>&&) noexcept;
 
+  /**
+   * @brief Returns true if lhs is equal to rhs, false otherwise.
+   */
   inline bool operator==(const Point& rhs) const {
     std::lock_guard<std::mutex> lock{mutex_};
     return data_ == rhs.data_;
   }
 
+  /**
+   * @brief Returns true if lhs is not equal to rhs, false otherwise.
+   */
   inline bool operator!=(const Point& rhs) const { return !(*this == rhs); }
 
   /**
