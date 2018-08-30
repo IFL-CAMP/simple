@@ -20,12 +20,12 @@ Bool::Bool(const Bool& other) : Bool{other.data_.load()} {}
 Bool::Bool(Bool&& other) noexcept : data_{other.data_.load()} {}
 
 Bool& Bool::operator=(const Bool& other) {
-  if (this != std::addressof(other)) { data_.store(other.data_); }
+  if (this != std::addressof(other)) { data_.exchange(other.data_.load()); }
   return *this;
 }
 
 Bool& Bool::operator=(Bool&& other) noexcept {
-  if (this != std::addressof(other)) { data_.store(other.data_.load()); }
+  if (this != std::addressof(other)) { data_.exchange(other.data_.load()); }
   return *this;
 }
 Bool& Bool::operator=(std::shared_ptr<void*> data) {
