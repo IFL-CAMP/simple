@@ -55,7 +55,7 @@ int main() {
     img.setImageDimensions(image.cols, image.rows, 1);
     // Set the image data, giving also the total size in bytes and the number of channels
     img.setImageData(image.data, static_cast<int>(image.total() * image.elemSize()),
-                     static_cast<int>(image.channels()));
+                     static_cast<uint16_t>(image.channels()));
     // Publish the image.
     pub.publish(img);
 
