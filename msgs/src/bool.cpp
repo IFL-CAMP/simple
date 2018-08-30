@@ -41,11 +41,6 @@ std::shared_ptr<flatbuffers::DetachedBuffer> Bool::getBufferData() const {
   return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
 
-void Bool::set(bool data) {
-  std::lock_guard<std::mutex> lock{mutex_};
-  data_ = data;
-}
-
 /**
  * @brief Stream extraction operator.
  */
