@@ -28,14 +28,17 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-if(MSVC)
-  add_compile_options(/W4 /w44640 /WX)
-  if (MSVC_VERSION GREATER 1900)
-    add_compile_options(/permissive-)
+# Set the compiler options to the given target according to the current architecture.
+function(simple_compile_options target_name)
+  if(MSVC)
+    target_compile_options(${target_name} PRIVATE /W4 /w44640 /WX)
+    if (MSVC_VERSION GREATER 1900)
+      target_compile_options(${target_name} PRIVATE /permissive-)
+    endif()
+  else()
+    target_compile_options(${target_name} PRIVATE -Werror -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic)
   endif()
-else()
-  add_compile_options(-Werror -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic)
-endif()
+endfunction(simple_compile_options)
 
 ###### OPTIONAL BUILDS
 
@@ -95,6 +98,9 @@ target_link_libraries(${PROJECT_NAME}
     ${coverage_lib}
 )
 
+# Set the compiler options for the shared lib, all warning are activated and treaded as errors.
+simple_compile_options(${PROJECT_NAME})
+
 # Generate the export header for the shared library.
 include(GenerateExportHeader)
 generate_export_header(${PROJECT_NAME})
@@ -121,6 +127,9 @@ target_link_libraries(${PROJECT_NAME}-static
     ${CMAKE_THREAD_LIBS_INIT}
     ${coverage_lib}
 )
+
+# Set the compiler options for the static lib, all warning are activated and treaded as errors.
+simple_compile_options(${PROJECT_NAME}-static)
 
 ###### INSTALLATION
 
