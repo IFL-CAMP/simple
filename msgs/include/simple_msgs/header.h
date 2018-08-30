@@ -11,6 +11,7 @@
 #ifndef SIMPLE_MSGS_HEADER_H
 #define SIMPLE_MSGS_HEADER_H
 
+#include <mutex>
 #include <ostream>
 
 #include "generated/header_generated.h"
