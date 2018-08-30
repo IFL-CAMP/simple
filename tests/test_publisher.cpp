@@ -3,18 +3,9 @@
  * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy
  * Langsch - fernanda.langsch@tum.de
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser Public License for more details.
- *
- * You should have received a copy of the GNU Lesser Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 #define CATCH_CONFIG_MAIN
@@ -52,7 +43,7 @@ SCENARIO("SIMPLE Publisher interface") {
 
     // Move ctor.
     WHEN("It is move-constructed") {
-      std::this_thread::sleep_for(std::chrono::seconds(1));  //< Wait a bit so that the subcriber is connected.
+      std::this_thread::sleep_for(std::chrono::seconds(1));  //! Wait a bit so that the subcriber is connected.
       simple::Publisher<simple_msgs::Bool> copy_publisher{"tcp://*:6667"};
       simple::Publisher<simple_msgs::Bool> publisher{std::move(copy_publisher)};
       THEN("It correctly sends messages.") {
@@ -72,7 +63,7 @@ SCENARIO("SIMPLE Publisher interface") {
 
     // Copy assignment.
     WHEN("It is move-assigned") {
-      std::this_thread::sleep_for(std::chrono::seconds(1));  //< Wait a bit so that the subcriber is connected.
+      std::this_thread::sleep_for(std::chrono::seconds(1));  //! Wait a bit so that the subcriber is connected.
       simple::Publisher<simple_msgs::Bool> copy_publisher{"tcp://*:6668"};
       simple::Publisher<simple_msgs::Bool> publisher;
       publisher = std::move(copy_publisher);

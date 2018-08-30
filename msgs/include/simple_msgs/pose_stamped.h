@@ -1,51 +1,89 @@
 /**
  * S.I.M.P.L.E. - Smart Intuitive Messaging Platform with Less Effort
- * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
+ * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy
+ * Langsch - fernanda.langsch@tum.de
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser Public License for more details.
- *
- * You should have received a copy of the GNU Lesser Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 #ifndef SIMPLE_MSGS_POSE_STAMPED_H
 #define SIMPLE_MSGS_POSE_STAMPED_H
 
-#include <iostream>
+#include <ostream>
 
 #include "generated/pose_stamped_generated.h"
 #include "header.h"
 #include "pose.h"
 
 namespace simple_msgs {
+/**
+ * @class PoseStamped pose_stamped.h.
+ * @brief Wrapper for a Flatbuffers PoseStamped message.
+ * It contains a Pose and a Header message.
+ */
 class PoseStamped : public GenericMessage {
 public:
   PoseStamped() = default;
+
+  /**
+   * @brief Construct a PoseStamped message given its Header and Pose.
+   */
   PoseStamped(const Header&, const Pose&);
+
+  /**
+   * @brief Construct a PoseStamped message given its Header and Pose.
+   */
   PoseStamped(Header&&, Pose&&);
+
+  /**
+   * @brief Construct a PoseStamped message using a raw memory coming from network.
+   */
   PoseStamped(const void*);
+
+  /**
+   * @brief Copy constructor.
+   */
   PoseStamped(const PoseStamped&);
+
+  /**
+   * @brief Move constructor.
+   */
   PoseStamped(PoseStamped&&) noexcept;
 
+  /**
+   * @brief Copy assignment operator.
+   */
   PoseStamped& operator=(const PoseStamped&);
+
+  /**
+   * @brief Move assignment operator.
+   */
   PoseStamped& operator=(PoseStamped&&) noexcept;
+
+  /**
+   * @brief Copy assignment operator that uses raw memory coming from the network.
+   */
   PoseStamped& operator=(std::shared_ptr<void*>);
 
+  /**
+   * @brief Returns true if lhs is equal to rhs, false otherwise.
+   */
   inline bool operator==(const PoseStamped& rhs) const { return (pose_ == rhs.pose_ && header_ == rhs.header_); }
+
+  /**
+   * @brief Returns true if lhs is not equal to rhs, false otherwise.
+   */
   inline bool operator!=(const PoseStamped& rhs) const { return !(*this == rhs); }
+
+  /**
+   * @brief Stream extraction operator.
+   */
   friend std::ostream& operator<<(std::ostream&, const PoseStamped&);
 
   /**
    * @brief Builds and returns the buffer accordingly to the values currently stored.
-   * @return the buffer data.
    */
   std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const override;
 
@@ -53,12 +91,20 @@ public:
    * @brief Returns message Header.
    */
   inline Header& getHeader() { return header_; }
+
+  /**
+   * @brief Returns message Header.
+   */
   inline const Header& getHeader() const { return header_; }
 
   /**
    * @brief Returns the message Pose.
    */
   inline Pose& getPose() { return pose_; }
+
+  /**
+   * @brief Returns the message Pose.
+   */
   inline const Pose& getPose() const { return pose_; }
 
   /**
