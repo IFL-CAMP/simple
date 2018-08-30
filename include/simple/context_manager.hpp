@@ -3,30 +3,30 @@
  * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy
  * Langsch - fernanda.langsch@tum.de
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser Public License for more details.
- *
- * You should have received a copy of the GNU Lesser Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 #ifndef SIMPLE_CONTEXT_MANAGER_HPP
 #define SIMPLE_CONTEXT_MANAGER_HPP
 
-#include "simple_export.h"
-
 #include <zmq.h>
 #include <memory>
 #include <mutex>
 
+#include "simple_export.h"
+
 namespace simple {
+/**
+ * @class ContextManager context_manager.hpp.
+ * @brief The ContextManager handles a singleton ZMQ Context that is shared between GenericSocket objects.
+ *
+ * Any GenericSocket object, created within one unit, works on a single instance of a ZMQ
+ * Context, since it is not recommended to create more than one context in that case.
+ * A ContextManager cannot be instantiated, a ContextManager object can only access the internal instance of the ZMQ
+ * Context.
+ */
 class ContextManager {
 public:
   ContextManager() = delete;
@@ -44,20 +44,20 @@ public:
    */
   static void* instance() {
     std::lock_guard<std::mutex> lock{context_creation_mutex_};
-    // Make a new context and atomically swap it with the member context.
+    // Create a new ZMQ context or return the existing one.
     if (context_ == nullptr) { context_ = std::make_shared<ZMQContext>(); }
     return context_->getContext();
   }
 
   /**
-   * @brief Destroys the current instance of the ZMQ context
+   * @brief Destroys the current instance of the ZMQ context.
    *
    * It is sometimes required to control the lifetime of the zmq context object explicitly, most notably
    * when using simple as (or from a) dynamic library. In such a case, the context needs to be destroyed
    * _before_ the DLL gets unloaded, but _after_ any other SIMPLE objects are destroyed.
-   * @Note Under normal circumstances, using this function is not necessary as the context normally will
-   *       be destroyed at static object destruction. Use this only when necessary and be aware that 
-   *       early destruction can result in application crashes or hangs.
+   * \attention {Under normal circumstances, using this function is not necessary as the context normally will
+   *       be destroyed at static object destruction. Use this only when necessary and be aware that
+   *       early destruction can result in application crashes or hangs.}
    */
   static void destroy() {
     std::lock_guard<std::mutex> lock{context_creation_mutex_};
@@ -66,15 +66,13 @@ public:
 
 private:
   /**
-   * @brief The ZMQContext class handles the lifetime of a static ZMQ context instance.
+   * @brief The ZMQContext class handles the lifetime of a ZMQ context instance.
    *
    * The ZMQ context is instatiated only on construction and automatically terminated when the objects lifetime is over.
    */
   class ZMQContext {
   public:
-    /**
-     * @brief Atomically instantiate a new ZMQ context if none was yet created.
-     */
+    // Instantiate a new ZMQ context.
     ZMQContext() { internal_context_ = zmq_ctx_new(); }
 
     ZMQContext(const ZMQContext&) = delete;
@@ -87,17 +85,16 @@ private:
       if (internal_context_ != nullptr) { zmq_ctx_term(internal_context_); }
     }
 
-    /**
-     * @brief Returns the ZMQ context instance.
-     */
+    // Returns the ZMQ context instance.
     void* getContext() { return internal_context_; }
 
   private:
-    void* internal_context_{nullptr};  //< ZMQ Context.
+    void* internal_context_{nullptr};  //! The actual ZMQ Context.
   };
+
   static SIMPLE_EXPORT std::mutex context_creation_mutex_;
-  static SIMPLE_EXPORT std::shared_ptr<ZMQContext> context_;	//< This allows to automatically dispose (and therefore, terminate) the
-																// ZMQ context handled by the ZMQContext class.
+  static SIMPLE_EXPORT std::shared_ptr<ZMQContext> context_;  //! This allows to automatically dispose (and therefore, terminate) the
+                                                              // ZMQ context handled by the ZMQContext class.
 };
 }  // Namespace simple.
 
