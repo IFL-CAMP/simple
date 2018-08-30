@@ -103,6 +103,12 @@ protected:
       throw std::runtime_error("[SIMPLE Error] - Cannot bind to the address/port: " + address +
                                ". ZMQ Error: " + std::string(zmq_strerror(zmq_errno())));
     }
+
+    // Query the bound endpoint from the ZMQ API.
+    char last_endpoint[1024];
+    size_t size = sizeof(last_endpoint);
+    zmq_getsockopt(socket_, ZMQ_LAST_ENDPOINT, &last_endpoint, &size);
+    endpoint_ = last_endpoint;
   }
 
   /**
@@ -309,10 +315,19 @@ protected:
     return static_cast<bool>(socket_ != nullptr);
   }
 
+  /**
+   * @brief Query the endpoint that this object is bound to.
+   *
+   * Can be used to find the bound port if binding to ephemeral ports.
+   * @return The endpoint in form of a ZMQ DSN string, i.e. "tcp://0.0.0.0:8000".
+   */
+  inline const std::string& endpoint() { return endpoint_; }
+
 private:
   mutable std::mutex mutex_{};        //! Mutex for thread-safety.
   std::string topic_{T::getTopic()};  //! The message topic, internally defined for each SIMPLE message.
   void* socket_{nullptr};             //! The internal ZMQ socket.
+  std::string endpoint_{};
 };
 }  // Namespace simple.
 
