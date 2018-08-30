@@ -17,11 +17,11 @@
 // Whenever the Subscriber receives a message (a PoseStamped in this example), it is elaborated by this function.
 // In this trivial case, the PoseStamped message is just printed to screen.
 void example_callback(const simple_msgs::PoseStamped& p) {
-  std::cout << p << std::endl;  //< Just print the content of the message.
+  std::cout << p << std::endl;  //! Just print the content of the message.
 }
 
 int main() {
-  const int SLEEP_TIME{60000};  //< Milliseconds.
+  const int SLEEP_TIME{60000};  //! Milliseconds.
 
   // A Subscriber listening on port 5555 to messages coming from the IP address "localhost"
   std::cout << "Creating a subscriber." << std::endl;

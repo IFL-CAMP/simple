@@ -11,6 +11,8 @@
 #ifndef SIMPLE_MSGS_ALL_H
 #define SIMPLE_MSGS_ALL_H
 
+//! All-in-one header to include all messsages defined in simple_msgs.
+
 #include "bool.h"
 #include "double.hpp"
 #include "float.hpp"

@@ -8,8 +8,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <utility>
-
 #include "simple_msgs/point_stamped.h"
 
 namespace simple_msgs {
@@ -78,6 +76,9 @@ void PointStamped::setPoint(const Point& p) {
   point_ = p;
 }
 
+/**
+ * @brief Stream extraction operator.
+ */
 std::ostream& operator<<(std::ostream& out, const PointStamped& p) {
   out << p.header_ << p.point_;
   return out;

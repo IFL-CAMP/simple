@@ -8,8 +8,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <utility>
-
 #include "simple_msgs/quaternion_stamped.h"
 
 namespace simple_msgs {
@@ -82,6 +80,9 @@ void QuaternionStamped::setQuaternion(const Quaternion& quaternion) {
   quaternion_ = quaternion;
 }
 
+/**
+ * @brief Stream extraction operator.
+ */
 std::ostream& operator<<(std::ostream& out, const QuaternionStamped& q) {
   out << q.header_ << q.quaternion_;
 

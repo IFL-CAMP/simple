@@ -43,7 +43,7 @@ SCENARIO("SIMPLE Publisher interface") {
 
     // Move ctor.
     WHEN("It is move-constructed") {
-      std::this_thread::sleep_for(std::chrono::seconds(1));  //< Wait a bit so that the subcriber is connected.
+      std::this_thread::sleep_for(std::chrono::seconds(1));  //! Wait a bit so that the subcriber is connected.
       simple::Publisher<simple_msgs::Bool> copy_publisher{"tcp://*:6667"};
       simple::Publisher<simple_msgs::Bool> publisher{std::move(copy_publisher)};
       THEN("It correctly sends messages.") {
@@ -63,7 +63,7 @@ SCENARIO("SIMPLE Publisher interface") {
 
     // Copy assignment.
     WHEN("It is move-assigned") {
-      std::this_thread::sleep_for(std::chrono::seconds(1));  //< Wait a bit so that the subcriber is connected.
+      std::this_thread::sleep_for(std::chrono::seconds(1));  //! Wait a bit so that the subcriber is connected.
       simple::Publisher<simple_msgs::Bool> copy_publisher{"tcp://*:6668"};
       simple::Publisher<simple_msgs::Bool> publisher;
       publisher = std::move(copy_publisher);

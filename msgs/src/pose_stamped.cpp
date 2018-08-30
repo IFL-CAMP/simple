@@ -8,8 +8,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <utility>
-
 #include "simple_msgs/pose_stamped.h"
 
 namespace simple_msgs {
@@ -79,6 +77,9 @@ void PoseStamped::setPose(const Pose& pose) {
   pose_ = pose;
 }
 
+/**
+ * @brief Stream extraction operator.
+ */
 std::ostream& operator<<(std::ostream& out, const PoseStamped& p) {
   out << p.header_ << p.pose_;
   return out;

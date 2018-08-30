@@ -17,7 +17,7 @@
 
 // Test: Subscriber interface.
 
-//< A dummy callback used to build the subscribers in this test.
+//! A dummy callback used to build the subscribers in this test.
 int n_received_msg{0};
 auto dummy_callback = [](const simple_msgs::Bool& /*unused*/) { ++n_received_msg; };
 
@@ -44,8 +44,8 @@ SCENARIO("SIMPLE Subscriber interface") {
       THEN("It works properly.") {
         simple::Publisher<simple_msgs::Bool> publisher{"tcp://*:6667"};
         simple::Subscriber<simple_msgs::Bool> subscriber{std::move(copy_subscriber)};
-        std::this_thread::sleep_for(std::chrono::seconds(2));  //< Wait a bit so that the subcriber is connected.
-        n_received_msg = 0;                                    //< Reset the global variable.
+        std::this_thread::sleep_for(std::chrono::seconds(2));  //! Wait a bit so that the subcriber is connected.
+        n_received_msg = 0;                                    //! Reset the global variable.
         for (int i = 0; i < 10; ++i) {
           publisher.publish(simple_msgs::Bool{false});
           std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -71,8 +71,8 @@ SCENARIO("SIMPLE Subscriber interface") {
       THEN("It works properly.") {
         simple::Publisher<simple_msgs::Bool> publisher{"tcp://*:6668"};
         simple::Subscriber<simple_msgs::Bool> subscriber = std::move(copy_subscriber);
-        std::this_thread::sleep_for(std::chrono::seconds(2));  //< Wait a bit so that the subcriber is connected.
-        n_received_msg = 0;                                    //< Reset the global variable.
+        std::this_thread::sleep_for(std::chrono::seconds(2));  //! Wait a bit so that the subcriber is connected.
+        n_received_msg = 0;                                    //! Reset the global variable.
         for (int i = 0; i < 10; ++i) {
           publisher.publish(simple_msgs::Bool{true});
           std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -93,8 +93,8 @@ SCENARIO("SIMPLE Subscriber interface") {
     WHEN("A subscriber is stopped") {
       simple::Publisher<simple_msgs::Bool> publisher{"tcp://*:6669"};
       simple::Subscriber<simple_msgs::Bool> subscriber{"tcp://127.0.0.1:6669", dummy_callback};
-      n_received_msg = 0;                                    //< Reset the global variable.
-      std::this_thread::sleep_for(std::chrono::seconds(2));  //< Wait a bit so that the subcriber is connected.
+      n_received_msg = 0;                                    //! Reset the global variable.
+      std::this_thread::sleep_for(std::chrono::seconds(2));  //! Wait a bit so that the subcriber is connected.
 
       for (int i = 0; i < 5; ++i) {
         publisher.publish(simple_msgs::Bool{false});
@@ -102,7 +102,7 @@ SCENARIO("SIMPLE Subscriber interface") {
       }
       REQUIRE(n_received_msg == 5);
 
-      subscriber.stop();  //< The subscriber is stopped, no messages should be received now.
+      subscriber.stop();  //! The subscriber is stopped, no messages should be received now.
       for (int i = 0; i < 5; ++i) {
         publisher.publish(simple_msgs::Bool{true});
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -110,7 +110,7 @@ SCENARIO("SIMPLE Subscriber interface") {
       REQUIRE(n_received_msg == 5);
 
       subscriber = simple::Subscriber<simple_msgs::Bool>{"tcp://127.0.0.1:6669", dummy_callback};
-      std::this_thread::sleep_for(std::chrono::seconds(2));  //< Wait a bit so that the subcriber is connected.
+      std::this_thread::sleep_for(std::chrono::seconds(2));  //! Wait a bit so that the subcriber is connected.
 
       for (int i = 0; i < 10; ++i) {
         publisher.publish(simple_msgs::Bool{false});

@@ -8,8 +8,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <utility>
-
 #include "simple_msgs/rotation_matrix_stamped.h"
 
 namespace simple_msgs {
@@ -83,6 +81,9 @@ void RotationMatrixStamped::setRotationMatrix(const RotationMatrix& rotation_mat
   rotation_matrix_ = rotation_matrix;
 }
 
+/**
+ * @brief Stream extraction operator.
+ */
 std::ostream& operator<<(std::ostream& out, const RotationMatrixStamped& q) {
   out << q.header_ << q.rotation_matrix_;
   return out;

@@ -14,11 +14,18 @@
 #include <zmq.h>
 #include <memory>
 #include <string>
+
 #include "simple/generic_socket.hpp"
 
 namespace simple {
 /**
- * @brief Creates a publisher socket for a specific type of message.
+ * @class Publisher publisher.hpp.
+ * @brief The Publisher class creates a ZMQ Socket of type ZMQ_PUB that can publish messages of type T passed to its
+ * publish() method.
+ * @tparam T The simple_msgs type to publish.
+ *
+ * Implements the logic for a Publisher in the Publisher / Subscriber paradigm. A Publisher can publish messages of
+ * types T that can be received by any number of Subscribers.
  */
 template <typename T>
 class Publisher {
@@ -26,37 +33,48 @@ public:
   Publisher() = default;
 
   /**
-   * @brief Class constructor. Creates a ZMQ_PUB socket and binds it to the
-   * port.
-   * @param port string for the connection port.
+   * @brief Creates a ZMQ_PUB socket and binds it to the given address.
+   *
+   * Subscribers can subscribe to a Publisher connecting to its address.
+   * @param [in] address - in the form \<PROTOCOL\>://\<IP_ADDRESS\>:\<PORT\>, e.g. tcp://127.0.0.1:5555.
    */
   explicit Publisher<T>(const std::string& address) : socket_{ZMQ_PUB} { socket_.bind(address); }
 
+  // A Publisher cannot be copied, only moved.
   Publisher(const Publisher& other) = delete;
   Publisher& operator=(const Publisher& other) = delete;
 
+  /**
+   * @brief Move constructor.
+   */
   Publisher(Publisher&& other) = default;
+
+  /**
+   * @brief Move assignment operator.
+   */
   Publisher& operator=(Publisher&& other) = default;
 
   ~Publisher() = default;
 
   /**
-   * @brief Publishes the message through the open socket.
-   * @param msg: SIMPLE class wrapper for Flatbuffer messages.
-   * @return size of the message, in bytes, published. Returns -1 if send fails.
+   * @brief Publishes the given message of type T through the open socket.
+   * @param [in] msg - simple_msgs class wrapper for Flatbuffer messages.
+   * @return size of the published message, in bytes. Returns -1 if send fails.
    */
   int publish(const T& msg) { return publish(msg.getBufferData()); }
+
+private:
   /**
-   * @brief Publishes the message through the open socket.
-   * @param buffer: buffer containing the data to be published.
-   * @return size of the message, in bytes, published. Returns -1 if send fails.
+   * @brief Publishes the given message through the open socket.
+   * @param [in] buffer - Flatbuffers buffer containing the data to be published.
+   * @return size of the published message, in bytes. Returns -1 if send fails.
    */
   int publish(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer) {
     return socket_.sendMsg(buffer, "[Simple Publisher] - ");
   }
 
 private:
-  GenericSocket<T> socket_{};
+  GenericSocket<T> socket_{};  //! The internal socket.
 };
 }  // Namespace simple.
 

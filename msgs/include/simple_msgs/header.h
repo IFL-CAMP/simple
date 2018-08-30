@@ -18,26 +18,70 @@
 
 namespace simple_msgs {
 /**
- * @brief Header: wrapper class around the HeaderFbs generated code from flatbuffers.
+ * @class Header header.h
+ * @brief Wrapper for a Flatbuffers Header message, as defined in header.fbs.
+ *
+ * A Header contains metadata information for other messages types. \n
+ * It is composed of: \n
+ * A <b>sequence number</b>, typically used to describe the sequence of messages sent or received. \n
+ * A <b>frame_id</b>, typically refering to a coordinate frame the message data is associated to.
+ * (e.g. a PoseStamped is linked to a certain reference frame). \n
+ * A <b>timestamp</b>, stores when the message is generated (usually time from epoch). \n
  */
 class Header : public GenericMessage {
 public:
   Header() = default;
+
+  /**
+   * @brief Construct a Header message using the given parameters.
+   */
   Header(int, const std::string&, long long);
+
+  /**
+   * @brief Construct a Header message using a raw memory coming from network.
+   */
   Header(const void*);
+
+  /**
+   * @brief Copy constructor.
+   */
   Header(const Header&);
+
+  /**
+   * @brief Move constructor.
+   */
   Header(Header&&) noexcept;
 
+  /**
+   * @brief Copy assignment operator.
+   */
   Header& operator=(const Header&);
+
+  /**
+   * @brief Move assignment operator.
+   */
   Header& operator=(Header&&) noexcept;
+
+  /**
+   * @brief Copy assignment operator that uses raw memory coming from the network.
+   */
   Header& operator=(std::shared_ptr<void*>);
 
+  /**
+   * @brief Returns true if lhs is equal to rhs, false otherwise.
+   */
   inline bool operator==(const Header& rhs) const {
     return (seq_n_ == rhs.seq_n_ && frame_id_ == rhs.frame_id_ && timestamp_ == rhs.timestamp_);
   }
 
+  /**
+   * @brief Returns true if lhs is not equal to rhs, false otherwise.
+   */
   inline bool operator!=(const Header& rhs) const { return !(*this == rhs); }
 
+  /**
+   * @brief Stream extraction operator.
+   */
   friend std::ostream& operator<<(std::ostream& out, const Header& h);
 
   /**
@@ -49,14 +93,17 @@ public:
    * @brief Returns the sequence number of the message.
    */
   inline int getSequenceNumber() const { return seq_n_; }
+
   /**
    * @brief Returns the frame id of the message.
    */
   inline std::string getFrameID() const { return frame_id_; }
+
   /**
    * @brief Returns the timestamp of the message.
    */
   inline long long getTimestamp() const { return timestamp_; }
+
   /**
    * @brief Modifies the sequence number of the message.
    */
@@ -69,7 +116,7 @@ public:
 
   /**
    * @brief Modifies the timestamp of the message.
-   * @param timestamp Seconds since the epoch, when the data in the message was generated.
+   * @param [in] timestamp - Time since epoch, usually representing when the message data was generated.
    */
   void setTimestamp(long long);
 

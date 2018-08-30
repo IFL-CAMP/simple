@@ -8,9 +8,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <algorithm>
-#include <utility>
-
 #include "simple_msgs/string.h"
 
 namespace simple_msgs {
@@ -55,6 +52,9 @@ String& String::operator+=(const String& rhs) {
   return *this;
 }
 
+/**
+ * @brief Concatenates two Strings.
+ */
 String operator+(String lhs, const String& rhs) {
   lhs += rhs;
   return lhs;
@@ -72,6 +72,9 @@ std::shared_ptr<flatbuffers::DetachedBuffer> String::getBufferData() const {
   return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
 
+/**
+ * @brief Stream extraction operator.
+ */
 std::ostream& operator<<(std::ostream& out, const String& s) {
   out << s.data_;
   return out;

@@ -12,7 +12,7 @@
 #define SIMPLE_MSGS_QUATERNION_STAMPED_H
 
 #include <array>
-#include <iostream>
+#include <ostream>
 
 #include "generated/quaternion_stamped_generated.h"
 #include "generic_message.h"
@@ -21,25 +21,69 @@
 
 namespace simple_msgs {
 /**
- * @brief Quaternion: wrapper class around the QuaternionFbs generated code from flatbuffers.
+ * @class QuaternionStamped quaternion_stamped.h.
+ * @brief Wrapper for a Flatbuffers QuaternionStamped message.
+ * It contains a Quaternion and a Header message.
  */
 class QuaternionStamped : public GenericMessage {
 public:
   QuaternionStamped() = default;
+
+  /**
+   * @brief Construct a QuaternionStamped message given its Header and Quaternion.
+   */
   QuaternionStamped(const Header&, const Quaternion&);
+
+  /**
+   * @brief Construct a QuaternionStamped message given its Header and Quaternion.
+   */
   QuaternionStamped(Header&&, Quaternion&&);
+
+  /**
+   * @brief Construct a QuaternionStamped message using a raw memory coming from network.
+   */
   QuaternionStamped(const void*);
+
+  /**
+   * @brief Copy constructor.
+   */
   QuaternionStamped(const QuaternionStamped&);
+
+  /**
+   * @brief Move constructor.
+   */
   QuaternionStamped(QuaternionStamped&&) noexcept;
 
+  /**
+   * @brief Copy assignment operator.
+   */
   QuaternionStamped& operator=(const QuaternionStamped&);
+
+  /**
+   * @brief Move assignment operator.
+   */
   QuaternionStamped& operator=(QuaternionStamped&&) noexcept;
+
+  /**
+   * @brief Copy assignment operator that uses raw memory coming from the network.
+   */
   QuaternionStamped& operator=(std::shared_ptr<void*>);
 
+  /**
+   * @brief Returns true if lhs is equal to rhs, false otherwise.
+   */
   inline bool operator==(const QuaternionStamped& rhs) const {
     return (quaternion_ == rhs.quaternion_ && header_ == rhs.header_);
   }
+
+  /**
+   * @brief Returns true if lhs is not equal to rhs, false otherwise.
+   */
   inline bool operator!=(const QuaternionStamped& rhs) const { return !(*this == rhs); }
+
+  /**
+   * @brief Stream extraction operator.
+   */
   friend std::ostream& operator<<(std::ostream&, const QuaternionStamped&);
 
   /**
@@ -51,13 +95,20 @@ public:
    * @brief Returns the message Hader.
    */
   inline Header& getHeader() { return header_; }
+
+  /**
+   * @brief Returns the message Hader.
+   */
   inline const Header& getHeader() const { return header_; }
 
   /**
    * @brief Returns the message Quaternion.
-   * @return
    */
   inline Quaternion& getQuaternion() { return quaternion_; }
+
+  /**
+   * @brief Returns the message Quaternion.
+   */
   inline const Quaternion& getQuaternion() const { return quaternion_; }
 
   /**

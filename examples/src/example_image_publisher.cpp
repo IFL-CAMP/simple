@@ -31,7 +31,7 @@ std::vector<cv::Mat> readImages() {
 
 int main() {
   const int N_RUN{30000};
-  const int SLEEP_TIME{200};  //<  Milliseconds.
+  const int SLEEP_TIME{200};  //!  Milliseconds.
 
   // Obtain the images.
   auto images = readImages();

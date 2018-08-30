@@ -127,6 +127,9 @@ void RotationMatrix::setColumn(int column_index, const std::array<double, 3>& va
   }
 }
 
+/**
+ * @brief Stream extraction operator.
+ */
 std::ostream& operator<<(std::ostream& out, const RotationMatrix& q) {
   out << "RotationMatrix \n \t" << std::to_string(q.data_[0]) << " " << std::to_string(q.data_[1]) << " "
       << std::to_string(q.data_[2]) << "\n \t" << std::to_string(q.data_[3]) << " " << std::to_string(q.data_[4]) << " "

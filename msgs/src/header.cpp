@@ -8,8 +8,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <utility>
-
 #include "simple_msgs/header.h"
 
 namespace simple_msgs {
@@ -80,6 +78,9 @@ void Header::setTimestamp(long long timestamp) {
   timestamp_ = timestamp;
 }
 
+/**
+ * @brief Stream extraction operator.
+ */
 std::ostream& operator<<(std::ostream& out, const Header& h) {
   out << "Header\n \t"
       << "seq_n: " << std::to_string(h.seq_n_) << "\n \t"

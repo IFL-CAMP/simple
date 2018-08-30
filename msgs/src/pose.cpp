@@ -8,8 +8,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <utility>
-
 #include "simple_msgs/pose.h"
 
 namespace simple_msgs {
@@ -77,6 +75,9 @@ void Pose::setPosition(const Point& position) {
   position_ = position;
 }
 
+/**
+ * @brief Stream extraction operator.
+ */
 std::ostream& operator<<(std::ostream& out, const Pose& p) {
   out << "Pose \n \t" << p.position_ << p.quaternion_;
   return out;

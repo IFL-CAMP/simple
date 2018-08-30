@@ -11,35 +11,81 @@
 #ifndef SIMPLE_MSGS_POSE_H
 #define SIMPLE_MSGS_POSE_H
 
-#include <iostream>
+#include <ostream>
 
 #include "generated/pose_generated.h"
 #include "point.h"
 #include "quaternion.h"
 
 namespace simple_msgs {
+/**
+ * @class Pose pose.h.
+ * @brief Wrapper for a Flatbuffers Pose message.
+ * It represents a Pose in 3D space by its position and orientation.
+ */
 class Pose : public GenericMessage {
 public:
   Pose() = default;
+
+  /**
+   * @brief Construct a Pose message given its position and orientation.
+   */
   Pose(const Point&, const Quaternion&);
+
+  /**
+   * @brief Construct a Pose message given its position and orientation.
+   */
   Pose(Point&&, Quaternion&&);
+
+  /**
+   * @brief Construct a Pose message using a raw memory coming from network.
+   */
   Pose(const void*);
+
+  /**
+   * @brief Copy constructor.
+   */
   Pose(const Pose&);
+
+  /**
+   * @brief Move constructor.
+   */
   Pose(Pose&&) noexcept;
 
+  /**
+   * @brief Copy assignment operator.
+   */
   Pose& operator=(const Pose&);
+
+  /**
+   * @brief Move assignment operator.
+   */
   Pose& operator=(Pose&&) noexcept;
+
+  /**
+   * @brief Copy assignment operator that uses raw memory coming from the network.
+   */
   Pose& operator=(std::shared_ptr<void*>);
 
+  /**
+   * @brief Returns true if lhs is equal to rhs, false otherwise.
+   */
   inline bool operator==(const Pose& rhs) const {
     return (position_ == rhs.position_ && quaternion_ == rhs.quaternion_);
   }
+
+  /**
+   * @brief Returns true if lhs is not equal to rhs, false otherwise.
+   */
   inline bool operator!=(const Pose& rhs) const { return !(*this == rhs); }
+
+  /**
+   * @brief Stream extraction operator.
+   */
   friend std::ostream& operator<<(std::ostream&, const Pose&);
 
   /**
    * @brief Builds and returns the buffer accordingly to the values currently stored.
-   * @return the buffer data.
    */
   std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const override;
 
@@ -47,12 +93,20 @@ public:
    * @brief Returns the translational part of the Pose as a Point message.
    */
   inline Point& getPosition() { return position_; }
+
+  /**
+   * @brief Returns the translational part of the Pose as a Point message.
+   */
   inline const Point& getPosition() const { return position_; }
 
   /**
    * @brief Returns the rotational part of the Pose as a Quaternion message.
    */
   inline Quaternion& getQuaternion() { return quaternion_; }
+
+  /**
+   * @brief Returns the rotational part of the Pose as a Quaternion message.
+   */
   inline const Quaternion& getQuaternion() const { return quaternion_; }
 
   /**
@@ -71,8 +125,8 @@ public:
   static inline std::string getTopic() { return PoseFbsIdentifier(); }
 
 private:
-  Point position_{};
-  Quaternion quaternion_{};
+  Point position_{};         //! Translational part.
+  Quaternion quaternion_{};  //! Rotational part.
 };
 }  // Namespace simple_msgs.
 
