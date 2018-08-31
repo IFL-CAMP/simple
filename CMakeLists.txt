@@ -44,6 +44,7 @@ endfunction(simple_compile_options)
 
 option(SIMPLE_BUILD_EXAMPLES "Build SIMPLE Examples" FALSE)
 option(SIMPLE_BUILD_TESTS "Build SIMPLE Tests" FALSE)
+option(SIMPLE_BUILD_DOC "Build SIMPLE Documentation" FALSE)
 
 # Examples.
 if (${SIMPLE_BUILD_EXAMPLES})
@@ -59,6 +60,11 @@ if (${SIMPLE_BUILD_TESTS})
   endif()
   enable_testing()
   add_subdirectory(tests)
+endif()
+
+# Documentation.
+if (${SIMPLE_BUILD_DOC})
+  add_subdirectory(doc)
 endif()
 
 ###### BUILD SIMPLE MSGS

@@ -1,19 +1,11 @@
 /**
  * S.I.M.P.L.E. - Smart Intuitive Messaging Platform with Less Effort
- * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
+ * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy
+ * Langsch - fernanda.langsch@tum.de
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser Public License for more details.
- *
- * You should have received a copy of the GNU Lesser Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 #include "simple_msgs/image.hpp"
@@ -63,6 +55,9 @@ flatbuffers::Offset<void> Image<double>::getDataUnionElem(
   return Createdouble_type(*builder, builder->CreateVector(data_.getData(), data_size_)).Union();
 }
 
+/**
+ * @brief Copy assignment operator that uses raw memory coming from the network.
+ */
 template <>
 Image<uint8_t>& Image<uint8_t>::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
@@ -78,6 +73,9 @@ Image<uint8_t>& Image<uint8_t>::operator=(std::shared_ptr<void*> data) {
   return *this;
 }
 
+/**
+ * @brief Copy assignment operator that uses raw memory coming from the network.
+ */
 template <>
 Image<int16_t>& Image<int16_t>::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
@@ -93,6 +91,9 @@ Image<int16_t>& Image<int16_t>::operator=(std::shared_ptr<void*> data) {
   return *this;
 }
 
+/**
+ * @brief Copy assignment operator that uses raw memory coming from the network.
+ */
 template <>
 Image<float>& Image<float>::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
@@ -108,6 +109,9 @@ Image<float>& Image<float>::operator=(std::shared_ptr<void*> data) {
   return *this;
 }
 
+/**
+ * @brief Copy assignment operator that uses raw memory coming from the network.
+ */
 template <>
 Image<double>& Image<double>::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
