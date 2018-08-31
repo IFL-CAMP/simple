@@ -63,7 +63,7 @@ target_include_directories(${PROJECT_NAME}
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/generated>
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE flatbuffers::flatbuffers)
+target_link_libraries(${PROJECT_NAME} PUBLIC flatbuffers::flatbuffers)
 
 ###### INSTALLATION
 
