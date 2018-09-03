@@ -28,14 +28,17 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-if(MSVC)
-  add_compile_options(/W4 /w44640 /WX)
-  if (MSVC_VERSION GREATER 1900)
-    add_compile_options(/permissive-)
+# Set the compiler options to the given target according to the current architecture.
+function(simple_compile_options target_name)
+  if(MSVC)
+    target_compile_options(${target_name} PRIVATE /W4 /w44640 /WX)
+    if (MSVC_VERSION GREATER 1900)
+      target_compile_options(${target_name} PRIVATE /permissive-)
+    endif()
+  else()
+    target_compile_options(${target_name} PRIVATE -Werror -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic)
   endif()
-else()
-  add_compile_options(-Werror -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic)
-endif()
+endfunction(simple_compile_options)
 
 ###### OPTIONAL BUILDS
 
@@ -75,21 +78,35 @@ find_package(ZeroMQ REQUIRED)
 
 ###### TARGETS
 
+# Collect all the headers.
 file(GLOB SIMPLE_HEADERS "include/simple/*.hpp")
+
+# Dummy target to visualize the header files in some IDE.
 add_custom_target(${PROJECT_NAME}-ide SOURCES ${SIMPLE_HEADERS})
 
 # SHARED library.
 add_library(${PROJECT_NAME} SHARED src/context_manager.cpp)
 
-target_include_directories(${PROJECT_NAME} PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/msgs/include>
-  $<BUILD_INTERFACE:${ZeroMQ_INCLUDE_DIR}>
-  $<INSTALL_INTERFACE:include>)
+target_include_directories(${PROJECT_NAME}
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/msgs/include>
+  PRIVATE
+    $<BUILD_INTERFACE:${ZeroMQ_INCLUDE_DIR}>
+)
 
 target_link_libraries(${PROJECT_NAME}
-  libzmq-static ${CMAKE_THREAD_LIBS_INIT} simple_msgs ${coverage_lib})
+  PUBLIC
+    simple_msgs
+    libzmq-static
+  PRIVATE
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${coverage_lib}
+)
+
+# Set the compiler options for the shared lib, all warning are activated and treaded as errors.
+simple_compile_options(${PROJECT_NAME})
 
 # Generate the export header for the shared library.
 include(GenerateExportHeader)
@@ -102,14 +119,25 @@ add_library(${PROJECT_NAME}-static src/context_manager.cpp)
 target_compile_definitions(${PROJECT_NAME}-static PUBLIC SIMPLE_STATIC_DEFINE)
 
 target_include_directories(${PROJECT_NAME}-static PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/msgs/include>
-  $<BUILD_INTERFACE:${ZeroMQ_INCLUDE_DIR}>
-  $<INSTALL_INTERFACE:include>)
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/msgs/include>
+  PRIVATE
+    $<BUILD_INTERFACE:${ZeroMQ_INCLUDE_DIR}>
+)
 
 target_link_libraries(${PROJECT_NAME}-static
-  libzmq-static ${CMAKE_THREAD_LIBS_INIT} simple_msgs ${coverage_lib})
+  PUBLIC
+    simple_msgs
+    libzmq-static
+  PRIVATE
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${coverage_lib}
+)
+
+# Set the compiler options for the static lib, all warning are activated and treaded as errors.
+simple_compile_options(${PROJECT_NAME}-static)
 
 ###### INSTALLATION
 
