@@ -91,7 +91,6 @@ private:
     if (socket_.sendMsg(buffer, "[SIMPLE Client] - ") != -1) {
       if (socket_.receiveMsg(msg, "[SIMPLE Client] - ") != -1) {
         success = true;
-
       } else {
         std::cerr << "[SIMPLE Client] - No reply received. Aborting this request." << std::endl;
         // If no message was received back we need to delete the existing socket and create a new one.
