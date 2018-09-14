@@ -2,10 +2,10 @@
 
 namespace simple_msgs;
 
-table HomoMatrixFbs {
+table TransformFbs {
 	point:[ubyte];
 	matrix:[ubyte];
 }
 
-root_type HomoMatrixFbs;
-file_identifier "HOMO";
+root_type TransformFbs;
+file_identifier "TRAN";

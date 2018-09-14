@@ -2,10 +2,10 @@
 
 namespace simple_msgs;
 
-table HomoMatrixStampedFbs {
-	matrix:[ubyte];
+table TransformStampedFbs {
+	transform:[ubyte];
 	header:[ubyte];
 }
 
-root_type HomoMatrixStampedFbs;
-file_identifier "HOST";
+root_type TransformStampedFbs;
+file_identifier "TRST";
