@@ -43,7 +43,7 @@ public:
    * That instantiation performs thread-safe operations to create/dispose the underlying ZMQ context object.
    */
   static void* instance() {
-    std::lock_guard<std::mutex> lock{context_creation_mutex_};
+    std::lock_guard<std::mutex> lock{context_mutex_};
     // Create a new ZMQ context or return the existing one.
     if (context_ == nullptr) { context_ = std::make_shared<ZMQContext>(); }
     return context_->getContext();
@@ -60,7 +60,7 @@ public:
    *       early destruction can result in application crashes or hangs.}
    */
   static void destroy() {
-    std::lock_guard<std::mutex> lock{context_creation_mutex_};
+    std::lock_guard<std::mutex> lock{context_mutex_};
     context_ = nullptr;
   }
 
@@ -92,9 +92,10 @@ private:
     void* internal_context_{nullptr};  //! The actual ZMQ Context.
   };
 
-  static SIMPLE_EXPORT std::mutex context_creation_mutex_;
-  static SIMPLE_EXPORT std::shared_ptr<ZMQContext> context_;  //! This allows to automatically dispose (and therefore, terminate) the
-                                                              // ZMQ context handled by the ZMQContext class.
+  static SIMPLE_EXPORT std::mutex context_mutex_;
+  static SIMPLE_EXPORT std::shared_ptr<ZMQContext>
+      context_;  //! This allows to automatically dispose (and therefore, terminate) the
+                 // ZMQ context handled by the ZMQContext class.
 };
 }  // Namespace simple.
 

@@ -19,13 +19,20 @@ String::String(const char* data) : data_{data} {}
 
 String::String(const void* data) : data_{GetStringFbs(data)->data()->c_str()} {}
 
-String::String(const String& other) : String{other.data_} {}
+String::String(const String& other, const std::lock_guard<std::mutex>&) : String{other.data_} {}
 
-String::String(String&& other) noexcept : data_{std::move(other.data_)} {}
+String::String(String&& other, const std::lock_guard<std::mutex>&) noexcept : data_{std::move(other.data_)} {}
+
+String::String(const String& other) : String{other, std::lock_guard<std::mutex>(other.mutex_)} {}
+
+String::String(String&& other) noexcept
+  : String{std::forward<String>(other), std::lock_guard<std::mutex>(other.mutex_)} {}
 
 String& String::operator=(const String& other) {
   if (this != std::addressof(other)) {
-    std::lock_guard<std::mutex> lock{mutex_};
+    std::lock(mutex_, other.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
     data_ = other.data_;
   }
   return *this;
@@ -33,7 +40,9 @@ String& String::operator=(const String& other) {
 
 String& String::operator=(String&& other) noexcept {
   if (this != std::addressof(other)) {
-    std::lock_guard<std::mutex> lock{mutex_};
+    std::lock(mutex_, other.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
     data_ = std::move(other.data_);
     other.data_.clear();
   }
@@ -76,6 +85,7 @@ std::shared_ptr<flatbuffers::DetachedBuffer> String::getBufferData() const {
  * @brief Stream extraction operator.
  */
 std::ostream& operator<<(std::ostream& out, const String& s) {
+  std::lock_guard<std::mutex> lock{s.mutex_};
   out << s.data_;
   return out;
 }

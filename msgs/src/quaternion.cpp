@@ -25,13 +25,21 @@ Quaternion::Quaternion(const void* data) {
   data_[3] = q->w();
 }
 
-Quaternion::Quaternion(const Quaternion& other) : Quaternion{other.data_} {}
+Quaternion::Quaternion(const Quaternion& other, const std::lock_guard<std::mutex>&) : Quaternion{other.data_} {}
 
-Quaternion::Quaternion(Quaternion&& other) noexcept : data_{std::move(other.data_)} {}
+Quaternion::Quaternion(Quaternion&& other, const std::lock_guard<std::mutex>&) noexcept
+  : data_{std::move(other.data_)} {}
+
+Quaternion::Quaternion(const Quaternion& other) : Quaternion{other, std::lock_guard<std::mutex>(other.mutex_)} {}
+
+Quaternion::Quaternion(Quaternion&& other) noexcept
+  : Quaternion{std::forward<Quaternion>(other), std::lock_guard<std::mutex>(other.mutex_)} {}
 
 Quaternion& Quaternion::operator=(const Quaternion& other) {
   if (this != std::addressof(other)) {
-    std::lock_guard<std::mutex> lock{mutex_};
+    std::lock(mutex_, other.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
     data_ = other.data_;
   }
   return *this;
@@ -39,7 +47,9 @@ Quaternion& Quaternion::operator=(const Quaternion& other) {
 
 Quaternion& Quaternion::operator=(Quaternion&& other) noexcept {
   if (this != std::addressof(other)) {
-    std::lock_guard<std::mutex> lock{mutex_};
+    std::lock(mutex_, other.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
     data_ = other.data_;
   }
   return *this;
@@ -103,6 +113,7 @@ void Quaternion::setW(double w) {
  * @brief Stream extraction operator.
  */
 std::ostream& operator<<(std::ostream& out, const Quaternion& q) {
+  std::lock_guard<std::mutex> lock{q.mutex_};
   out << "Quaternion \n \t"
       << "x: " << std::to_string(q.data_[0]) << "\n \t"
       << "y: " << std::to_string(q.data_[1]) << "\n \t"

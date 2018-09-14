@@ -51,7 +51,7 @@ public:
    * @param [in] timeout - Time the subscriber will block the thread waiting for a message. In
    * milliseconds.
    */
-  Subscriber<T>(const std::string& address, const std::function<void(const T&)>& callback, int timeout = 1000)
+  explicit Subscriber<T>(const std::string& address, const std::function<void(const T&)>& callback, int timeout = 1000)
     : socket_{new GenericSocket<T>(ZMQ_SUB)}, callback_{callback} {
     socket_->filter();  //! Filter the type of message that can be received, only the type T is accepted.
     socket_->setTimeout(timeout);
@@ -67,7 +67,7 @@ public:
    * @brief Move constructor.
    */
   Subscriber(Subscriber&& other) : socket_{std::move(other.socket_)}, callback_{std::move(other.callback_)} {
-    other.stop();  //! The moved Subscribed has to be stopped.
+    other.stop();  //! The moved Subscriber has to be stopped.
     initSubscriber();
   }
 
@@ -77,7 +77,7 @@ public:
   Subscriber& operator=(Subscriber&& other) {
     stop();                 //! Stop the current Subscriber object.
     if (other.isValid()) {  //! Move the Subscriber only if it's a valid one, e.g. if it was not default constructed.
-      other.stop();         //! The moved Subscribed has to be stopped.
+      other.stop();         //! The moved Subscriber has to be stopped.
       socket_ = std::move(other.socket_);
       callback_ = std::move(other.callback_);
       initSubscriber();
@@ -94,7 +94,7 @@ public:
    */
   inline void stop() {
     if (isValid()) {
-      alive_->store(false);
+      alive_.store(false);
       if (subscriber_thread_.joinable()) { subscriber_thread_.join(); }
     }
   }
@@ -111,17 +111,17 @@ private:
   /**
    * @brief Checks if the Subscriber is properly initialied and its internal thread is running.
    */
-  inline bool isValid() const { return alive_ == nullptr ? false : alive_->load(); }
+  inline bool isValid() const { return alive_.load(); }
 
   /**
    * @brief Initializes the Subscriber thread.
    */
   void initSubscriber() {
-    alive_ = std::make_shared<std::atomic<bool>>(true);
+    alive_.store(true);
 
     // Start the callback thread if not yet done.
     if (!subscriber_thread_.joinable() && socket_ != nullptr) {
-      subscriber_thread_ = std::thread(&Subscriber::subscribe, this, alive_, socket_);
+      subscriber_thread_ = std::thread(&Subscriber::subscribe, this);
     }
   }
 
@@ -129,17 +129,17 @@ private:
    * @brief Waits for a message to be published to the connected port.
    * Calls the user callback with an instance of T obtained by a simple Publisher.
    */
-  void subscribe(std::shared_ptr<std::atomic<bool>> alive, std::shared_ptr<GenericSocket<T>> socket) {
-    while (alive->load()) {  //! Run this in a loop until the Subscriber is stopped.
+  void subscribe() {
+    while (alive_.load()) {  //! Run this in a loop until the Subscriber is stopped.
       T msg;
-      if (socket->receiveMsg(msg, "[SIMPLE Subscriber] - ") != -1) {
-        if (alive->load()) { callback_(msg); }
+      if (socket_->receiveMsg(msg, "[SIMPLE Subscriber] - ") != -1) {
+        if (alive_.load()) { callback_(msg); }
       }
     }
   }
 
-  std::shared_ptr<std::atomic<bool>> alive_{nullptr};  //! Flag keeping track of the internal thread's state.
-  std::shared_ptr<GenericSocket<T>> socket_{nullptr};  //! The internal socket.
+  std::atomic<bool> alive_{false};                     //! Flag keeping track of the internal thread's state.
+  std::unique_ptr<GenericSocket<T>> socket_{nullptr};  //! The internal socket.
   std::function<void(const T&)> callback_{};           //! The callback function called at each message arrival.
   std::thread subscriber_thread_{};  //! The internal Subscriber thread on which the given callback runs.
 };

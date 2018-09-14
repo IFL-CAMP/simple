@@ -182,7 +182,7 @@ SCENARIO("Client-Server to a Int message.") {
       auto i = createRandomInt();
       auto sentInt = i;
       client.request(i);
-      THEN("The data received is the same as the one sent plus 1") { REQUIRE(i == sentInt + 1); }
+      THEN("The data received is the same as the one sent plus 1") { REQUIRE(i == sentInt.get() + 1); }
     }
   }
 }

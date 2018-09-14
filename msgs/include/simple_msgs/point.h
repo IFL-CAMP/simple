@@ -12,6 +12,7 @@
 #define SIMPLE_MSGS_POINT_H
 
 #include <array>
+#include <mutex>
 #include <ostream>
 
 #include "generated/point_generated.h"
@@ -20,7 +21,7 @@
 namespace simple_msgs {
 /**
  * @class Point point.h.
- * @brief Wrapper for a Flatbuffers Point message.
+ * @brief Thread-safe wrapper for a Flatbuffers Point message.
  * It represents a 3D Point by its x, y and z coordinates.
  */
 class Point : public GenericMessage {
@@ -90,7 +91,10 @@ public:
   /**
    * @brief Returns true if lhs is equal to rhs, false otherwise.
    */
-  inline bool operator==(const Point& rhs) const { return data_ == rhs.data_; }
+  inline bool operator==(const Point& rhs) const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return data_ == rhs.data_;
+  }
 
   /**
    * @brief Returns true if lhs is not equal to rhs, false otherwise.
@@ -170,23 +174,31 @@ public:
   /**
    * @brief Returns the point as an array of 3 elements.
    */
-  inline std::array<double, 3> toVector() const { return data_; }
-
+  inline std::array<double, 3> toVector() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return data_;
+  }
   /**
    * @brief Returns of the x point coordinate.
    */
-  inline double getX() const { return data_[0]; }
-
+  inline double getX() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return data_[0];
+  }
   /**
    * @brief Returns of the y point coordinate.
    */
-  inline double getY() const { return data_[1]; }
-
+  inline double getY() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return data_[1];
+  }
   /**
    * @brief Returns of the z point coordinate.
    */
-  inline double getZ() const { return data_[2]; }
-
+  inline double getZ() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return data_[2];
+  }
   /**
    * @brief Modifies the x coordinate of the point.
    */
@@ -208,7 +220,12 @@ public:
   static inline std::string getTopic() { return PointFbsIdentifier(); }
 
 private:
-  std::array<double, 3> data_{{0, 0, 0}};  //! Internal array.
+  //! Thread safe copy and move constructors.
+  Point(const Point& other, const std::lock_guard<std::mutex>&);
+  Point(Point&& other, const std::lock_guard<std::mutex>&) noexcept;
+
+  mutable std::mutex mutex_{};
+  std::array<double, 3> data_{{0, 0, 0}};
 };
 }  // Namespace simple_msgs.
 

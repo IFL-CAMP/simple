@@ -11,6 +11,7 @@
 #ifndef SIMPLE_MSGS_POSE_H
 #define SIMPLE_MSGS_POSE_H
 
+#include <mutex>
 #include <ostream>
 
 #include "generated/pose_generated.h"
@@ -20,7 +21,7 @@
 namespace simple_msgs {
 /**
  * @class Pose pose.h.
- * @brief Wrapper for a Flatbuffers Pose message.
+ * @brief Thread-safe wrapper for a Flatbuffers Pose message.
  * It represents a Pose in 3D space by its position and orientation.
  */
 class Pose : public GenericMessage {
@@ -71,6 +72,7 @@ public:
    * @brief Returns true if lhs is equal to rhs, false otherwise.
    */
   inline bool operator==(const Pose& rhs) const {
+    std::lock_guard<std::mutex> lock{mutex_};
     return (position_ == rhs.position_ && quaternion_ == rhs.quaternion_);
   }
 
@@ -92,22 +94,34 @@ public:
   /**
    * @brief Returns the translational part of the Pose as a Point message.
    */
-  inline Point& getPosition() { return position_; }
+  inline Point& getPosition() {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return position_;
+  }
 
   /**
    * @brief Returns the translational part of the Pose as a Point message.
    */
-  inline const Point& getPosition() const { return position_; }
+  inline const Point& getPosition() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return position_;
+  }
 
   /**
    * @brief Returns the rotational part of the Pose as a Quaternion message.
    */
-  inline Quaternion& getQuaternion() { return quaternion_; }
+  inline Quaternion& getQuaternion() {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return quaternion_;
+  }
 
   /**
    * @brief Returns the rotational part of the Pose as a Quaternion message.
    */
-  inline const Quaternion& getQuaternion() const { return quaternion_; }
+  inline const Quaternion& getQuaternion() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return quaternion_;
+  }
 
   /**
    * @brief Modifies the rotational part of the Pose.
@@ -125,8 +139,13 @@ public:
   static inline std::string getTopic() { return PoseFbsIdentifier(); }
 
 private:
-  Point position_{};         //! Translational part.
-  Quaternion quaternion_{};  //! Rotational part.
+  //! Thread safe copy and move constructors.
+  Pose(const Pose& other, const std::lock_guard<std::mutex>&);
+  Pose(Pose&& other, const std::lock_guard<std::mutex>&) noexcept;
+
+  mutable std::mutex mutex_{};
+  Point position_{};
+  Quaternion quaternion_{};
 };
 }  // Namespace simple_msgs.
 

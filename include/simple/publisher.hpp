@@ -69,7 +69,7 @@ private:
    * @param [in] buffer - Flatbuffers buffer containing the data to be published.
    * @return size of the published message, in bytes. Returns -1 if send fails.
    */
-  int publish(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer) {
+  int publish(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer) const {
     return socket_.sendMsg(buffer, "[Simple Publisher] - ");
   }
 
