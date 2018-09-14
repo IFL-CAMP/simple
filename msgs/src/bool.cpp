@@ -28,6 +28,7 @@ Bool& Bool::operator=(Bool&& other) noexcept {
   if (this != std::addressof(other)) { data_.exchange(other.data_.load()); }
   return *this;
 }
+
 Bool& Bool::operator=(std::shared_ptr<void*> data) {
   data_.store(GetBoolFbs(*data)->data());
   return *this;
