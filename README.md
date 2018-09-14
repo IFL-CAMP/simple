@@ -61,4 +61,4 @@ ___
 ___
 ### License
 
-*simple* is distributed under the LGPLv3 License. See [LICENSE](https://github.com/IFL-CAMP/simple/blob/master/LICENSE) for details.
+*simple* is distributed under the MPL v2.0 License. See [LICENSE](https://github.com/IFL-CAMP/simple/blob/master/LICENSE) for details.
