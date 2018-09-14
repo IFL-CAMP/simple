@@ -139,6 +139,10 @@ public:
   static inline std::string getTopic() { return PoseFbsIdentifier(); }
 
 private:
+  //! Thread safe copy and move constructors.
+  Pose(const Pose& other, const std::lock_guard<std::mutex>&);
+  Pose(Pose&& other, const std::lock_guard<std::mutex>&) noexcept;
+
   mutable std::mutex mutex_{};
   Point position_{};
   Quaternion quaternion_{};

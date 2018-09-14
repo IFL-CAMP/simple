@@ -19,14 +19,20 @@ Pose::Pose(Point&& position, Quaternion&& quaternion)
 Pose::Pose(const void* data)
   : position_{GetPoseFbs(data)->position()->data()}, quaternion_{GetPoseFbs(data)->quaternion()->data()} {}
 
-Pose::Pose(const Pose& other) : Pose{other.position_, other.quaternion_} {}
+Pose::Pose(const Pose& other, const std::lock_guard<std::mutex>&) : Pose{other.position_, other.quaternion_} {}
 
-Pose::Pose(Pose&& other) noexcept : Pose{std::move(other.position_), std::move(other.quaternion_)} {}
+Pose::Pose(Pose&& other, const std::lock_guard<std::mutex>&) noexcept
+  : Pose{std::move(other.position_), std::move(other.quaternion_)} {}
+
+Pose::Pose(const Pose& other) : Pose{other, std::lock_guard<std::mutex>(other.mutex_)} {}
+
+Pose::Pose(Pose&& other) noexcept : Pose{std::forward<Pose>(other), std::lock_guard<std::mutex>(other.mutex_)} {}
 
 Pose& Pose::operator=(const Pose& other) {
   if (this != std::addressof(other)) {
-    std::lock_guard<std::mutex> lock{mutex_};
-    std::lock_guard<std::mutex> other_lock{other.mutex_};
+    std::lock(mutex_, other.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
     position_ = other.position_;
     quaternion_ = other.quaternion_;
   }
@@ -35,8 +41,9 @@ Pose& Pose::operator=(const Pose& other) {
 
 Pose& Pose::operator=(Pose&& other) noexcept {
   if (this != std::addressof(other)) {
-    std::lock_guard<std::mutex> lock{mutex_};
-    std::lock_guard<std::mutex> other_lock{other.mutex_};
+    std::lock(mutex_, other.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
     position_ = std::move(other.position_);
     quaternion_ = std::move(other.quaternion_);
   }
