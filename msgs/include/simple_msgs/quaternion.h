@@ -89,7 +89,9 @@ public:
    * @brief Returns true if lhs is equal to rhs, false otherwise.
    */
   inline bool operator==(const Quaternion& rhs) const {
-    std::lock_guard<std::mutex> lock{mutex_};
+    std::lock(mutex_, rhs.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{rhs.mutex_, std::adopt_lock};
     return data_ == rhs.data_;
   }
 
@@ -169,6 +171,10 @@ public:
   static inline std::string getTopic() { return QuaternionFbsIdentifier(); }
 
 private:
+  //! Thread safe copy and move constructors.
+  Quaternion(const Quaternion& other, const std::lock_guard<std::mutex>&);
+  Quaternion(Quaternion&& other, const std::lock_guard<std::mutex>&) noexcept;
+
   mutable std::mutex mutex_{};
   std::array<double, 4> data_{{0, 0, 0, 1}};
 };
