@@ -50,7 +50,13 @@ public:
    * @brief Construct a Transform message give a vector of 16 elements.
    * The vector is expected to be in <b>row-major</b> order.
    */
-  Transform(std::array<double, 16>&);
+  Transform(const std::array<double, 16>&);
+
+  /**
+   * @brief Construct a Transform message give a vector of 16 elements.
+   * The vector is expected to be in <b>row-major</b> order.
+   */
+  Transform(std::array<double, 16>&&) noexcept;
 
   /**
    * @brief Construct a Transform message using a raw memory coming from network.
@@ -85,7 +91,10 @@ public:
   /**
    * @brief Returns true if lhs is equal to rhs, false otherwise.
    */
-  inline bool operator==(const Transform& rhs) const { return (point_ == rhs.point_ && matrix_ == rhs.matrix_); }
+  inline bool operator==(const Transform& rhs) const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return (point_ == rhs.point_ && matrix_ == rhs.matrix_);
+  }
 
   /**
    * @brief Returns true if lhs is not equal to rhs, false otherwise.
@@ -105,22 +114,34 @@ public:
   /**
    * @brief Returns the rotational part of the homogeneous transformation.
    */
-  inline RotationMatrix& getRotation() { return matrix_; }
+  inline RotationMatrix& getRotation() {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return matrix_;
+  }
 
   /**
    * @brief Returns the rotational part of the homogeneous transformation.
    */
-  inline const RotationMatrix& getRotation() const { return matrix_; }
+  inline const RotationMatrix& getRotation() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return matrix_;
+  }
 
   /**
    * @brief Returns the translational part of the homogeneous transformation.
    */
-  inline Point& getTranslation() { return point_; }
+  inline Point& getTranslation() {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return point_;
+  }
 
   /**
    * @brief Returns the translational part of the homogeneous transformation.
    */
-  inline const Point& getTranslation() const { return point_; }
+  inline const Point& getTranslation() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return point_;
+  }
 
   /**
    * @brief Modifies the translational part of the Pose.
@@ -138,7 +159,11 @@ public:
   static inline std::string getTopic() { return TransformFbsIdentifier(); }
 
 private:
-  std::mutex mutex_{};
+  //! Thread safe copy and move constructors.
+  Transform(const Transform& other, const std::lock_guard<std::mutex>&);
+  Transform(Transform&& other, const std::lock_guard<std::mutex>&) noexcept;
+
+  mutable std::mutex mutex_{};
   Point point_{};            //! The translational part of the homogeneous transformation.
   RotationMatrix matrix_{};  //! The rotational part of the homogeneous transformation.
 };

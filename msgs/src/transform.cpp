@@ -18,47 +18,66 @@
 
 #include <utility>
 
-#include "simple_msgs/homo_matrix.h"
+#include "simple_msgs/transform.h"
 
 namespace simple_msgs {
-HomoMatrix::HomoMatrix(const Point& point, const RotationMatrix& matrix) : point_{point}, matrix_{matrix} {}
+Transform::Transform(const Point& point, const RotationMatrix& matrix) : point_{point}, matrix_{matrix} {}
 
-HomoMatrix::HomoMatrix(Point&& point, RotationMatrix&& matrix) : point_{std::move(point)}, matrix_{std::move(matrix)} {}
+Transform::Transform(Point&& point, RotationMatrix&& matrix) : point_{std::move(point)}, matrix_{std::move(matrix)} {}
 
-HomoMatrix::HomoMatrix(const void* data)
-  : point_{GetHomoMatrixFbs(data)->point()->data()}, matrix_{GetHomoMatrixFbs(data)->matrix()->data()} {}
+Transform::Transform(const std::array<double, 16>& data)
+  : point_{data[3], data[7], data[11]}
+  , matrix_{data[0], data[1], data[2], data[4], data[5], data[6], data[8], data[9], data[10]} {}
 
-HomoMatrix::HomoMatrix(const HomoMatrix& other) : HomoMatrix{other.point_, other.matrix_} {}
+Transform::Transform(std::array<double, 16>&& data)
+  : point_{data[3], data[7], data[11]}
+  , matrix_{data[0], data[1], data[2], data[4], data[5], data[6], data[8], data[9], data[10]} {}
 
-HomoMatrix::HomoMatrix(HomoMatrix&& other) noexcept : HomoMatrix{std::move(other.point_), std::move(other.matrix_)} {}
+Transform::Transform(const void* data)
+  : point_{GetTransformFbs(data)->point()->data()}, matrix_{GetTransformFbs(data)->matrix()->data()} {}
 
-HomoMatrix& HomoMatrix::operator=(const HomoMatrix& other) {
+Transform::Transform(const Transform& other, const std::lock_guard<std::mutex>&)
+  : Transform{other.point_, other.matrix_} {}
+
+Transform::Transform(Transform&& other, const std::lock_guard<std::mutex>&) noexcept
+  : point_{std::move(other.point_)}, matrix_{std::move(other.matrix_)} {}
+
+Transform::Transform(const Transform& other) : Transform{other, std::lock_guard<std::mutex>(other.mutex_)} {}
+
+Transform::Transform(Transform&& other) noexcept
+  : Transform{std::forward<Transform>(other), std::lock_guard<std::mutex>(other.mutex_)} {}
+
+Transform& Transform::operator=(const Transform& other) {
   if (this != std::addressof(other)) {
-    std::lock_guard<std::mutex> lock{mutex_};
+    std::lock(mutex_, other.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
     point_ = other.point_;
     matrix_ = other.matrix_;
   }
   return *this;
 }
 
-HomoMatrix& HomoMatrix::operator=(HomoMatrix&& other) noexcept {
+Transform& Transform::operator=(Transform&& other) noexcept {
   if (this != std::addressof(other)) {
-    std::lock_guard<std::mutex> lock{mutex_};
+    std::lock(mutex_, other.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
     point_ = std::move(other.point_);
     matrix_ = std::move(other.matrix_);
   }
   return *this;
 }
 
-HomoMatrix& HomoMatrix::operator=(std::shared_ptr<void*> data) {
+Transform& Transform::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
-  auto p = GetHomoMatrixFbs(*data);
+  auto p = GetTransformFbs(*data);
   point_ = p->point()->data();
   matrix_ = p->matrix()->data();
   return *this;
 }
 
-std::shared_ptr<flatbuffers::DetachedBuffer> HomoMatrix::getBufferData() const {
+std::shared_ptr<flatbuffers::DetachedBuffer> Transform::getBufferData() const {
   std::lock_guard<std::mutex> lock{mutex_};
   flatbuffers::FlatBufferBuilder builder{1024};
 
@@ -68,25 +87,33 @@ std::shared_ptr<flatbuffers::DetachedBuffer> HomoMatrix::getBufferData() const {
   auto matrix_data = matrix_.getBufferData();
   auto matrix_vector = builder.CreateVector(matrix_data->data(), matrix_data->size());
 
-  HomoMatrixFbsBuilder tmp_builder{builder};
+  TransformFbsBuilder tmp_builder{builder};
   tmp_builder.add_point(point_vector);
   tmp_builder.add_matrix(matrix_vector);
-  FinishHomoMatrixFbsBuffer(builder, tmp_builder.Finish());
+  FinishTransformFbsBuffer(builder, tmp_builder.Finish());
   return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
 
-void HomoMatrix::setRotationMatrix(const RotationMatrix& m) {
+void Transform::setRotationMatrix(const RotationMatrix& m) {
   std::lock_guard<std::mutex> lock{mutex_};
   matrix_ = m;
 }
 
-void HomoMatrix::setPoint(const Point& p) {
+void Transform::setPoint(const Point& p) {
   std::lock_guard<std::mutex> lock{mutex_};
   point_ = p;
 }
 
-std::ostream& operator<<(std::ostream& out, const HomoMatrix& p) {
-  out << p.point_ << p.matrix_;
+std::ostream& operator<<(std::ostream& out, const Transform& p) {
+  std::lock_guard<std::mutex> lock{mutex_};
+  auto vectorized_matrix = p.matrix_.toVector();
+  out << "Transform \n \t" << std::to_string(vectorized_matrix[0]) << " " << std::to_string(vectorized_matrix[1]) << " "
+      << std::to_string(vectorized_matrix[2]) << std::to_string(p.point_.getX()) << "\n \t"
+      << std::to_string(vectorized_matrix[3]) << " " << std::to_string(vectorized_matrix[4]) << " "
+      << std::to_string(vectorized_matrix[5]) << std::to_string(p.point_.getY()) << "\n \t"
+      << std::to_string(vectorized_matrix[6]) << " " << std::to_string(vectorized_matrix[7]) << " "
+      << std::to_string(vectorized_matrix[8]) << std::to_string(p.point_.getX()) << "\n"
+      << "0 0 0 1 \n";
   return out;
 }
 }  // namespace simple_msgs
