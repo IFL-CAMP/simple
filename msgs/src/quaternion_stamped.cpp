@@ -21,16 +21,23 @@ QuaternionStamped::QuaternionStamped(const void* data)
   : header_{GetQuaternionStampedFbs(data)->header()->data()}
   , quaternion_{GetQuaternionStampedFbs(data)->quaternion()->data()} {}
 
-QuaternionStamped::QuaternionStamped(const QuaternionStamped& other)
+QuaternionStamped::QuaternionStamped(const QuaternionStamped& other, const std::lock_guard<std::mutex>&)
   : QuaternionStamped{other.header_, other.quaternion_} {}
 
-QuaternionStamped::QuaternionStamped(QuaternionStamped&& other) noexcept
+QuaternionStamped::QuaternionStamped(QuaternionStamped&& other, const std::lock_guard<std::mutex>&) noexcept
   : QuaternionStamped{std::move(other.header_), std::move(other.quaternion_)} {}
+
+QuaternionStamped::QuaternionStamped(const QuaternionStamped& other)
+  : QuaternionStamped{other, std::lock_guard<std::mutex>(other.mutex_)} {}
+
+QuaternionStamped::QuaternionStamped(QuaternionStamped&& other) noexcept
+  : QuaternionStamped{std::forward<QuaternionStamped>(other), std::lock_guard<std::mutex>(other.mutex_)} {}
 
 QuaternionStamped& QuaternionStamped::operator=(const QuaternionStamped& other) {
   if (this != std::addressof(other)) {
-    std::lock_guard<std::mutex> lock{mutex_};
-    std::lock_guard<std::mutex> other_lock{other.mutex_};
+    std::lock(mutex_, other.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
     header_ = other.header_;
     quaternion_ = other.quaternion_;
   }
@@ -39,8 +46,9 @@ QuaternionStamped& QuaternionStamped::operator=(const QuaternionStamped& other) 
 
 QuaternionStamped& QuaternionStamped::operator=(QuaternionStamped&& other) noexcept {
   if (this != std::addressof(other)) {
-    std::lock_guard<std::mutex> lock{mutex_};
-    std::lock_guard<std::mutex> other_lock{other.mutex_};
+    std::lock(mutex_, other.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
     quaternion_ = std::move(other.quaternion_);
     header_ = std::move(other.header_);
   }
