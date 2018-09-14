@@ -73,7 +73,9 @@ public:
    * @brief Returns true if lhs is equal to rhs, false otherwise.
    */
   inline bool operator==(const RotationMatrixStamped& rhs) const {
-    std::lock_guard<std::mutex> lock{mutex_};
+    std::lock(mutex_, rhs.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{rhs.mutex_, std::adopt_lock};
     return (rotation_matrix_ == rhs.rotation_matrix_ && header_ == rhs.header_);
   }
 
@@ -140,6 +142,10 @@ public:
   static inline std::string getTopic() { return RotationMatrixStampedFbsIdentifier(); }
 
 private:
+  //! Thread safe copy and move constructors.
+  RotationMatrixStamped(const RotationMatrixStamped& other, const std::lock_guard<std::mutex>&);
+  RotationMatrixStamped(RotationMatrixStamped&& other, const std::lock_guard<std::mutex>&) noexcept;
+
   mutable std::mutex mutex_{};
   Header header_{};
   RotationMatrix rotation_matrix_{};

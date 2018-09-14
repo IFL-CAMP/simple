@@ -21,16 +21,23 @@ RotationMatrixStamped::RotationMatrixStamped(const void* data)
   : header_{GetRotationMatrixStampedFbs(data)->header()->data()}
   , rotation_matrix_{GetRotationMatrixStampedFbs(data)->rotation_matrix()->data()} {}
 
-RotationMatrixStamped::RotationMatrixStamped(const RotationMatrixStamped& other)
+RotationMatrixStamped::RotationMatrixStamped(const RotationMatrixStamped& other, const std::lock_guard<std::mutex>&)
   : RotationMatrixStamped{other.header_, other.rotation_matrix_} {}
 
-RotationMatrixStamped::RotationMatrixStamped(RotationMatrixStamped&& other) noexcept
+RotationMatrixStamped::RotationMatrixStamped(RotationMatrixStamped&& other, const std::lock_guard<std::mutex>&) noexcept
   : RotationMatrixStamped{std::move(other.header_), std::move(other.rotation_matrix_)} {}
+
+RotationMatrixStamped::RotationMatrixStamped(const RotationMatrixStamped& other)
+  : RotationMatrixStamped{other, std::lock_guard<std::mutex>(other.mutex_)} {}
+
+RotationMatrixStamped::RotationMatrixStamped(RotationMatrixStamped&& other) noexcept
+  : RotationMatrixStamped{std::forward<RotationMatrixStamped>(other), std::lock_guard<std::mutex>(other.mutex_)} {}
 
 RotationMatrixStamped& RotationMatrixStamped::operator=(const RotationMatrixStamped& other) {
   if (this != std::addressof(other)) {
-    std::lock_guard<std::mutex> lock{mutex_};
-    std::lock_guard<std::mutex> other_lock{other.mutex_};
+    std::lock(mutex_, other.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
     rotation_matrix_ = other.rotation_matrix_;
     header_ = other.header_;
   }
@@ -39,8 +46,9 @@ RotationMatrixStamped& RotationMatrixStamped::operator=(const RotationMatrixStam
 
 RotationMatrixStamped& RotationMatrixStamped::operator=(RotationMatrixStamped&& other) noexcept {
   if (this != std::addressof(other)) {
-    std::lock_guard<std::mutex> lock{mutex_};
-    std::lock_guard<std::mutex> other_lock{other.mutex_};
+    std::lock(mutex_, other.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
     rotation_matrix_ = std::move(other.rotation_matrix_);
     header_ = std::move(other.header_);
   }
