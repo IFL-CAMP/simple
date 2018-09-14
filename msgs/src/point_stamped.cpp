@@ -18,15 +18,23 @@ PointStamped::PointStamped(Header&& header, Point&& point) : header_{std::move(h
 PointStamped::PointStamped(const void* data)
   : header_{GetPointStampedFbs(data)->header()->data()}, point_{GetPointStampedFbs(data)->point()->data()} {}
 
-PointStamped::PointStamped(const PointStamped& other) : PointStamped{other.header_, other.point_} {}
+PointStamped::PointStamped(const PointStamped& other, const std::lock_guard<std::mutex>&)
+  : PointStamped{other.header_, other.point_} {}
+
+PointStamped::PointStamped(PointStamped&& other, const std::lock_guard<std::mutex>&) noexcept
+  : PointStamped{std::move(other.header_), std::move(other.point_)} {}
+
+PointStamped::PointStamped(const PointStamped& other)
+  : PointStamped{other, std::lock_guard<std::mutex>(other.mutex_)} {}
 
 PointStamped::PointStamped(PointStamped&& other) noexcept
-  : PointStamped{std::move(other.header_), std::move(other.point_)} {}
+  : PointStamped{std::forward<PointStamped>(other), std::lock_guard<std::mutex>(other.mutex_)} {}
 
 PointStamped& PointStamped::operator=(const PointStamped& other) {
   if (this != std::addressof(other)) {
-    std::lock_guard<std::mutex> lock{mutex_};
-    std::lock_guard<std::mutex> other_lock{other.mutex_};
+    std::lock(mutex_, other.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
     header_ = other.header_;
     point_ = other.point_;
   }
@@ -35,8 +43,9 @@ PointStamped& PointStamped::operator=(const PointStamped& other) {
 
 PointStamped& PointStamped::operator=(PointStamped&& other) noexcept {
   if (this != std::addressof(other)) {
-    std::lock_guard<std::mutex> lock{mutex_};
-    std::lock_guard<std::mutex> other_lock{other.mutex_};
+    std::lock(mutex_, other.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
     header_ = std::move(other.header_);
     point_ = std::move(other.point_);
   }

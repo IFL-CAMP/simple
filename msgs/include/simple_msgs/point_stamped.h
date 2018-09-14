@@ -73,7 +73,9 @@ public:
    * @brief Returns true if lhs is equal to rhs, false otherwise.
    */
   inline bool operator==(const PointStamped& rhs) const {
-    std::lock_guard<std::mutex> lock{mutex_};
+    std::lock(mutex_, rhs.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{rhs.mutex_, std::adopt_lock};
     return (point_ == rhs.point_ && header_ == rhs.header_);
   }
 
@@ -139,6 +141,10 @@ public:
   static inline std::string getTopic() { return PointStampedFbsIdentifier(); }
 
 private:
+  //! Thread safe copy and move constructors.
+  PointStamped(const PointStamped& other, const std::lock_guard<std::mutex>&);
+  PointStamped(PointStamped&& other, const std::lock_guard<std::mutex>&) noexcept;
+
   mutable std::mutex mutex_{};
   Header header_{};
   Point point_{};
