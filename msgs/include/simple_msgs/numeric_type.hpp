@@ -49,7 +49,7 @@ public:
    * @brief Copy assignment.
    */
   NumericType& operator=(const NumericType& other) {
-    if (this != std::addressof(other)) { data_.store(other.data_); }
+    if (this != std::addressof(other)) { data_.exchange(other.data_); }
     return *this;
   }
 
@@ -61,13 +61,13 @@ public:
   /**
    * @brief Move constructor.
    */
-  NumericType(NumericType&& other) noexcept : data_(other.data_.load()) {}
+  NumericType(NumericType&& other) noexcept : data_{other.data_.load()} {}
 
   /**
    * @brief Move assignment.
    */
   NumericType& operator=(NumericType&& other) noexcept {
-    if (this != std::addressof(other)) { data_.store(other.data_); }
+    if (this != std::addressof(other)) { data_.exchange(other.data_); }
     return *this;
   }
 
@@ -100,104 +100,6 @@ public:
    * @brief Returns true if lhs is greater than or equal to rhs, false otherwise.
    */
   inline bool operator>=(const NumericType& rhs) const { return !(*this < rhs); }
-
-  /**
-   * @brief Prefix decrement operator.
-   */
-  NumericType& operator--() {
-    data_.exchange(data_.load() - 1);
-    return *this;
-  }
-
-  /**
-   * @brief Postfix decrement operator.
-   */
-  const NumericType operator--(int) {
-    const NumericType old(*this);
-    --(*this);
-    return old;
-  }
-
-  /**
-   * @brief Prefix increment operator.
-   */
-  NumericType& operator++() {
-    data_.exchange(data_.load() + 1);
-    return *this;
-  }
-
-  /**
-   * @brief Postfix increment operator.
-   */
-  const NumericType operator++(int) {
-    const NumericType old(*this);
-    ++(*this);
-    return old;
-  }
-
-  /**
-   * @brief Addition operator.
-   */
-  NumericType& operator+=(const NumericType& rhs) {
-    data_.exchange(data_.load() + rhs.data_.load());
-    return *this;
-  }
-
-  /**
-   * @brief Addition operator.
-   */
-  friend NumericType operator+(NumericType lhs, const NumericType& rhs) {
-    lhs += rhs;
-    return lhs;
-  }
-
-  /**
-   * @brief Subtraction operator.
-   */
-  NumericType& operator-=(const NumericType& rhs) {
-    data_.exchange(data_.load() - rhs.data_.load());
-    return *this;
-  }
-
-  /**
-   * @brief Subtraction operator.
-   */
-  friend NumericType operator-(NumericType lhs, const NumericType& rhs) {
-    lhs -= rhs;
-    return lhs;
-  }
-
-  /**
-   * @brief Multiplication operator.
-   */
-  NumericType& operator*=(const NumericType& rhs) {
-    data_.exchange(data_.load() * rhs.data_.load());
-    return *this;
-  }
-
-  /**
-   * @brief Multiplication operator.
-   */
-  friend NumericType operator*(NumericType lhs, const NumericType& rhs) {
-    lhs *= rhs;
-    return lhs;
-  }
-
-  /**
-   * @brief Division operator.
-   */
-  NumericType& operator/=(const NumericType& rhs) {
-    data_.exchange(data_.load() / rhs.data_.load());
-    return *this;
-  }
-
-  /**
-   * @brief Division operator.
-   */
-  friend NumericType operator/(NumericType lhs, const NumericType& rhs) {
-    lhs /= rhs;
-    return lhs;
-  }
 
   /**
    * @brief Builds and returns the buffer accordingly to the values currently stored.
