@@ -1,19 +1,11 @@
 /**
  * S.I.M.P.L.E. - Smart Intuitive Messaging Platform with Less Effort
- * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
+ * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy
+ * Langsch - fernanda.langsch@tum.de
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser Public License for more details.
- *
- * You should have received a copy of the GNU Lesser Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 #include <iostream>
@@ -39,7 +31,7 @@ std::vector<cv::Mat> readImages() {
 
 int main() {
   const int N_RUN{30000};
-  const int SLEEP_TIME{200};  //<  Milliseconds.
+  const int SLEEP_TIME{200};  //!  Milliseconds.
 
   // Obtain the images.
   auto images = readImages();
@@ -60,9 +52,10 @@ int main() {
     // At each iteration pick one of the images in rotation.
     auto image = images[i % 4];
     // Set the image dimensions (e.g. 512x512x1).
-    img.setImageDimensions(image.cols, image.rows, 1);
+    img.setImageDimensions(static_cast<uint32_t>(image.cols), static_cast<uint32_t>(image.rows), 1);
     // Set the image data, giving also the total size in bytes and the number of channels
-    img.setImageData(image.data, static_cast<int>(image.total() * image.elemSize()), image.channels());
+    img.setImageData(image.data, static_cast<uint64_t>(image.total() * image.elemSize()),
+                     static_cast<uint16_t>(image.channels()));
     // Publish the image.
     pub.publish(img);
 

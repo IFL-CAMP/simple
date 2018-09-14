@@ -1,19 +1,11 @@
 /**
  * S.I.M.P.L.E. - Smart Intuitive Messaging Platform with Less Effort
- * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy Langsch - fernanda.langsch@tum.de
+ * Copyright (C) 2018 Salvatore Virga - salvo.virga@tum.de, Fernanda Levy
+ * Langsch - fernanda.langsch@tum.de
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser Public License for more details.
- *
- * You should have received a copy of the GNU Lesser Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 #include <iostream>
@@ -30,14 +22,14 @@ long long getTimeNow() {
 
 int main() {
   const int N_RUN{3000};
-  const int SLEEP_TIME{1};  //<  Milliseconds.
+  const int SLEEP_TIME{1};  //!  Milliseconds.
   int sequence_num{1};
 
-  auto beginning = getTimeNow();  //< Time at the start of this program.
+  auto beginning = getTimeNow();  //! Time at the start of this program.
 
-  simple_msgs::Header my_header{sequence_num, "root", 0};  //< Build a Header.
-  simple_msgs::Point my_point{1.0, 2.0, 3.0};              //< Build a Point.
-  simple_msgs::Quaternion my_quaternion{};                 //< Identity Quaternion.
+  simple_msgs::Header my_header{sequence_num, "root", 0};  //! Build a Header.
+  simple_msgs::Point my_point{1.0, 2.0, 3.0};              //! Build a Point.
+  simple_msgs::Quaternion my_quaternion{};                 //! Identity Quaternion.
 
   // Create a PoseStamped message from the Header, Point and Quaternion.
   simple_msgs::PoseStamped my_pose_stamped{my_header, {my_point, my_quaternion}};
@@ -51,7 +43,7 @@ int main() {
     publisher.publish(my_pose_stamped);  // Publish the current PoseStamped message.
 
     // Modify the pose at each iteration.
-    my_point += 1.0;  //< The translation part of the Pose is modified.
+    my_point += 1.0;  //! The translation part of the Pose is modified.
     my_pose_stamped.getPose().setPosition(my_point);
     my_pose_stamped.getHeader().setSequenceNumber(sequence_num + 1);
     my_pose_stamped.getHeader().setTimestamp(getTimeNow() - beginning);

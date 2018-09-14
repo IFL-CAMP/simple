@@ -1,8 +1,9 @@
 ## S.I.M.P.L.E.
-**S**mart **I**ntuitive **M**essaging **P**latform with **L**ess **E**ffort.   
+
+ <b>S</b>mart <b>I</b>ntuitive <b>M</b>essaging <b>P</b>latform with <b>L</b>ess <b>E</b>ffort.   
 
 [![Build Status](https://travis-ci.org/IFL-CAMP/simple.svg?branch=master)](https://travis-ci.org/IFL-CAMP/simple) [![Build status](https://ci.appveyor.com/api/projects/status/vgwego8e0mddmf6k/branch/master?svg=true)](https://ci.appveyor.com/project/SalvoVirga/simple/branch/master)
- [![codecov](https://codecov.io/gh/IFL-CAMP/simple/branch/master/graph/badge.svg)](https://codecov.io/gh/IFL-CAMP/simple)
+[![codecov](https://codecov.io/gh/IFL-CAMP/simple/branch/master/graph/badge.svg)](https://codecov.io/gh/IFL-CAMP/simple)
 ___
 
 S.I.M.P.L.E. (or just *simple*) is a cross-platform C++ library to **easily** exchange data across a network.          
@@ -28,8 +29,8 @@ New messages can be defined - in the *simple_msgs* format - and sent/received us
 
 ### Usage
 
-**Build and Install from source:** on [Windows](https://github.com/IFL-CAMP/simple/wiki/install:-windows) or [Linux/Mac OSX](https://github.com/IFL-CAMP/simple/wiki/install:-linux).       
-**Use in your C++ project:** [via CMake](https://github.com/IFL-CAMP/simple/wiki#cmake). We suggest Windows users to link to the static version of *simple*.     
+<b>Build and Install from source:</b> on [Windows](https://github.com/IFL-CAMP/simple/wiki/install:-windows) or [Linux/Mac OSX](https://github.com/IFL-CAMP/simple/wiki/install:-linux).      
+<b>Use in your C++ project:</b> [via CMake](https://github.com/IFL-CAMP/simple/wiki#cmake). We suggest Windows users to link to the static version of *simple*.     
 
 #### Publisher / Subscriber 
 - A Publisher sends (publishes) data to any Subscriber that is listening to its IP address/port.
@@ -52,12 +53,12 @@ ___
 [Chair for Computer Aided Medical Procedures](http://campar.in.tum.de/)        
 [Technical University of Munich](www.tum.de), Germany.       
 
-**Salvatore Virga** : [salvo.virga@tum.de][salvo_email]  
-**Fernanda Levy Langsch** : [fernanda.langsch@tum.de][fernanda_email]
+<b>Salvatore Virga</b>> : [salvo.virga@tum.de][salvo_email]     
+<b>Fernanda Levy Langsch</b> : [fernanda.langsch@tum.de][fernanda_email]
 
 [salvo_email]: salvo.virga@tum.de
 [fernanda_email]: fernanda.langsch@tum.de       
 ___
 ### License
 
-*simple* is distributed under the LGPLv3 License. See [LICENSE](LICENSE) for details.
+*simple* is distributed under the MPL v2.0 License. See [LICENSE](https://github.com/IFL-CAMP/simple/blob/master/LICENSE) for details.
