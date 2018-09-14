@@ -26,14 +26,19 @@ Point::Point(const void* data) {
   data_[2] = p->z();
 }
 
-Point::Point(const Point& other) : Point{other.data_} {}
+Point::Point(const Point& other, const std::lock_guard<std::mutex>&) : Point{other.data_} {}
 
-Point::Point(Point&& other) noexcept : data_{std::move(other.data_)} {}
+Point::Point(Point&& other, const std::lock_guard<std::mutex>&) noexcept : data_{std::move(other.data_)} {}
+
+Point::Point(const Point& other) : Point{other, std::lock_guard<std::mutex>(other.mutex_)} {}
+
+Point::Point(Point&& other) noexcept : Point{std::forward<Point>(other), std::lock_guard<std::mutex>(other.mutex_)} {}
 
 Point& Point::operator=(const Point& other) {
   if (this != std::addressof(other)) {
-    std::lock_guard<std::mutex> lock{mutex_};
-    std::lock_guard<std::mutex> other_lock{other.mutex_};
+    std::lock(mutex_, other.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
     data_ = other.data_;
   }
   return *this;
@@ -41,8 +46,9 @@ Point& Point::operator=(const Point& other) {
 
 Point& Point::operator=(Point&& other) noexcept {
   if (this != std::addressof(other)) {
-    std::lock_guard<std::mutex> lock{mutex_};
-    std::lock_guard<std::mutex> other_lock{other.mutex_};
+    std::lock(mutex_, other.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
     data_ = std::move(other.data_);
   }
   return *this;

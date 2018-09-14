@@ -220,6 +220,10 @@ public:
   static inline std::string getTopic() { return PointFbsIdentifier(); }
 
 private:
+  //! Thread safe copy and move constructors.
+  Point(const Point& other, const std::lock_guard<std::mutex>&);
+  Point(Point&& other, const std::lock_guard<std::mutex>&) noexcept;
+
   mutable std::mutex mutex_{};
   std::array<double, 3> data_{{0, 0, 0}};
 };
