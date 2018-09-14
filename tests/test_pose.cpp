@@ -64,7 +64,7 @@ SCENARIO("Using a Pose Message") {
       THEN("The new Pose has to be equal to the other") { REQUIRE(buffer_pose == pose); }
     }
     WHEN("I copy-construct a new Pose") {
-      const simple_msgs::Pose& copy_pose{pose};
+      const simple_msgs::Pose copy_pose{pose};
       THEN("The new Pose is equal to the other") { REQUIRE(copy_pose == pose); }
     }
     WHEN("I move-construct a new Pose") {
