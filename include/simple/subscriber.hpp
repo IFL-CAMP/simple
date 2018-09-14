@@ -67,7 +67,7 @@ public:
    * @brief Move constructor.
    */
   Subscriber(Subscriber&& other) : socket_{std::move(other.socket_)}, callback_{std::move(other.callback_)} {
-    other.stop();  //! The moved Subscribed has to be stopped.
+    other.stop();  //! The moved Subscriber has to be stopped.
     initSubscriber();
   }
 
@@ -77,7 +77,7 @@ public:
   Subscriber& operator=(Subscriber&& other) {
     stop();                 //! Stop the current Subscriber object.
     if (other.isValid()) {  //! Move the Subscriber only if it's a valid one, e.g. if it was not default constructed.
-      other.stop();         //! The moved Subscribed has to be stopped.
+      other.stop();         //! The moved Subscriber has to be stopped.
       socket_ = std::move(other.socket_);
       callback_ = std::move(other.callback_);
       initSubscriber();
