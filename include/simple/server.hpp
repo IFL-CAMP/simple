@@ -105,7 +105,7 @@ private:
    */
   void stop() {
     if (isValid()) {
-      alive_->store(false);
+      alive_.store(false);
       if (server_thread_.joinable()) { server_thread_.join(); }
     }
   }
@@ -113,31 +113,29 @@ private:
   /**
    * @brief Checks if the Server is properly initialied and its internal thread is running.
    */
-  inline bool isValid() const { return alive_ == nullptr ? false : alive_->load(); }
+  inline bool isValid() const { return alive_.load(); }
 
   /**
    * @brief Initializes the server thread.
    */
   void initServer() {
-    alive_ = std::make_shared<std::atomic<bool>>(true);
+    alive_.store(true);
 
     // Start the thread of the server if not yet done. Wait for requests on the
     // dedicated thread.
-    if (!server_thread_.joinable() && socket_ != nullptr) {
-      server_thread_ = std::thread(&Server::awaitRequest, this, alive_, socket_);
-    }
+    if (!server_thread_.joinable() && socket_ != nullptr) { server_thread_ = std::thread(&Server::awaitRequest, this); }
   }
 
   /**
    * @brief Keep waiting for a request to arrive. Process the request using the
    * callback function and reply.
    */
-  void awaitRequest(std::shared_ptr<std::atomic<bool>> alive, std::shared_ptr<GenericSocket<T>> socket) {
-    while (alive->load()) {
+  void awaitRequest() {
+    while (alive_.load()) {
       T msg;
-      if (socket->receiveMsg(msg, "[SIMPLE Server] - ") != -1) {
-        if (alive->load()) { callback_(msg); }
-        if (alive->load()) { reply(socket.get(), msg); }
+      if (socket_->receiveMsg(msg, "[SIMPLE Server] - ") != -1) {
+        if (alive_.load()) { callback_(msg); }
+        if (alive_.load()) { reply(socket_.get(), msg); }
       }
     }
   }
@@ -148,8 +146,8 @@ private:
    */
   void reply(GenericSocket<T>* socket, const T& msg) { socket->sendMsg(msg.getBufferData(), "[SIMPLE Server] - "); }
 
-  std::shared_ptr<std::atomic<bool>> alive_{nullptr};  //! Flag keeping track of the internal thread's state.
-  std::shared_ptr<GenericSocket<T>> socket_{nullptr};  //! The internal socket.
+  std::atomic<bool> alive_{false};                     //! Flag keeping track of the internal thread's state.
+  std::unique_ptr<GenericSocket<T>> socket_{nullptr};  //! The internal socket.
   std::function<void(T&)> callback_;                   //! The callback function called at each message arrival.
   std::thread server_thread_{};                        //! The internal Server thread on which the given callback runs.
 };
