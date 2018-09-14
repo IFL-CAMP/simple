@@ -102,46 +102,6 @@ SCENARIO("Using a Double Message") {
 
   GIVEN("A Double") {
     simple_msgs::Double single_double(double_1);
-    WHEN("I increase its value (operator++)") {
-      single_double++;
-      THEN("The new value is correct") { REQUIRE(single_double.get() == double_1 + 1.0); }
-    }
-    WHEN("I decrease its value (operator--)") {
-      single_double--;
-      THEN("The new value is correct") { REQUIRE(single_double.get() == double_1 - 1.0); }
-    }
-    WHEN("I add a value to it (operator+)") {
-      single_double += 2.0;
-      THEN("The new value is correct") { REQUIRE(single_double.get() == double_1 + 2.0); }
-    }
-    WHEN("I subtract a value to it (operator-)") {
-      single_double -= 5.0;
-      THEN("The new value is correct") { REQUIRE(single_double.get() == double_1 - 5.0); }
-    }
-    WHEN("I multiply its value (operator*)") {
-      single_double *= 2.0;
-      THEN("The new value is correct") { REQUIRE(single_double.get() == double_1 * 2.0); }
-    }
-    WHEN("I divide its value (operator/)") {
-      single_double /= 5.0;
-      THEN("The new value is correct") { REQUIRE(single_double.get() == double_1 / 5.0); }
-    }
-    WHEN("I add another Double to it") {
-      single_double = single_double + simple_msgs::Double{6.0};
-      THEN("The new value is correct") { REQUIRE(single_double.get() == double_1 + 6.0); }
-    }
-    WHEN("I subtract another Double to it") {
-      single_double = single_double - simple_msgs::Double{6.0};
-      THEN("The new value is correct") { REQUIRE(single_double.get() == double_1 - 6.0); }
-    }
-    WHEN("I multiply another Double to it") {
-      single_double = single_double * simple_msgs::Double{6.0};
-      THEN("The new value is correct") { REQUIRE(single_double.get() == double_1 * 6.0); }
-    }
-    WHEN("I divide another Double to it") {
-      single_double = single_double / simple_msgs::Double{6.0};
-      THEN("The new value is correct") { REQUIRE(single_double.get() == double_1 / 6.0); }
-    }
     WHEN("I get the message topic") {
       std::string topic_name = single_double.getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "DOBL"); }

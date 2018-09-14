@@ -102,46 +102,6 @@ SCENARIO("Using a Float Message") {
 
   GIVEN("A Float") {
     simple_msgs::Float single_Float(float_1);
-    WHEN("I increase its value (operator++)") {
-      single_Float++;
-      THEN("The new value is correct") { REQUIRE(single_Float.get() == float_1 + 1.0f); }
-    }
-    WHEN("I decrease its value (operator--)") {
-      single_Float--;
-      THEN("The new value is correct") { REQUIRE(single_Float.get() == float_1 - 1.0f); }
-    }
-    WHEN("I add a value to it (operator+)") {
-      single_Float += 2.0;
-      THEN("The new value is correct") { REQUIRE(single_Float.get() == float_1 + 2.0f); }
-    }
-    WHEN("I subtract a value to it (operator-)") {
-      single_Float -= 5.0;
-      THEN("The new value is correct") { REQUIRE(single_Float.get() == float_1 - 5.0f); }
-    }
-    WHEN("I multiply its value (operator*)") {
-      single_Float *= 2.0;
-      THEN("The new value is correct") { REQUIRE(single_Float.get() == float_1 * 2.0f); }
-    }
-    WHEN("I divide its value (operator/)") {
-      single_Float /= 5.0;
-      THEN("The new value is correct") { REQUIRE(single_Float.get() == float_1 / 5.0f); }
-    }
-    WHEN("I add another Float to it") {
-      single_Float = single_Float + simple_msgs::Float{6.0};
-      THEN("The new value is correct") { REQUIRE(single_Float.get() == float_1 + 6.0f); }
-    }
-    WHEN("I subtract another Float to it") {
-      single_Float = single_Float - simple_msgs::Float{6.0};
-      THEN("The new value is correct") { REQUIRE(single_Float.get() == float_1 - 6.0f); }
-    }
-    WHEN("I multiply another Float to it") {
-      single_Float = single_Float * simple_msgs::Float{6.0};
-      THEN("The new value is correct") { REQUIRE(single_Float.get() == float_1 * 6.0f); }
-    }
-    WHEN("I divide another Float to it") {
-      single_Float = single_Float / simple_msgs::Float{6.0};
-      THEN("The new value is correct") { REQUIRE(single_Float.get() == float_1 / 6.0f); }
-    }
     WHEN("I get the message topic") {
       std::string topic_name = single_Float.getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "FLOT"); }

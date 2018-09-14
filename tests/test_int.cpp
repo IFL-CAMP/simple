@@ -102,46 +102,6 @@ SCENARIO("Using a Int Message") {
 
   GIVEN("A Int") {
     simple_msgs::Int single_Int(int_1);
-    WHEN("I increase its value (operator++)") {
-      single_Int++;
-      THEN("The new value is correct") { REQUIRE(single_Int.get() == int_1 + 1); }
-    }
-    WHEN("I decrease its value (operator--)") {
-      single_Int--;
-      THEN("The new value is correct") { REQUIRE(single_Int.get() == int_1 - 1); }
-    }
-    WHEN("I add a value to it (operator+)") {
-      single_Int += 2;
-      THEN("The new value is correct") { REQUIRE(single_Int.get() == int_1 + 2); }
-    }
-    WHEN("I subtract a value to it (operator-)") {
-      single_Int -= 5;
-      THEN("The new value is correct") { REQUIRE(single_Int.get() == int_1 - 5); }
-    }
-    WHEN("I multiply its value (operator*)") {
-      single_Int *= 2;
-      THEN("The new value is correct") { REQUIRE(single_Int.get() == int_1 * 2); }
-    }
-    WHEN("I divide its value (operator/)") {
-      single_Int /= 5;
-      THEN("The new value is correct") { REQUIRE(single_Int.get() == int_1 / 5); }
-    }
-    WHEN("I add another Int to it") {
-      single_Int = single_Int + simple_msgs::Int{6};
-      THEN("The new value is correct") { REQUIRE(single_Int.get() == int_1 + 6); }
-    }
-    WHEN("I subtract another Int to it") {
-      single_Int = single_Int - simple_msgs::Int{6};
-      THEN("The new value is correct") { REQUIRE(single_Int.get() == int_1 - 6); }
-    }
-    WHEN("I multiply another Int to it") {
-      single_Int = single_Int * simple_msgs::Int{6};
-      THEN("The new value is correct") { REQUIRE(single_Int.get() == int_1 * 6); }
-    }
-    WHEN("I divide another Int to it") {
-      single_Int = single_Int / simple_msgs::Int{6};
-      THEN("The new value is correct") { REQUIRE(single_Int.get() == int_1 / 6); }
-    }
     WHEN("I get the message topic") {
       std::string topic_name = single_Int.getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "INTF"); }
