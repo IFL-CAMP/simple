@@ -19,15 +19,22 @@ PoseStamped::PoseStamped(const void* data)
   : header_{GetPoseStampedFbs(data)->header()->data()}  // namespace simple_msgs
   , pose_{GetPoseStampedFbs(data)->pose()->data()} {}
 
-PoseStamped::PoseStamped(const PoseStamped& other) : PoseStamped{other.header_, other.pose_} {}
+PoseStamped::PoseStamped(const PoseStamped& other, const std::lock_guard<std::mutex>&)
+  : PoseStamped{other.header_, other.pose_} {}
+
+PoseStamped::PoseStamped(PoseStamped&& other, const std::lock_guard<std::mutex>&) noexcept
+  : PoseStamped{std::move(other.header_), std::move(other.pose_)} {}
+
+PoseStamped::PoseStamped(const PoseStamped& other) : PoseStamped{other, std::lock_guard<std::mutex>(other.mutex_)} {}
 
 PoseStamped::PoseStamped(PoseStamped&& other) noexcept
-  : PoseStamped{std::move(other.header_), std::move(other.pose_)} {}
+  : PoseStamped{std::forward<PoseStamped>(other), std::lock_guard<std::mutex>(other.mutex_)} {}
 
 PoseStamped& PoseStamped::operator=(const PoseStamped& other) {
   if (this != std::addressof(other)) {
-    std::lock_guard<std::mutex> lock{mutex_};
-    std::lock_guard<std::mutex> other_lock{other.mutex_};
+    std::lock(mutex_, other.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
     header_ = other.header_;
     pose_ = other.pose_;
   }
@@ -36,8 +43,9 @@ PoseStamped& PoseStamped::operator=(const PoseStamped& other) {
 
 PoseStamped& PoseStamped::operator=(PoseStamped&& other) noexcept {
   if (this != std::addressof(other)) {
-    std::lock_guard<std::mutex> lock{mutex_};
-    std::lock_guard<std::mutex> other_lock{other.mutex_};
+    std::lock(mutex_, other.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
     header_ = std::move(other.header_);
     pose_ = std::move(other.pose_);
   }

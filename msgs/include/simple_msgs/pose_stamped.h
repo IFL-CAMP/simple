@@ -139,6 +139,10 @@ public:
   static inline std::string getTopic() { return PoseStampedFbsIdentifier(); }
 
 private:
+  //! Thread safe copy and move constructors.
+  PoseStamped(const PoseStamped& other, const std::lock_guard<std::mutex>&);
+  PoseStamped(PoseStamped&& other, const std::lock_guard<std::mutex>&) noexcept;
+
   mutable std::mutex mutex_{};
   Header header_{};
   Pose pose_{};
