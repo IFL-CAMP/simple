@@ -321,9 +321,9 @@ protected:
   inline const std::string& endpoint() { return endpoint_; }
 
 private:
-  mutable std::mutex mutex_{};        //! Mutex for thread-safety.
-  std::string topic_{T::getTopic()};  //! The message topic, internally defined for each SIMPLE message.
-  void* socket_{nullptr};             //! The internal ZMQ socket.
+  mutable std::mutex mutex_{};              //! Mutex for thread-safety.
+  const std::string topic_{T::getTopic()};  //! The message topic, internally defined for each SIMPLE message.
+  void* socket_{nullptr};                   //! The internal ZMQ socket.
   std::string endpoint_{};
 };
 }  // Namespace simple.
