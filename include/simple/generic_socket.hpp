@@ -51,8 +51,9 @@ public:
    * @brief Move constructor.
    */
   GenericSocket(GenericSocket&& other) {
-    std::lock_guard<std::mutex> lock{mutex_};
-    std::lock_guard<std::mutex> other_lock{other.mutex_};
+    std::lock(mutex_, other.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
     socket_ = other.socket_;
     other.socket_ = nullptr;
   }
@@ -61,8 +62,9 @@ public:
    * @brief Move assignment operator.
    */
   GenericSocket& operator=(GenericSocket&& other) {
-    std::lock_guard<std::mutex> lock{mutex_};
-    std::lock_guard<std::mutex> other_lock{other.mutex_};
+    std::lock(mutex_, other.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
     if (other.isValid()) {
       socket_ = other.socket_;
       other.socket_ = nullptr;
