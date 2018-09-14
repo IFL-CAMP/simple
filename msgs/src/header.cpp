@@ -19,15 +19,22 @@ Header::Header(const void* data)
   , frame_id_{GetHeaderFbs(data)->frame_id()->c_str()}
   , timestamp_{static_cast<long long>(GetHeaderFbs(data)->timestamp())} {}
 
-Header::Header(const Header& h) : Header{h.seq_n_, h.frame_id_, h.timestamp_} {}
+Header::Header(const Header& other, const std::lock_guard<std::mutex>&)
+  : Header{other.seq_n_, other.frame_id_, other.timestamp_} {}
+
+Header::Header(Header&& other, const std::lock_guard<std::mutex>&) noexcept
+  : seq_n_{other.seq_n_}, frame_id_(std::move(other.frame_id_)), timestamp_{other.timestamp_} {}
+
+Header::Header(const Header& other) : Header(other, std::lock_guard<std::mutex>(other.mutex_)) {}
 
 Header::Header(Header&& other) noexcept
-  : seq_n_{other.seq_n_}, frame_id_(std::move(other.frame_id_)), timestamp_{other.timestamp_} {}
+  : Header(std::forward<Header>(other), std::lock_guard<std::mutex>(other.mutex_)) {}
 
 Header& Header::operator=(const Header& other) {
   if (this != std::addressof(other)) {
-    std::lock_guard<std::mutex> lock{mutex_};
-    std::lock_guard<std::mutex> other_lock{other.mutex_};
+    std::lock(mutex_, other.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
     seq_n_ = other.seq_n_;
     frame_id_ = other.frame_id_;
     timestamp_ = other.timestamp_;
@@ -37,8 +44,9 @@ Header& Header::operator=(const Header& other) {
 
 Header& Header::operator=(Header&& other) noexcept {
   if (this != std::addressof(other)) {
-    std::lock_guard<std::mutex> lock{mutex_};
-    std::lock_guard<std::mutex> other_lock{other.mutex_};
+    std::lock(mutex_, other.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
     seq_n_ = other.seq_n_;
     frame_id_ = std::move(other.frame_id_);
     timestamp_ = other.timestamp_;
@@ -66,7 +74,10 @@ std::shared_ptr<flatbuffers::DetachedBuffer> Header::getBufferData() const {
   return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
 
-void Header::setSequenceNumber(int seq_n) { seq_n_ = seq_n; }
+void Header::setSequenceNumber(int seq_n) {
+  std::lock_guard<std::mutex> lock{mutex_};
+  seq_n_ = seq_n;
+}
 
 void Header::setFrameID(const std::string& frame_id) {
   std::lock_guard<std::mutex> lock{mutex_};

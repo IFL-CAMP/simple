@@ -134,6 +134,10 @@ public:
   static inline std::string getTopic() { return HeaderFbsIdentifier(); }
 
 private:
+  //! Thread safe copy and move constructors.
+  Header(const Header& other, const std::lock_guard<std::mutex>&);
+  Header(Header&& other, const std::lock_guard<std::mutex>&) noexcept;
+
   mutable std::mutex mutex_{};
   int seq_n_{0};
   std::string frame_id_{""};
