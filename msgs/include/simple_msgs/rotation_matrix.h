@@ -92,7 +92,9 @@ public:
    * @brief Returns true if lhs is equal to rhs, false otherwise.
    */
   inline bool operator==(const RotationMatrix& rhs) const {
-    std::lock_guard<std::mutex> lock{mutex_};
+    std::lock(mutex_, rhs.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{rhs.mutex_, std::adopt_lock};
     return data_ == rhs.data_;
   }
 
@@ -164,6 +166,10 @@ public:
   }
 
 private:
+  //! Thread safe copy and move constructors.
+  RotationMatrix(const RotationMatrix& other, const std::lock_guard<std::mutex>&);
+  RotationMatrix(RotationMatrix&& other, const std::lock_guard<std::mutex>&) noexcept;
+
   mutable std::mutex mutex_{};
   std::array<double, 9> data_{{0, 0, 0, 0, 0, 0, 0, 0, 0}};
 };

@@ -34,14 +34,23 @@ RotationMatrix::RotationMatrix(const void* data)
         GetRotationMatrixFbs(data)->r33(),
     }} {}
 
-RotationMatrix::RotationMatrix(const RotationMatrix& m) : RotationMatrix{m.data_} {}
+RotationMatrix::RotationMatrix(const RotationMatrix& other, const std::lock_guard<std::mutex>&)
+  : RotationMatrix{other.data_} {}
 
-RotationMatrix::RotationMatrix(RotationMatrix&& m) noexcept : RotationMatrix{std::move(m.data_)} {}
+RotationMatrix::RotationMatrix(RotationMatrix&& other, const std::lock_guard<std::mutex>&) noexcept
+  : data_{std::move(other.data_)} {}
+
+RotationMatrix::RotationMatrix(const RotationMatrix& other)
+  : RotationMatrix{other, std::lock_guard<std::mutex>(other.mutex_)} {}
+
+RotationMatrix::RotationMatrix(RotationMatrix&& other) noexcept
+  : RotationMatrix{std::forward<RotationMatrix>(other), std::lock_guard<std::mutex>(other.mutex_)} {}
 
 RotationMatrix& RotationMatrix::operator=(const RotationMatrix& other) {
   if (this != std::addressof(other)) {
-    std::lock_guard<std::mutex> lock{mutex_};
-    std::lock_guard<std::mutex> other_lock{other.mutex_};
+    std::lock(mutex_, other.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
     data_ = other.data_;
   }
   return *this;
@@ -49,8 +58,9 @@ RotationMatrix& RotationMatrix::operator=(const RotationMatrix& other) {
 
 RotationMatrix& RotationMatrix::operator=(RotationMatrix&& other) noexcept {
   if (this != std::addressof(other)) {
-    std::lock_guard<std::mutex> lock{mutex_};
-    std::lock_guard<std::mutex> other_lock{other.mutex_};
+    std::lock(mutex_, other.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
     data_ = other.data_;
   }
   return *this;
