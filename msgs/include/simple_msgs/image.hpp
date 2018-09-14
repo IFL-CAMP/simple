@@ -40,44 +40,21 @@ public:
   /**
    * @brief Copy constructor.
    */
-  Image(const Image& other)
-    : header_{other.header_}
-    , origin_{other.origin_}
-    , encoding_{other.encoding_}
-    , spacing_x_{other.spacing_x_}
-    , spacing_y_{other.spacing_y_}
-    , spacing_z_{other.spacing_z_}
-    , width_{other.width_}
-    , height_{other.height_}
-    , depth_{other.depth_}
-    , data_size_{other.data_size_}
-    , num_channels_{other.num_channels_}
-    , data_{other.data_} {}
+  Image(const Image& other) : Image(other, std::lock_guard<std::mutex>(other.mutex_)) {}
 
   /**
    * @brief Move constructor.
    */
-  Image(Image&& other) noexcept
-    : header_{std::move(other.header_)}
-    , origin_{std::move(other.origin_)}
-    , encoding_{std::move(other.encoding_)}
-    , spacing_x_{std::move(other.spacing_x_)}
-    , spacing_y_{std::move(other.spacing_y_)}
-    , spacing_z_{std::move(other.spacing_z_)}
-    , width_{std::move(other.width_)}
-    , height_{std::move(other.height_)}
-    , depth_{std::move(other.depth_)}
-    , data_size_{std::move(other.data_size_)}
-    , num_channels_{std::move(other.num_channels_)}
-    , data_{std::move(other.data_)} {}
+  Image(Image&& other) noexcept : Image(std::forward<Image>(other), std::lock_guard<std::mutex>(other.mutex_)) {}
 
   /**
    * @brief Copy assignment operator.
    */
   Image& operator=(const Image& other) {
     if (this != std::addressof(other)) {
-      std::lock_guard<std::mutex> lock{mutex_};
-      std::lock_guard<std::mutex> other_lock{other.mutex_};
+      std::lock(mutex_, other.mutex_);
+      std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+      std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
       header_ = other.header_;
       origin_ = other.origin_;
       encoding_ = other.encoding_;
@@ -99,8 +76,9 @@ public:
    */
   Image& operator=(Image&& other) noexcept {
     if (this != std::addressof(other)) {
-      std::lock_guard<std::mutex> lock{mutex_};
-      std::lock_guard<std::mutex> other_lock{other.mutex_};
+      std::lock(mutex_, other.mutex_);
+      std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+      std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
       header_ = std::move(other.header_);
       origin_ = std::move(other.origin_);
       encoding_ = std::move(other.encoding_);
@@ -354,6 +332,35 @@ public:
   static inline std::string getTopic() { return ImageFbsIdentifier(); }
 
 private:
+  //! Thread safe copy and move constructors.
+  Image(const Image& other, const std::lock_guard<std::mutex>&)
+    : header_{other.header_}
+    , origin_{other.origin_}
+    , encoding_{other.encoding_}
+    , spacing_x_{other.spacing_x_}
+    , spacing_y_{other.spacing_y_}
+    , spacing_z_{other.spacing_z_}
+    , width_{other.width_}
+    , height_{other.height_}
+    , depth_{other.depth_}
+    , data_size_{other.data_size_}
+    , num_channels_{other.num_channels_}
+    , data_{other.data_} {}
+
+  Image(Image&& other, const std::lock_guard<std::mutex>&) noexcept
+    : header_{std::move(other.header_)}
+    , origin_{std::move(other.origin_)}
+    , encoding_{std::move(other.encoding_)}
+    , spacing_x_{std::move(other.spacing_x_)}
+    , spacing_y_{std::move(other.spacing_y_)}
+    , spacing_z_{std::move(other.spacing_z_)}
+    , width_{std::move(other.width_)}
+    , height_{std::move(other.height_)}
+    , depth_{std::move(other.depth_)}
+    , data_size_{std::move(other.data_size_)}
+    , num_channels_{std::move(other.num_channels_)}
+    , data_{std::move(other.data_)} {}
+
   /**
    * @brief Utility class that handles the internal image data.
    * It holds either an owning pointer or a raw pointer to the data and returns the correct one when requested.
