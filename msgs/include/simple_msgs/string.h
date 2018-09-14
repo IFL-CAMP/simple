@@ -142,6 +142,10 @@ public:
   static inline std::string getTopic() { return StringFbsIdentifier(); }
 
 private:
+  //! Thread safe copy and move constructors.
+  String(const String& other, const std::lock_guard<std::mutex>&);
+  String(String&& other, const std::lock_guard<std::mutex>&) noexcept;
+
   mutable std::mutex mutex_{};
   std::string data_{""};
 };
