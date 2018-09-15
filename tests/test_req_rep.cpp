@@ -60,10 +60,11 @@ SCENARIO("Client-Server to a Bool message.") {
     simple::Server<simple_msgs::Bool> server(server_address, callbackFunctionBool);
 
     WHEN("The client sends a request") {
-      auto p = createRandomBool();
-      client.request(p);
+      auto message = createRandomBool();
+      auto sentMessage = message;
+      client.request(message);
 
-      THEN("The data received is true") { REQUIRE(p == true); }
+      THEN("The data received is true") { REQUIRE(message == !sentMessage); }
     }
   }
 }
