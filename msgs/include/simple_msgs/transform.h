@@ -21,8 +21,8 @@
 
 #include <array>
 #include <ostream>
+
 #include "generated/transform_generated.h"
-#include "generic_message.h"
 #include "point.h"
 #include "rotation_matrix.h"
 
@@ -30,7 +30,7 @@ namespace simple_msgs {
 /**
  * @class Transform transform.h.
  * @brief Wrapper for a Flatbuffers Transform message.
- * It represents a 4x4 homogeneous transformation, store in <b>row-major</b> order.
+ * It represents a 4x4 homogeneous transformation, stored in <b>row-major</b> order.
  */
 class Transform : public GenericMessage {
 public:

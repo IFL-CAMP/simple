@@ -77,14 +77,14 @@ std::shared_ptr<flatbuffers::DetachedBuffer> PointStamped::getBufferData() const
   return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
 
-void PointStamped::setHeader(const Header& h) {
+void PointStamped::setHeader(const Header& header) {
   std::lock_guard<std::mutex> lock{mutex_};
-  header_ = h;
+  header_ = header;
 }
 
-void PointStamped::setPoint(const Point& p) {
+void PointStamped::setPoint(const Point& point) {
   std::lock_guard<std::mutex> lock{mutex_};
-  point_ = p;
+  point_ = point;
 }
 
 /**

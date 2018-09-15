@@ -16,8 +16,7 @@ PoseStamped::PoseStamped(const Header& header, const Pose& pose) : header_{heade
 PoseStamped::PoseStamped(Header&& header, Pose&& pose) : header_{std::move(header)}, pose_{std::move(pose)} {}
 
 PoseStamped::PoseStamped(const void* data)
-  : header_{GetPoseStampedFbs(data)->header()->data()}  // namespace simple_msgs
-  , pose_{GetPoseStampedFbs(data)->pose()->data()} {}
+  : header_{GetPoseStampedFbs(data)->header()->data()}, pose_{GetPoseStampedFbs(data)->pose()->data()} {}
 
 PoseStamped::PoseStamped(const PoseStamped& other, const std::lock_guard<std::mutex>&)
   : PoseStamped{other.header_, other.pose_} {}

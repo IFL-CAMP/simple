@@ -16,8 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <utility>
-
 #include "simple_msgs/transform.h"
 
 namespace simple_msgs {
@@ -29,7 +27,7 @@ Transform::Transform(const std::array<double, 16>& data)
   : point_{data[3], data[7], data[11]}
   , matrix_{data[0], data[1], data[2], data[4], data[5], data[6], data[8], data[9], data[10]} {}
 
-Transform::Transform(std::array<double, 16>&& data)
+Transform::Transform(std::array<double, 16>&& data) noexcept
   : point_{data[3], data[7], data[11]}
   , matrix_{data[0], data[1], data[2], data[4], data[5], data[6], data[8], data[9], data[10]} {}
 
@@ -94,25 +92,28 @@ std::shared_ptr<flatbuffers::DetachedBuffer> Transform::getBufferData() const {
   return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
 
-void Transform::setRotationMatrix(const RotationMatrix& m) {
+void Transform::setRotation(const RotationMatrix& matrix) {
   std::lock_guard<std::mutex> lock{mutex_};
-  matrix_ = m;
+  matrix_ = matrix;
 }
 
-void Transform::setPoint(const Point& p) {
+void Transform::setTranslation(const Point& point) {
   std::lock_guard<std::mutex> lock{mutex_};
-  point_ = p;
+  point_ = point;
 }
 
-std::ostream& operator<<(std::ostream& out, const Transform& p) {
-  std::lock_guard<std::mutex> lock{mutex_};
-  auto vectorized_matrix = p.matrix_.toVector();
+/**
+ * @brief Stream extraction operator.
+ */
+std::ostream& operator<<(std::ostream& out, const Transform& t) {
+  std::lock_guard<std::mutex> lock{t.mutex_};
+  auto vectorized_matrix = t.matrix_.toVector();
   out << "Transform \n \t" << std::to_string(vectorized_matrix[0]) << " " << std::to_string(vectorized_matrix[1]) << " "
-      << std::to_string(vectorized_matrix[2]) << std::to_string(p.point_.getX()) << "\n \t"
+      << std::to_string(vectorized_matrix[2]) << " " << std::to_string(t.point_.getX()) << "\n \t"
       << std::to_string(vectorized_matrix[3]) << " " << std::to_string(vectorized_matrix[4]) << " "
-      << std::to_string(vectorized_matrix[5]) << std::to_string(p.point_.getY()) << "\n \t"
+      << std::to_string(vectorized_matrix[5]) << " " << std::to_string(t.point_.getY()) << "\n \t"
       << std::to_string(vectorized_matrix[6]) << " " << std::to_string(vectorized_matrix[7]) << " "
-      << std::to_string(vectorized_matrix[8]) << std::to_string(p.point_.getX()) << "\n"
+      << std::to_string(vectorized_matrix[8]) << " " << std::to_string(t.point_.getZ()) << "\n"
       << "0 0 0 1 \n";
   return out;
 }
