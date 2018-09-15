@@ -11,32 +11,33 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include <cstdlib>
-#include <ctime>
 #include <iostream>
+
+#include "random_generators.hpp"
 #include "simple_msgs/float.hpp"
 
 // TEST FOR USING THE Float MESSAGE WRAPPER
 
 SCENARIO("Using a Float Message") {
-  float float_1 = static_cast<float>(rand()) / RAND_MAX;
-  float float_2 = static_cast<float>(rand()) / RAND_MAX;
+  float float_1 = static_cast<float>(double_dist(generator));
+  float float_2 = static_cast<float>(double_dist(generator));
+
   // Testing constructors.
   GIVEN("A Float created from an empty constructor") {
     simple_msgs::Float empty_Float{};
     WHEN("We check its value") {
-      THEN("It has to be zero") { REQUIRE(empty_Float.get() == 0); }
+      THEN("It has to be zero") { REQUIRE(empty_Float.get() == Approx(0)); }
     }
   }
 
   GIVEN("A Float created from a Float") {
     simple_msgs::Float single_Float{float_1};
     WHEN("We check the its value") {
-      THEN("It has to be equal to the given parameter") { REQUIRE(single_Float.get() == float_1); }
+      THEN("It has to be equal to the given parameter") { REQUIRE(single_Float.get() == Approx(float_1)); }
     }
   }
 
-  // Testing copy-constructors.
+  // Testing copy/move constructors.
   GIVEN("A Float") {
     simple_msgs::Float single_Float{float_1};
     WHEN("I construct a new Float from the serialized data of the existing Float") {
@@ -50,12 +51,12 @@ SCENARIO("Using a Float Message") {
     WHEN("I move-construct a new Float") {
       simple_msgs::Float moved_Float{std::move(single_Float)};
       THEN("The new Float contains the value that was contained in the orignal one") {
-        REQUIRE(moved_Float.get() == float_1);
+        REQUIRE(moved_Float.get() == Approx(float_1));
       }
     }
   }
 
-  // Testing copy-assignments.
+  // Testing copy/move assignments.
   GIVEN("A Float") {
     simple_msgs::Float single_float{float_1};
     WHEN("I copy-assign from that Float's buffer") {
@@ -72,7 +73,7 @@ SCENARIO("Using a Float Message") {
     WHEN("I move-assign from that Float") {
       simple_msgs::Float move_assigned_float{};
       move_assigned_float = std::move(single_float);
-      THEN("The new Float is equal to the original") { REQUIRE(move_assigned_float.get() == float_1); }
+      THEN("The new Float is equal to the original") { REQUIRE(move_assigned_float.get() == Approx(float_1)); }
     }
   }
 
@@ -83,7 +84,7 @@ SCENARIO("Using a Float Message") {
     WHEN("I set the value of the Float") {
       float x = static_cast<float>(rand()) / RAND_MAX;
       d.set(x);
-      THEN("Its value is correct") { REQUIRE(d.get() == x); }
+      THEN("Its value is correct") { REQUIRE(d.get() == Approx(x)); }
     }
   }
 
@@ -100,6 +101,7 @@ SCENARIO("Using a Float Message") {
     }
   }
 
+  // Testing message topic and stream operator.
   GIVEN("A Float") {
     simple_msgs::Float single_Float(float_1);
     WHEN("I get the message topic") {

@@ -11,26 +11,25 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include <cstdlib>
-#include <ctime>
 #include <iostream>
-#include "simple_msgs/header.h"
-#include "simple_msgs/point.h"
+
+#include "random_generators.hpp"
 #include "simple_msgs/point_stamped.h"
 
 // TEST FOR USING THE STAMPED POINT MESSAGE WRAPPER
 
 SCENARIO("Using a PointStamped Message") {
-  double double_1 = static_cast<double>(rand()) / RAND_MAX;
-  double double_2 = static_cast<double>(rand()) / RAND_MAX;
-  double double_3 = static_cast<double>(rand()) / RAND_MAX;
-  long long time = rand();
-  int random_int = rand() / 100;
+  double double_1 = double_dist(generator);
+  double double_2 = double_dist(generator);
+  double double_3 = double_dist(generator);
+  long long time = static_cast<long long>(double_dist(generator));
+  int random_int = int_dist(generator);
   std::string random_string = std::to_string(double_1);
   simple_msgs::Point random_point(double_1, double_2, double_3);
   simple_msgs::Point empty_point;
   simple_msgs::Header empty_header;
   simple_msgs::Header random_header(random_int, random_string, time);
+
   // Test the constructors.
   GIVEN("A PointStamped created from an empty constructor") {
     simple_msgs::PointStamped empty_point_stamped{};
@@ -52,7 +51,7 @@ SCENARIO("Using a PointStamped Message") {
     }
   }
 
-  // Testing copy constructors.
+  // Testing copy/move constructors.
   GIVEN("A PointStamped") {
     simple_msgs::PointStamped point_stamped{random_header, random_point};
     WHEN("I copy-construct a PointStamped from its serialized data") {
@@ -72,7 +71,7 @@ SCENARIO("Using a PointStamped Message") {
     }
   }
 
-  // Testing Copy-assignments.
+  // Testing copy/move assignments.
   GIVEN("A PointStamped") {
     simple_msgs::PointStamped point_stamped{random_header, random_point};
     WHEN("I copy-assign from that PointStamped's buffer") {
@@ -126,7 +125,7 @@ SCENARIO("Using a PointStamped Message") {
     }
   }
 
-  // Testing Topic and ostream
+  // Testing message topic and stream operator.
   GIVEN("A point") {
     simple_msgs::PointStamped point_stamped{};
     WHEN("I get the message topic") {

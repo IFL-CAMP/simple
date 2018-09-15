@@ -11,18 +11,19 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include <cstdlib>
-#include <ctime>
 #include <iostream>
+
+#include "random_generators.hpp"
 #include "simple_msgs/header.h"
 
 // TEST FOR USING THE HEADER MESSAGE WRAPPER
 
 SCENARIO("Using a Header Message") {
-  int int_1 = static_cast<int>(rand());
-  long long long_1 = rand();
-  long long long_2 = rand();
+  int int_1 = int_dist(generator);
+  long long long_1 = static_cast<long long>(double_dist(generator));
+  long long long_2 = static_cast<long long>(double_dist(generator));
   std::string string_1 = std::to_string(long_1);
+
   // Testing constructors.
   GIVEN("A Header created from an empty constructor") {
     simple_msgs::Header empty_header{};
@@ -46,7 +47,7 @@ SCENARIO("Using a Header Message") {
     }
   }
 
-  // Testing copy-constructors.
+  // Testing copy/move constructors.
   GIVEN("A header") {
     simple_msgs::Header original_header{int_1, string_1, long_1};
     WHEN("I construct a new Header from the serialized data of the existing Header") {
@@ -67,7 +68,7 @@ SCENARIO("Using a Header Message") {
     }
   }
 
-  // Testing copy-assignments.
+  // Testing copy/move assignments.
   GIVEN("A Header") {
     simple_msgs::Header original_header(int_1, string_1, long_1);
     WHEN("I copy-assign from that Header's buffer") {
@@ -120,9 +121,24 @@ SCENARIO("Using a Header Message") {
       header1.setTimestamp(long_2);
       THEN("They have to be different") { REQUIRE(header1 != header2); }
     }
+  }
+
+  // Testing message topic and stream operator.
+  GIVEN("A Header") {
+    simple_msgs::Header header{int_1, string_1, long_1};
     WHEN("I get the message topic") {
-      std::string topic_name = header1.getTopic();
+      std::string topic_name = header.getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "HEAD"); }
+    }
+    WHEN("I print the Float") {
+      std::ostringstream out_msg, out_check;
+      out_msg << header;
+      out_check << "Header\n \t"
+                << "seq_n: " << std::to_string(int_1) << "\n \t"
+                << "frame_id: " << string_1 << "\n \t"
+                << "timestamp: " << std::to_string(long_1) << "\n";
+      ;
+      THEN("The output is correct") { REQUIRE(out_msg.str() == out_check.str()); }
     }
   }
 }

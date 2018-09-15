@@ -11,24 +11,21 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include <cstdlib>
-#include <ctime>
 #include <iostream>
 
-#include "simple_msgs/header.h"
-#include "simple_msgs/pose.h"
+#include "random_generators.hpp"
 #include "simple_msgs/pose_stamped.h"
 
 // TEST FOR USING THE STAMPED POSE MESSAGE WRAPPER
 
 SCENARIO("Using a PoseStamped Message") {
-  double double_1 = static_cast<double>(rand()) / RAND_MAX;
-  double double_2 = static_cast<double>(rand()) / RAND_MAX;
-  double double_3 = static_cast<double>(rand()) / RAND_MAX;
-  double double_4 = static_cast<double>(rand()) / RAND_MAX;
-  double double_5 = static_cast<double>(rand()) / RAND_MAX;
-  double double_6 = static_cast<double>(rand()) / RAND_MAX;
-  double double_7 = static_cast<double>(rand()) / RAND_MAX;
+  double double_1 = double_dist(generator);
+  double double_2 = double_dist(generator);
+  double double_3 = double_dist(generator);
+  double double_4 = double_dist(generator);
+  double double_5 = double_dist(generator);
+  double double_6 = double_dist(generator);
+  double double_7 = double_dist(generator);
   long long time = rand();
   int random_int = rand() / 100;
   std::string random_string = std::to_string(double_1);
@@ -38,6 +35,7 @@ SCENARIO("Using a PoseStamped Message") {
   simple_msgs::Pose empty_pose{};
   simple_msgs::Header empty_header{};
   simple_msgs::Header random_header{random_int, random_string, time};
+
   // Test the constructors.
   GIVEN("A PoseStamped created from an empty constructor") {
     simple_msgs::PoseStamped empty_pose_stamped{};
@@ -133,7 +131,7 @@ SCENARIO("Using a PoseStamped Message") {
     }
   }
 
-  // Testing Topic
+  // Testing message topic and stream operators.
   GIVEN("A point") {
     simple_msgs::PoseStamped pose_stamped{};
     WHEN("I get the message topic") {

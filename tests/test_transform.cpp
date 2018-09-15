@@ -11,31 +11,32 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include <cstdlib>
-#include <ctime>
 #include <iostream>
+
+#include "random_generators.hpp"
 #include "simple_msgs/transform.h"
 
 // TEST FOR USING THE TRANSFORM MESSAGE WRAPPER
 
 SCENARIO("Using a Transform Message") {
-  double double_1 = static_cast<double>(rand()) / RAND_MAX;
-  double double_2 = static_cast<double>(rand()) / RAND_MAX;
-  double double_3 = static_cast<double>(rand()) / RAND_MAX;
-  double double_4 = static_cast<double>(rand()) / RAND_MAX;
-  double double_5 = static_cast<double>(rand()) / RAND_MAX;
-  double double_6 = static_cast<double>(rand()) / RAND_MAX;
-  double double_7 = static_cast<double>(rand()) / RAND_MAX;
-  double double_8 = static_cast<double>(rand()) / RAND_MAX;
-  double double_9 = static_cast<double>(rand()) / RAND_MAX;
-  double x = static_cast<double>(rand()) / RAND_MAX;
-  double y = static_cast<double>(rand()) / RAND_MAX;
-  double z = static_cast<double>(rand()) / RAND_MAX;
+  double double_1 = double_dist(generator);
+  double double_2 = double_dist(generator);
+  double double_3 = double_dist(generator);
+  double double_4 = double_dist(generator);
+  double double_5 = double_dist(generator);
+  double double_6 = double_dist(generator);
+  double double_7 = double_dist(generator);
+  double double_8 = double_dist(generator);
+  double double_9 = double_dist(generator);
+  double x = double_dist(generator);
+  double y = double_dist(generator);
+  double z = double_dist(generator);
   std::array<double, 9> rotation{
       {double_1, double_2, double_3, double_4, double_5, double_6, double_7, double_8, double_9}};
   std::array<double, 3> translation{{x, y, z}};
   simple_msgs::Point point{translation};
   simple_msgs::RotationMatrix matrix{rotation};
+
   // Testing constructors.
   GIVEN("An empty transform") {
     simple_msgs::Transform transform{};
@@ -79,7 +80,7 @@ SCENARIO("Using a Transform Message") {
     }
   }
 
-  // Testing copy-constructors.
+  // Testing copy/move constructors.
   GIVEN("A Transform message") {
     simple_msgs::Transform transform{point, matrix};
     WHEN("I construct a new Transform from the serialized data of the existing Transform") {
@@ -99,7 +100,7 @@ SCENARIO("Using a Transform Message") {
     }
   }
 
-  // Testing copy-assignments.
+  // Testing copy/move assignments.
   GIVEN("A Transform") {
     simple_msgs::Transform transform{point, matrix};
     WHEN("I copy-assign from that Transform's buffer") {
@@ -157,6 +158,11 @@ SCENARIO("Using a Transform Message") {
       transform.setRotation(matrix);
       THEN("The Transform rotation is now the correct one") { REQUIRE(transform.getRotation() == matrix); }
     }
+  }
+
+  // Testing message topic and stream operator.
+  GIVEN("A Transform") {
+    simple_msgs::Transform transform{point, matrix};
     WHEN("I get the message topic") {
       std::string topic_name = transform.getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "TRAN"); }
