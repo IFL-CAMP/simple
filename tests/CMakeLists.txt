@@ -40,6 +40,10 @@ add_executable(test_rotation_matrix test_rotation_matrix.cpp)
 target_link_libraries(test_rotation_matrix simple-static ${coverage_lib})
 add_test(NAME simple_tests.rotation_matrix COMMAND $<TARGET_FILE:test_rotation_matrix>)
 
+add_executable(test_transform test_transform.cpp)
+target_link_libraries(test_transform simple-static ${coverage_lib})
+add_test(NAME simple_tests.transform COMMAND $<TARGET_FILE:test_transform>)
+
 add_executable(test_pose test_pose.cpp)
 target_link_libraries(test_pose simple-static ${coverage_lib})
 add_test(NAME simple_tests.pose COMMAND $<TARGET_FILE:test_pose>)
@@ -71,6 +75,10 @@ add_test(NAME simple_tests.quaternion_stamped COMMAND $<TARGET_FILE:test_quatern
 add_executable(test_rotation_matrix_stamped test_rotation_matrix_stamped.cpp)
 target_link_libraries(test_rotation_matrix_stamped simple-static ${coverage_lib})
 add_test(NAME simple_tests.rotation_matrix_stamped COMMAND $<TARGET_FILE:test_rotation_matrix_stamped>)
+
+add_executable(test_transform_stamped test_transform_stamped.cpp)
+target_link_libraries(test_transform_stamped simple-static ${coverage_lib})
+add_test(NAME simple_tests.transform_stamped COMMAND $<TARGET_FILE:test_transform_stamped>)
 
 # PUBLISHER / SUBSCRIBER TESTS
 add_executable(test_publisher test_publisher.cpp)

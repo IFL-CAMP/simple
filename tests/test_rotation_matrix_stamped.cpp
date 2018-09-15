@@ -14,8 +14,6 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
-#include "simple_msgs/header.h"
-#include "simple_msgs/rotation_matrix.h"
 #include "simple_msgs/rotation_matrix_stamped.h"
 
 // TEST FOR USING THE STAMPED ROTATION MATRIX MESSAGE WRAPPER

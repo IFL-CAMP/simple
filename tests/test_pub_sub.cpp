@@ -26,12 +26,12 @@ SCENARIO("Publish and subscribe to a Bool message.") {
     std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
-        auto p = createRandomBool();
-        pub.publish(p);
+        auto message = createRandomBool();
+        pub.publish(message);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
         if (running_bool) {
-          THEN("The data received is the same as the one sent") { REQUIRE(p == received_bool); }
+          THEN("The data received is the same as the one sent") { REQUIRE(message == received_bool); }
         }
       }
     }
@@ -46,12 +46,12 @@ SCENARIO("Publish and subscribe to a Int message.") {
     std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
-        auto p = createRandomInt();
-        pub.publish(p);
+        auto message = createRandomInt();
+        pub.publish(message);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
         if (running_int) {
-          THEN("The data received is the same as the one sent") { REQUIRE(p == received_int); }
+          THEN("The data received is the same as the one sent") { REQUIRE(message == received_int); }
         }
       }
     }
@@ -66,12 +66,12 @@ SCENARIO("Publish and subscribe to a Float message.") {
     std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
-        auto p = createRandomFloat();
-        pub.publish(p);
+        auto message = createRandomFloat();
+        pub.publish(message);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
         if (running_float) {
-          THEN("The data received is the same as the one sent") { REQUIRE(p == received_float); }
+          THEN("The data received is the same as the one sent") { REQUIRE(message == received_float); }
         }
       }
     }
@@ -86,12 +86,12 @@ SCENARIO("Publish and subscribe to a Double message.") {
     std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
-        auto p = createRandomDouble();
-        pub.publish(p);
+        auto message = createRandomDouble();
+        pub.publish(message);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
         if (running_double) {
-          THEN("The data received is the same as the one sent") { REQUIRE(p == received_double); }
+          THEN("The data received is the same as the one sent") { REQUIRE(message == received_double); }
         }
       }
     }
@@ -106,12 +106,12 @@ SCENARIO("Publish and subscribe to a String message.") {
     std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
-        auto p = createRandomString();
-        pub.publish(p);
+        auto message = createRandomString();
+        pub.publish(message);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
         if (running_string) {
-          THEN("The data received is the same as the one sent") { REQUIRE(p == received_string); }
+          THEN("The data received is the same as the one sent") { REQUIRE(message == received_string); }
         }
       }
     }
@@ -126,12 +126,12 @@ SCENARIO("Publish and subscribe to a Header message.") {
     std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
-        auto p = createRandomHeader();
-        pub.publish(p);
+        auto message = createRandomHeader();
+        pub.publish(message);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
         if (running_header) {
-          THEN("The data received is the same as the one sent") { REQUIRE(p == received_header); }
+          THEN("The data received is the same as the one sent") { REQUIRE(message == received_header); }
         }
       }
     }
@@ -146,12 +146,12 @@ SCENARIO("Publish and subscribe to a Point message.") {
     std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
-        auto p = createRandomPoint();
-        pub.publish(p);
+        auto message = createRandomPoint();
+        pub.publish(message);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
         if (running_point) {
-          THEN("The data received is the same as the one sent") { REQUIRE(p == received_point); }
+          THEN("The data received is the same as the one sent") { REQUIRE(message == received_point); }
         }
       }
     }
@@ -166,12 +166,12 @@ SCENARIO("Publish and subscribe to a Quaternion message.") {
     std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
-        auto p = createRandomQuaternion();
-        pub.publish(p);
+        auto message = createRandomQuaternion();
+        pub.publish(message);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
         if (running_quaternion) {
-          THEN("The data received is the same as the one sent") { REQUIRE(p == received_quaternion); }
+          THEN("The data received is the same as the one sent") { REQUIRE(message == received_quaternion); }
         }
       }
     }
@@ -186,12 +186,12 @@ SCENARIO("Publish and subscribe to a Pose message.") {
     std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
-        auto p = createRandomPose();
-        pub.publish(p);
+        auto message = createRandomPose();
+        pub.publish(message);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
         if (running_pose) {
-          THEN("The data received is the same as the one sent") { REQUIRE(p == received_pose); }
+          THEN("The data received is the same as the one sent") { REQUIRE(message == received_pose); }
         }
       }
     }
@@ -206,16 +206,36 @@ SCENARIO("Publish and subscribe to a Rotation Matrix message.") {
     std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
-        auto p = createRandomRotationMatrix();
-        pub.publish(p);
+        auto message = createRandomRotationMatrix();
+        pub.publish(message);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
         if (running_rotation_matrix) {
-          THEN("The data received is the same as the one sent") { REQUIRE(p == received_rotation_matrix); }
+          THEN("The data received is the same as the one sent") { REQUIRE(message == received_rotation_matrix); }
         }
       }
     }
     REQUIRE(num_received_rotation_matrix == 10);
+  }
+}
+
+SCENARIO("Publish and subscribe to a Transform message.") {
+  GIVEN("An instance of a subscriber.") {
+    simple::Publisher<simple_msgs::Transform> pub("tcp://*:5570");
+    simple::Subscriber<simple_msgs::Transform> sub("tcp://localhost:5570", callbackFunctionConstTransform);
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+    WHEN("A publisher publishes data") {
+      for (int i = 0; i < 10; ++i) {
+        auto message = createRandomTransform();
+        pub.publish(message);
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
+        if (running_transform) {
+          THEN("The data received is the same as the one sent") { REQUIRE(message == received_transform); }
+        }
+      }
+    }
+    REQUIRE(num_received_transform == 10);
   }
 }
 
@@ -226,12 +246,12 @@ SCENARIO("Publish and subscribe to a PointStamped message.") {
     std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
-        auto p = createRandomPointStamped();
-        pub.publish(p);
+        auto message = createRandomPointStamped();
+        pub.publish(message);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
         if (running_point_stamped) {
-          THEN("The data received is the same as the one sent") { REQUIRE(p == received_point_stamped); }
+          THEN("The data received is the same as the one sent") { REQUIRE(message == received_point_stamped); }
         }
       }
     }
@@ -247,12 +267,12 @@ SCENARIO("Publish and subscribe to a QuaternionStamped message.") {
     std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
-        auto p = createRandomQuaternionStamped();
-        pub.publish(p);
+        auto message = createRandomQuaternionStamped();
+        pub.publish(message);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
         if (running_quaternion_stamped) {
-          THEN("The data received is the same as the one sent") { REQUIRE(p == received_quaternion_stamped); }
+          THEN("The data received is the same as the one sent") { REQUIRE(message == received_quaternion_stamped); }
         }
       }
     }
@@ -267,12 +287,12 @@ SCENARIO("Publish and subscribe to a PoseStamped message.") {
     std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
-        auto p = createRandomPoseStamped();
-        pub.publish(p);
+        auto message = createRandomPoseStamped();
+        pub.publish(message);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
         if (running_pose_stamped) {
-          THEN("The data received is the same as the one sent") { REQUIRE(p == received_pose_stamped); }
+          THEN("The data received is the same as the one sent") { REQUIRE(message == received_pose_stamped); }
         }
       }
     }
@@ -288,16 +308,39 @@ SCENARIO("Publish and subscribe to a RotationMatrixStamped message.") {
     std::this_thread::sleep_for(std::chrono::seconds(5));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
-        auto p = createRandomRotationMatrixStamped();
-        pub.publish(p);
+        auto message = createRandomRotationMatrixStamped();
+        pub.publish(message);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
         if (running_rotation_matrix_stamped) {
-          THEN("The data received is the same as the one sent") { REQUIRE(p == received_rotation_matrix_stamped); }
+          THEN("The data received is the same as the one sent") {
+            REQUIRE(message == received_rotation_matrix_stamped);
+          }
         }
       }
     }
     REQUIRE(num_received_rotation_matrix_stamped == 10);
+  }
+}
+
+SCENARIO("Publish and subscribe to a TransformStamped message.") {
+  GIVEN("An instance of a subscriber.") {
+    simple::Publisher<simple_msgs::TransformStamped> pub("tcp://*:5571");
+    simple::Subscriber<simple_msgs::TransformStamped> sub("tcp://localhost:5571",
+                                                          callbackFunctionConstTransformStamped);
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+    WHEN("A publisher publishes data") {
+      for (int i = 0; i < 10; ++i) {
+        auto message = createRandomTransformStamped();
+        pub.publish(message);
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
+        if (running_transform_stamped) {
+          THEN("The data received is the same as the one sent") { REQUIRE(message == received_transform_stamped); }
+        }
+      }
+    }
+    REQUIRE(num_received_transform_stamped == 10);
   }
 }
 
@@ -311,8 +354,8 @@ SCENARIO("Publish a Pose and subscribe to a Point message") {
     std::this_thread::sleep_for(std::chrono::seconds(1));
     WHEN("A publisher publishes data") {
       for (int i = 0; i < 10; ++i) {
-        auto p = createRandomPose();
-        pub.publish(p);
+        auto message = createRandomPose();
+        pub.publish(message);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
       }
     }

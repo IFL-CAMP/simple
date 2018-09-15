@@ -127,6 +127,22 @@ SCENARIO("Client-Server to a Rotation Matrix message.") {
   }
 }
 
+SCENARIO("Client-Server to a Transform message.") {
+  GIVEN("An instance of a server.") {
+    simple::Client<simple_msgs::Transform> client("tcp://localhost:5569");
+    simple::Server<simple_msgs::Transform> server("tcp://*:5569", callbackFunctionTransform);
+    WHEN("The client sends a request") {
+      auto t = createRandomTransform();
+      auto sentT = t;
+      client.request(t);
+      THEN("The data received is the equal to the sent pose plus one's") {
+        REQUIRE(t.getTranslation() == simple_msgs::Point{1, 1, 1});
+        REQUIRE(t.getRotation() == simple_msgs::RotationMatrix{1, 1, 1, 1, 1, 1, 1, 1, 1});
+      }
+    }
+  }
+}
+
 SCENARIO("Client-Server to a String message.") {
   GIVEN("An instance of a server.") {
     // start a server
@@ -313,6 +329,25 @@ SCENARIO("Client-Server to a Stamped Rotation Matrix message.") {
         REQUIRE(r.getHeader().getFrameID() == "ID");
         REQUIRE(r.getHeader().getSequenceNumber() == 1);
         REQUIRE(r.getHeader().getTimestamp() == 10);
+      }
+    }
+  }
+}
+
+SCENARIO("Client-Server to a TransformStamped message.") {
+  GIVEN("An instance of a server.") {
+    simple::Client<simple_msgs::TransformStamped> client("tcp://localhost:5570");
+    simple::Server<simple_msgs::TransformStamped> server("tcp://*:5570", callbackFunctionTransformStamped);
+
+    WHEN("The client sends a request") {
+      auto ts = createRandomTransformStamped();
+      client.request(ts);
+      THEN("The data received is the the identity matrix") {
+        REQUIRE(ts.getTransform().getTranslation() == simple_msgs::Point{1, 1, 1});
+        REQUIRE(ts.getTransform().getRotation() == simple_msgs::RotationMatrix{1, 1, 1, 1, 1, 1, 1, 1, 1});
+        REQUIRE(ts.getHeader().getFrameID() == "ID");
+        REQUIRE(ts.getHeader().getSequenceNumber() == 1);
+        REQUIRE(ts.getHeader().getTimestamp() == 10);
       }
     }
   }
