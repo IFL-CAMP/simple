@@ -16,82 +16,94 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <utility>
-
-#include "simple_msgs/homo_matrix_stamped.h"
+#include "simple_msgs/transform_stamped.h"
 
 namespace simple_msgs {
-HomoMatrixStamped::HomoMatrixStamped(const Header& header, const HomoMatrix& matrix)
-  : header_{header}, matrix_{matrix} {}
+TransformStamped::TransformStamped(const Header& header, const Transform& matrix)
+  : header_{header}, transform_{matrix} {}
 
-HomoMatrixStamped::HomoMatrixStamped(Header&& header, HomoMatrix&& matrix)
-  : header_{std::move(header)}, matrix_{std::move(matrix)} {}
+TransformStamped::TransformStamped(Header&& header, Transform&& matrix)
+  : header_{std::move(header)}, transform_{std::move(matrix)} {}
 
-HomoMatrixStamped::HomoMatrixStamped(const void* data)
-  : header_{GetHomoMatrixStampedFbs(data)->header()->data()}
-  , matrix_{GetHomoMatrixStampedFbs(data)->matrix()->data()} {}
+TransformStamped::TransformStamped(const void* data)
+  : header_{GetTransformStampedFbs(data)->header()->data()}
+  , transform_{GetTransformStampedFbs(data)->transform()->data()} {}
 
-HomoMatrixStamped::HomoMatrixStamped(const HomoMatrixStamped& other)
-  : HomoMatrixStamped{other.header_, other.matrix_} {}
+TransformStamped::TransformStamped(const TransformStamped& other, const std::lock_guard<std::mutex>&)
+  : TransformStamped{other.header_, other.transform_} {}
 
-HomoMatrixStamped::HomoMatrixStamped(HomoMatrixStamped&& other) noexcept
-  : HomoMatrixStamped{std::move(other.header_), std::move(other.matrix_)} {}
+TransformStamped::TransformStamped(TransformStamped&& other, const std::lock_guard<std::mutex>&) noexcept
+  : TransformStamped{std::move(other.header_), std::move(other.transform_)} {}
 
-HomoMatrixStamped& HomoMatrixStamped::operator=(const HomoMatrixStamped& other) {
+TransformStamped::TransformStamped(const TransformStamped& other)
+  : TransformStamped{other, std::lock_guard<std::mutex>(other.mutex_)} {}
+
+TransformStamped::TransformStamped(TransformStamped&& other) noexcept
+  : TransformStamped{std::forward<TransformStamped>(other), std::lock_guard<std::mutex>(other.mutex_)} {}
+
+TransformStamped& TransformStamped::operator=(const TransformStamped& other) {
   if (this != std::addressof(other)) {
-    std::lock_guard<std::mutex> lock{mutex_};
+    std::lock(mutex_, other.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
     header_ = other.header_;
-    matrix_ = other.matrix_;
+    transform_ = other.transform_;
   }
   return *this;
 }
 
-HomoMatrixStamped& HomoMatrixStamped::operator=(HomoMatrixStamped&& other) noexcept {
+TransformStamped& TransformStamped::operator=(TransformStamped&& other) noexcept {
   if (this != std::addressof(other)) {
-    std::lock_guard<std::mutex> lock{mutex_};
+    std::lock(mutex_, other.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
     header_ = std::move(other.header_);
-    matrix_ = std::move(other.matrix_);
+    transform_ = std::move(other.transform_);
   }
   return *this;
 }
 
-HomoMatrixStamped& HomoMatrixStamped::operator=(std::shared_ptr<void*> data) {
+TransformStamped& TransformStamped::operator=(std::shared_ptr<void*> data) {
   std::lock_guard<std::mutex> lock{mutex_};
-  auto p = GetHomoMatrixStampedFbs(*data);
+  auto p = GetTransformStampedFbs(*data);
   header_ = p->header()->data();
-  matrix_ = p->matrix()->data();
+  transform_ = p->transform()->data();
   return *this;
 }
 
-std::shared_ptr<flatbuffers::DetachedBuffer> HomoMatrixStamped::getBufferData() const {
+std::shared_ptr<flatbuffers::DetachedBuffer> TransformStamped::getBufferData() const {
   std::lock_guard<std::mutex> lock{mutex_};
   flatbuffers::FlatBufferBuilder builder{1024};
 
   auto header_data = header_.getBufferData();
   auto header_vector = builder.CreateVector(header_data->data(), header_data->size());
 
-  auto HomoMatrix_data = matrix_.getBufferData();
-  auto HomoMatrix_vector = builder.CreateVector(HomoMatrix_data->data(), HomoMatrix_data->size());
+  auto transform_data = transform_.getBufferData();
+  auto transform_vector = builder.CreateVector(transform_data->data(), transform_data->size());
 
-  HomoMatrixStampedFbsBuilder tmp_builder{builder};
+  TransformStampedFbsBuilder tmp_builder{builder};
   tmp_builder.add_header(header_vector);
-  tmp_builder.add_matrix(HomoMatrix_vector);
-  FinishHomoMatrixStampedFbsBuffer(builder, tmp_builder.Finish());
+  tmp_builder.add_transform(transform_vector);
+  FinishTransformStampedFbsBuffer(builder, tmp_builder.Finish());
   return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
 
-void HomoMatrixStamped::setHeader(const Header& h) {
+void TransformStamped::setHeader(const Header& header) {
   std::lock_guard<std::mutex> lock{mutex_};
-  header_ = h;
+  header_ = header;
 }
 
-void HomoMatrixStamped::setMatrix(const HomoMatrix& m) {
+void TransformStamped::setTransform(const Transform& transform) {
   std::lock_guard<std::mutex> lock{mutex_};
-  matrix_ = m;
+  transform_ = transform;
 }
 
-std::ostream& operator<<(std::ostream& out, const HomoMatrixStamped& p) {
-  out << p.header_ << p.matrix_;
+/**
+ * @brief Stream extraction operator.
+ */
+std::ostream& operator<<(std::ostream& out, const TransformStamped& t) {
+  std::lock_guard<std::mutex> lock{t.mutex_};
+  out << t.header_ << t.transform_;
   return out;
 }
 }  // namespace simple_msgs
