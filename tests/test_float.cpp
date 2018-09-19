@@ -16,6 +16,8 @@
 #include "random_generators.hpp"
 #include "simple_msgs/float.hpp"
 
+using namespace simple_tests;
+
 // TEST FOR USING THE Float MESSAGE WRAPPER
 
 SCENARIO("Using a Float Message") {

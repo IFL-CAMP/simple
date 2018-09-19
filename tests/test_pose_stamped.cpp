@@ -16,6 +16,8 @@
 #include "random_generators.hpp"
 #include "simple_msgs/pose_stamped.h"
 
+using namespace simple_tests;
+
 // TEST FOR USING THE STAMPED POSE MESSAGE WRAPPER
 
 SCENARIO("Using a PoseStamped Message") {

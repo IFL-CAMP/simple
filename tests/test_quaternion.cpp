@@ -16,6 +16,8 @@
 #include "random_generators.hpp"
 #include "simple_msgs/quaternion.h"
 
+using namespace simple_tests;
+
 // TEST FOR USING THE QUATERNION MESSAGE WRAPPER
 
 SCENARIO("Using a Quaternion Message") {

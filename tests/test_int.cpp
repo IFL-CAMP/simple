@@ -16,6 +16,8 @@
 #include "random_generators.hpp"
 #include "simple_msgs/int.hpp"
 
+using namespace simple_tests;
+
 // TEST FOR USING THE Int MESSAGE WRAPPER
 
 SCENARIO("Using a Int Message") {

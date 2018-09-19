@@ -15,6 +15,8 @@
 #include "simple/server.hpp"
 #include "test_utilities.hpp"
 
+using namespace simple_tests;
+
 // TEST FOR A CLIENT AND SERVER OF ALL DATA TYPES
 
 SCENARIO("Client requests a non-existing server") {

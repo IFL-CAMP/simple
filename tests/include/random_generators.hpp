@@ -14,10 +14,14 @@
 #include <cfloat>
 #include <random>
 
+namespace simple_tests {
+
 static std::random_device rd;
 static std::minstd_rand generator(rd());
 static std::uniform_int_distribution<int> int_dist(1, 1000);
 static std::uniform_real_distribution<double> double_dist(1, std::nextafter(1000, DBL_MAX));
 static std::bernoulli_distribution bool_dist;
+
+}  // Namespace simple_tests.
 
 #endif  // SIMPLE_TESTS_RANDOM_GENERATORS_HPP.

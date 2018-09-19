@@ -16,6 +16,8 @@
 #include "simple_msgs/image.hpp"
 #include "test_utilities.hpp"
 
+using namespace simple_tests;
+
 // TEST FOR USING THE IMAGE MESSAGE WRAPPER
 
 SCENARIO("Using an uint8 Image Message") {

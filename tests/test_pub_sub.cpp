@@ -17,6 +17,8 @@
 #include "simple/subscriber.hpp"
 #include "test_utilities.hpp"
 
+using namespace simple_tests;
+
 // Test: Publish and Subscribe to all data types.
 
 static constexpr size_t TEST_MESSAGES_TO_SEND = 10;

@@ -16,6 +16,8 @@
 #include "random_generators.hpp"
 #include "simple_msgs/transform_stamped.h"
 
+using namespace simple_tests;
+
 // TESTS FOR USING THE TRANSFORM STAMPED MESSAGE WRAPPER
 
 SCENARIO("Using a TransformStamped Message") {

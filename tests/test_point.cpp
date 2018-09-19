@@ -16,6 +16,8 @@
 #include "random_generators.hpp"
 #include "simple_msgs/point.h"
 
+using namespace simple_tests;
+
 // Tests for Point Message.
 SCENARIO("Using a Point Message") {
   double double_1 = double_dist(generator);

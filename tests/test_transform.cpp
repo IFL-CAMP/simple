@@ -16,6 +16,8 @@
 #include "random_generators.hpp"
 #include "simple_msgs/transform.h"
 
+using namespace simple_tests;
+
 // TEST FOR USING THE TRANSFORM MESSAGE WRAPPER
 
 SCENARIO("Using a Transform Message") {

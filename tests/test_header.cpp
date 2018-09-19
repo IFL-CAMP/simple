@@ -16,6 +16,8 @@
 #include "random_generators.hpp"
 #include "simple_msgs/header.h"
 
+using namespace simple_tests;
+
 // TEST FOR USING THE HEADER MESSAGE WRAPPER
 
 SCENARIO("Using a Header Message") {

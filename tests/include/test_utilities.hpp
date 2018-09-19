@@ -16,6 +16,8 @@
 #include "random_generators.hpp"
 #include "simple_msgs/all_messages.h"
 
+namespace simple_tests {
+
 //! The total number of messages defined in the simple_msgs namespace.
 static constexpr size_t TOTAL_NUM_MESSAGES = 16;
 
@@ -349,5 +351,7 @@ void callbackFunctionConstTransformStamped(const simple_msgs::TransformStamped& 
   received_messages[MessageType::TransformStamped]++;
   if (!active_callback[MessageType::TransformStamped]) { active_callback[MessageType::TransformStamped] = true; }
 }
+
+}  // Namespace simple_tests.
 
 #endif  // SIMPLE_TESTS_UTILITIES_HPP.

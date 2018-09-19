@@ -16,6 +16,8 @@
 #include "random_generators.hpp"
 #include "simple_msgs/quaternion_stamped.h"
 
+using namespace simple_tests;
+
 // TEST FOR USING THE STAMPED QUATERNION MESSAGE WRAPPER
 
 SCENARIO("Using a QuaternionStamped Message") {

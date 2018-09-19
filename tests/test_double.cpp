@@ -16,6 +16,8 @@
 #include "random_generators.hpp"
 #include "simple_msgs/double.hpp"
 
+using namespace simple_tests;
+
 // TEST FOR USING THE DOUBLE MESSAGE WRAPPER
 
 SCENARIO("Using a Double Message") {

@@ -16,6 +16,8 @@
 #include "random_generators.hpp"
 #include "simple_msgs/rotation_matrix.h"
 
+using namespace simple_tests;
+
 // TEST FOR USING THE ROTATION MATRIX MESSAGE WRAPPER
 
 SCENARIO("Using a Rotation Matrix Message") {

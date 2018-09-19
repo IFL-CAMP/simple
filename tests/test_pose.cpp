@@ -16,6 +16,8 @@
 #include "random_generators.hpp"
 #include "simple_msgs/pose.h"
 
+using namespace simple_tests;
+
 // TEST FOR USING THE POSE MESSAGE WRAPPER
 
 SCENARIO("Using a Pose Message") {
