@@ -21,8 +21,8 @@
 namespace simple_msgs {
 /**
  * @class RotationMatrix rotation_matrix.h.
- * @brief Thread-safe wrapper for a Flatbuffers RotationMatrix message.
- * It represents a 3x3 rotation matrix.
+ * @brief A thread-safe wrapper for a Flatbuffers RotationMatrix message.
+ * It represents a 3x3 rotation matrix stored in <b>row-major</b> order.
  */
 class RotationMatrix : public GenericMessage {
 public:

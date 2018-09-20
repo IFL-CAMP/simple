@@ -28,5 +28,7 @@
 #include "rotation_matrix.h"
 #include "rotation_matrix_stamped.h"
 #include "string.h"
+#include "transform.h"
+#include "transform_stamped.h"
 
 #endif  // SIMPLE_MSGS_ALL_H

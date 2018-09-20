@@ -11,25 +11,25 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include <cstdlib>
-#include <ctime>
 #include <iostream>
-#include "simple_msgs/header.h"
-#include "simple_msgs/rotation_matrix.h"
+
+#include "random_generators.hpp"
 #include "simple_msgs/rotation_matrix_stamped.h"
+
+using namespace simple_tests;
 
 // TEST FOR USING THE STAMPED ROTATION MATRIX MESSAGE WRAPPER
 
 SCENARIO("Using a RotationMatrixStamped Message") {
-  double double_1 = static_cast<double>(rand()) / RAND_MAX;
-  double double_2 = static_cast<double>(rand()) / RAND_MAX;
-  double double_3 = static_cast<double>(rand()) / RAND_MAX;
-  double double_4 = static_cast<double>(rand()) / RAND_MAX;
-  double double_5 = static_cast<double>(rand()) / RAND_MAX;
-  double double_6 = static_cast<double>(rand()) / RAND_MAX;
-  double double_7 = static_cast<double>(rand()) / RAND_MAX;
-  double double_8 = static_cast<double>(rand()) / RAND_MAX;
-  double double_9 = static_cast<double>(rand()) / RAND_MAX;
+  double double_1 = double_dist(generator);
+  double double_2 = double_dist(generator);
+  double double_3 = double_dist(generator);
+  double double_4 = double_dist(generator);
+  double double_5 = double_dist(generator);
+  double double_6 = double_dist(generator);
+  double double_7 = double_dist(generator);
+  double double_8 = double_dist(generator);
+  double double_9 = double_dist(generator);
   long long time = rand();
   int random_int = rand() / 100;
   std::string random_string = std::to_string(double_1);
@@ -38,6 +38,7 @@ SCENARIO("Using a RotationMatrixStamped Message") {
   simple_msgs::RotationMatrix empty_rotation_matrix{};
   simple_msgs::Header empty_header{};
   simple_msgs::Header random_header{random_int, random_string, time};
+
   // Test the constructors.
   GIVEN("A RotationMatrixStamped created from an empty constructor") {
     simple_msgs::RotationMatrixStamped empty_rotation_matrix_stamped{};
@@ -143,7 +144,7 @@ SCENARIO("Using a RotationMatrixStamped Message") {
     }
   }
 
-  // Testing Topic and ostream
+  // Testing message topic and stream operator.
   GIVEN("A Rotation Matrix Stamped") {
     simple_msgs::RotationMatrixStamped rotation_matrix_stamped{random_header, random_rotation_matrix};
     WHEN("I get the message topic") {

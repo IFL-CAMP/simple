@@ -11,9 +11,8 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include <cstdlib>
-#include <ctime>
 #include <iostream>
+
 #include "simple_msgs/string.h"
 
 // TEST FOR USING THE STRING MESSAGE WRAPPER
@@ -22,6 +21,7 @@ SCENARIO("Using a String Message") {
   std::string string_1{"abcd"};
   std::string string_2{"efg"};
   const char* char_1{"hijk"};
+
   // Testing constructors.
   GIVEN("A String created from an empty constructor") {
     simple_msgs::String empty_string{};
@@ -44,7 +44,7 @@ SCENARIO("Using a String Message") {
     }
   }
 
-  // Testing copy-constructors.
+  // Testing copy/move constructors.
   GIVEN("A String") {
     simple_msgs::String single_string{string_1};
     WHEN("I construct a new String from the serialized data of the existing String") {
@@ -61,7 +61,7 @@ SCENARIO("Using a String Message") {
     }
   }
 
-  // Testing copy-assignments.
+  // Testing copy/move assignments.
   GIVEN("A String") {
     simple_msgs::String single_string{string_1};
     WHEN("I copy-assign from that String's buffer") {
@@ -115,14 +115,20 @@ SCENARIO("Using a String Message") {
       simple_msgs::String added_string = single_string_1 + single_string_2;
       THEN("The new value is correct") { REQUIRE(added_string.get() == string_1 + string_2); }
     }
+  }
+
+  // Testing message topic and stream operator.
+  GIVEN("A String") {
+    simple_msgs::String string{string_1};
+
     WHEN("I get the message topic") {
-      std::string topic_name = single_string_1.getTopic();
+      std::string topic_name = string.getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "STRG"); }
     }
     WHEN("I print the String") {
       std::ostringstream out;
-      out << single_string_1;
-      THEN("The output is correct") { REQUIRE(out.str() == single_string_1.get()); }
+      out << string;
+      THEN("The output is correct") { REQUIRE(out.str() == string_1); }
     }
   }
 }

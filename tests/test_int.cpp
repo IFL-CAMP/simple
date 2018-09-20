@@ -11,16 +11,19 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include <cstdlib>
-#include <ctime>
 #include <iostream>
+
+#include "random_generators.hpp"
 #include "simple_msgs/int.hpp"
+
+using namespace simple_tests;
 
 // TEST FOR USING THE Int MESSAGE WRAPPER
 
 SCENARIO("Using a Int Message") {
-  int int_1 = rand() / 100;
-  int int_2 = rand() / 100;
+  int int_1 = int_dist(generator);
+  int int_2 = int_dist(generator);
+
   // Testing constructors.
   GIVEN("A Int created from an empty constructor") {
     simple_msgs::Int empty_Int{};
@@ -36,7 +39,7 @@ SCENARIO("Using a Int Message") {
     }
   }
 
-  // Testing copy-constructors.
+  // Testing copy/move constructors.
   GIVEN("A Int") {
     simple_msgs::Int single_Int{int_1};
     WHEN("I construct a new Int from the serialized data of the existing Int") {
@@ -55,7 +58,7 @@ SCENARIO("Using a Int Message") {
     }
   }
 
-  // Testing copy-assignments.
+  // Testing copy/move assignments.
   GIVEN("A Int") {
     simple_msgs::Int single_Int{int_1};
     WHEN("I copy-assign from that Int's buffer") {
@@ -100,6 +103,7 @@ SCENARIO("Using a Int Message") {
     }
   }
 
+  // Testing message topic and stream operator.
   GIVEN("A Int") {
     simple_msgs::Int single_Int(int_1);
     WHEN("I get the message topic") {

@@ -11,23 +11,25 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include <cstdlib>
-#include <ctime>
 #include <iostream>
+
+#include "random_generators.hpp"
 #include "simple_msgs/rotation_matrix.h"
+
+using namespace simple_tests;
 
 // TEST FOR USING THE ROTATION MATRIX MESSAGE WRAPPER
 
 SCENARIO("Using a Rotation Matrix Message") {
-  double double_1 = static_cast<double>(rand()) / RAND_MAX;
-  double double_2 = static_cast<double>(rand()) / RAND_MAX;
-  double double_3 = static_cast<double>(rand()) / RAND_MAX;
-  double double_4 = static_cast<double>(rand()) / RAND_MAX;
-  double double_5 = static_cast<double>(rand()) / RAND_MAX;
-  double double_6 = static_cast<double>(rand()) / RAND_MAX;
-  double double_7 = static_cast<double>(rand()) / RAND_MAX;
-  double double_8 = static_cast<double>(rand()) / RAND_MAX;
-  double double_9 = static_cast<double>(rand()) / RAND_MAX;
+  double double_1 = double_dist(generator);
+  double double_2 = double_dist(generator);
+  double double_3 = double_dist(generator);
+  double double_4 = double_dist(generator);
+  double double_5 = double_dist(generator);
+  double double_6 = double_dist(generator);
+  double double_7 = double_dist(generator);
+  double double_8 = double_dist(generator);
+  double double_9 = double_dist(generator);
   std::array<double, 9> doubles_array{
       {double_1, double_2, double_3, double_4, double_5, double_6, double_7, double_8, double_9}};
   std::array<double, 3> column0_array{{double_1, double_4, double_7}};
@@ -42,15 +44,15 @@ SCENARIO("Using a Rotation Matrix Message") {
 
     WHEN("It is constructed") {
       THEN("The Rotation Matrix elements have to be zero") {
-        REQUIRE(rotation_matrix.getRow(0)[0] == 0);
-        REQUIRE(rotation_matrix.getRow(0)[1] == 0);
-        REQUIRE(rotation_matrix.getRow(0)[2] == 0);
-        REQUIRE(rotation_matrix.getRow(1)[0] == 0);
-        REQUIRE(rotation_matrix.getRow(1)[1] == 0);
-        REQUIRE(rotation_matrix.getRow(1)[2] == 0);
-        REQUIRE(rotation_matrix.getRow(2)[0] == 0);
-        REQUIRE(rotation_matrix.getRow(2)[1] == 0);
-        REQUIRE(rotation_matrix.getRow(2)[2] == 0);
+        REQUIRE(rotation_matrix.getRow(0)[0] == Approx(0));
+        REQUIRE(rotation_matrix.getRow(0)[1] == Approx(0));
+        REQUIRE(rotation_matrix.getRow(0)[2] == Approx(0));
+        REQUIRE(rotation_matrix.getRow(1)[0] == Approx(0));
+        REQUIRE(rotation_matrix.getRow(1)[1] == Approx(0));
+        REQUIRE(rotation_matrix.getRow(1)[2] == Approx(0));
+        REQUIRE(rotation_matrix.getRow(2)[0] == Approx(0));
+        REQUIRE(rotation_matrix.getRow(2)[1] == Approx(0));
+        REQUIRE(rotation_matrix.getRow(2)[2] == Approx(0));
       }
     }
   }
@@ -59,15 +61,15 @@ SCENARIO("Using a Rotation Matrix Message") {
     simple_msgs::RotationMatrix double_rotation_matrix{double_1};
     WHEN("We check the Rotation Matrix's elements") {
       THEN("They all have to be equal to the double from the constructor") {
-        REQUIRE(double_rotation_matrix.getRow(0)[0] == double_1);
-        REQUIRE(double_rotation_matrix.getRow(0)[1] == double_1);
-        REQUIRE(double_rotation_matrix.getRow(0)[2] == double_1);
-        REQUIRE(double_rotation_matrix.getRow(1)[0] == double_1);
-        REQUIRE(double_rotation_matrix.getRow(1)[1] == double_1);
-        REQUIRE(double_rotation_matrix.getRow(1)[2] == double_1);
-        REQUIRE(double_rotation_matrix.getRow(2)[0] == double_1);
-        REQUIRE(double_rotation_matrix.getRow(2)[1] == double_1);
-        REQUIRE(double_rotation_matrix.getRow(2)[2] == double_1);
+        REQUIRE(double_rotation_matrix.getRow(0)[0] == Approx(double_1));
+        REQUIRE(double_rotation_matrix.getRow(0)[1] == Approx(double_1));
+        REQUIRE(double_rotation_matrix.getRow(0)[2] == Approx(double_1));
+        REQUIRE(double_rotation_matrix.getRow(1)[0] == Approx(double_1));
+        REQUIRE(double_rotation_matrix.getRow(1)[1] == Approx(double_1));
+        REQUIRE(double_rotation_matrix.getRow(1)[2] == Approx(double_1));
+        REQUIRE(double_rotation_matrix.getRow(2)[0] == Approx(double_1));
+        REQUIRE(double_rotation_matrix.getRow(2)[1] == Approx(double_1));
+        REQUIRE(double_rotation_matrix.getRow(2)[2] == Approx(double_1));
       }
     }
   }
@@ -77,15 +79,15 @@ SCENARIO("Using a Rotation Matrix Message") {
                                                         double_6, double_7, double_8, double_9};
     WHEN("We check the Rotation Matrix's elements") {
       THEN("They all have to be equal to the doubles from the constructor") {
-        REQUIRE(doubles_rotation_matrix.getRow(0)[0] == double_1);
-        REQUIRE(doubles_rotation_matrix.getRow(0)[1] == double_2);
-        REQUIRE(doubles_rotation_matrix.getRow(0)[2] == double_3);
-        REQUIRE(doubles_rotation_matrix.getRow(1)[0] == double_4);
-        REQUIRE(doubles_rotation_matrix.getRow(1)[1] == double_5);
-        REQUIRE(doubles_rotation_matrix.getRow(1)[2] == double_6);
-        REQUIRE(doubles_rotation_matrix.getRow(2)[0] == double_7);
-        REQUIRE(doubles_rotation_matrix.getRow(2)[1] == double_8);
-        REQUIRE(doubles_rotation_matrix.getRow(2)[2] == double_9);
+        REQUIRE(doubles_rotation_matrix.getRow(0)[0] == Approx(double_1));
+        REQUIRE(doubles_rotation_matrix.getRow(0)[1] == Approx(double_2));
+        REQUIRE(doubles_rotation_matrix.getRow(0)[2] == Approx(double_3));
+        REQUIRE(doubles_rotation_matrix.getRow(1)[0] == Approx(double_4));
+        REQUIRE(doubles_rotation_matrix.getRow(1)[1] == Approx(double_5));
+        REQUIRE(doubles_rotation_matrix.getRow(1)[2] == Approx(double_6));
+        REQUIRE(doubles_rotation_matrix.getRow(2)[0] == Approx(double_7));
+        REQUIRE(doubles_rotation_matrix.getRow(2)[1] == Approx(double_8));
+        REQUIRE(doubles_rotation_matrix.getRow(2)[2] == Approx(double_9));
       }
     }
   }
@@ -94,15 +96,15 @@ SCENARIO("Using a Rotation Matrix Message") {
     simple_msgs::RotationMatrix array_rotation_matrix{doubles_array};
     WHEN("We check the Rotation Matrix's elements") {
       THEN("They all have to be equal to the doubles") {
-        REQUIRE(array_rotation_matrix.getRow(0)[0] == double_1);
-        REQUIRE(array_rotation_matrix.getRow(0)[1] == double_2);
-        REQUIRE(array_rotation_matrix.getRow(0)[2] == double_3);
-        REQUIRE(array_rotation_matrix.getRow(1)[0] == double_4);
-        REQUIRE(array_rotation_matrix.getRow(1)[1] == double_5);
-        REQUIRE(array_rotation_matrix.getRow(1)[2] == double_6);
-        REQUIRE(array_rotation_matrix.getRow(2)[0] == double_7);
-        REQUIRE(array_rotation_matrix.getRow(2)[1] == double_8);
-        REQUIRE(array_rotation_matrix.getRow(2)[2] == double_9);
+        REQUIRE(array_rotation_matrix.getRow(0)[0] == Approx(double_1));
+        REQUIRE(array_rotation_matrix.getRow(0)[1] == Approx(double_2));
+        REQUIRE(array_rotation_matrix.getRow(0)[2] == Approx(double_3));
+        REQUIRE(array_rotation_matrix.getRow(1)[0] == Approx(double_4));
+        REQUIRE(array_rotation_matrix.getRow(1)[1] == Approx(double_5));
+        REQUIRE(array_rotation_matrix.getRow(1)[2] == Approx(double_6));
+        REQUIRE(array_rotation_matrix.getRow(2)[0] == Approx(double_7));
+        REQUIRE(array_rotation_matrix.getRow(2)[1] == Approx(double_8));
+        REQUIRE(array_rotation_matrix.getRow(2)[2] == Approx(double_9));
       }
     }
   }
@@ -111,20 +113,20 @@ SCENARIO("Using a Rotation Matrix Message") {
     simple_msgs::RotationMatrix moved_array_rotation_matrix{std::move(doubles_array)};
     WHEN("We check the Rotation Matrix's elements") {
       THEN("They all have to be equal to the doubles") {
-        REQUIRE(moved_array_rotation_matrix.getRow(0)[0] == double_1);
-        REQUIRE(moved_array_rotation_matrix.getRow(0)[1] == double_2);
-        REQUIRE(moved_array_rotation_matrix.getRow(0)[2] == double_3);
-        REQUIRE(moved_array_rotation_matrix.getRow(1)[0] == double_4);
-        REQUIRE(moved_array_rotation_matrix.getRow(1)[1] == double_5);
-        REQUIRE(moved_array_rotation_matrix.getRow(1)[2] == double_6);
-        REQUIRE(moved_array_rotation_matrix.getRow(2)[0] == double_7);
-        REQUIRE(moved_array_rotation_matrix.getRow(2)[1] == double_8);
-        REQUIRE(moved_array_rotation_matrix.getRow(2)[2] == double_9);
+        REQUIRE(moved_array_rotation_matrix.getRow(0)[0] == Approx(double_1));
+        REQUIRE(moved_array_rotation_matrix.getRow(0)[1] == Approx(double_2));
+        REQUIRE(moved_array_rotation_matrix.getRow(0)[2] == Approx(double_3));
+        REQUIRE(moved_array_rotation_matrix.getRow(1)[0] == Approx(double_4));
+        REQUIRE(moved_array_rotation_matrix.getRow(1)[1] == Approx(double_5));
+        REQUIRE(moved_array_rotation_matrix.getRow(1)[2] == Approx(double_6));
+        REQUIRE(moved_array_rotation_matrix.getRow(2)[0] == Approx(double_7));
+        REQUIRE(moved_array_rotation_matrix.getRow(2)[1] == Approx(double_8));
+        REQUIRE(moved_array_rotation_matrix.getRow(2)[2] == Approx(double_9));
       }
     }
   }
 
-  // Testing copy-constructors.
+  // Testing copy/move constructors.
   GIVEN("A rotation Matrix") {
     simple_msgs::RotationMatrix array_rotation_matrix{doubles_array};
     WHEN("I construct a new Rotation Matrix from the serialized data of the existing Rotation Matrix") {
@@ -140,20 +142,20 @@ SCENARIO("Using a Rotation Matrix Message") {
     WHEN("I move-construct a new Rotation Matrix") {
       simple_msgs::RotationMatrix moved_rotation_matrix{std::move(array_rotation_matrix)};
       THEN("The new Rotation Matrix's coordinates are equal to the previous' ones") {
-        REQUIRE(moved_rotation_matrix.getRow(0)[0] == double_1);
-        REQUIRE(moved_rotation_matrix.getRow(0)[1] == double_2);
-        REQUIRE(moved_rotation_matrix.getRow(0)[2] == double_3);
-        REQUIRE(moved_rotation_matrix.getRow(1)[0] == double_4);
-        REQUIRE(moved_rotation_matrix.getRow(1)[1] == double_5);
-        REQUIRE(moved_rotation_matrix.getRow(1)[2] == double_6);
-        REQUIRE(moved_rotation_matrix.getRow(2)[0] == double_7);
-        REQUIRE(moved_rotation_matrix.getRow(2)[1] == double_8);
-        REQUIRE(moved_rotation_matrix.getRow(2)[2] == double_9);
+        REQUIRE(moved_rotation_matrix.getRow(0)[0] == Approx(double_1));
+        REQUIRE(moved_rotation_matrix.getRow(0)[1] == Approx(double_2));
+        REQUIRE(moved_rotation_matrix.getRow(0)[2] == Approx(double_3));
+        REQUIRE(moved_rotation_matrix.getRow(1)[0] == Approx(double_4));
+        REQUIRE(moved_rotation_matrix.getRow(1)[1] == Approx(double_5));
+        REQUIRE(moved_rotation_matrix.getRow(1)[2] == Approx(double_6));
+        REQUIRE(moved_rotation_matrix.getRow(2)[0] == Approx(double_7));
+        REQUIRE(moved_rotation_matrix.getRow(2)[1] == Approx(double_8));
+        REQUIRE(moved_rotation_matrix.getRow(2)[2] == Approx(double_9));
       }
     }
   }
 
-  // Testing copy-assignments.
+  // Testing copy/move assignments.
   GIVEN("A Rotation Matrix") {
     simple_msgs::RotationMatrix array_rotation_matrix{doubles_array};
     WHEN("I copy-assign from that Rotation Matrix's buffer") {
@@ -175,30 +177,30 @@ SCENARIO("Using a Rotation Matrix Message") {
       simple_msgs::RotationMatrix move_assigned_rotation_matrix{};
       move_assigned_rotation_matrix = std::move(array_rotation_matrix);
       THEN("The new Rotation Matrix has to be same as the original") {
-        REQUIRE(move_assigned_rotation_matrix.getRow(0)[0] == double_1);
-        REQUIRE(move_assigned_rotation_matrix.getRow(0)[1] == double_2);
-        REQUIRE(move_assigned_rotation_matrix.getRow(0)[2] == double_3);
-        REQUIRE(move_assigned_rotation_matrix.getRow(1)[0] == double_4);
-        REQUIRE(move_assigned_rotation_matrix.getRow(1)[1] == double_5);
-        REQUIRE(move_assigned_rotation_matrix.getRow(1)[2] == double_6);
-        REQUIRE(move_assigned_rotation_matrix.getRow(2)[0] == double_7);
-        REQUIRE(move_assigned_rotation_matrix.getRow(2)[1] == double_8);
-        REQUIRE(move_assigned_rotation_matrix.getRow(2)[2] == double_9);
+        REQUIRE(move_assigned_rotation_matrix.getRow(0)[0] == Approx(double_1));
+        REQUIRE(move_assigned_rotation_matrix.getRow(0)[1] == Approx(double_2));
+        REQUIRE(move_assigned_rotation_matrix.getRow(0)[2] == Approx(double_3));
+        REQUIRE(move_assigned_rotation_matrix.getRow(1)[0] == Approx(double_4));
+        REQUIRE(move_assigned_rotation_matrix.getRow(1)[1] == Approx(double_5));
+        REQUIRE(move_assigned_rotation_matrix.getRow(1)[2] == Approx(double_6));
+        REQUIRE(move_assigned_rotation_matrix.getRow(2)[0] == Approx(double_7));
+        REQUIRE(move_assigned_rotation_matrix.getRow(2)[1] == Approx(double_8));
+        REQUIRE(move_assigned_rotation_matrix.getRow(2)[2] == Approx(double_9));
       }
     }
     WHEN("I move-assign from an array") {
       simple_msgs::RotationMatrix move_assigned_array_rotation_matrix{};
       move_assigned_array_rotation_matrix = std::move(doubles_array);
       THEN("The new Rotation Matrix has to be same as the array") {
-        REQUIRE(move_assigned_array_rotation_matrix.getRow(0)[0] == double_1);
-        REQUIRE(move_assigned_array_rotation_matrix.getRow(0)[1] == double_2);
-        REQUIRE(move_assigned_array_rotation_matrix.getRow(0)[2] == double_3);
-        REQUIRE(move_assigned_array_rotation_matrix.getRow(1)[0] == double_4);
-        REQUIRE(move_assigned_array_rotation_matrix.getRow(1)[1] == double_5);
-        REQUIRE(move_assigned_array_rotation_matrix.getRow(1)[2] == double_6);
-        REQUIRE(move_assigned_array_rotation_matrix.getRow(2)[0] == double_7);
-        REQUIRE(move_assigned_array_rotation_matrix.getRow(2)[1] == double_8);
-        REQUIRE(move_assigned_array_rotation_matrix.getRow(2)[2] == double_9);
+        REQUIRE(move_assigned_array_rotation_matrix.getRow(0)[0] == Approx(double_1));
+        REQUIRE(move_assigned_array_rotation_matrix.getRow(0)[1] == Approx(double_2));
+        REQUIRE(move_assigned_array_rotation_matrix.getRow(0)[2] == Approx(double_3));
+        REQUIRE(move_assigned_array_rotation_matrix.getRow(1)[0] == Approx(double_4));
+        REQUIRE(move_assigned_array_rotation_matrix.getRow(1)[1] == Approx(double_5));
+        REQUIRE(move_assigned_array_rotation_matrix.getRow(1)[2] == Approx(double_6));
+        REQUIRE(move_assigned_array_rotation_matrix.getRow(2)[0] == Approx(double_7));
+        REQUIRE(move_assigned_array_rotation_matrix.getRow(2)[1] == Approx(double_8));
+        REQUIRE(move_assigned_array_rotation_matrix.getRow(2)[2] == Approx(double_9));
       }
     }
   }
@@ -208,29 +210,29 @@ SCENARIO("Using a Rotation Matrix Message") {
     WHEN("I copy-assign an array to that Rotation Matrix") {
       empty_rotation_matrix = doubles_array;
       THEN("The Rotation Matrix's elements are equal to the array") {
-        REQUIRE(empty_rotation_matrix.getRow(0)[0] == double_1);
-        REQUIRE(empty_rotation_matrix.getRow(0)[1] == double_2);
-        REQUIRE(empty_rotation_matrix.getRow(0)[2] == double_3);
-        REQUIRE(empty_rotation_matrix.getRow(1)[0] == double_4);
-        REQUIRE(empty_rotation_matrix.getRow(1)[1] == double_5);
-        REQUIRE(empty_rotation_matrix.getRow(1)[2] == double_6);
-        REQUIRE(empty_rotation_matrix.getRow(2)[0] == double_7);
-        REQUIRE(empty_rotation_matrix.getRow(2)[1] == double_8);
-        REQUIRE(empty_rotation_matrix.getRow(2)[2] == double_9);
+        REQUIRE(empty_rotation_matrix.getRow(0)[0] == Approx(double_1));
+        REQUIRE(empty_rotation_matrix.getRow(0)[1] == Approx(double_2));
+        REQUIRE(empty_rotation_matrix.getRow(0)[2] == Approx(double_3));
+        REQUIRE(empty_rotation_matrix.getRow(1)[0] == Approx(double_4));
+        REQUIRE(empty_rotation_matrix.getRow(1)[1] == Approx(double_5));
+        REQUIRE(empty_rotation_matrix.getRow(1)[2] == Approx(double_6));
+        REQUIRE(empty_rotation_matrix.getRow(2)[0] == Approx(double_7));
+        REQUIRE(empty_rotation_matrix.getRow(2)[1] == Approx(double_8));
+        REQUIRE(empty_rotation_matrix.getRow(2)[2] == Approx(double_9));
       }
     }
     WHEN("I move-assign from an array to that Rotation Matrix") {
       empty_rotation_matrix = std::move(doubles_array);
       THEN("The quaternion's elements are the same as the array") {
-        REQUIRE(empty_rotation_matrix.getRow(0)[0] == double_1);
-        REQUIRE(empty_rotation_matrix.getRow(0)[1] == double_2);
-        REQUIRE(empty_rotation_matrix.getRow(0)[2] == double_3);
-        REQUIRE(empty_rotation_matrix.getRow(1)[0] == double_4);
-        REQUIRE(empty_rotation_matrix.getRow(1)[1] == double_5);
-        REQUIRE(empty_rotation_matrix.getRow(1)[2] == double_6);
-        REQUIRE(empty_rotation_matrix.getRow(2)[0] == double_7);
-        REQUIRE(empty_rotation_matrix.getRow(2)[1] == double_8);
-        REQUIRE(empty_rotation_matrix.getRow(2)[2] == double_9);
+        REQUIRE(empty_rotation_matrix.getRow(0)[0] == Approx(double_1));
+        REQUIRE(empty_rotation_matrix.getRow(0)[1] == Approx(double_2));
+        REQUIRE(empty_rotation_matrix.getRow(0)[2] == Approx(double_3));
+        REQUIRE(empty_rotation_matrix.getRow(1)[0] == Approx(double_4));
+        REQUIRE(empty_rotation_matrix.getRow(1)[1] == Approx(double_5));
+        REQUIRE(empty_rotation_matrix.getRow(1)[2] == Approx(double_6));
+        REQUIRE(empty_rotation_matrix.getRow(2)[0] == Approx(double_7));
+        REQUIRE(empty_rotation_matrix.getRow(2)[1] == Approx(double_8));
+        REQUIRE(empty_rotation_matrix.getRow(2)[2] == Approx(double_9));
       }
     }
   }
@@ -253,15 +255,15 @@ SCENARIO("Using a Rotation Matrix Message") {
     auto identity = simple_msgs::RotationMatrix::Identity();
     WHEN("Its values are checked") {
       THEN("They are correct") {
-        REQUIRE(identity.getRow(0)[0] == 1);
-        REQUIRE(identity.getRow(0)[1] == 0);
-        REQUIRE(identity.getRow(0)[2] == 0);
-        REQUIRE(identity.getRow(1)[0] == 0);
-        REQUIRE(identity.getRow(1)[1] == 1);
-        REQUIRE(identity.getRow(1)[2] == 0);
-        REQUIRE(identity.getRow(2)[0] == 0);
-        REQUIRE(identity.getRow(2)[1] == 0);
-        REQUIRE(identity.getRow(2)[2] == 1);
+        REQUIRE(identity.getRow(0)[0] == Approx(1));
+        REQUIRE(identity.getRow(0)[1] == Approx(0));
+        REQUIRE(identity.getRow(0)[2] == Approx(0));
+        REQUIRE(identity.getRow(1)[0] == Approx(0));
+        REQUIRE(identity.getRow(1)[1] == Approx(1));
+        REQUIRE(identity.getRow(1)[2] == Approx(0));
+        REQUIRE(identity.getRow(2)[0] == Approx(0));
+        REQUIRE(identity.getRow(2)[1] == Approx(0));
+        REQUIRE(identity.getRow(2)[2] == Approx(1));
       }
     }
   }
@@ -324,31 +326,36 @@ SCENARIO("Using a Rotation Matrix Message") {
     WHEN("I get the array from the Rotation Matrix") {
       std::array<double, 9> array = rotation_matrix.toVector();
       THEN("The array elements are correct") {
-        REQUIRE(array[0] == double_1);
-        REQUIRE(array[1] == double_2);
-        REQUIRE(array[2] == double_3);
-        REQUIRE(array[3] == double_4);
-        REQUIRE(array[4] == double_5);
-        REQUIRE(array[5] == double_6);
-        REQUIRE(array[6] == double_7);
-        REQUIRE(array[7] == double_8);
-        REQUIRE(array[8] == double_9);
+        REQUIRE(array[0] == Approx(double_1));
+        REQUIRE(array[1] == Approx(double_2));
+        REQUIRE(array[2] == Approx(double_3));
+        REQUIRE(array[3] == Approx(double_4));
+        REQUIRE(array[4] == Approx(double_5));
+        REQUIRE(array[5] == Approx(double_6));
+        REQUIRE(array[6] == Approx(double_7));
+        REQUIRE(array[7] == Approx(double_8));
+        REQUIRE(array[8] == Approx(double_9));
       }
     }
     WHEN("I get the transpose from the Rotation Matrix") {
       simple_msgs::RotationMatrix transpose = rotation_matrix.getTranspose();
       THEN("The transpose elements are correct") {
-        REQUIRE(transpose.getRow(0)[0] == double_1);
-        REQUIRE(transpose.getRow(0)[1] == double_4);
-        REQUIRE(transpose.getRow(0)[2] == double_7);
-        REQUIRE(transpose.getRow(1)[0] == double_2);
-        REQUIRE(transpose.getRow(1)[1] == double_5);
-        REQUIRE(transpose.getRow(1)[2] == double_8);
-        REQUIRE(transpose.getRow(2)[0] == double_3);
-        REQUIRE(transpose.getRow(2)[1] == double_6);
-        REQUIRE(transpose.getRow(2)[2] == double_9);
+        REQUIRE(transpose.getRow(0)[0] == Approx(double_1));
+        REQUIRE(transpose.getRow(0)[1] == Approx(double_4));
+        REQUIRE(transpose.getRow(0)[2] == Approx(double_7));
+        REQUIRE(transpose.getRow(1)[0] == Approx(double_2));
+        REQUIRE(transpose.getRow(1)[1] == Approx(double_5));
+        REQUIRE(transpose.getRow(1)[2] == Approx(double_8));
+        REQUIRE(transpose.getRow(2)[0] == Approx(double_3));
+        REQUIRE(transpose.getRow(2)[1] == Approx(double_6));
+        REQUIRE(transpose.getRow(2)[2] == Approx(double_9));
       }
     }
+  }
+
+  // Testing message topic and stream operator.
+  GIVEN("A RotationMatrix") {
+    simple_msgs::RotationMatrix rotation_matrix{doubles_array};
     WHEN("I get the message topic") {
       std::string topic_name = rotation_matrix.getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "RMAT"); }

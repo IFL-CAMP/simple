@@ -48,6 +48,8 @@ set(SIMPLE_MSGS_SRCS
   src/pose_stamped.cpp
   src/rotation_matrix.cpp
   src/rotation_matrix_stamped.cpp
+  src/transform.cpp
+  src/transform_stamped.cpp
   )
 
 # Generate the Flatbuffers headers.

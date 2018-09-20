@@ -18,7 +18,7 @@
 // Test: Subscriber interface.
 
 //! A dummy callback used to build the subscribers in this test.
-int n_received_msg{0};
+static int n_received_msg{0};
 auto dummy_callback = [](const simple_msgs::Bool& /*unused*/) { ++n_received_msg; };
 
 SCENARIO("SIMPLE Subscriber interface") {
