@@ -11,7 +11,7 @@
 #ifndef SIMPLE_MSGS_POINT_STAMPED_H
 #define SIMPLE_MSGS_POINT_STAMPED_H
 
-#include <array>
+#include <mutex>
 #include <ostream>
 
 #include "generated/point_stamped_generated.h"
@@ -22,7 +22,7 @@
 namespace simple_msgs {
 /**
  * @class PointStamped point_stamped.h.
- * @brief Wrapper for a Flatbuffers PointStamped message.
+ * @brief Thread-safe wrapper for a Flatbuffers PointStamped message.
  * It contains a Point and a Header message.
  */
 class PointStamped : public GenericMessage {
@@ -72,7 +72,12 @@ public:
   /**
    * @brief Returns true if lhs is equal to rhs, false otherwise.
    */
-  inline bool operator==(const PointStamped& rhs) const { return (point_ == rhs.point_ && header_ == rhs.header_); }
+  inline bool operator==(const PointStamped& rhs) const {
+    std::lock(mutex_, rhs.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{rhs.mutex_, std::adopt_lock};
+    return (point_ == rhs.point_ && header_ == rhs.header_);
+  }
 
   /**
    * @brief Returns true if lhs is not equal to rhs, false otherwise.
@@ -92,22 +97,34 @@ public:
   /**
    * @brief Returns the message Header.
    */
-  inline Header& getHeader() { return header_; }
+  inline Header& getHeader() {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return header_;
+  }
 
   /**
    * @brief Returns the message Header.
    */
-  inline const Header& getHeader() const { return header_; }
+  inline const Header& getHeader() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return header_;
+  }
 
   /**
    * @brief Returns the message Point.
    */
-  inline Point& getPoint() { return point_; }
+  inline Point& getPoint() {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return point_;
+  }
 
   /**
    * @brief Returns the message Point.
    */
-  inline const Point& getPoint() const { return point_; }
+  inline const Point& getPoint() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return point_;
+  }
 
   /**
    * @brief Modifies the message header.
@@ -124,6 +141,11 @@ public:
   static inline std::string getTopic() { return PointStampedFbsIdentifier(); }
 
 private:
+  //! Thread safe copy and move constructors.
+  PointStamped(const PointStamped& other, const std::lock_guard<std::mutex>&);
+  PointStamped(PointStamped&& other, const std::lock_guard<std::mutex>&) noexcept;
+
+  mutable std::mutex mutex_{};
   Header header_{};
   Point point_{};
 };

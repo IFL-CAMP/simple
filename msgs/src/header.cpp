@@ -19,14 +19,22 @@ Header::Header(const void* data)
   , frame_id_{GetHeaderFbs(data)->frame_id()->c_str()}
   , timestamp_{static_cast<long long>(GetHeaderFbs(data)->timestamp())} {}
 
-Header::Header(const Header& h) : Header{h.seq_n_, h.frame_id_, h.timestamp_} {}
+Header::Header(const Header& other, const std::lock_guard<std::mutex>&)
+  : Header{other.seq_n_, other.frame_id_, other.timestamp_} {}
+
+Header::Header(Header&& other, const std::lock_guard<std::mutex>&) noexcept
+  : seq_n_{other.seq_n_}, frame_id_(std::move(other.frame_id_)), timestamp_{other.timestamp_} {}
+
+Header::Header(const Header& other) : Header(other, std::lock_guard<std::mutex>(other.mutex_)) {}
 
 Header::Header(Header&& other) noexcept
-  : seq_n_{std::move(other.seq_n_)}, frame_id_(std::move(other.frame_id_)), timestamp_{std::move(other.timestamp_)} {}
+  : Header(std::forward<Header>(other), std::lock_guard<std::mutex>(other.mutex_)) {}
 
 Header& Header::operator=(const Header& other) {
   if (this != std::addressof(other)) {
-    std::lock_guard<std::mutex> lock{mutex_};
+    std::lock(mutex_, other.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
     seq_n_ = other.seq_n_;
     frame_id_ = other.frame_id_;
     timestamp_ = other.timestamp_;
@@ -36,9 +44,12 @@ Header& Header::operator=(const Header& other) {
 
 Header& Header::operator=(Header&& other) noexcept {
   if (this != std::addressof(other)) {
-    seq_n_ = std::move(other.seq_n_);
+    std::lock(mutex_, other.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
+    seq_n_ = other.seq_n_;
     frame_id_ = std::move(other.frame_id_);
-    timestamp_ = std::move(other.timestamp_);
+    timestamp_ = other.timestamp_;
   }
   return *this;
 }
@@ -82,6 +93,7 @@ void Header::setTimestamp(long long timestamp) {
  * @brief Stream extraction operator.
  */
 std::ostream& operator<<(std::ostream& out, const Header& h) {
+  std::lock_guard<std::mutex> lock{h.mutex_};
   out << "Header\n \t"
       << "seq_n: " << std::to_string(h.seq_n_) << "\n \t"
       << "frame_id: " << h.frame_id_ << "\n \t"

@@ -51,7 +51,7 @@ public:
    * @param [in] timeout - Time the subscriber will block the thread waiting for a message. In
    * milliseconds.
    */
-  Subscriber<T>(const std::string& address, const std::function<void(const T&)>& callback, int timeout = 1000)
+  explicit Subscriber<T>(const std::string& address, const std::function<void(const T&)>& callback, int timeout = 1000)
     : socket_{new GenericSocket<T>(ZMQ_SUB)}, callback_{callback} {
     socket_->filter();  //! Filter the type of message that can be received, only the type T is accepted.
     socket_->setTimeout(timeout);
@@ -67,7 +67,7 @@ public:
    * @brief Move constructor.
    */
   Subscriber(Subscriber&& other) : socket_{std::move(other.socket_)}, callback_{std::move(other.callback_)} {
-    other.stop();  //! The moved Subscribed has to be stopped.
+    other.stop();  //! The moved Subscriber has to be stopped.
     initSubscriber();
   }
 
@@ -77,7 +77,7 @@ public:
   Subscriber& operator=(Subscriber&& other) {
     stop();                 //! Stop the current Subscriber object.
     if (other.isValid()) {  //! Move the Subscriber only if it's a valid one, e.g. if it was not default constructed.
-      other.stop();         //! The moved Subscribed has to be stopped.
+      other.stop();         //! The moved Subscriber has to be stopped.
       socket_ = std::move(other.socket_);
       callback_ = std::move(other.callback_);
       initSubscriber();

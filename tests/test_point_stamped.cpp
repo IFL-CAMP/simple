@@ -60,7 +60,7 @@ SCENARIO("Using a PointStamped Message") {
       THEN("The new PointStamped has to be equal to the other") { REQUIRE(buffer_point_stamped == point_stamped); }
     }
     WHEN("I copy-construct a new PointStamped") {
-      const simple_msgs::PointStamped& copy_point_stamped{point_stamped};
+      const simple_msgs::PointStamped copy_point_stamped{point_stamped};
       THEN("The new PointStamped is equal to the other") { REQUIRE(copy_point_stamped == point_stamped); }
     }
     WHEN("I move-construct a new PointStamped") {

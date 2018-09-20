@@ -12,6 +12,7 @@
 #define SIMPLE_MSGS_QUATERNION_H
 
 #include <array>
+#include <mutex>
 #include <ostream>
 
 #include "generated/quaternion_generated.h"
@@ -20,7 +21,7 @@
 namespace simple_msgs {
 /**
  * @class Quaternion quaternion.h.
- * @brief Wrapper for a Flatbuffers Quaternion message.
+ * @brief Thread-safe wrapper for a Flatbuffers Quaternion message.
  */
 class Quaternion : public GenericMessage {
 public:
@@ -87,7 +88,12 @@ public:
   /**
    * @brief Returns true if lhs is equal to rhs, false otherwise.
    */
-  inline bool operator==(const Quaternion& rhs) const { return data_ == rhs.data_; }
+  inline bool operator==(const Quaternion& rhs) const {
+    std::lock(mutex_, rhs.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{rhs.mutex_, std::adopt_lock};
+    return data_ == rhs.data_;
+  }
 
   /**
    * @brief Returns true if lhs is not equal to rhs, false otherwise.
@@ -107,28 +113,38 @@ public:
   /**
    * @brief Returns the quaternion as an array for 4 elements.
    */
-  std::array<double, 4> toVector() const { return data_; }
-
+  std::array<double, 4> toVector() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return data_;
+  }
   /**
    * @brief Returns of the x quaternion component.
    */
-  double getX() const { return data_[0]; }
-
+  double getX() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return data_[0];
+  }
   /**
    * @brief Returns of the y quaternion component.
    */
-  double getY() const { return data_[1]; }
-
+  double getY() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return data_[1];
+  }
   /**
    * @brief Returns of the z quaternion component.
    */
-  double getZ() const { return data_[2]; }
-
+  double getZ() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return data_[2];
+  }
   /**
    * @brief Returns of the w quaternion component.
    */
-  double getW() const { return data_[3]; }
-
+  double getW() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return data_[3];
+  }
   /**
    * @brief Modifies the x component of the quaternion.
    */
@@ -155,7 +171,12 @@ public:
   static inline std::string getTopic() { return QuaternionFbsIdentifier(); }
 
 private:
-  std::array<double, 4> data_{{0, 0, 0, 1}};  //! Internal array.
+  //! Thread safe copy and move constructors.
+  Quaternion(const Quaternion& other, const std::lock_guard<std::mutex>&);
+  Quaternion(Quaternion&& other, const std::lock_guard<std::mutex>&) noexcept;
+
+  mutable std::mutex mutex_{};
+  std::array<double, 4> data_{{0, 0, 0, 1}};
 };
 }  // Namespace simple_msgs.
 

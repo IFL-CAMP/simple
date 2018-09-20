@@ -11,6 +11,7 @@
 #ifndef SIMPLE_MSGS_POSE_STAMPED_H
 #define SIMPLE_MSGS_POSE_STAMPED_H
 
+#include <mutex>
 #include <ostream>
 
 #include "generated/pose_stamped_generated.h"
@@ -20,7 +21,7 @@
 namespace simple_msgs {
 /**
  * @class PoseStamped pose_stamped.h.
- * @brief Wrapper for a Flatbuffers PoseStamped message.
+ * @brief Thread-safe wrapper for a Flatbuffers PoseStamped message.
  * It contains a Pose and a Header message.
  */
 class PoseStamped : public GenericMessage {
@@ -70,7 +71,10 @@ public:
   /**
    * @brief Returns true if lhs is equal to rhs, false otherwise.
    */
-  inline bool operator==(const PoseStamped& rhs) const { return (pose_ == rhs.pose_ && header_ == rhs.header_); }
+  inline bool operator==(const PoseStamped& rhs) const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return (pose_ == rhs.pose_ && header_ == rhs.header_);
+  }
 
   /**
    * @brief Returns true if lhs is not equal to rhs, false otherwise.
@@ -90,22 +94,34 @@ public:
   /**
    * @brief Returns message Header.
    */
-  inline Header& getHeader() { return header_; }
+  inline Header& getHeader() {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return header_;
+  }
 
   /**
    * @brief Returns message Header.
    */
-  inline const Header& getHeader() const { return header_; }
+  inline const Header& getHeader() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return header_;
+  }
 
   /**
    * @brief Returns the message Pose.
    */
-  inline Pose& getPose() { return pose_; }
+  inline Pose& getPose() {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return pose_;
+  }
 
   /**
    * @brief Returns the message Pose.
    */
-  inline const Pose& getPose() const { return pose_; }
+  inline const Pose& getPose() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return pose_;
+  }
 
   /**
    * @brief Modifies the message Header.
@@ -123,6 +139,11 @@ public:
   static inline std::string getTopic() { return PoseStampedFbsIdentifier(); }
 
 private:
+  //! Thread safe copy and move constructors.
+  PoseStamped(const PoseStamped& other, const std::lock_guard<std::mutex>&);
+  PoseStamped(PoseStamped&& other, const std::lock_guard<std::mutex>&) noexcept;
+
+  mutable std::mutex mutex_{};
   Header header_{};
   Pose pose_{};
 };

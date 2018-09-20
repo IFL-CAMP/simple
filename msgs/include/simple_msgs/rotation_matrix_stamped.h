@@ -11,7 +11,7 @@
 #ifndef SIMPLE_MSGS_ROTATION_MATRIX_STAMPED_H
 #define SIMPLE_MSGS_ROTATION_MATRIX_STAMPED_H
 
-#include <array>
+#include <mutex>
 #include <ostream>
 
 #include "generated/rotation_matrix_stamped_generated.h"
@@ -22,7 +22,7 @@
 namespace simple_msgs {
 /**
  * @class RotationMatrixStamped rotation_matrix_stamped.h.
- * @brief Wrapper for a Flatbuffers RotationMatrixStamped message.
+ * @brief Thread-safe wrapper for a Flatbuffers RotationMatrixStamped message.
  * It contains a RotationMatrix and a Header message.
  */
 class RotationMatrixStamped : public GenericMessage {
@@ -73,6 +73,9 @@ public:
    * @brief Returns true if lhs is equal to rhs, false otherwise.
    */
   inline bool operator==(const RotationMatrixStamped& rhs) const {
+    std::lock(mutex_, rhs.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{rhs.mutex_, std::adopt_lock};
     return (rotation_matrix_ == rhs.rotation_matrix_ && header_ == rhs.header_);
   }
 
@@ -94,22 +97,34 @@ public:
   /**
    * @brief Returns the message Header.
    */
-  inline Header& getHeader() { return header_; }
+  inline Header& getHeader() {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return header_;
+  }
 
   /**
    * @brief Returns the message Header.
    */
-  inline const Header& getHeader() const { return header_; }
+  inline const Header& getHeader() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return header_;
+  }
 
   /**
    * @brief Returns the rotation matrix.
    */
-  inline RotationMatrix& getRotationMatrix() { return rotation_matrix_; }
+  inline RotationMatrix& getRotationMatrix() {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return rotation_matrix_;
+  }
 
   /**
    * @brief Returns the rotation matrix.
    */
-  inline const RotationMatrix& getRotationMatrix() const { return rotation_matrix_; }
+  inline const RotationMatrix& getRotationMatrix() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return rotation_matrix_;
+  }
 
   /**
    * @brief Mofidies the header.
@@ -127,6 +142,11 @@ public:
   static inline std::string getTopic() { return RotationMatrixStampedFbsIdentifier(); }
 
 private:
+  //! Thread safe copy and move constructors.
+  RotationMatrixStamped(const RotationMatrixStamped& other, const std::lock_guard<std::mutex>&);
+  RotationMatrixStamped(RotationMatrixStamped&& other, const std::lock_guard<std::mutex>&) noexcept;
+
+  mutable std::mutex mutex_{};
   Header header_{};
   RotationMatrix rotation_matrix_{};
 };

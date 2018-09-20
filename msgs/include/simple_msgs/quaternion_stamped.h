@@ -11,7 +11,7 @@
 #ifndef SIMPLE_MSGS_QUATERNION_STAMPED_H
 #define SIMPLE_MSGS_QUATERNION_STAMPED_H
 
-#include <array>
+#include <mutex>
 #include <ostream>
 
 #include "generated/quaternion_stamped_generated.h"
@@ -22,7 +22,7 @@
 namespace simple_msgs {
 /**
  * @class QuaternionStamped quaternion_stamped.h.
- * @brief Wrapper for a Flatbuffers QuaternionStamped message.
+ * @brief Thread-safe wrapper for a Flatbuffers QuaternionStamped message.
  * It contains a Quaternion and a Header message.
  */
 class QuaternionStamped : public GenericMessage {
@@ -73,6 +73,9 @@ public:
    * @brief Returns true if lhs is equal to rhs, false otherwise.
    */
   inline bool operator==(const QuaternionStamped& rhs) const {
+    std::lock(mutex_, rhs.mutex_);
+    std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+    std::lock_guard<std::mutex> other_lock{rhs.mutex_, std::adopt_lock};
     return (quaternion_ == rhs.quaternion_ && header_ == rhs.header_);
   }
 
@@ -94,22 +97,34 @@ public:
   /**
    * @brief Returns the message Hader.
    */
-  inline Header& getHeader() { return header_; }
+  inline Header& getHeader() {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return header_;
+  }
 
   /**
    * @brief Returns the message Hader.
    */
-  inline const Header& getHeader() const { return header_; }
+  inline const Header& getHeader() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return header_;
+  }
 
   /**
    * @brief Returns the message Quaternion.
    */
-  inline Quaternion& getQuaternion() { return quaternion_; }
+  inline Quaternion& getQuaternion() {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return quaternion_;
+  }
 
   /**
    * @brief Returns the message Quaternion.
    */
-  inline const Quaternion& getQuaternion() const { return quaternion_; }
+  inline const Quaternion& getQuaternion() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return quaternion_;
+  }
 
   /**
    * @brief Modifies the message Header.
@@ -128,6 +143,11 @@ public:
   static inline std::string getTopic() { return QuaternionStampedFbsIdentifier(); }
 
 private:
+  //! Thread safe copy and move constructors.
+  QuaternionStamped(const QuaternionStamped& other, const std::lock_guard<std::mutex>&);
+  QuaternionStamped(QuaternionStamped&& other, const std::lock_guard<std::mutex>&) noexcept;
+
+  mutable std::mutex mutex_{};
   Header header_{};
   Quaternion quaternion_{};
 };

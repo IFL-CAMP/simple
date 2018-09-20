@@ -21,7 +21,7 @@
 namespace simple_msgs {
 /**
  * @class Image image.hpp.
- * @brief Wrapper for a Flatbuffers Image message.
+ * @brief Thread-safe wrapper for a Flatbuffers Image message.
  * @tparam T Type of the internal image data: uint8, int16, float or double.
  * It contains the data of a 2D or 3D image and its metadata:
  * - the size of the image data,
@@ -40,43 +40,21 @@ public:
   /**
    * @brief Copy constructor.
    */
-  Image(const Image& other)
-    : header_{other.header_}
-    , origin_{other.origin_}
-    , encoding_{other.encoding_}
-    , spacing_x_{other.spacing_x_}
-    , spacing_y_{other.spacing_y_}
-    , spacing_z_{other.spacing_z_}
-    , width_{other.width_}
-    , height_{other.height_}
-    , depth_{other.depth_}
-    , data_size_{other.data_size_}
-    , num_channels_{other.num_channels_}
-    , data_{other.data_} {}
+  Image(const Image& other) : Image(other, std::lock_guard<std::mutex>(other.mutex_)) {}
 
   /**
    * @brief Move constructor.
    */
-  Image(Image&& other) noexcept
-    : header_{std::move(other.header_)}
-    , origin_{std::move(other.origin_)}
-    , encoding_{std::move(other.encoding_)}
-    , spacing_x_{std::move(other.spacing_x_)}
-    , spacing_y_{std::move(other.spacing_y_)}
-    , spacing_z_{std::move(other.spacing_z_)}
-    , width_{std::move(other.width_)}
-    , height_{std::move(other.height_)}
-    , depth_{std::move(other.depth_)}
-    , data_size_{std::move(other.data_size_)}
-    , num_channels_{std::move(other.num_channels_)}
-    , data_{std::move(other.data_)} {}
+  Image(Image&& other) noexcept : Image(std::forward<Image>(other), std::lock_guard<std::mutex>(other.mutex_)) {}
 
   /**
    * @brief Copy assignment operator.
    */
   Image& operator=(const Image& other) {
     if (this != std::addressof(other)) {
-      std::lock_guard<std::mutex> lock{mutex_};
+      std::lock(mutex_, other.mutex_);
+      std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+      std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
       header_ = other.header_;
       origin_ = other.origin_;
       encoding_ = other.encoding_;
@@ -98,7 +76,9 @@ public:
    */
   Image& operator=(Image&& other) noexcept {
     if (this != std::addressof(other)) {
-      std::lock_guard<std::mutex> lock{mutex_};
+      std::lock(mutex_, other.mutex_);
+      std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
+      std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
       header_ = std::move(other.header_);
       origin_ = std::move(other.origin_);
       encoding_ = std::move(other.encoding_);
@@ -124,6 +104,7 @@ public:
    * @brief Returns true if lhs is equal to rhs, false otherwise.
    */
   bool operator==(const Image& rhs) const {
+    std::lock_guard<std::mutex> lock{mutex_};
     bool compare = ((header_ == rhs.header_) && (origin_ == rhs.origin_) && (encoding_ == rhs.encoding_) &&
                     (spacing_x_ == rhs.spacing_x_) && (spacing_y_ == rhs.spacing_y_) &&
                     (spacing_z_ == rhs.spacing_z_) && (width_ == rhs.width_) && (height_ == rhs.height_) &&
@@ -181,52 +162,82 @@ public:
   /**
    * @brief Returns the pixel (or voxel) spacing.
    */
-  std::array<double, 3> getSpacing() const { return {{spacing_x_, spacing_y_, spacing_z_}}; }
+  std::array<double, 3> getSpacing() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return {{spacing_x_, spacing_y_, spacing_z_}};
+  }
 
   /**
    * @brief Returns of image dimensions (width, height and depth).
    */
-  std::array<uint32_t, 3> getImageDimensions() const { return {{width_, height_, depth_}}; }
+  std::array<uint32_t, 3> getImageDimensions() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return {{width_, height_, depth_}};
+  }
 
   /**
    * @brief Returns the actually image raw data.
    */
-  const T* getImageData() const { return data_.getData(); }
+  const T* getImageData() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return data_.getData();
+  }
 
   /**
    * @brief Returns the size of the image in bytes.
    */
-  uint64_t getImageSize() const { return data_size_; }
+  uint64_t getImageSize() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return data_size_;
+  }
 
   /**
    * @brief Returns the message Header.
    */
-  const Header& getHeader() const { return header_; }
+  const Header& getHeader() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return header_;
+  }
 
   /**
    * @brief Returns the message Header.
    */
-  Header& getHeader() { return header_; }
+  Header& getHeader() {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return header_;
+  }
 
   /**
    * @brief Returns a Pose representing the origin of the image in space.
    */
-  const Pose& getImageOrigin() const { return origin_; }
+  const Pose& getImageOrigin() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return origin_;
+  }
 
   /**
    * @brief Returns a Pose representing the origin of the image in space.
    */
-  Pose& getImageOrigin() { return origin_; }
+  Pose& getImageOrigin() {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return origin_;
+  }
 
   /**
    * @brief Returns image encoding.
    */
-  std::string getImageEncoding() const { return encoding_; }
+  std::string getImageEncoding() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return encoding_;
+  }
 
   /**
    * @brief Returns number of color channels.
    */
-  uint16_t getNumChannels() const { return num_channels_; }
+  uint16_t getNumChannels() const {
+    std::lock_guard<std::mutex> lock{mutex_};
+    return num_channels_;
+  }
 
   /**
    * @brief Modifies the image encoding.
@@ -321,6 +332,35 @@ public:
   static inline std::string getTopic() { return ImageFbsIdentifier(); }
 
 private:
+  //! Thread safe copy and move constructors.
+  Image(const Image& other, const std::lock_guard<std::mutex>&)
+    : header_{other.header_}
+    , origin_{other.origin_}
+    , encoding_{other.encoding_}
+    , spacing_x_{other.spacing_x_}
+    , spacing_y_{other.spacing_y_}
+    , spacing_z_{other.spacing_z_}
+    , width_{other.width_}
+    , height_{other.height_}
+    , depth_{other.depth_}
+    , data_size_{other.data_size_}
+    , num_channels_{other.num_channels_}
+    , data_{other.data_} {}
+
+  Image(Image&& other, const std::lock_guard<std::mutex>&) noexcept
+    : header_{std::move(other.header_)}
+    , origin_{std::move(other.origin_)}
+    , encoding_{std::move(other.encoding_)}
+    , spacing_x_{std::move(other.spacing_x_)}
+    , spacing_y_{std::move(other.spacing_y_)}
+    , spacing_z_{std::move(other.spacing_z_)}
+    , width_{std::move(other.width_)}
+    , height_{std::move(other.height_)}
+    , depth_{std::move(other.depth_)}
+    , data_size_{std::move(other.data_size_)}
+    , num_channels_{std::move(other.num_channels_)}
+    , data_{std::move(other.data_)} {}
+
   /**
    * @brief Utility class that handles the internal image data.
    * It holds either an owning pointer or a raw pointer to the data and returns the correct one when requested.
@@ -381,6 +421,7 @@ private:
    */
   flatbuffers::Offset<void> getDataUnionElem(std::shared_ptr<flatbuffers::FlatBufferBuilder> builder) const;
 
+  mutable std::mutex mutex_{};
   simple_msgs::Header header_{};
   simple_msgs::Pose origin_{};
   std::string encoding_{""};

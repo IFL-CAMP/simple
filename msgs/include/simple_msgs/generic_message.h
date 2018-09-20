@@ -12,7 +12,6 @@
 #define SIMPLE_MSGS_GENERIC_MESSAGE_H
 
 #include <flatbuffers/flatbuffers.h>
-#include <mutex>
 
 namespace simple_msgs {
 /**
@@ -28,9 +27,6 @@ public:
    * @brief Returns the built buffer. Each simple_msgs type implements its version of it.
    */
   virtual std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const = 0;
-
-protected:
-  mutable std::mutex mutex_{};  ///< Mutex to implement thread-safe message classes.
 };
 }  // Namespace simple_msgs.
 

@@ -48,12 +48,13 @@ public:
    * @param [in] address - address the server binds to, in the form: \<PROTOCOL\>://\<HOSTNAME\>:\<PORT\>. e.g
    * tcp://localhost:5555.
    * @param [in] callback - user defined callback function for incoming requests.
-   * @param [in] timeout - Time the subscriber will block the thread waiting for a message. In
+   * @param [in] timeout - Time the server will block the thread waiting for a message. In
    * milliseconds.
    * @param [in] linger - Time the unsent messages linger in memory after the socket
    * is closed. In milliseconds. Default is -1 (infinite).
    */
-  Server(const std::string& address, const std::function<void(T&)>& callback, int timeout = 1000, int linger = -1)
+  explicit Server(const std::string& address, const std::function<void(T&)>& callback, int timeout = 1000,
+                  int linger = -1)
     : socket_{new GenericSocket<T>(ZMQ_REP)}, callback_{callback} {
     socket_->filter();  //! Filter the type of message that can be received, only the type T is accepted.
     socket_->setTimeout(timeout);
@@ -70,7 +71,7 @@ public:
    * @brief Move constructor.
    */
   Server(Server&& other) : socket_{std::move(other.socket_)}, callback_{std::move(other.callback_)} {
-    other.stop();  //! The moved Subscribed has to be stopped.
+    other.stop();  //! The moved Server has to be stopped.
     initServer();
   }
 
@@ -78,9 +79,9 @@ public:
    * @brief Move assignment operator.
    */
   Server& operator=(Server&& other) {
-    stop();                 //! Stop the current Subscriber object.
-    if (other.isValid()) {  //! Move the Subscriber only if it's a valid one, e.g. if it was not default constructed.
-      other.stop();         //! The moved Subscribed has to be stopped.
+    stop();                 //! Stop the current Server object.
+    if (other.isValid()) {  //! Move the Server only if it's a valid one, e.g. if it was not default constructed.
+      other.stop();         //! The moved Server has to be stopped.
       socket_ = std::move(other.socket_);
       callback_ = std::move(other.callback_);
       initServer();
@@ -110,7 +111,7 @@ private:
   }
 
   /**
-   * @brief Checks if the Subscriber is properly initialied and its internal thread is running.
+   * @brief Checks if the Server is properly initialied and its internal thread is running.
    */
   inline bool isValid() const { return alive_ == nullptr ? false : alive_->load(); }
 
@@ -132,11 +133,11 @@ private:
    * callback function and reply.
    */
   void awaitRequest(std::shared_ptr<std::atomic<bool>> alive, std::shared_ptr<GenericSocket<T>> socket) {
-    while (*alive) {
+    while (alive->load()) {
       T msg;
       if (socket->receiveMsg(msg, "[SIMPLE Server] - ") != -1) {
-        if (*alive) { callback_(msg); }
-        if (*alive) { reply(socket.get(), msg); }
+        if (alive->load()) { callback_(msg); }
+        if (alive->load()) { reply(socket.get(), msg); }
       }
     }
   }

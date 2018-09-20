@@ -81,7 +81,7 @@ SCENARIO("Using a Quaternion Message") {
       THEN("The new Quaternion has to be equal to the other") { REQUIRE(buffer_quaternion == quaternion); }
     }
     WHEN("I copy-construct a new Quaternion") {
-      const simple_msgs::Quaternion& copy_quaternion{quaternion};
+      const simple_msgs::Quaternion copy_quaternion{quaternion};
       THEN("The new Quaternion is equal to the other") { REQUIRE(copy_quaternion == quaternion); }
     }
     WHEN("I move-construct a new Quaternion") {

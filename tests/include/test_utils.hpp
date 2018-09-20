@@ -141,17 +141,17 @@ void callbackFunctionBool(simple_msgs::Bool& b) {
 }
 
 void callbackFunctionInt(simple_msgs::Int& i) {
-  i += 1;  //! Add 1.
+  i.set(i.get() + 1);  //! Add 1.
 }
 
 // define callback function
 void callbackFunctionDouble(simple_msgs::Double& d) {
-  d += 1.0;  //! Add 1.
+  d.set(d.get() + 1);  //! Add 1.
 }
 
 // define callback function
 void callbackFunctionFloat(simple_msgs::Float& f) {
-  f += 1.0f;  //! Add 1.
+  f.set(f.get() + 1);  //! Add 1.
 }
 
 void callbackFunctionPointStamped(simple_msgs::PointStamped& p) {
