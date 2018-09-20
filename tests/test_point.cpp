@@ -11,27 +11,29 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include <cstdlib>
-#include <ctime>
 #include <iostream>
+
+#include "random_generators.hpp"
 #include "simple_msgs/point.h"
+
+using namespace simple_tests;
 
 // Tests for Point Message.
 SCENARIO("Using a Point Message") {
-  double double_1 = static_cast<double>(rand()) / RAND_MAX;
-  double double_2 = static_cast<double>(rand()) / RAND_MAX;
-  double double_3 = static_cast<double>(rand()) / RAND_MAX;
+  double double_1 = double_dist(generator);
+  double double_2 = double_dist(generator);
+  double double_3 = double_dist(generator);
   std::array<double, 3> double_array{{double_1, double_2, double_3}};
-  std::array<double, 3> twisted_double_array{{double_3, double_1, double_2}};
+  std::array<double, 3> flipped_double_array{{double_3, double_1, double_2}};
 
   // Testing Constructors.
   GIVEN("An empty Point") {
     simple_msgs::Point empty_point{};
     WHEN("It is constructed") {
       THEN("The Point coordinates have to be zero") {
-        REQUIRE(empty_point.getX() == 0);
-        REQUIRE(empty_point.getY() == 0);
-        REQUIRE(empty_point.getZ() == 0);
+        REQUIRE(empty_point.getX() == Approx(0));
+        REQUIRE(empty_point.getY() == Approx(0));
+        REQUIRE(empty_point.getZ() == Approx(0));
       }
     }
   }
@@ -40,9 +42,9 @@ SCENARIO("Using a Point Message") {
     simple_msgs::Point single_double_point{double_1};
     WHEN("We check the Point coordinates") {
       THEN("They all have to be equal to the given value") {
-        REQUIRE(single_double_point.getX() == double_1);
-        REQUIRE(single_double_point.getY() == double_1);
-        REQUIRE(single_double_point.getZ() == double_1);
+        REQUIRE(single_double_point.getX() == Approx(double_1));
+        REQUIRE(single_double_point.getY() == Approx(double_1));
+        REQUIRE(single_double_point.getZ() == Approx(double_1));
       }
     }
   }
@@ -51,9 +53,9 @@ SCENARIO("Using a Point Message") {
     simple_msgs::Point three_double_point{double_1, double_2, double_3};
     WHEN("We check the Point coordinates") {
       THEN("They have to be equal to the given values") {
-        REQUIRE(three_double_point.getX() == double_1);
-        REQUIRE(three_double_point.getY() == double_2);
-        REQUIRE(three_double_point.getZ() == double_3);
+        REQUIRE(three_double_point.getX() == Approx(double_1));
+        REQUIRE(three_double_point.getY() == Approx(double_2));
+        REQUIRE(three_double_point.getZ() == Approx(double_3));
       }
     }
   }
@@ -62,9 +64,9 @@ SCENARIO("Using a Point Message") {
     simple_msgs::Point double_array_point{double_array};
     WHEN("We check the Point coordinates") {
       THEN("They all have to be equal to the array content") {
-        REQUIRE(double_array_point.getX() == double_1);
-        REQUIRE(double_array_point.getY() == double_2);
-        REQUIRE(double_array_point.getZ() == double_3);
+        REQUIRE(double_array_point.getX() == Approx(double_1));
+        REQUIRE(double_array_point.getY() == Approx(double_2));
+        REQUIRE(double_array_point.getZ() == Approx(double_3));
       }
     }
   }
@@ -73,14 +75,14 @@ SCENARIO("Using a Point Message") {
     simple_msgs::Point moved_array_point{std::move(double_array)};
     WHEN("We check the Point coordinates") {
       THEN("They all have to be equal to the array content") {
-        REQUIRE(moved_array_point.getX() == double_1);
-        REQUIRE(moved_array_point.getY() == double_2);
-        REQUIRE(moved_array_point.getZ() == double_3);
+        REQUIRE(moved_array_point.getX() == Approx(double_1));
+        REQUIRE(moved_array_point.getY() == Approx(double_2));
+        REQUIRE(moved_array_point.getZ() == Approx(double_3));
       }
     }
   }
 
-  // Testing Copy-constructors.
+  // Testing copy/move constructors.
   GIVEN("A Point") {
     simple_msgs::Point single_point{double_array};
     simple_msgs::Point reference_point{single_point};
@@ -95,14 +97,14 @@ SCENARIO("Using a Point Message") {
     WHEN("I move-construct a new Point") {
       simple_msgs::Point moved_point{std::move(single_point)};
       THEN("The new Point coordinates are equal to the previous' ones") {
-        REQUIRE(moved_point.getX() == reference_point.getX());
-        REQUIRE(moved_point.getY() == reference_point.getY());
-        REQUIRE(moved_point.getZ() == reference_point.getZ());
+        REQUIRE(moved_point.getX() == Approx(reference_point.getX()));
+        REQUIRE(moved_point.getY() == Approx(reference_point.getY()));
+        REQUIRE(moved_point.getZ() == Approx(reference_point.getZ()));
       }
     }
   }
 
-  // Testing Copy-assignments.
+  // Testing copy/move assignments.
   GIVEN("A Point") {
     simple_msgs::Point single_point{double_1};
     simple_msgs::Point reference_point{double_1};
@@ -123,19 +125,19 @@ SCENARIO("Using a Point Message") {
       THEN("The new Point has to be same as the original") { REQUIRE(copy_buffer_point == reference_point); }
     }
     WHEN("I copy-assign a double array to that point") {
-      single_point = twisted_double_array;
+      single_point = flipped_double_array;
       THEN("The Point coordinates are equal to the array") {
-        REQUIRE(single_point.getX() == twisted_double_array[0]);
-        REQUIRE(single_point.getY() == twisted_double_array[1]);
-        REQUIRE(single_point.getZ() == twisted_double_array[2]);
+        REQUIRE(single_point.getX() == Approx(flipped_double_array[0]));
+        REQUIRE(single_point.getY() == Approx(flipped_double_array[1]));
+        REQUIRE(single_point.getZ() == Approx(flipped_double_array[2]));
       }
     }
     WHEN("I move-assign from an array to that Point") {
-      single_point = std::move(twisted_double_array);
+      single_point = std::move(flipped_double_array);
       THEN("The Point coordinates are equal to the array") {
-        REQUIRE(single_point.getX() == twisted_double_array[0]);
-        REQUIRE(single_point.getY() == twisted_double_array[1]);
-        REQUIRE(single_point.getZ() == twisted_double_array[2]);
+        REQUIRE(single_point.getX() == Approx(flipped_double_array[0]));
+        REQUIRE(single_point.getY() == Approx(flipped_double_array[1]));
+        REQUIRE(single_point.getZ() == Approx(flipped_double_array[2]));
       }
     }
   }
@@ -176,65 +178,65 @@ SCENARIO("Using a Point Message") {
     WHEN("I add them") {
       simple_msgs::Point sum_point = first_point + second_point;
       THEN("The sum should be correct") {
-        REQUIRE(sum_point.getX() == (first_point.getX() + second_point.getX()));
-        REQUIRE(sum_point.getY() == (first_point.getY() + second_point.getY()));
-        REQUIRE(sum_point.getZ() == (first_point.getZ() + second_point.getZ()));
+        REQUIRE(sum_point.getX() == Approx(first_point.getX() + second_point.getX()));
+        REQUIRE(sum_point.getY() == Approx(first_point.getY() + second_point.getY()));
+        REQUIRE(sum_point.getZ() == Approx(first_point.getZ() + second_point.getZ()));
       }
     }
     WHEN("I add the second to the first one") {
       first_point += second_point;
       THEN("The first Point should have increased by the second Point") {
-        REQUIRE(first_point.getX() == (double_1 + second_point.getX()));
-        REQUIRE(first_point.getY() == (double_2 + second_point.getX()));
-        REQUIRE(first_point.getZ() == (double_3 + second_point.getX()));
+        REQUIRE(first_point.getX() == Approx(double_1 + second_point.getX()));
+        REQUIRE(first_point.getY() == Approx(double_2 + second_point.getX()));
+        REQUIRE(first_point.getZ() == Approx(double_3 + second_point.getX()));
       }
     }
     WHEN("I subtract them") {
       simple_msgs::Point difference_point = first_point - second_point;
       THEN("The difference should be correct") {
-        REQUIRE(difference_point.getX() == (first_point.getX() - second_point.getX()));
-        REQUIRE(difference_point.getY() == (first_point.getY() - second_point.getY()));
-        REQUIRE(difference_point.getZ() == (first_point.getZ() - second_point.getZ()));
+        REQUIRE(difference_point.getX() == Approx(first_point.getX() - second_point.getX()));
+        REQUIRE(difference_point.getY() == Approx(first_point.getY() - second_point.getY()));
+        REQUIRE(difference_point.getZ() == Approx(first_point.getZ() - second_point.getZ()));
       }
     }
     WHEN("I subtract the second to the first one") {
       first_point -= second_point;
       THEN("The first Point should have decreased by the second Point") {
-        REQUIRE(first_point.getX() == double_1 - second_point.getX());
-        REQUIRE(first_point.getY() == double_2 - second_point.getY());
-        REQUIRE(first_point.getZ() == double_3 - second_point.getZ());
+        REQUIRE(first_point.getX() == Approx(double_1 - second_point.getX()));
+        REQUIRE(first_point.getY() == Approx(double_2 - second_point.getY()));
+        REQUIRE(first_point.getZ() == Approx(double_3 - second_point.getZ()));
       }
     }
     WHEN("I multiply them") {
       simple_msgs::Point multiplied_point = first_point * second_point;
       THEN("The result is correct") {
-        REQUIRE(multiplied_point.getX() == first_point.getX() * second_point.getX());
-        REQUIRE(multiplied_point.getY() == first_point.getY() * second_point.getY());
-        REQUIRE(multiplied_point.getZ() == first_point.getZ() * second_point.getZ());
+        REQUIRE(multiplied_point.getX() == Approx(first_point.getX() * second_point.getX()));
+        REQUIRE(multiplied_point.getY() == Approx(first_point.getY() * second_point.getY()));
+        REQUIRE(multiplied_point.getZ() == Approx(first_point.getZ() * second_point.getZ()));
       }
     }
     WHEN("I multiply the first times the second") {
       first_point *= second_point;
       THEN("The result is correct") {
-        REQUIRE(first_point.getX() == double_1 * second_point.getX());
-        REQUIRE(first_point.getY() == double_2 * second_point.getY());
-        REQUIRE(first_point.getZ() == double_3 * second_point.getZ());
+        REQUIRE(first_point.getX() == Approx(double_1 * second_point.getX()));
+        REQUIRE(first_point.getY() == Approx(double_2 * second_point.getY()));
+        REQUIRE(first_point.getZ() == Approx(double_3 * second_point.getZ()));
       }
     }
     WHEN("I divide them") {
       simple_msgs::Point divided_point = first_point / second_point;
       THEN("The result is correct") {
-        REQUIRE(divided_point.getX() == first_point.getX() / second_point.getX());
-        REQUIRE(divided_point.getY() == first_point.getY() / second_point.getY());
-        REQUIRE(divided_point.getZ() == first_point.getZ() / second_point.getZ());
+        REQUIRE(divided_point.getX() == Approx(first_point.getX() / second_point.getX()));
+        REQUIRE(divided_point.getY() == Approx(first_point.getY() / second_point.getY()));
+        REQUIRE(divided_point.getZ() == Approx(first_point.getZ() / second_point.getZ()));
       }
     }
     WHEN("I divide the first by the second") {
       first_point /= second_point;
       THEN("The result is correct") {
-        REQUIRE(first_point.getX() == double_1 / second_point.getX());
-        REQUIRE(first_point.getY() == double_2 / second_point.getY());
-        REQUIRE(first_point.getZ() == double_3 / second_point.getZ());
+        REQUIRE(first_point.getX() == Approx(double_1 / second_point.getX()));
+        REQUIRE(first_point.getY() == Approx(double_2 / second_point.getY()));
+        REQUIRE(first_point.getZ() == Approx(double_3 / second_point.getZ()));
       }
     }
   }
@@ -244,26 +246,27 @@ SCENARIO("Using a Point Message") {
     simple_msgs::Point single_point{};
     WHEN("I set the X coordinate of the Point") {
       single_point.setX(double_3);
-      THEN("The data point has the correct coordinate") { REQUIRE(single_point.getX() == double_3); }
+      THEN("The data point has the correct coordinate") { REQUIRE(single_point.getX() == Approx(double_3)); }
     }
     WHEN("I set the Y coordinate of the Point") {
       single_point.setY(double_1);
-      THEN("The data point has the correct coordinate") { REQUIRE(single_point.getY() == double_1); }
+      THEN("The data point has the correct coordinate") { REQUIRE(single_point.getY() == Approx(double_1)); }
     }
     WHEN("I set the Z coordinate of the Point") {
       single_point.setZ(double_2);
-      THEN("The data Point has the correct coordinate") { REQUIRE(single_point.getZ() == double_2); }
+      THEN("The data Point has the correct coordinate") { REQUIRE(single_point.getZ() == Approx(double_2)); }
     }
   }
 
+  // Testing vectorization, message topic and stream operator.
   GIVEN("A Point") {
     simple_msgs::Point single_point{double_array};
     WHEN("I get the double array from the Point") {
       auto array = single_point.toVector();
       THEN("The array elements are correct") {
-        REQUIRE(array[0] == single_point.getX());
-        REQUIRE(array[1] == single_point.getY());
-        REQUIRE(array[2] == single_point.getZ());
+        REQUIRE(array[0] == Approx(single_point.getX()));
+        REQUIRE(array[1] == Approx(single_point.getY()));
+        REQUIRE(array[2] == Approx(single_point.getZ()));
       }
     }
     WHEN("I get the message topic") {

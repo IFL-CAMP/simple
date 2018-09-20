@@ -102,7 +102,7 @@ add_test(NAME simple_tests.pub_sub COMMAND $<TARGET_FILE:test_pub_sub>)
 #target_link_libraries(test_server simple-static ${coverage_lib})
 #add_test(NAME simple_tests.server COMMAND $<TARGET_FILE:test_server>)
 
-add_executable(test_req_rep test_single_req_rep.cpp)
+add_executable(test_req_rep test_req_rep.cpp)
 target_link_libraries(test_req_rep simple-static ${coverage_lib})
 add_test(NAME simple_tests.req_rep COMMAND $<TARGET_FILE:test_req_rep>)
 

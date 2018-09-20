@@ -11,32 +11,35 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include <cstdlib>
-#include <ctime>
 #include <iostream>
+
+#include "random_generators.hpp"
 #include "simple_msgs/double.hpp"
+
+using namespace simple_tests;
 
 // TEST FOR USING THE DOUBLE MESSAGE WRAPPER
 
 SCENARIO("Using a Double Message") {
-  double double_1 = static_cast<double>(rand()) / RAND_MAX;
-  double double_2 = static_cast<double>(rand()) / RAND_MAX;
+  double double_1 = double_dist(generator);
+  double double_2 = double_dist(generator);
+
   // Testing constructors.
   GIVEN("A Double created from an empty constructor") {
     simple_msgs::Double empty_double{};
     WHEN("We check its value") {
-      THEN("It has to be zero") { REQUIRE(empty_double.get() == 0); }
+      THEN("It has to be zero") { REQUIRE(empty_double.get() == Approx(0)); }
     }
   }
 
   GIVEN("A Double created from a double") {
     simple_msgs::Double single_double{double_1};
     WHEN("We check the its value") {
-      THEN("It has to be equal to the given parameter") { REQUIRE(single_double.get() == double_1); }
+      THEN("It has to be equal to the given parameter") { REQUIRE(single_double.get() == Approx(double_1)); }
     }
   }
 
-  // Testing copy-constructors.
+  // Testing copy/move constructors.
   GIVEN("A Double") {
     simple_msgs::Double single_double{double_1};
     WHEN("I construct a new Double from the serialized data of the existing Double") {
@@ -50,12 +53,12 @@ SCENARIO("Using a Double Message") {
     WHEN("I move-construct a new Double") {
       simple_msgs::Double moved_double{std::move(single_double)};
       THEN("The new Double contains the value that was contained in the orignal one") {
-        REQUIRE(moved_double.get() == double_1);
+        REQUIRE(moved_double.get() == Approx(double_1));
       }
     }
   }
 
-  // Testing copy-assignments.
+  // Testing copy/move assignments.
   GIVEN("A Double") {
     simple_msgs::Double single_double{double_1};
     WHEN("I copy-assign from that Double's buffer") {
@@ -72,7 +75,7 @@ SCENARIO("Using a Double Message") {
     WHEN("I move-assign from that Double") {
       simple_msgs::Double move_assigned_double{};
       move_assigned_double = std::move(single_double);
-      THEN("The new Double is equal to the original") { REQUIRE(move_assigned_double.get() == double_1); }
+      THEN("The new Double is equal to the original") { REQUIRE(move_assigned_double.get() == Approx(double_1)); }
     }
   }
 
@@ -81,9 +84,9 @@ SCENARIO("Using a Double Message") {
     // start a Double
     simple_msgs::Double d{};
     WHEN("I set the value of the Double") {
-      double x = static_cast<double>(rand()) / RAND_MAX;
+      double x = double_dist(generator);
       d.set(x);
-      THEN("Its value is correct") { REQUIRE(d.get() == x); }
+      THEN("Its value is correct") { REQUIRE(d.get() == Approx(x)); }
     }
   }
 
@@ -100,6 +103,7 @@ SCENARIO("Using a Double Message") {
     }
   }
 
+  // Testing message topic and stream operator.
   GIVEN("A Double") {
     simple_msgs::Double single_double(double_1);
     WHEN("I get the message topic") {

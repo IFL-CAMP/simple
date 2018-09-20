@@ -11,21 +11,20 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-#include <cstdlib>
-#include <ctime>
 #include <iostream>
 
-#include "simple_msgs/header.h"
-#include "simple_msgs/quaternion.h"
+#include "random_generators.hpp"
 #include "simple_msgs/quaternion_stamped.h"
+
+using namespace simple_tests;
 
 // TEST FOR USING THE STAMPED QUATERNION MESSAGE WRAPPER
 
 SCENARIO("Using a QuaternionStamped Message") {
-  double double_1 = static_cast<double>(rand()) / RAND_MAX;
-  double double_2 = static_cast<double>(rand()) / RAND_MAX;
-  double double_3 = static_cast<double>(rand()) / RAND_MAX;
-  double double_4 = static_cast<double>(rand()) / RAND_MAX;
+  double double_1 = double_dist(generator);
+  double double_2 = double_dist(generator);
+  double double_3 = double_dist(generator);
+  double double_4 = double_dist(generator);
   long long time = rand();
   int random_int = rand() / 100;
   std::string random_string = std::to_string(double_1);
@@ -137,7 +136,7 @@ SCENARIO("Using a QuaternionStamped Message") {
     }
   }
 
-  // Testing Topic
+  // Testing message topic and stream operator.
   GIVEN("A point") {
     simple_msgs::QuaternionStamped quaternion_stamped{};
     WHEN("I get the message topic") {
