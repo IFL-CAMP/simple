@@ -50,7 +50,7 @@ public:
   /**
    * @brief Move constructor.
    */
-  GenericSocket(GenericSocket&& other) {
+  GenericSocket(GenericSocket&& other) noexcept {
     std::lock(mutex_, other.mutex_);
     std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
     std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
@@ -61,7 +61,7 @@ public:
   /**
    * @brief Move assignment operator.
    */
-  GenericSocket& operator=(GenericSocket&& other) {
+  GenericSocket& operator=(GenericSocket&& other) noexcept {
     std::lock(mutex_, other.mutex_);
     std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
     std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
