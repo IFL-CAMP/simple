@@ -28,7 +28,7 @@ namespace simple {
  * Implements the logic for a Client in the Client / Server paradigm.
  * A Client can send requests to a Server using messages of types T and receive back an answer.
  */
-template <typename T>
+template <typename T, typename U>
 class Client {
 public:
   Client() = default;
@@ -63,13 +63,14 @@ public:
 
   /**
    * @brief Sends the request to a server and waits for an answer.
-   * @param [in,out] msg - simple_msgs class wrapper for Flatbuffer messages..
+   * @param [in] req - request message to send to a simple::Server.
+   * @param [in, out] rep - reply message to be returned by a simple::Server.
    */
-  bool request(T& msg) { return request(msg.getBufferData(), msg); }
+  bool request(const T& req, U& rep) { return request(req.getBufferData(), rep); }
 
   /**
-   * @brief Query the endpoint that this object is bound to. 
-   * 
+   * @brief Query the endpoint that this object is bound to.
+   *
    * Can be used to find the bound port if binding to ephemeral ports.
    * @return the endpoint in form of a ZMQ DSN string, i.e. "tcp://0.0.0.0:8000"
    */
@@ -84,12 +85,12 @@ private:
     socket_.connect(address_);
   }
 
-  bool request(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer, T& msg) {
+  bool request(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer, U& reply) {
     bool success{false};
 
     // Send the message to the Server and receive back the response.
     if (socket_.sendMsg(buffer, "[SIMPLE Client] - ") != -1) {
-      if (socket_.receiveMsg(msg, "[SIMPLE Client] - ") != -1) {
+      if (socket_.receiveMsg(reply, "[SIMPLE Client] - ") != -1) {
         success = true;
       } else {
         std::cerr << "[SIMPLE Client] - No reply received. Aborting this request." << std::endl;

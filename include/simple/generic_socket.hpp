@@ -27,10 +27,10 @@ template <typename T>
 class Subscriber;
 template <typename T>
 class Publisher;
-template <typename T>
-class Client;
 template <typename T, typename U>
 class Server;
+template <typename T, typename U>
+class Client;
 
 /**
  * @class GenericSocket generic_socket.hpp.
@@ -75,7 +75,7 @@ public:
   // Only friend classes can instantiate a GenericSocket.
   friend class Publisher<T>;
   friend class Subscriber<T>;
-  friend class Client<T>;
+  friend class Client<T, U>;
   friend class Server<T, U>;
 
 protected:
