@@ -151,7 +151,7 @@ install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}-static
 
 # Install SIMPLE includes.
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_export.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_export.h" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file("${CMAKE_CURRENT_SOURCE_DIR}/simpleConfigVersion.cmake"

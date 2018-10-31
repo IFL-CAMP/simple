@@ -29,7 +29,7 @@ namespace simple {
  *
  * Implements the logic for a Server in the Client / Server paradigm.
  */
-template <typename T>
+template <typename T, typename U>
 class Server {
 public:
   Server() = default;
@@ -53,8 +53,7 @@ public:
    * @param [in] linger - Time the unsent messages linger in memory after the socket
    * is closed. In milliseconds. Default is -1 (infinite).
    */
-  explicit Server(const std::string& address, const std::function<void(T&)>& callback, int timeout = 1000,
-                  int linger = -1)
+  explicit Server(const std::string& address, const std::function<U(T&)>& callback, int timeout = 1000, int linger = -1)
     : socket_{new GenericSocket<T>(ZMQ_REP)}, callback_{callback} {
     socket_->filter();  //! Filter the type of message that can be received, only the type T is accepted.
     socket_->setTimeout(timeout);
@@ -136,8 +135,7 @@ private:
     while (alive->load()) {
       T msg;
       if (socket->receiveMsg(msg, "[SIMPLE Server] - ") != -1) {
-        if (alive->load()) { callback_(msg); }
-        if (alive->load()) { reply(socket.get(), msg); }
+        if (alive->load()) { reply(socket.get(), callback_(msg)); }
       }
     }
   }
@@ -150,7 +148,7 @@ private:
 
   std::shared_ptr<std::atomic<bool>> alive_{nullptr};  //! Flag keeping track of the internal thread's state.
   std::shared_ptr<GenericSocket<T>> socket_{nullptr};  //! The internal socket.
-  std::function<void(T&)> callback_;                   //! The callback function called at each message arrival.
+  std::function<U(T&)> callback_;                      //! The callback function called at each message arrival.
   std::thread server_thread_{};                        //! The internal Server thread on which the given callback runs.
 };
 }  // Namespace simple.

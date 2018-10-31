@@ -29,7 +29,7 @@ template <typename T>
 class Publisher;
 template <typename T>
 class Client;
-template <typename T>
+template <typename T, typename U>
 class Server;
 
 /**
@@ -38,7 +38,7 @@ class Server;
  * thread-safe class.
  * @tparam T The simple_msgs type to handle.
  */
-template <typename T>
+template <typename T, typename U = T>
 class GenericSocket {
 public:
   virtual ~GenericSocket() { closeSocket(); }  //! The socket is closed.
@@ -76,7 +76,7 @@ public:
   friend class Publisher<T>;
   friend class Subscriber<T>;
   friend class Client<T>;
-  friend class Server<T>;
+  friend class Server<T, U>;
 
 protected:
   // Class ctors are protected. A user cannot instantiate a GenericSocket.
