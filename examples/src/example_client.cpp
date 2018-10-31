@@ -19,17 +19,19 @@ int main() {
   const int SLEEP_TIME{1000};  //!  Milliseconds.
 
   // Create a pose message
-  simple_msgs::Pose pose({5.0, 6.0, 7.0}, {1.0, 2.0, 3.0, 4.0});
+  simple_msgs::Pose request({5.0, 6.0, 7.0}, {1.0, 2.0, 3.0, 4.0});
+  simple_msgs::Pose reply;
+
   // Create a Client that will send request to a Server on "localhost" and on port "5555".
-  simple::Client<simple_msgs::Pose> client{"tcp://localhost:5555"};
+  simple::Client<simple_msgs::Pose, simple_msgs::Pose> client{"tcp://localhost:5555"};
 
   // Send a request every SLEEP_TIME milliseconds for N_RUN times.
   // The request is a Pose message, the reply is the modified Pose message.
   // The message is modified by the Server that listens on localhost:5555 accordingly to its callback function.
   for (auto i = 0; i < N_RUN; ++i) {
-    std::cout << "Sending: \n" << pose << std::endl;
-    if (client.request(pose)) {
-      std::cout << "Receiving: \n" << pose << std::endl;
+    std::cout << "Sending: \n" << request << std::endl;
+    if (client.request(request, reply)) {
+      std::cout << "Receiving: \n" << reply << std::endl;
     } else {
       std::cerr << "Request to the server failed." << std::endl;
     }

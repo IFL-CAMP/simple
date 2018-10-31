@@ -172,83 +172,97 @@ simple_msgs::TransformStamped createRandomTransformStamped() {
 //! Set of callback functions for all the simple_msgs.
 //! They modify the received point. They are used for client/server tests.
 
-void callbackFunctionBool(simple_msgs::Bool& b) {
-  b = !b;  //! Invert the value of the Bool message.
+simple_msgs::Bool callbackFunctionBool(simple_msgs::Bool& b) {
+  return !b;  //! Invert the value of the Bool message.
 }
 
-void callbackFunctionInt(simple_msgs::Int& i) {
+simple_msgs::Int callbackFunctionInt(simple_msgs::Int& i) {
   i.set(i.get() + 1);  //! Add 1.
+  return i;
 }
 
-void callbackFunctionDouble(simple_msgs::Double& d) {
-  d.set(d.get() + 1);  //! Add 1.
-}
-
-void callbackFunctionFloat(simple_msgs::Float& f) {
+simple_msgs::Float callbackFunctionFloat(simple_msgs::Float& f) {
   f.set(f.get() + 1);  //! Add 1.
+  return f;
 }
 
-void callbackFunctionString(simple_msgs::String& s) {
+simple_msgs::Double callbackFunctionDouble(simple_msgs::Double& d) {
+  d.set(d.get() + 1);  //! Add 1.
+  return d;
+}
+
+simple_msgs::String callbackFunctionString(simple_msgs::String& s) {
   s.set("REPLY");  //! Replace the string by a standard reply.
+  return s;
 }
 
-void callbackFunctionHeader(simple_msgs::Header& h) {
+simple_msgs::Header callbackFunctionHeader(simple_msgs::Header& h) {
   h.setFrameID("ID");
   h.setSequenceNumber(1);
   h.setTimestamp(10);
+  return h;
 }
 
-void callbackFunctionPoint(simple_msgs::Point& p) { ++p; }
+simple_msgs::Point callbackFunctionPoint(simple_msgs::Point& p) { return ++p; }
 
-void callbackFunctionQuaternion(simple_msgs::Quaternion& q) {
+simple_msgs::Quaternion callbackFunctionQuaternion(simple_msgs::Quaternion& q) {
   q.setW(q.getW() + 1);
   q.setX(q.getX() + 1);
   q.setY(q.getY() + 1);
   q.setZ(q.getZ() + 1);
+  return q;
 }
 
-void callbackFunctionPose(simple_msgs::Pose& p) {
+simple_msgs::Pose callbackFunctionPose(simple_msgs::Pose& p) {
   p.getPosition() += 1.0;
   p.getQuaternion().setW(p.getQuaternion().getW() + 1);
   p.getQuaternion().setX(p.getQuaternion().getX() + 1);
   p.getQuaternion().setY(p.getQuaternion().getY() + 1);
   p.getQuaternion().setZ(p.getQuaternion().getZ() + 1);
+  return p;
 }
 
-void callbackFunctionRotationMatrix(simple_msgs::RotationMatrix& r) {
+simple_msgs::RotationMatrix callbackFunctionRotationMatrix(simple_msgs::RotationMatrix& r) {
   r.setColumn(0, {{0, 0, 0}});
   r.setColumn(1, {{0, 0, 0}});
   r.setColumn(2, {{0, 0, 0}});
+  return r;
 }
 
-void callbackFunctionTransform(simple_msgs::Transform& t) {
+simple_msgs::Transform callbackFunctionTransform(simple_msgs::Transform& t) {
   t.setTranslation({1, 1, 1});
   t.setRotation({1, 1, 1, 1, 1, 1, 1, 1, 1});
+  return t;
 }
 
-void callbackFunctionPointStamped(simple_msgs::PointStamped& p) {
+simple_msgs::PointStamped callbackFunctionPointStamped(simple_msgs::PointStamped& p) {
   callbackFunctionPoint(p.getPoint());
   callbackFunctionHeader(p.getHeader());
+  return p;
 }
 
-void callbackFunctionQuaternionStamped(simple_msgs::QuaternionStamped& q) {
+simple_msgs::QuaternionStamped callbackFunctionQuaternionStamped(simple_msgs::QuaternionStamped& q) {
   callbackFunctionQuaternion(q.getQuaternion());
   callbackFunctionHeader(q.getHeader());
+  return q;
 }
 
-void callbackFunctionPoseStamped(simple_msgs::PoseStamped& p) {
+simple_msgs::PoseStamped callbackFunctionPoseStamped(simple_msgs::PoseStamped& p) {
   callbackFunctionPose(p.getPose());
   callbackFunctionHeader(p.getHeader());
+  return p;
 }
 
-void callbackFunctionRotationMatrixStamped(simple_msgs::RotationMatrixStamped& r) {
+simple_msgs::RotationMatrixStamped callbackFunctionRotationMatrixStamped(simple_msgs::RotationMatrixStamped& r) {
   callbackFunctionRotationMatrix(r.getRotationMatrix());
   callbackFunctionHeader(r.getHeader());
+  return r;
 }
 
-void callbackFunctionTransformStamped(simple_msgs::TransformStamped& t) {
+simple_msgs::TransformStamped callbackFunctionTransformStamped(simple_msgs::TransformStamped& t) {
   callbackFunctionTransform(t.getTransform());
   callbackFunctionHeader(t.getHeader());
+  return t;
 }
 
 //! Set of const callbacks for all the simple_msgs

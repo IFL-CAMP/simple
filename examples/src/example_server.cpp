@@ -16,9 +16,10 @@
 // Callback function for a Server object.
 // Whenever the Server receives a request (a Pose message), it is elaborated by this function.
 // In this trivial case, all elements of the Pose translation part will be increased by 1.
-void example_callback(simple_msgs::Pose& p) {
+simple_msgs::Pose example_callback(simple_msgs::Pose& p) {
   std::cout << "Received a point. Adding 1 to its elements." << std::endl;
   p.getPosition() += 1.0;
+  return std::move(p);
 }
 
 int main() {
@@ -26,7 +27,7 @@ int main() {
 
   // A Server listening on port 5555 for requests from any IP address.
   std::cout << "Creating a server." << std::endl;
-  simple::Server<simple_msgs::Pose> server{"tcp://*:5555", example_callback};
+  simple::Server<simple_msgs::Pose, simple_msgs::Pose> server{"tcp://*:5555", example_callback};
 
   // Wait for 60 seconds. The Service callback is called asynchronously.
   std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_TIME));
