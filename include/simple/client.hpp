@@ -28,7 +28,7 @@ namespace simple {
  * Implements the logic for a Client in the Client / Server paradigm.
  * A Client can send requests to a Server using messages of types T and receive back an answer.
  */
-template <typename T, typename U>
+template <typename RequestType, typename ReplyType>
 class Client {
 public:
   Client() = default;
@@ -66,7 +66,7 @@ public:
    * @param [in] req - request message to send to a simple::Server.
    * @param [in, out] rep - reply message to be returned by a simple::Server.
    */
-  bool request(const T& req, U& rep) { return request(req.getBufferData(), rep); }
+  bool request(const RequestType& req, ReplyType& rep) { return request(req.getBufferData(), rep); }
 
   /**
    * @brief Query the endpoint that this object is bound to.
@@ -85,12 +85,12 @@ private:
     socket_.connect(address_);
   }
 
-  bool request(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer, U& reply) {
+  bool request(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer, ReplyType& reply) {
     bool success{false};
 
     // Send the message to the Server and receive back the response.
-    if (socket_.sendMsg(buffer, "[SIMPLE Client] - ") != -1) {
-      if (socket_.receiveMsg(reply, "[SIMPLE Client] - ") != -1) {
+    if (socket_.sendMessage(buffer, "[SIMPLE Client] - ") != -1) {
+      if (socket_.template receiveMessage<ReplyType>(reply, "[SIMPLE Client] - ") != -1) {
         success = true;
       } else {
         std::cerr << "[SIMPLE Client] - No reply received. Aborting this request." << std::endl;
@@ -102,10 +102,10 @@ private:
     return success;
   }
 
-  GenericSocket<T> socket_{};  //! The internal socket.
-  std::string address_{""};    //! The address the Client is connected to.
-  int timeout_{30000};         //! Milliseconds the Client should wait for a reply from a Server.
-  int linger_{-1};             //! Milliseconds the messages linger in memory after the socket is closed.
+  GenericSocket<RequestType, ReplyType> socket_{};  //! The internal socket.
+  std::string address_{""};                         //! The address the Client is connected to.
+  int timeout_{30000};                              //! Milliseconds the Client should wait for a reply from a Server.
+  int linger_{-1};  //! Milliseconds the messages linger in memory after the socket is closed.
 };
 }  // Namespace simple.
 

@@ -37,6 +37,7 @@ class Client;
  * @brief The GenericSocket class implements the logic to transmit Flatbuffers data over ZMQ sockets. It is a
  * thread-safe class.
  * @tparam T The simple_msgs type to handle.
+ * @tparam U The simple_msgs type to handle for replies in the Server/Client paradigm.
  */
 template <typename T, typename U = T>
 class GenericSocket {
@@ -130,10 +131,10 @@ protected:
    * @brief Sends buffer data over the ZMQ Socket.
    * @param [in] buffer - a pointer to the buffer data constructed using Flatbuffers.
    * @param [in] custom_error - a string to prefix to the error messages printed in failure cases.
-   * @return the number of bytes sent over the ZMQ Socket. -1 for failure.
+   * @return The number of bytes sent over the ZMQ Socket. -1 for failure.
    */
-  int sendMsg(std::shared_ptr<flatbuffers::DetachedBuffer> buffer,
-              const std::string& custom_error = "[SIMPLE Error] - ") const {
+  int sendMessage(std::shared_ptr<flatbuffers::DetachedBuffer> buffer,
+                  const std::string& custom_error = "[SIMPLE Error] - ") const {
     std::lock_guard<std::mutex> lock{mutex_};
 
     zmq_msg_t topic_message{};
@@ -179,12 +180,14 @@ protected:
   }
 
   /**
-   * @brief Receive a message of type T from the ZMQ Socket.
-   * @param [in,out] msg - The message of type T to populate with the data incoming from the ZMQ Socket.
+   * @brief Receive a message of type MessageType from the ZMQ Socket.
+   * @param [in,out] message - The message of type MessageType to populate with the data incoming from the ZMQ Socket.
    * @param [in] custom_error - a string to prefix to the error messages printed in failure cases.
-   * @return the number of bytes received by the ZMQ Socket. -1 for failure.
+   * @tparam MessageType The simple_msgs type to receive.
+   * @return The number of bytes received by the ZMQ Socket. -1 for failure.
    */
-  int receiveMsg(T& msg, const std::string& custom_error = "") {
+  template <typename MessageType>
+  int receiveMessage(MessageType& message, const std::string& custom_error = "") {
     std::lock_guard<std::mutex> lock{mutex_};
 
     // Local variables to check if data after the topic message is available and its size.
@@ -194,9 +197,9 @@ protected:
     // Local ZMQ message, it is used to collect the data received from the ZMQ socket.
     // A custom deleter is provided, such that when the message has to be disposed zmq_msg_close is called before
     // deleting the pointer. This is the pointer handling the lifetime of the received data.
-    std::shared_ptr<zmq_msg_t> local_message(new zmq_msg_t{}, [](zmq_msg_t* disposable_msg) {
-      zmq_msg_close(disposable_msg);
-      delete disposable_msg;
+    std::shared_ptr<zmq_msg_t> local_message(new zmq_msg_t{}, [](zmq_msg_t* disposable_message) {
+      zmq_msg_close(disposable_message);
+      delete disposable_message;
     });
 
     // ZMQ Messages have to be initialized.
@@ -212,9 +215,10 @@ protected:
 
     // Check if the received topic matches the right message topic.
     std::string received_message_type = static_cast<char*>(zmq_msg_data(local_message.get()));
-    if (strncmp(received_message_type.c_str(), topic_.c_str(), strlen(topic_.c_str())) != 0) {
-      std::cerr << custom_error << "Received message type " << received_message_type << " while expecting " << topic_
-                << "." << std::endl;
+    if (strncmp(received_message_type.c_str(), MessageType::getTopic().c_str(),
+                strlen(MessageType::getTopic().c_str()) != 0)) {
+      std::cerr << custom_error << "Received message type " << received_message_type << " while expecting "
+                << MessageType::getTopic() << "." << std::endl;
       return -1;
     }
 
@@ -244,7 +248,7 @@ protected:
     // Shared pointer to the internal data that shares ref counter with local_message. Since it is passed by value to
     // the operator= of T, the ref counter is increased and local_message will stay alive until the object T needs the
     // data.
-    msg = std::shared_ptr<void*>{local_message, &data_ptr};
+    message = std::shared_ptr<void*>{local_message, &data_ptr};
 
     // Return the number of bytes received.
     return bytes_received;

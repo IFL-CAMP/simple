@@ -25,15 +25,15 @@ namespace simple {
  */
 /**
  * @class Subscriber subscriber.hpp.
- * @brief The Subscriber class creates a ZMQ Socket of type ZMQ_SUB that receives messages of type T from a simple
- * Publisher.
- * @tparam T The simple_msgs type to be received.
+ * @brief The Subscriber class creates a ZMQ Socket of type ZMQ_SUB that receives messages of type MessageType from a
+ * simple Publisher.
+ * @tparam MessageType The simple_msgs type to be received.
  *
  * Implements the logic for a Subscriber in the Publisher / Subscriber paradigm. A Subscriber receives messages of type
- * T from a simple Publisher. The received messages will be passed to the callback function which is providede to the
- * Subscriber upon construction.
+ * MessageType from a simple Publisher. The received messages will be passed to the callback function which is providede
+ * to the Subscriber upon construction.
  */
-template <typename T>
+template <typename MessageType>
 class Subscriber {
 public:
   Subscriber() = default;
@@ -51,9 +51,10 @@ public:
    * @param [in] timeout - Time the subscriber will block the thread waiting for a message. In
    * milliseconds.
    */
-  explicit Subscriber<T>(const std::string& address, const std::function<void(const T&)>& callback, int timeout = 1000)
-    : socket_{new GenericSocket<T>(ZMQ_SUB)}, callback_{callback} {
-    socket_->filter();  //! Filter the type of message that can be received, only the type T is accepted.
+  explicit Subscriber<MessageType>(const std::string& address, const std::function<void(const MessageType&)>& callback,
+                                   int timeout = 1000)
+    : socket_{new GenericSocket<MessageType>(ZMQ_SUB)}, callback_{callback} {
+    socket_->filter();  //! Filter the type of message that can be received, only the type MessageType is accepted.
     socket_->setTimeout(timeout);
     socket_->connect(address);
     initSubscriber();
@@ -85,7 +86,7 @@ public:
     return *this;
   }
 
-  ~Subscriber<T>() { stop(); }
+  ~Subscriber<MessageType>() { stop(); }
 
   /**
    * @brief Stop the subscriber loop. No further messages will be received.
@@ -127,20 +128,20 @@ private:
 
   /**
    * @brief Waits for a message to be published to the connected port.
-   * Calls the user callback with an instance of T obtained by a simple Publisher.
+   * Calls the user callback with an instance of MessageType obtained by a simple Publisher.
    */
-  void subscribe(std::shared_ptr<std::atomic<bool>> alive, std::shared_ptr<GenericSocket<T>> socket) {
+  void subscribe(std::shared_ptr<std::atomic<bool>> alive, std::shared_ptr<GenericSocket<MessageType>> socket) {
     while (alive->load()) {  //! Run this in a loop until the Subscriber is stopped.
-      T msg;
-      if (socket->receiveMsg(msg, "[SIMPLE Subscriber] - ") != -1) {
+      MessageType msg;
+      if (socket->template receiveMessage<MessageType>(msg, "[SIMPLE Subscriber] - ") != -1) {
         if (alive->load()) { callback_(msg); }
       }
     }
   }
 
-  std::shared_ptr<std::atomic<bool>> alive_{nullptr};  //! Flag keeping track of the internal thread's state.
-  std::shared_ptr<GenericSocket<T>> socket_{nullptr};  //! The internal socket.
-  std::function<void(const T&)> callback_{};           //! The callback function called at each message arrival.
+  std::shared_ptr<std::atomic<bool>> alive_{nullptr};            //! Flag keeping track of the internal thread's state.
+  std::shared_ptr<GenericSocket<MessageType>> socket_{nullptr};  //! The internal socket.
+  std::function<void(const MessageType&)> callback_{};  //! The callback function called at each message arrival.
   std::thread subscriber_thread_{};  //! The internal Subscriber thread on which the given callback runs.
 };
 }  // Namespace simple.

@@ -20,14 +20,14 @@
 namespace simple {
 /**
  * @class Publisher publisher.hpp.
- * @brief The Publisher class creates a ZMQ Socket of type ZMQ_PUB that can publish messages of type T passed to its
- * publish() method.
- * @tparam T The simple_msgs type to publish.
+ * @brief The Publisher class creates a ZMQ Socket of type ZMQ_PUB that can publish messages of type MessageType passed
+ * to its publish() method.
+ * @tparam MessageType The simple_msgs type to publish.
  *
  * Implements the logic for a Publisher in the Publisher / Subscriber paradigm. A Publisher can publish messages of
- * types T that can be received by any number of Subscribers.
+ * type MessageType that can be received by any number of Subscribers.
  */
-template <typename T>
+template <typename MessageType>
 class Publisher {
 public:
   Publisher() = default;
@@ -38,7 +38,7 @@ public:
    * Subscribers can subscribe to a Publisher connecting to its address.
    * @param [in] address - in the form \<PROTOCOL\>://\<IP_ADDRESS\>:\<PORT\>, e.g. tcp://127.0.0.1:5555.
    */
-  explicit Publisher<T>(const std::string& address) : socket_{ZMQ_PUB} { socket_.bind(address); }
+  explicit Publisher<MessageType>(const std::string& address) : socket_{ZMQ_PUB} { socket_.bind(address); }
 
   // A Publisher cannot be copied, only moved.
   Publisher(const Publisher& other) = delete;
@@ -57,11 +57,11 @@ public:
   ~Publisher() = default;
 
   /**
-   * @brief Publishes the given message of type T through the open socket.
+   * @brief Publishes the given message of type MessageType through the open socket.
    * @param [in] msg - simple_msgs class wrapper for Flatbuffer messages.
    * @return size of the published message, in bytes. Returns -1 if send fails.
    */
-  int publish(const T& msg) { return publish(msg.getBufferData()); }
+  int publish(const MessageType& msg) { return publish(msg.getBufferData()); }
 
 private:
   /**
@@ -70,19 +70,19 @@ private:
    * @return size of the published message, in bytes. Returns -1 if send fails.
    */
   int publish(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer) const {
-    return socket_.sendMsg(buffer, "[Simple Publisher] - ");
+    return socket_.sendMessage(buffer, "[Simple Publisher] - ");
   }
 
   /**
-   * @brief Query the endpoint that this object is bound to. 
-   * 
+   * @brief Query the endpoint that this object is bound to.
+   *
    * Can be used to find the bound port if binding to ephemeral ports.
    * @return the endpoint in form of a ZMQ DSN string, i.e. "tcp://0.0.0.0:8000"
    */
   const std::string& endpoint() { return socket_.endpoint(); }
 
 private:
-  GenericSocket<T> socket_{};  //! The internal socket.
+  GenericSocket<MessageType> socket_{};  //! The internal socket.
 };
 }  // Namespace simple.
 
