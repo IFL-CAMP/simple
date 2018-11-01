@@ -56,7 +56,7 @@ SCENARIO("A Client connecting to a false address") {
   }
 }
 
-SCENARIO("Client-Server to a Bool message.") {
+SCENARIO("Client-Server accepting and returning Bool messages.") {
   const auto port = generatePort();
   const auto server_address = "tcp://*:" + std::to_string(port);
   const auto client_address = "tcp://localhost:" + std::to_string(port);
@@ -74,7 +74,7 @@ SCENARIO("Client-Server to a Bool message.") {
   }
 }
 
-SCENARIO("Client-Server to a Int message.") {
+SCENARIO("Client-Server accepting and returning a Int messages.") {
   const auto port = generatePort();
   const auto server_address = "tcp://*:" + std::to_string(port);
   const auto client_address = "tcp://localhost:" + std::to_string(port);
@@ -92,7 +92,7 @@ SCENARIO("Client-Server to a Int message.") {
   }
 }
 
-SCENARIO("Client-Server to a Float message.") {
+SCENARIO("Client-Server accepting and returning a Float messages.") {
   const auto port = generatePort();
   const auto server_address = "tcp://*:" + std::to_string(port);
   const auto client_address = "tcp://localhost:" + std::to_string(port);
@@ -114,7 +114,7 @@ SCENARIO("Client-Server to a Float message.") {
   }
 }
 
-SCENARIO("Client-Server to a Double message.") {
+SCENARIO("Client-Server accepting and returning a Double messages.") {
   const auto port = generatePort();
   const auto server_address = "tcp://*:" + std::to_string(port);
   const auto client_address = "tcp://localhost:" + std::to_string(port);
@@ -134,7 +134,7 @@ SCENARIO("Client-Server to a Double message.") {
   }
 }
 
-SCENARIO("Client-Server to a String message.") {
+SCENARIO("Client-Server accepting and returning a String messages.") {
   const auto port = generatePort();
   const auto server_address = "tcp://*:" + std::to_string(port);
   const auto client_address = "tcp://localhost:" + std::to_string(port);
@@ -151,7 +151,7 @@ SCENARIO("Client-Server to a String message.") {
   }
 }
 
-SCENARIO("Client-Server to a Header message.") {
+SCENARIO("Client-Server accepting and returning a Header messages.") {
   const auto port = generatePort();
   const auto server_address = "tcp://*:" + std::to_string(port);
   const auto client_address = "tcp://localhost:" + std::to_string(port);
@@ -173,7 +173,7 @@ SCENARIO("Client-Server to a Header message.") {
   }
 }
 
-SCENARIO("Client-Server to a Point message.") {
+SCENARIO("Client-Server accepting and returning a Point messages.") {
   const auto port = generatePort();
   const auto server_address = "tcp://*:" + std::to_string(port);
   const auto client_address = "tcp://localhost:" + std::to_string(port);
@@ -195,7 +195,7 @@ SCENARIO("Client-Server to a Point message.") {
   }
 }
 
-SCENARIO("Client-Server to a Quaternion message.") {
+SCENARIO("Client-Server accepting and returning a Quaternion messages.") {
   const auto port = generatePort();
   const auto server_address = "tcp://*:" + std::to_string(port);
   const auto client_address = "tcp://localhost:" + std::to_string(port);
@@ -218,7 +218,7 @@ SCENARIO("Client-Server to a Quaternion message.") {
   }
 }
 
-SCENARIO("Client-Server to a Pose message.") {
+SCENARIO("Client-Server accepting and returning a Pose messages.") {
   const auto port = generatePort();
   const auto server_address = "tcp://*:" + std::to_string(port);
   const auto client_address = "tcp://localhost:" + std::to_string(port);
@@ -244,7 +244,7 @@ SCENARIO("Client-Server to a Pose message.") {
   }
 }
 
-SCENARIO("Client-Server to a Rotation Matrix message.") {
+SCENARIO("Client-Server accepting and returning a Rotation Matrix messages.") {
   const auto port = generatePort();
   const auto server_address = "tcp://*:" + std::to_string(port);
   const auto client_address = "tcp://localhost:" + std::to_string(port);
@@ -262,7 +262,7 @@ SCENARIO("Client-Server to a Rotation Matrix message.") {
   }
 }
 
-SCENARIO("Client-Server to a Transform message.") {
+SCENARIO("Client-Server accepting and returning a Transform messages.") {
   const auto port = generatePort();
   const auto server_address = "tcp://*:" + std::to_string(port);
   const auto client_address = "tcp://localhost:" + std::to_string(port);
@@ -280,7 +280,7 @@ SCENARIO("Client-Server to a Transform message.") {
   }
 }
 
-SCENARIO("Client-Server to a PointStamped message.") {
+SCENARIO("Client-Server accepting and returning a PointStamped messages.") {
   const auto port = generatePort();
   const auto server_address = "tcp://*:" + std::to_string(port);
   const auto client_address = "tcp://localhost:" + std::to_string(port);
@@ -308,7 +308,7 @@ SCENARIO("Client-Server to a PointStamped message.") {
   }
 }
 
-SCENARIO("Client-Server to a QuaternionStamped message.") {
+SCENARIO("Client-Server accepting and returning a QuaternionStamped messages.") {
   const auto port = generatePort();
   const auto server_address = "tcp://*:" + std::to_string(port);
   const auto client_address = "tcp://localhost:" + std::to_string(port);
@@ -335,7 +335,7 @@ SCENARIO("Client-Server to a QuaternionStamped message.") {
   }
 }
 
-SCENARIO("Client-Server to a PoseStamped message.") {
+SCENARIO("Client-Server accepting and returning a PoseStamped messages.") {
   const auto port = generatePort();
   const auto server_address = "tcp://*:" + std::to_string(port);
   const auto client_address = "tcp://localhost:" + std::to_string(port);
@@ -366,7 +366,7 @@ SCENARIO("Client-Server to a PoseStamped message.") {
   }
 }
 
-SCENARIO("Client-Server to a RotationMatrixStamped message.") {
+SCENARIO("Client-Server accepting and returning a RotationMatrixStamped messages.") {
   const auto port = generatePort();
   const auto server_address = "tcp://*:" + std::to_string(port);
   const auto client_address = "tcp://localhost:" + std::to_string(port);
@@ -389,7 +389,7 @@ SCENARIO("Client-Server to a RotationMatrixStamped message.") {
   }
 }
 
-SCENARIO("Client-Server to a TransformStamped message.") {
+SCENARIO("Client-Server accepting and returning a TransformStamped messages.") {
   const auto port = generatePort();
   const auto server_address = "tcp://*:" + std::to_string(port);
   const auto client_address = "tcp://localhost:" + std::to_string(port);
@@ -408,6 +408,29 @@ SCENARIO("Client-Server to a TransformStamped message.") {
         REQUIRE(t.getHeader().getSequenceNumber() == 1);
         REQUIRE(t.getHeader().getTimestamp() == 10);
       }
+    }
+  }
+}
+
+SCENARIO("Client-Server accepting a RotationMatrix and returning a Bool message.") {
+  const auto port = generatePort();
+  const auto server_address = "tcp://*:" + std::to_string(port);
+  const auto client_address = "tcp://localhost:" + std::to_string(port);
+  GIVEN("An instance of a server.") {
+    simple::Client<simple_msgs::RotationMatrix, simple_msgs::Bool> client(client_address);
+    simple::Server<simple_msgs::RotationMatrix, simple_msgs::Bool> server(server_address,
+                                                                          callbackIsRotationMatrixIdentity);
+    simple_msgs::Bool b;  //< Reply message.
+
+    WHEN("The client sends an Identity matrix as request") {
+      auto identity = simple_msgs::RotationMatrix::Identity();
+      client.request(identity, b);
+      THEN("The server returns a simple::Bool message set to true.") { REQUIRE(b == true); }
+    }
+    WHEN("The client sends an Identity matrix as request") {
+      auto r = createRandomRotationMatrix();
+      client.request(r, b);
+      THEN("The server returns a simple::Bool message set to true.") { REQUIRE(b == false); }
     }
   }
 }

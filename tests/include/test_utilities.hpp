@@ -265,6 +265,10 @@ simple_msgs::TransformStamped callbackFunctionTransformStamped(simple_msgs::Tran
   return t;
 }
 
+bool callbackIsRotationMatrixIdentity(simple_msgs::RotationMatrix& r) {
+  return r == simple_msgs::RotationMatrix::Identity() ? true : false;
+}
+
 //! Set of const callbacks for all the simple_msgs
 //! They receive a message and just save it. They are used for pub/sub tests.
 
