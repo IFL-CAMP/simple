@@ -40,6 +40,25 @@ function(simple_compile_options target_name)
   endif()
 endfunction(simple_compile_options)
 
+###### UTILITIES
+
+option(SIMPLE_USE_IWYU "FALSE")
+option(SIMPLE_USE_LWYU "FALSE")
+mark_as_advanced(SIMPLE_USE_IWYU SIMPLE_USE_LWYU)
+
+if (${SIMPLE_USE_IWYU})
+  find_program(iwyu_path NAMES include-what-you-use iwyu)
+  if(NOT iwyu_path)
+    message(FATAL_ERROR "Could not find include-what-you-use")
+  else()
+    set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE ${iwyu_path})
+  endif()
+endif()
+
+if (${SIMPLE_USE_LWYU})
+  set(CMAKE_LINK_WHAT_YOU_USE ON)
+endif()
+
 ###### OPTIONAL BUILDS
 
 option(SIMPLE_BUILD_EXAMPLES "Build SIMPLE Examples" FALSE)
