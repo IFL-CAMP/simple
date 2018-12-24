@@ -40,5 +40,5 @@ jobs:
         displayName: 'CMake Configuration'
       - script: cd %BUILD_DIR% && cmake --build . --config %CONFIGURATION%
         displayName: 'Build Library'
-      - script: cd %BUILD_DIR% && ctest -R simple_tests -C %CONFIGURATION% -output-on-failure
+      - script: cd %BUILD_DIR% && ctest -R simple_tests -C %CONFIGURATION% --output-on-failure
         displayName: 'Run Unit Tests'
