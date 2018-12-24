@@ -26,7 +26,7 @@ jobs:
           %VCPKG_DIR%\vcpkg.exe version
         displayName: 'Bootstrap vcpkg'
       - script: |
-          %VCPKG_DIR%\vcpkg.exe install flatbuffers libzmq doxygen --triplet %PLATFORM%-windows && %VCPKG_DIR%\vcpkg.exe list
+          %VCPKG_DIR%\vcpkg.exe install flatbuffers zeromq doxygen --triplet %PLATFORM%-windows && %VCPKG_DIR%\vcpkg.exe list
         displayName: 'Install Dependencies'
       - script: |
           rmdir %VCPKG_DIR%\downloads /S /Q
