@@ -26,7 +26,7 @@ jobs:
           %VCPKG_DIR%\vcpkg.exe version
         displayName: 'Bootstrap vcpkg'
       - script: |
-          %VCPKG_DIR%\vcpkg.exe install flatbuffers zeromq doxygen --triplet %PLATFORM%-windows && %VCPKG_DIR%\vcpkg.exe list
+          %VCPKG_DIR%\vcpkg.exe install flatbuffers zeromq --triplet %PLATFORM%-windows && %VCPKG_DIR%\vcpkg.exe list
         displayName: 'Install Dependencies'
       - script: |
           rmdir %VCPKG_DIR%\downloads /S /Q
@@ -36,7 +36,7 @@ jobs:
           call "%VCVARSALL%" %ARCHITECTURE%
           set PATH=%VCPKG_DIR%\installed\%PLATFORM%-windows\bin;%PATH%
           mkdir %BUILD_DIR% && cd %BUILD_DIR%
-          cmake $(Build.SourcesDirectory) -G"%GENERATOR%" -DCMAKE_TOOLCHAIN_FILE=%VCPKG_DIR%\scripts\buildsystems\vcpkg.cmake -DVCPKG_APPLOCAL_DEPS=ON -DSIMPLE_BUILD_TESTS=ON -DSIMPLE_BUILD_EXAMPLES=ON -DSIMPLE_BUILD_DOC=ON
+          cmake $(Build.SourcesDirectory) -G"%GENERATOR%" -DCMAKE_TOOLCHAIN_FILE=%VCPKG_DIR%\scripts\buildsystems\vcpkg.cmake -DVCPKG_APPLOCAL_DEPS=ON -DSIMPLE_BUILD_TESTS=ON -DSIMPLE_BUILD_EXAMPLES=ON
         displayName: 'CMake Configuration'
       - script: cd %BUILD_DIR% && cmake --build . --config %CONFIGURATION%
         displayName: 'Build Library'
