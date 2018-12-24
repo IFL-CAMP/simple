@@ -9,9 +9,9 @@ jobs:
     strategy:
       maxParallel: 8
       matrix:
-        debug_clang:
+        Debug:
           configuration: Debug
-        release_clang:
+        Release:
           configuration: Release
     pool:
       vmImage: 'macOS-10.13'
