@@ -9,19 +9,19 @@ jobs:
     strategy:
       maxParallel: 8
       matrix:
-        debug_clang:
+        Debug clang:
           configuration: Debug
           compiler: clang++
-        release_clang:
+        Release clang:
           configuration: Release
           compiler: clang++
-        debug_gcc:
+        Debug gcc:
           configuration: Debug
           compiler: g++
-        release_gcc:
+        Release gcc:
           configuration: Release
           compiler: g++
-        coverage_gcc:
+        Coverage gcc:
           configuration: Coverage
           compiler: g++
     pool:
