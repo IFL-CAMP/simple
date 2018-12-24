@@ -3,7 +3,7 @@ jobs:
     displayName: Windows Visual Studio 2017
     timeoutInMinutes: 0
     variables:
-      BUILD_DIR: '$(Agent.WorkFolder)/build'
+      BUILD_DIR: '$(Agent.WorkFolder)\build'
       VCPKG_DIR: '$(Agent.WorkFolder)\vcpkg'
       VCVARSALL: '%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\Build\vcvarsall.bat'
       PLATFORM: x64
