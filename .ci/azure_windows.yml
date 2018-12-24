@@ -12,8 +12,6 @@ jobs:
     strategy:
       maxParallel: 8
       matrix:
-        Debug:
-          configuration: Debug
         Release:
           configuration: Release
     pool:
