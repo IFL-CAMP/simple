@@ -9,25 +9,35 @@ jobs:
     strategy:
       maxParallel: 8
       matrix:
-        debug:
+        debugCLANG:
           configuration: Debug
-        release:
+          compiler: clang++-3.8
+        releaseCLANG:
           configuration: Release
-        coverage:
+          compiler: clang++-3.8
+        debugGCC:
+          configuration: Debug
+          compiler: g++-5
+        releaseGCC:
+          configuration: Release
+          compiler: g++-5
+        coverageGCC:
           configuration: Coverage
+          compiler: g++-5
     pool:
       vmImage: 'Ubuntu 16.04'
     steps:
       - script: |
           # Install LCOV
-          if [ "$(configuration)" = "Coverage" ] then
+          if [ "$(configuration)" = "Coverage" ] 
+          then
             mkdir -p $DEPS_DIR && cd $DEPS_DIR
             wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.11.orig.tar.gz
             tar xf lcov_1.11.orig.tar.gz
             make -C lcov-1.11/ install
           fi
           # Install flatbuffers
-          cd DEPS_DIR
+          cd $DEPS_DIR
           git clone https://github.com/google/flatbuffers.git
           cd flatbuffers && mkdir -p flatbuffer_build && cd flatbuffer_build
           cmake -DCMAKE_BUILD_TYPE=Release ..
@@ -42,11 +52,13 @@ jobs:
           sudo apt-get install doxygen
         displayName: 'Install Dependencies'
       - script: |
-          if [ "$(configuration)" = "Coverage" ] then
+          if [ "$(configuration)" = "Coverage" ] 
+          then
             lcov --directory . --zerocounters
           fi
           mkdir -p $BUILD_DIR && cd $BUILD_DIR
           cmake $(Build.SourcesDirectory) \
+            -DCXX='$(compiler)'
             -DCMAKE_BUILD_TYPE=$(configuration) \
             -DSIMPLE_BUILD_TESTS=ON \
             -DSIMPLE_BUILD_EXAMPLES=ON \
@@ -61,10 +73,12 @@ jobs:
           ctest -R simple_tests -C $(configuration) --output-on-failure
         displayName: 'Run Unit Tests'
       - script: |
-          if [ "$(configuration)" = "Coverage" ] then
+          if [ "$(configuration)" = "Coverage" ] 
+          then
             # Generate code coverage information and send it to Coveralls
             lcov --gcov-tool gcov-5 --directory $BUILD_DIR --capture --output-file coverage.info
             lcov --remove coverage.info 'tests/*' 'msgs/include/simple_msgs/generated/*' '/usr/*' --output-file coverage.info
             lcov --list coverage.info
             bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
           fi
+        displayName: 'Code Coverage'
