@@ -1,0 +1,52 @@
+jobs:
+  - job: osx
+    displayName: macOS High Sierra
+    timeoutInMinutes: 0
+    variables:
+      BUILD_DIR: '$(Agent.WorkFolder)/build'
+      DEPS_DIR: '$(Agent.WorkFolder)/deps'
+      platform: x64
+    strategy:
+      maxParallel: 8
+      matrix:
+        debug_clang:
+          configuration: Debug
+        release_clang:
+          configuration: Release
+    pool:
+      vmImage: 'macOS-10.13'
+    steps:
+      - script: |
+          # Install flatbuffers
+          cd $DEPS_DIR
+          git clone https://github.com/google/flatbuffers.git
+          cd flatbuffers && mkdir -p flatbuffer_build && cd flatbuffer_build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+          sudo make -j8 install
+          # Install Zeromq
+          cd $DEPS_DIR
+          git clone https://github.com/zeromq/libzmq.git
+          cd libzmq && mkdir -p libzmq_build && cd libzmq_build
+          cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_CURVE=OFF -DZMQ_BUILD_TESTS=OFF ..
+          sudo make -j8 install
+          # Install Doxygen
+          brew install doxygen
+          # Install CMake if needed
+          which cmake || brew install cmake
+        displayName: 'Install Dependencies'
+      - script: |
+          mkdir -p $BUILD_DIR && cd $BUILD_DIR
+          cmake $(Build.SourcesDirectory) \
+            -DCMAKE_BUILD_TYPE=$(configuration) \
+            -DSIMPLE_BUILD_TESTS=ON \
+            -DSIMPLE_BUILD_EXAMPLES=ON \
+            -DSIMPLE_BUILD_DOC=ON
+        displayName: 'CMake Configuration'
+      - script: |
+          cd $BUILD_DIR
+          make -j8
+        displayName: 'Build'
+      - script: |
+          cd $BUILD_DIR
+          ctest -R simple_tests -C $(configuration) --output-on-failure
+        displayName: 'Run Unit Tests'
