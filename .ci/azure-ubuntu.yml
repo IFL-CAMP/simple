@@ -9,21 +9,21 @@ jobs:
     strategy:
       maxParallel: 8
       matrix:
-        debugCLANG:
+        debug_clang:
           configuration: Debug
-          compiler: clang++-3.8
-        releaseCLANG:
+          compiler: clang++
+        release_clang:
           configuration: Release
-          compiler: clang++-3.8
-        debugGCC:
+          compiler: clang++
+        debug_gcc:
           configuration: Debug
-          compiler: g++-5
-        releaseGCC:
+          compiler: g++
+        release_gcc:
           configuration: Release
-          compiler: g++-5
-        coverageGCC:
+          compiler: g++
+        coverage_gcc:
           configuration: Coverage
-          compiler: g++-5
+          compiler: g++
     pool:
       vmImage: 'Ubuntu 16.04'
     steps:
@@ -57,8 +57,8 @@ jobs:
             lcov --directory . --zerocounters
           fi
           mkdir -p $BUILD_DIR && cd $BUILD_DIR
+          export CXX='$(compiler)'
           cmake $(Build.SourcesDirectory) \
-            -DCXX='$(compiler)' \
             -DCMAKE_BUILD_TYPE=$(configuration) \
             -DSIMPLE_BUILD_TESTS=ON \
             -DSIMPLE_BUILD_EXAMPLES=ON \
