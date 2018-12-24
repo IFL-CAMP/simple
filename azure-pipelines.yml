@@ -58,7 +58,7 @@ jobs:
           fi
           mkdir -p $BUILD_DIR && cd $BUILD_DIR
           cmake $(Build.SourcesDirectory) \
-            -DCXX='$(compiler)'
+            -DCXX='$(compiler)' \
             -DCMAKE_BUILD_TYPE=$(configuration) \
             -DSIMPLE_BUILD_TESTS=ON \
             -DSIMPLE_BUILD_EXAMPLES=ON \
