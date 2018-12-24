@@ -1,0 +1,46 @@
+jobs:
+  - job: ubuntu1604
+    displayName: Ubuntu 16.04
+    timeoutInMinutes: 0
+    variables:
+      BUILD_DIR: '$(Agent.WorkFolder)/build'
+      DEPS_DIR: '$(Agent.WorkFolder)/deps'
+    pool:
+      vmImage: 'Ubuntu 16.04'
+    steps:
+      - script: |
+          # Install LCOV
+          mkdir -p $DEPS_DIR && cd $DEPS_DIR
+          wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.11.orig.tar.gz
+          tar xf lcov_1.11.orig.tar.gz
+          make -C lcov-1.11/ install
+          # Install flatbuffers
+          cd DEPS_DIR
+          git clone --branch v1.8.0 https://github.com/google/flatbuffers.git
+          cd flatbuffers && mkdir -p flatbuffer_build && cd flatbuffer_build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+          sudo make -j8 install
+          # Install Zeromq
+          cd $DEPS_DIR
+          git clone https://github.com/zeromq/libzmq.git
+          cd libzmq && mkdir -p libzmq_build && cd libzmq_build
+          cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_CURVE=OFF -DZMQ_BUILD_TESTS=OFF ..
+          sudo make -j8 install
+          # Install Doxygen
+          sudo apt-get install doxygen
+        displayName: 'Install Dependencies'
+      - script: |
+          mkdir -p $BUILD_DIR && cd $BUILD_DIR
+          cmake $(Build.SourcesDirectory) \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DSIMPLE_BUILD_TESTS=ON \
+            -DSIMPLE_BUILD_EXAMPLES=ON
+        displayName: 'CMake Configuration'
+      - script: |
+          cd $BUILD_DIR
+          make -j8
+        displayName: 'Build'
+      - script: |
+          cd $BUILD_DIR
+          ctest -R simple_tests -C Release --output-on-failure
+        displayName: 'Run Unit Tests'
