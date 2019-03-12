@@ -31,7 +31,7 @@ inline NumericType<int>::NumericType(const void* data) : data_{GetIntFbs(data)->
  * @brief Copy assignment operator that uses raw memory coming from the network.
  */
 template <>
-NumericType<int>& NumericType<int>::operator=(std::shared_ptr<void*> data) {
+inline NumericType<int>& NumericType<int>::operator=(std::shared_ptr<void*> data) {
   data_.store(GetIntFbs(*data)->data());
   return *this;
 }
@@ -40,7 +40,7 @@ NumericType<int>& NumericType<int>::operator=(std::shared_ptr<void*> data) {
  * @brief Builds and returns the buffer accordingly to the value currently stored.
  */
 template <>
-std::shared_ptr<flatbuffers::DetachedBuffer> NumericType<int>::getBufferData() const {
+inline std::shared_ptr<flatbuffers::DetachedBuffer> NumericType<int>::getBufferData() const {
   flatbuffers::FlatBufferBuilder builder{1024};
   IntFbsBuilder tmp_builder{builder};
   tmp_builder.add_data(data_.load());
