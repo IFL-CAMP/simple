@@ -22,12 +22,12 @@ namespace simple_msgs {
  * @class Header header.h
  * @brief Thread-safe wrapper for a Flatbuffers Header message, as defined in header.fbs.
  *
- * A Header contains metadata information for other messages types. \n
- * It is composed of: \n
- * A <b>sequence number</b>, typically used to describe the sequence of messages sent or received. \n
+ * A Header contains metadata information for other messages types.
+ * It is composed of:
+ * A <b>sequence number</b>, typically used to describe the sequence of messages sent or received.
  * A <b>frame_id</b>, typically refering to a coordinate frame the message data is associated to.
- * (e.g. a PoseStamped is linked to a certain reference frame). \n
- * A <b>timestamp</b>, stores when the message is generated (usually time from epoch). \n
+ * (e.g. a PoseStamped is linked to a certain reference frame).
+ * A <b>timestamp</b>, stores when the message is generated (usually time from epoch).
  */
 class Header : public GenericMessage {
 public:
