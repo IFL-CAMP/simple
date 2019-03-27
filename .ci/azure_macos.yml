@@ -56,5 +56,5 @@ jobs:
         inputs:
           testResultsFormat: 'CTest'
           testResultsFiles: '**/Test*.xml'
-          searchFolder: '$(Agent.WorkFolder)\build'
+          searchFolder: $BUILD_DIR
         condition: succeededOrFailed()
