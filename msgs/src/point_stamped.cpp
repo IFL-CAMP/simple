@@ -30,31 +30,31 @@ PointStamped::PointStamped(const PointStamped& other)
 PointStamped::PointStamped(PointStamped&& other) noexcept
   : PointStamped{std::forward<PointStamped>(other), std::lock_guard<std::mutex>(other.mutex_)} {}
 
-PointStamped& PointStamped::operator=(const PointStamped& other) {
-  if (this != std::addressof(other)) {
-    std::lock(mutex_, other.mutex_);
+PointStamped& PointStamped::operator=(const PointStamped& rhs) {
+  if (this != std::addressof(rhs)) {
+    std::lock(mutex_, rhs.mutex_);
     std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
-    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
-    header_ = other.header_;
-    point_ = other.point_;
+    std::lock_guard<std::mutex> other_lock{rhs.mutex_, std::adopt_lock};
+    header_ = rhs.header_;
+    point_ = rhs.point_;
   }
   return *this;
 }
 
-PointStamped& PointStamped::operator=(PointStamped&& other) noexcept {
-  if (this != std::addressof(other)) {
-    std::lock(mutex_, other.mutex_);
+PointStamped& PointStamped::operator=(PointStamped&& rhs) noexcept {
+  if (this != std::addressof(rhs)) {
+    std::lock(mutex_, rhs.mutex_);
     std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
-    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
-    header_ = std::move(other.header_);
-    point_ = std::move(other.point_);
+    std::lock_guard<std::mutex> other_lock{rhs.mutex_, std::adopt_lock};
+    header_ = std::move(rhs.header_);
+    point_ = std::move(rhs.point_);
   }
   return *this;
 }
 
-PointStamped& PointStamped::operator=(std::shared_ptr<void*> data) {
+PointStamped& PointStamped::operator=(std::shared_ptr<void*> rhs) {
   std::lock_guard<std::mutex> lock{mutex_};
-  auto p = GetPointStampedFbs(*data);
+  auto p = GetPointStampedFbs(*rhs);
   header_ = p->header()->data();
   point_ = p->point()->data();
   return *this;

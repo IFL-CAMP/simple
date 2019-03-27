@@ -36,7 +36,7 @@ public:
   /**
    * @brief Construct a Header message using the given parameters.
    */
-  Header(int seq_n, const std::string& frame_id, long long timestamp);
+  Header(int sequence_number, const std::string& frame_id, long long timestamp);
 
   /**
    * @brief Construct a Header message using a raw memory coming from network.
@@ -56,17 +56,17 @@ public:
   /**
    * @brief Copy assignment operator.
    */
-  Header& operator=(const Header& other);
+  Header& operator=(const Header& rhs);
 
   /**
    * @brief Move assignment operator.
    */
-  Header& operator=(Header&& other) noexcept;
+  Header& operator=(Header&& rhs) noexcept;
 
   /**
    * @brief Copy assignment operator that uses raw memory coming from the network.
    */
-  Header& operator=(std::shared_ptr<void*> data);
+  Header& operator=(std::shared_ptr<void*> rhs);
 
   /**
    * @brief Returns true if lhs is equal to rhs, false otherwise.
@@ -115,7 +115,7 @@ public:
   /**
    * @brief Modifies the sequence number of the message.
    */
-  void setSequenceNumber(int seq_n);
+  void setSequenceNumber(int sequence_number);
 
   /**
    * @brief Modifies the frame id of the message.

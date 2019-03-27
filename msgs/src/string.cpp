@@ -28,30 +28,30 @@ String::String(const String& other) : String{other, std::lock_guard<std::mutex>(
 String::String(String&& other) noexcept
   : String{std::forward<String>(other), std::lock_guard<std::mutex>(other.mutex_)} {}
 
-String& String::operator=(const String& other) {
-  if (this != std::addressof(other)) {
-    std::lock(mutex_, other.mutex_);
+String& String::operator=(const String& rhs) {
+  if (this != std::addressof(rhs)) {
+    std::lock(mutex_, rhs.mutex_);
     std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
-    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
-    data_ = other.data_;
+    std::lock_guard<std::mutex> other_lock{rhs.mutex_, std::adopt_lock};
+    data_ = rhs.data_;
   }
   return *this;
 }
 
-String& String::operator=(String&& other) noexcept {
-  if (this != std::addressof(other)) {
-    std::lock(mutex_, other.mutex_);
+String& String::operator=(String&& rhs) noexcept {
+  if (this != std::addressof(rhs)) {
+    std::lock(mutex_, rhs.mutex_);
     std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
-    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
-    data_ = std::move(other.data_);
-    other.data_.clear();
+    std::lock_guard<std::mutex> other_lock{rhs.mutex_, std::adopt_lock};
+    data_ = std::move(rhs.data_);
+    rhs.data_.clear();
   }
   return *this;
 }
 
-String& String::operator=(std::shared_ptr<void*> data) {
+String& String::operator=(std::shared_ptr<void*> rhs) {
   std::lock_guard<std::mutex> lock{mutex_};
-  data_ = GetStringFbs(*data)->data()->c_str();
+  data_ = GetStringFbs(*rhs)->data()->c_str();
   return *this;
 }
 

@@ -35,41 +35,41 @@ Quaternion::Quaternion(const Quaternion& other) : Quaternion{other, std::lock_gu
 Quaternion::Quaternion(Quaternion&& other) noexcept
   : Quaternion{std::forward<Quaternion>(other), std::lock_guard<std::mutex>(other.mutex_)} {}
 
-Quaternion& Quaternion::operator=(const Quaternion& other) {
-  if (this != std::addressof(other)) {
-    std::lock(mutex_, other.mutex_);
+Quaternion& Quaternion::operator=(const Quaternion& rhs) {
+  if (this != std::addressof(rhs)) {
+    std::lock(mutex_, rhs.mutex_);
     std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
-    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
-    data_ = other.data_;
+    std::lock_guard<std::mutex> other_lock{rhs.mutex_, std::adopt_lock};
+    data_ = rhs.data_;
   }
   return *this;
 }
 
-Quaternion& Quaternion::operator=(Quaternion&& other) noexcept {
-  if (this != std::addressof(other)) {
-    std::lock(mutex_, other.mutex_);
+Quaternion& Quaternion::operator=(Quaternion&& rhs) noexcept {
+  if (this != std::addressof(rhs)) {
+    std::lock(mutex_, rhs.mutex_);
     std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
-    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
-    data_ = other.data_;
+    std::lock_guard<std::mutex> other_lock{rhs.mutex_, std::adopt_lock};
+    data_ = rhs.data_;
   }
   return *this;
 }
 
-Quaternion& Quaternion::operator=(const std::array<double, 4>& array) {
+Quaternion& Quaternion::operator=(const std::array<double, 4>& rhs) {
   std::lock_guard<std::mutex> lock{mutex_};
-  data_ = array;
+  data_ = rhs;
   return *this;
 }
 
-Quaternion& Quaternion::operator=(std::array<double, 4>&& array) noexcept {
+Quaternion& Quaternion::operator=(std::array<double, 4>&& rhs) noexcept {
   std::lock_guard<std::mutex> lock{mutex_};
-  data_ = array;
+  data_ = std::move(rhs);
   return *this;
 }
 
-Quaternion& Quaternion::operator=(std::shared_ptr<void*> data) {
+Quaternion& Quaternion::operator=(std::shared_ptr<void*> rhs) {
   std::lock_guard<std::mutex> lock{mutex_};
-  auto q = GetQuaternionFbs(*data);
+  auto q = GetQuaternionFbs(*rhs);
   data_[0] = q->x();
   data_[1] = q->y();
   data_[2] = q->z();

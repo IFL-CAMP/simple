@@ -33,31 +33,31 @@ QuaternionStamped::QuaternionStamped(const QuaternionStamped& other)
 QuaternionStamped::QuaternionStamped(QuaternionStamped&& other) noexcept
   : QuaternionStamped{std::forward<QuaternionStamped>(other), std::lock_guard<std::mutex>(other.mutex_)} {}
 
-QuaternionStamped& QuaternionStamped::operator=(const QuaternionStamped& other) {
-  if (this != std::addressof(other)) {
-    std::lock(mutex_, other.mutex_);
+QuaternionStamped& QuaternionStamped::operator=(const QuaternionStamped& rhs) {
+  if (this != std::addressof(rhs)) {
+    std::lock(mutex_, rhs.mutex_);
     std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
-    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
-    header_ = other.header_;
-    quaternion_ = other.quaternion_;
+    std::lock_guard<std::mutex> other_lock{rhs.mutex_, std::adopt_lock};
+    header_ = rhs.header_;
+    quaternion_ = rhs.quaternion_;
   }
   return *this;
 }
 
-QuaternionStamped& QuaternionStamped::operator=(QuaternionStamped&& other) noexcept {
-  if (this != std::addressof(other)) {
-    std::lock(mutex_, other.mutex_);
+QuaternionStamped& QuaternionStamped::operator=(QuaternionStamped&& rhs) noexcept {
+  if (this != std::addressof(rhs)) {
+    std::lock(mutex_, rhs.mutex_);
     std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
-    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
-    quaternion_ = std::move(other.quaternion_);
-    header_ = std::move(other.header_);
+    std::lock_guard<std::mutex> other_lock{rhs.mutex_, std::adopt_lock};
+    quaternion_ = std::move(rhs.quaternion_);
+    header_ = std::move(rhs.header_);
   }
   return *this;
 }
 
-QuaternionStamped& QuaternionStamped::operator=(std::shared_ptr<void*> data) {
+QuaternionStamped& QuaternionStamped::operator=(std::shared_ptr<void*> rhs) {
   std::lock_guard<std::mutex> lock{mutex_};
-  auto matrix = GetQuaternionStampedFbs(*data);
+  auto matrix = GetQuaternionStampedFbs(*rhs);
   header_ = matrix->header()->data();
   quaternion_ = matrix->quaternion()->data();
   return *this;

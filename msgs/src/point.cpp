@@ -34,41 +34,41 @@ Point::Point(const Point& other) : Point{other, std::lock_guard<std::mutex>(othe
 
 Point::Point(Point&& other) noexcept : Point{std::forward<Point>(other), std::lock_guard<std::mutex>(other.mutex_)} {}
 
-Point& Point::operator=(const Point& other) {
-  if (this != std::addressof(other)) {
-    std::lock(mutex_, other.mutex_);
+Point& Point::operator=(const Point& rhs) {
+  if (this != std::addressof(rhs)) {
+    std::lock(mutex_, rhs.mutex_);
     std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
-    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
-    data_ = other.data_;
+    std::lock_guard<std::mutex> other_lock{rhs.mutex_, std::adopt_lock};
+    data_ = rhs.data_;
   }
   return *this;
 }
 
-Point& Point::operator=(Point&& other) noexcept {
-  if (this != std::addressof(other)) {
-    std::lock(mutex_, other.mutex_);
+Point& Point::operator=(Point&& rhs) noexcept {
+  if (this != std::addressof(rhs)) {
+    std::lock(mutex_, rhs.mutex_);
     std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
-    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
-    data_ = std::move(other.data_);
+    std::lock_guard<std::mutex> other_lock{rhs.mutex_, std::adopt_lock};
+    data_ = std::move(rhs.data_);
   }
   return *this;
 }
 
-Point& Point::operator=(const std::array<double, 3>& array) {
+Point& Point::operator=(const std::array<double, 3>& rhs) {
   std::lock_guard<std::mutex> lock{mutex_};
-  data_ = array;
+  data_ = rhs;
   return *this;
 }
 
-Point& Point::operator=(std::array<double, 3>&& array) noexcept {
+Point& Point::operator=(std::array<double, 3>&& rhs) noexcept {
   std::lock_guard<std::mutex> lock{mutex_};
-  data_ = std::move(array);
+  data_ = std::move(rhs);
   return *this;
 }
 
-Point& Point::operator=(std::shared_ptr<void*> data) {
+Point& Point::operator=(std::shared_ptr<void*> rhs) {
   std::lock_guard<std::mutex> lock{mutex_};
-  auto p = GetPointFbs(*data);
+  auto p = GetPointFbs(*rhs);
   data_ = std::array<double, 3>{{p->x(), p->y(), p->z()}};
   return *this;
 }

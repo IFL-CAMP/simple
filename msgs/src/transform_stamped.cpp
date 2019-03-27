@@ -11,11 +11,11 @@
 #include "simple_msgs/transform_stamped.h"
 
 namespace simple_msgs {
-TransformStamped::TransformStamped(const Header& header, const Transform& matrix)
-  : header_{header}, transform_{matrix} {}
+TransformStamped::TransformStamped(const Header& header, const Transform& transform)
+  : header_{header}, transform_{transform} {}
 
-TransformStamped::TransformStamped(Header&& header, Transform&& matrix)
-  : header_{std::move(header)}, transform_{std::move(matrix)} {}
+TransformStamped::TransformStamped(Header&& header, Transform&& transform)
+  : header_{std::move(header)}, transform_{std::move(transform)} {}
 
 TransformStamped::TransformStamped(const void* data)
   : header_{GetTransformStampedFbs(data)->header()->data()}
@@ -33,31 +33,31 @@ TransformStamped::TransformStamped(const TransformStamped& other)
 TransformStamped::TransformStamped(TransformStamped&& other) noexcept
   : TransformStamped{std::forward<TransformStamped>(other), std::lock_guard<std::mutex>(other.mutex_)} {}
 
-TransformStamped& TransformStamped::operator=(const TransformStamped& other) {
-  if (this != std::addressof(other)) {
-    std::lock(mutex_, other.mutex_);
+TransformStamped& TransformStamped::operator=(const TransformStamped& rhs) {
+  if (this != std::addressof(rhs)) {
+    std::lock(mutex_, rhs.mutex_);
     std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
-    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
-    header_ = other.header_;
-    transform_ = other.transform_;
+    std::lock_guard<std::mutex> other_lock{rhs.mutex_, std::adopt_lock};
+    header_ = rhs.header_;
+    transform_ = rhs.transform_;
   }
   return *this;
 }
 
-TransformStamped& TransformStamped::operator=(TransformStamped&& other) noexcept {
-  if (this != std::addressof(other)) {
-    std::lock(mutex_, other.mutex_);
+TransformStamped& TransformStamped::operator=(TransformStamped&& rhs) noexcept {
+  if (this != std::addressof(rhs)) {
+    std::lock(mutex_, rhs.mutex_);
     std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
-    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
-    header_ = std::move(other.header_);
-    transform_ = std::move(other.transform_);
+    std::lock_guard<std::mutex> other_lock{rhs.mutex_, std::adopt_lock};
+    header_ = std::move(rhs.header_);
+    transform_ = std::move(rhs.transform_);
   }
   return *this;
 }
 
-TransformStamped& TransformStamped::operator=(std::shared_ptr<void*> data) {
+TransformStamped& TransformStamped::operator=(std::shared_ptr<void*> rhs) {
   std::lock_guard<std::mutex> lock{mutex_};
-  auto p = GetTransformStampedFbs(*data);
+  auto p = GetTransformStampedFbs(*rhs);
   header_ = p->header()->data();
   transform_ = p->transform()->data();
   return *this;

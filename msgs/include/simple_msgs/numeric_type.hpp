@@ -46,30 +46,30 @@ public:
   NumericType(const NumericType& other) : NumericType{other.data_.load()} {}
 
   /**
+   * @brief Move constructor.
+   */
+  NumericType(NumericType&& other) noexcept : data_{other.data_.load()} {}
+
+  /**
    * @brief Copy assignment.
    */
-  NumericType& operator=(const NumericType& other) {
-    if (this != std::addressof(other)) { data_.exchange(other.data_); }
+  NumericType& operator=(const NumericType& rhs) {
+    if (this != std::addressof(rhs)) { data_.exchange(rhs.data_); }
+    return *this;
+  }
+
+  /**
+   * @brief Move assignment.
+   */
+  NumericType& operator=(NumericType&& rhs) noexcept {
+    if (this != std::addressof(rhs)) { data_.exchange(rhs.data_); }
     return *this;
   }
 
   /**
    * @brief Copy assignment operator that uses raw memory coming from the network.
    */
-  NumericType& operator=(std::shared_ptr<void*> data);
-
-  /**
-   * @brief Move constructor.
-   */
-  NumericType(NumericType&& other) noexcept : data_{other.data_.load()} {}
-
-  /**
-   * @brief Move assignment.
-   */
-  NumericType& operator=(NumericType&& other) noexcept {
-    if (this != std::addressof(other)) { data_.exchange(other.data_); }
-    return *this;
-  }
+  NumericType& operator=(std::shared_ptr<void*> rhs);
 
   /**
    * @brief Returns true if lhs is equal to rhs, false otherwise.

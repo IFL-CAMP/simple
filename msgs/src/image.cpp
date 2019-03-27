@@ -59,16 +59,16 @@ flatbuffers::Offset<void> Image<double>::getDataUnionElem(
  * @brief Copy assignment operator that uses raw memory coming from the network.
  */
 template <>
-Image<uint8_t>& Image<uint8_t>::operator=(std::shared_ptr<void*> data) {
+Image<uint8_t>& Image<uint8_t>::operator=(std::shared_ptr<void*> rhs) {
   std::lock_guard<std::mutex> lock{mutex_};
-  auto image_data = GetImageFbs(*data);
+  auto image_data = GetImageFbs(*rhs);
 
   Image<uint8_t>::fillPartialImage(image_data);
 
   // Set the Image data according to the right date type.
   if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE)) {
     auto local_data = (image_data->image_as_uint8_type())->raw()->data();
-    data_.setData({data, local_data});
+    data_.setData({rhs, local_data});
   }
   return *this;
 }
@@ -77,16 +77,16 @@ Image<uint8_t>& Image<uint8_t>::operator=(std::shared_ptr<void*> data) {
  * @brief Copy assignment operator that uses raw memory coming from the network.
  */
 template <>
-Image<int16_t>& Image<int16_t>::operator=(std::shared_ptr<void*> data) {
+Image<int16_t>& Image<int16_t>::operator=(std::shared_ptr<void*> rhs) {
   std::lock_guard<std::mutex> lock{mutex_};
-  auto image_data = GetImageFbs(*data);
+  auto image_data = GetImageFbs(*rhs);
 
   Image<int16_t>::fillPartialImage(image_data);
 
   // Set the Image data according to the right date type.
   if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE)) {
     auto local_data = (image_data->image_as_int16_type())->raw()->data();
-    data_.setData({data, local_data});
+    data_.setData({rhs, local_data});
   }
   return *this;
 }
@@ -95,16 +95,16 @@ Image<int16_t>& Image<int16_t>::operator=(std::shared_ptr<void*> data) {
  * @brief Copy assignment operator that uses raw memory coming from the network.
  */
 template <>
-Image<float>& Image<float>::operator=(std::shared_ptr<void*> data) {
+Image<float>& Image<float>::operator=(std::shared_ptr<void*> rhs) {
   std::lock_guard<std::mutex> lock{mutex_};
-  auto image_data = GetImageFbs(*data);
+  auto image_data = GetImageFbs(*rhs);
 
   Image<float>::fillPartialImage(image_data);
 
   // Set the Image data according to the right date type.
   if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE)) {
     auto local_data = (image_data->image_as_float_type())->raw()->data();
-    data_.setData({data, local_data});
+    data_.setData({rhs, local_data});
   }
   return *this;
 }
@@ -113,16 +113,16 @@ Image<float>& Image<float>::operator=(std::shared_ptr<void*> data) {
  * @brief Copy assignment operator that uses raw memory coming from the network.
  */
 template <>
-Image<double>& Image<double>::operator=(std::shared_ptr<void*> data) {
+Image<double>& Image<double>::operator=(std::shared_ptr<void*> rhs) {
   std::lock_guard<std::mutex> lock{mutex_};
-  auto image_data = GetImageFbs(*data);
+  auto image_data = GetImageFbs(*rhs);
 
   Image<double>::fillPartialImage(image_data);
 
   // Set the Image data according to the right date type.
   if (flatbuffers::IsFieldPresent(image_data, ImageFbs::VT_IMAGE)) {
     auto local_data = (image_data->image_as_double_type())->raw()->data();
-    data_.setData({data, local_data});
+    data_.setData({rhs, local_data});
   }
   return *this;
 }

@@ -49,17 +49,17 @@ public:
   /**
    * @brief Copy assignment operator.
    */
-  Bool& operator=(const Bool& other);
+  Bool& operator=(const Bool& rhs);
 
   /**
    * @brief Move assignment operator.
    */
-  Bool& operator=(Bool&& other) noexcept;
+  Bool& operator=(Bool&& rhs) noexcept;
 
   /**
    * @brief Copy assignment operator that uses raw memory coming from the network.
    */
-  Bool& operator=(std::shared_ptr<void*> data);
+  Bool& operator=(std::shared_ptr<void*> rhs);
 
   /**
    * @brief Returns true if lhs is equal to rhs, false otherwise.
