@@ -40,7 +40,7 @@ jobs:
         displayName: 'Build Library'
       - script: cd %BUILD_DIR% && ctest -R simple_tests -C %CONFIGURATION% -T Test
         displayName: 'Run Unit Tests'
-      - task: 'Publish Test Results'
+      - task: Publish Test Results@1
         inputs:
           testResultsFormat: 'CTest'
           testResultsFiles: '**/Test*.xml'
