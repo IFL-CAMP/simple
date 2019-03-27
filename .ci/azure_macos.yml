@@ -17,8 +17,8 @@ jobs:
       vmImage: 'macOS-10.13'
     steps:
       - script: |
-	  # Select Xcode 8.3, that is the min required version.
-	  sudo xcode-select -s /Applications/Xcode_8.3.3.app/Contents/Developer
+          # Select Xcode 8.3, that is the min required version.
+          sudo xcode-select -s /Applications/Xcode_8.3.3.app/Contents/Developer
           # Install flatbuffers
           cd $DEPS_DIR
           git clone https://github.com/google/flatbuffers.git
