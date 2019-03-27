@@ -63,6 +63,14 @@ public:
    */
   int publish(const T& msg) { return publish(msg.getBufferData()); }
 
+  /**
+   * @brief Query the endpoint that this object is bound to.
+   *
+   * Can be used to find the bound port if binding to ephemeral ports.
+   * @return the endpoint in form of a ZMQ DSN string, i.e. "tcp://0.0.0.0:8000"
+   */
+  const std::string& endpoint() { return socket_.endpoint(); }
+
 private:
   /**
    * @brief Publishes the given message through the open socket.
@@ -72,14 +80,6 @@ private:
   int publish(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer) const {
     return socket_.sendMsg(buffer, "[Simple Publisher] - ");
   }
-
-  /**
-   * @brief Query the endpoint that this object is bound to. 
-   * 
-   * Can be used to find the bound port if binding to ephemeral ports.
-   * @return the endpoint in form of a ZMQ DSN string, i.e. "tcp://0.0.0.0:8000"
-   */
-  const std::string& endpoint() { return socket_.endpoint(); }
 
 private:
   GenericSocket<T> socket_{};  //! The internal socket.

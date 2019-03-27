@@ -31,8 +31,8 @@ inline NumericType<double>::NumericType(const void* data) : data_{GetDoubleFbs(d
  * @brief Copy assignment operator that uses raw memory coming from the network.
  */
 template <>
-NumericType<double>& NumericType<double>::operator=(std::shared_ptr<void*> data) {
-  data_.store(GetDoubleFbs(*data)->data());
+NumericType<double>& NumericType<double>::operator=(std::shared_ptr<void*> rhs) {
+  data_.store(GetDoubleFbs(*rhs)->data());
   return *this;
 }
 

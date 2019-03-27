@@ -29,37 +29,37 @@ public:
   /**
    * @brief Construct a Bool message using a raw memory coming from network.
    */
-  Bool(const void*);
+  Bool(const void* data);
 
   /**
    * @brief Construct a Bool message using the given parameter.
    */
-  Bool(bool);
+  Bool(bool data);
 
   /**
    * @brief Copy constructor.
    */
-  Bool(const Bool&);
+  Bool(const Bool& other);
 
   /**
    * @brief Move constructor.
    */
-  Bool(Bool&&) noexcept;
+  Bool(Bool&& other) noexcept;
 
   /**
    * @brief Copy assignment operator.
    */
-  Bool& operator=(const Bool&);
+  Bool& operator=(const Bool& rhs);
 
   /**
    * @brief Move assignment operator.
    */
-  Bool& operator=(Bool&&) noexcept;
+  Bool& operator=(Bool&& rhs) noexcept;
 
   /**
    * @brief Copy assignment operator that uses raw memory coming from the network.
    */
-  Bool& operator=(std::shared_ptr<void*> data);
+  Bool& operator=(std::shared_ptr<void*> rhs);
 
   /**
    * @brief Returns true if lhs is equal to rhs, false otherwise.

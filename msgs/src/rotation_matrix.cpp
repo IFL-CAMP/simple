@@ -46,35 +46,35 @@ RotationMatrix::RotationMatrix(const RotationMatrix& other)
 RotationMatrix::RotationMatrix(RotationMatrix&& other) noexcept
   : RotationMatrix{std::forward<RotationMatrix>(other), std::lock_guard<std::mutex>(other.mutex_)} {}
 
-RotationMatrix& RotationMatrix::operator=(const RotationMatrix& other) {
-  if (this != std::addressof(other)) {
-    std::lock(mutex_, other.mutex_);
+RotationMatrix& RotationMatrix::operator=(const RotationMatrix& rhs) {
+  if (this != std::addressof(rhs)) {
+    std::lock(mutex_, rhs.mutex_);
     std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
-    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
-    data_ = other.data_;
+    std::lock_guard<std::mutex> other_lock{rhs.mutex_, std::adopt_lock};
+    data_ = rhs.data_;
   }
   return *this;
 }
 
-RotationMatrix& RotationMatrix::operator=(RotationMatrix&& other) noexcept {
-  if (this != std::addressof(other)) {
-    std::lock(mutex_, other.mutex_);
+RotationMatrix& RotationMatrix::operator=(RotationMatrix&& rhs) noexcept {
+  if (this != std::addressof(rhs)) {
+    std::lock(mutex_, rhs.mutex_);
     std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
-    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
-    data_ = other.data_;
+    std::lock_guard<std::mutex> other_lock{rhs.mutex_, std::adopt_lock};
+    data_ = rhs.data_;
   }
   return *this;
 }
 
-RotationMatrix& RotationMatrix::operator=(const std::array<double, 9>& array) {
+RotationMatrix& RotationMatrix::operator=(const std::array<double, 9>& rhs) {
   std::lock_guard<std::mutex> lock{mutex_};
-  data_ = array;
+  data_ = rhs;
   return *this;
 }
 
-RotationMatrix& RotationMatrix::operator=(std::array<double, 9>&& array) noexcept {
+RotationMatrix& RotationMatrix::operator=(std::array<double, 9>&& rhs) noexcept {
   std::lock_guard<std::mutex> lock{mutex_};
-  data_ = array;
+  data_ = std::move(rhs);
   return *this;
 }
 
