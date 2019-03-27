@@ -2,8 +2,9 @@
 
  <b>S</b>mart <b>I</b>ntuitive <b>M</b>essaging <b>P</b>latform with <b>L</b>ess <b>E</b>ffort.   
 
-[![Build Status](https://travis-ci.org/IFL-CAMP/simple.svg?branch=master)](https://travis-ci.org/IFL-CAMP/simple) [![Build status](https://ci.appveyor.com/api/projects/status/vgwego8e0mddmf6k/branch/master?svg=true)](https://ci.appveyor.com/project/SalvoVirga/simple/branch/master)
-[![codecov](https://codecov.io/gh/IFL-CAMP/simple/branch/master/graph/badge.svg)](https://codecov.io/gh/IFL-CAMP/simple)
+Ubuntu CI | Windows CI | MacOS CI | Code Coverage |
+------ | ------- | ----- | ----- |
+[![Build Status](https://dev.azure.com/IFL-CAMP/SIMPLE/_apis/build/status/Build.Ubuntu?branchName=master)](https://dev.azure.com/IFL-CAMP/SIMPLE/_build/latest?definitionId=2&branchName=master) | [![Build Status](https://dev.azure.com/IFL-CAMP/SIMPLE/_apis/build/status/Build.Windows?branchName=master)](https://dev.azure.com/IFL-CAMP/SIMPLE/_build/latest?definitionId=3&branchName=master)| [![Build Status](https://dev.azure.com/IFL-CAMP/SIMPLE/_apis/build/status/Build.MacOS?branchName=master)](https://dev.azure.com/IFL-CAMP/SIMPLE/_build/latest?definitionId=4&branchName=master) | [![codecov](https://codecov.io/gh/IFL-CAMP/simple/branch/master/graph/badge.svg)](https://codecov.io/gh/IFL-CAMP/simple)
 ___
 
 S.I.M.P.L.E. (or just *simple*) is a cross-platform C++ library to **easily** exchange data across a network.          
