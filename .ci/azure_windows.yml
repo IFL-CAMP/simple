@@ -27,10 +27,6 @@ jobs:
           %VCPKG_DIR%\vcpkg.exe install flatbuffers zeromq --triplet %PLATFORM%-windows && %VCPKG_DIR%\vcpkg.exe list
         displayName: 'Install Dependencies'
       - script: |
-          rmdir %VCPKG_DIR%\downloads /S /Q
-          rmdir %VCPKG_DIR%\packages /S /Q
-        displayName: 'Free Up Space'
-      - script: |
           call "%VCVARSALL%" %ARCHITECTURE%
           set PATH=%VCPKG_DIR%\installed\%PLATFORM%-windows\bin;%PATH%
           mkdir %BUILD_DIR% && cd %BUILD_DIR%
