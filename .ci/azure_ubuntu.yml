@@ -75,7 +75,7 @@ jobs:
       - task: PublishTestResults@2
         inputs:
           testResultsFormat: 'CTest'
-          testResultsFiles: '**/Test*.xml'
+          testResultsFiles: '**/TEST-*.xml'
           searchFolder: $BUILD_DIR
         condition: succeededOrFailed()
       - script: |
