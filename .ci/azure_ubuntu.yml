@@ -75,8 +75,8 @@ jobs:
       - task: PublishTestResults@2
         inputs:
           testResultsFormat: 'CTest'
-          testResultsFiles: '**/TEST-*.xml'
-          searchFolder: $BUILD_DIR
+          testResultsFiles: '**/Test.xml'
+          searchFolder: '$(Agent.WorkFolder)/build'
         condition: succeededOrFailed()
       - script: |
           if [ "$(configuration)" = "Coverage" ] 

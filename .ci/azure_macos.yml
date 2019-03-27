@@ -55,6 +55,6 @@ jobs:
       - task: PublishTestResults@2
         inputs:
           testResultsFormat: 'CTest'
-          testResultsFiles: '**/TEST-*.xml'
-          searchFolder: $BUILD_DIR
+          testResultsFiles: '**/Test.xml'
+          searchFolder: '$(System.WorkFolder)/build'
         condition: succeededOrFailed()
