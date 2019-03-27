@@ -38,9 +38,9 @@ jobs:
         displayName: 'CMake Configuration'
       - script: cd %BUILD_DIR% && cmake --build . --config %CONFIGURATION%
         displayName: 'Build Library'
-      - script: cd %BUILD_DIR% && ctest -R simple_tests -C %CONFIGURATION% --output-on-failure -T Test
+      - script: cd %BUILD_DIR% && ctest -R simple_tests -C %CONFIGURATION% -T Test
         displayName: 'Run Unit Tests'
-      - task: PublishTestResults@2
+      - task: 'Publish Test Results'
         inputs:
           testResultsFormat: 'CTest'
           testResultsFiles: '**/Test*.xml'

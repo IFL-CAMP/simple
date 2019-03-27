@@ -70,9 +70,9 @@ jobs:
         displayName: 'Build'
       - script: |
           cd $BUILD_DIR
-          ctest -R simple_tests -C $(configuration) --output-on-failure -T Test
+          ctest -R simple_tests -C $(configuration) -T Test
         displayName: 'Run Unit Tests'
-      - task: PublishTestResults@2
+      - task: 'Publish Test Results'
         inputs:
           testResultsFormat: 'CTest'
           testResultsFiles: '**/Test*.xml'
