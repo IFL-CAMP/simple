@@ -31,62 +31,63 @@ public:
   /**
    * @brief Construct a RotationMatrix message, all matrix values are set to the given parameter.
    */
-  RotationMatrix(double);
+  RotationMatrix(double value);
 
   /**
    * @brief Construct a RotationMatrix message using the given parameters.
    */
-  RotationMatrix(double, double, double, double, double, double, double, double, double);
+  RotationMatrix(double r11, double r12, double r13, double r21, double r22, double r23, double r31, double r32,
+                 double r33);
 
   /**
    * @brief Copy construct a RotationMatrix message using the given 9D array.
    */
-  RotationMatrix(const std::array<double, 9>&);
+  RotationMatrix(const std::array<double, 9>& array);
 
   /**
    * @brief Move construct a RotationMatrix message using the given 9D array.
    */
-  RotationMatrix(std::array<double, 9>&&) noexcept;
+  RotationMatrix(std::array<double, 9>&& array) noexcept;
 
   /**
    * @brief Construct a RotationMatrix message using a raw memory coming from network.
    */
-  RotationMatrix(const void*);
+  RotationMatrix(const void* data);
 
   /**
    * @brief Copy constructor.
    */
-  RotationMatrix(const RotationMatrix&);
+  RotationMatrix(const RotationMatrix& other);
 
   /**
    * @brief Move constructor.
    */
-  RotationMatrix(RotationMatrix&&) noexcept;
+  RotationMatrix(RotationMatrix&& other) noexcept;
 
   /**
    * @brief Copy assignment operator.
    */
-  RotationMatrix& operator=(const RotationMatrix&);
+  RotationMatrix& operator=(const RotationMatrix& rhs);
 
   /**
    * @brief Move assignment operator.
    */
-  RotationMatrix& operator=(RotationMatrix&&) noexcept;
+  RotationMatrix& operator=(RotationMatrix&& rhs) noexcept;
 
   /**
    * @brief Copy assignment operator that uses raw memory coming from the network.
    */
-  RotationMatrix& operator=(std::shared_ptr<void*>);
+  RotationMatrix& operator=(std::shared_ptr<void*> rhs);
 
   /**
    * @brief Copy assignment from a 9D array.
    */
-  RotationMatrix& operator=(const std::array<double, 9>&);
+  RotationMatrix& operator=(const std::array<double, 9>& rhs);
 
   /**
    * @brief Move assignment from a 9D array.
    */
-  RotationMatrix& operator=(std::array<double, 9>&&) noexcept;
+  RotationMatrix& operator=(std::array<double, 9>&& rhs) noexcept;
 
   /**
    * @brief Returns true if lhs is equal to rhs, false otherwise.
@@ -106,7 +107,7 @@ public:
   /**
    * @brief Stream extraction operator.
    */
-  friend std::ostream& operator<<(std::ostream&, const RotationMatrix&);
+  friend std::ostream& operator<<(std::ostream& out, const RotationMatrix& matrix);
 
   /**
    * @brief Builds and returns the buffer accordingly to the values currently stored.

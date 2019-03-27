@@ -33,31 +33,31 @@ RotationMatrixStamped::RotationMatrixStamped(const RotationMatrixStamped& other)
 RotationMatrixStamped::RotationMatrixStamped(RotationMatrixStamped&& other) noexcept
   : RotationMatrixStamped{std::forward<RotationMatrixStamped>(other), std::lock_guard<std::mutex>(other.mutex_)} {}
 
-RotationMatrixStamped& RotationMatrixStamped::operator=(const RotationMatrixStamped& other) {
-  if (this != std::addressof(other)) {
-    std::lock(mutex_, other.mutex_);
+RotationMatrixStamped& RotationMatrixStamped::operator=(const RotationMatrixStamped& rhs) {
+  if (this != std::addressof(rhs)) {
+    std::lock(mutex_, rhs.mutex_);
     std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
-    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
-    rotation_matrix_ = other.rotation_matrix_;
-    header_ = other.header_;
+    std::lock_guard<std::mutex> other_lock{rhs.mutex_, std::adopt_lock};
+    rotation_matrix_ = rhs.rotation_matrix_;
+    header_ = rhs.header_;
   }
   return *this;
 }
 
-RotationMatrixStamped& RotationMatrixStamped::operator=(RotationMatrixStamped&& other) noexcept {
-  if (this != std::addressof(other)) {
-    std::lock(mutex_, other.mutex_);
+RotationMatrixStamped& RotationMatrixStamped::operator=(RotationMatrixStamped&& rhs) noexcept {
+  if (this != std::addressof(rhs)) {
+    std::lock(mutex_, rhs.mutex_);
     std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
-    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
-    rotation_matrix_ = std::move(other.rotation_matrix_);
-    header_ = std::move(other.header_);
+    std::lock_guard<std::mutex> other_lock{rhs.mutex_, std::adopt_lock};
+    rotation_matrix_ = std::move(rhs.rotation_matrix_);
+    header_ = std::move(rhs.header_);
   }
   return *this;
 }
 
-RotationMatrixStamped& RotationMatrixStamped::operator=(std::shared_ptr<void*> data) {
+RotationMatrixStamped& RotationMatrixStamped::operator=(std::shared_ptr<void*> rhs) {
   std::lock_guard<std::mutex> lock{mutex_};
-  auto matrix = GetRotationMatrixStampedFbs(*data);
+  auto matrix = GetRotationMatrixStampedFbs(*rhs);
   rotation_matrix_ = matrix->rotation_matrix()->data();
   header_ = matrix->header()->data();
   return *this;

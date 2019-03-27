@@ -28,32 +28,32 @@ Pose::Pose(const Pose& other) : Pose{other, std::lock_guard<std::mutex>(other.mu
 
 Pose::Pose(Pose&& other) noexcept : Pose{std::forward<Pose>(other), std::lock_guard<std::mutex>(other.mutex_)} {}
 
-Pose& Pose::operator=(const Pose& other) {
-  if (this != std::addressof(other)) {
-    std::lock(mutex_, other.mutex_);
+Pose& Pose::operator=(const Pose& rhs) {
+  if (this != std::addressof(rhs)) {
+    std::lock(mutex_, rhs.mutex_);
     std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
-    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
-    position_ = other.position_;
-    quaternion_ = other.quaternion_;
+    std::lock_guard<std::mutex> other_lock{rhs.mutex_, std::adopt_lock};
+    position_ = rhs.position_;
+    quaternion_ = rhs.quaternion_;
   }
   return *this;
 }
 
-Pose& Pose::operator=(Pose&& other) noexcept {
-  if (this != std::addressof(other)) {
-    std::lock(mutex_, other.mutex_);
+Pose& Pose::operator=(Pose&& rhs) noexcept {
+  if (this != std::addressof(rhs)) {
+    std::lock(mutex_, rhs.mutex_);
     std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
-    std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
-    position_ = std::move(other.position_);
-    quaternion_ = std::move(other.quaternion_);
+    std::lock_guard<std::mutex> other_lock{rhs.mutex_, std::adopt_lock};
+    position_ = std::move(rhs.position_);
+    quaternion_ = std::move(rhs.quaternion_);
   }
   return *this;
 }
 
-Pose& Pose::operator=(std::shared_ptr<void*> data) {
+Pose& Pose::operator=(std::shared_ptr<void*> rhs) {
   std::lock_guard<std::mutex> lock{mutex_};
-  position_ = GetPoseFbs(*data)->position()->data();
-  quaternion_ = GetPoseFbs(*data)->quaternion()->data();
+  position_ = GetPoseFbs(*rhs)->position()->data();
+  quaternion_ = GetPoseFbs(*rhs)->quaternion()->data();
   return *this;
 }
 
@@ -74,14 +74,14 @@ std::shared_ptr<flatbuffers::DetachedBuffer> Pose::getBufferData() const {
   return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
 
-void Pose::setQuaternion(const Quaternion& quaternion) {
-  std::lock_guard<std::mutex> lock{mutex_};
-  quaternion_ = quaternion;
-}
-
 void Pose::setPosition(const Point& position) {
   std::lock_guard<std::mutex> lock{mutex_};
   position_ = position;
+}
+
+void Pose::setQuaternion(const Quaternion& quaternion) {
+  std::lock_guard<std::mutex> lock{mutex_};
+  quaternion_ = quaternion;
 }
 
 /**

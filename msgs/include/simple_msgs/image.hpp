@@ -50,23 +50,23 @@ public:
   /**
    * @brief Copy assignment operator.
    */
-  Image& operator=(const Image& other) {
-    if (this != std::addressof(other)) {
-      std::lock(mutex_, other.mutex_);
+  Image& operator=(const Image& rhs) {
+    if (this != std::addressof(rhs)) {
+      std::lock(mutex_, rhs.mutex_);
       std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
-      std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
-      header_ = other.header_;
-      origin_ = other.origin_;
-      encoding_ = other.encoding_;
-      spacing_x_ = other.spacing_x_;
-      spacing_y_ = other.spacing_y_;
-      spacing_z_ = other.spacing_z_;
-      width_ = other.width_;
-      height_ = other.height_;
-      depth_ = other.depth_;
-      data_size_ = other.data_size_;
-      num_channels_ = other.num_channels_;
-      data_ = other.data_;
+      std::lock_guard<std::mutex> other_lock{rhs.mutex_, std::adopt_lock};
+      header_ = rhs.header_;
+      origin_ = rhs.origin_;
+      encoding_ = rhs.encoding_;
+      spacing_x_ = rhs.spacing_x_;
+      spacing_y_ = rhs.spacing_y_;
+      spacing_z_ = rhs.spacing_z_;
+      width_ = rhs.width_;
+      height_ = rhs.height_;
+      depth_ = rhs.depth_;
+      data_size_ = rhs.data_size_;
+      num_channels_ = rhs.num_channels_;
+      data_ = rhs.data_;
     }
     return *this;
   }
@@ -74,23 +74,23 @@ public:
   /**
    * @brief Move assignment operator.
    */
-  Image& operator=(Image&& other) noexcept {
-    if (this != std::addressof(other)) {
-      std::lock(mutex_, other.mutex_);
+  Image& operator=(Image&& rhs) noexcept {
+    if (this != std::addressof(rhs)) {
+      std::lock(mutex_, rhs.mutex_);
       std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
-      std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
-      header_ = std::move(other.header_);
-      origin_ = std::move(other.origin_);
-      encoding_ = std::move(other.encoding_);
-      spacing_x_ = std::move(other.spacing_x_);
-      spacing_y_ = std::move(other.spacing_y_);
-      spacing_z_ = std::move(other.spacing_z_);
-      width_ = std::move(other.width_);
-      height_ = std::move(other.height_);
-      depth_ = std::move(other.depth_);
-      data_size_ = std::move(other.data_size_);
-      num_channels_ = std::move(other.num_channels_);
-      data_ = std::move(other.data_);
+      std::lock_guard<std::mutex> other_lock{rhs.mutex_, std::adopt_lock};
+      header_ = std::move(rhs.header_);
+      origin_ = std::move(rhs.origin_);
+      encoding_ = std::move(rhs.encoding_);
+      spacing_x_ = std::move(rhs.spacing_x_);
+      spacing_y_ = std::move(rhs.spacing_y_);
+      spacing_z_ = std::move(rhs.spacing_z_);
+      width_ = std::move(rhs.width_);
+      height_ = std::move(rhs.height_);
+      depth_ = std::move(rhs.depth_);
+      data_size_ = std::move(rhs.data_size_);
+      num_channels_ = std::move(rhs.num_channels_);
+      data_ = std::move(rhs.data_);
     }
     return *this;
   }
@@ -98,7 +98,7 @@ public:
   /**
    * @brief Copy assignment operator that uses raw memory coming from the network.
    */
-  Image& operator=(std::shared_ptr<void*> data);
+  Image& operator=(std::shared_ptr<void*> rhs);
 
   /**
    * @brief Returns true if lhs is equal to rhs, false otherwise.

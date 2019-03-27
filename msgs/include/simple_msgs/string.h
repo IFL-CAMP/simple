@@ -29,47 +29,47 @@ public:
   /**
    * @brief Construct a String message using the given text.
    */
-  String(const std::string&);
+  String(const std::string& data);
 
   /**
    * @brief Construct a String message using the given text.
    */
-  String(std::string&&);
+  String(std::string&& data);
 
   /**
    * @brief Construct a String message using the given text.
    */
-  String(const char*);
+  String(const char* data);
 
   /**
    * @brief Construct a String message using a raw memory coming from network.
    */
-  String(const void*);
+  String(const void* data);
 
   /**
    * @brief Copy constructor.
    */
-  String(const String&);
+  String(const String& other);
 
   /**
    * @brief Move constructor.
    */
-  String(String&&) noexcept;
+  String(String&& other) noexcept;
 
   /**
    * @brief Copy assignment.
    */
-  String& operator=(const String&);
+  String& operator=(const String& rhs);
 
   /**
    * @brief Move assignment.
    */
-  String& operator=(String&&) noexcept;
+  String& operator=(String&& rhs) noexcept;
 
   /**
    * @brief Copy assignment operator that uses raw memory coming from the network.
    */
-  String& operator=(std::shared_ptr<void*>);
+  String& operator=(std::shared_ptr<void*> rhs);
 
   /**
    * @brief Returns true if lhs is equal to rhs, false otherwise.

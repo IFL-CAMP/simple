@@ -19,18 +19,18 @@ Bool::Bool(const Bool& other) : Bool{other.data_.load()} {}
 
 Bool::Bool(Bool&& other) noexcept : data_{other.data_.load()} {}
 
-Bool& Bool::operator=(const Bool& other) {
-  if (this != std::addressof(other)) { data_.exchange(other.data_.load()); }
+Bool& Bool::operator=(const Bool& rhs) {
+  if (this != std::addressof(rhs)) { data_.exchange(rhs.data_.load()); }
   return *this;
 }
 
-Bool& Bool::operator=(Bool&& other) noexcept {
-  if (this != std::addressof(other)) { data_.exchange(other.data_.load()); }
+Bool& Bool::operator=(Bool&& rhs) noexcept {
+  if (this != std::addressof(rhs)) { data_.exchange(rhs.data_.load()); }
   return *this;
 }
 
-Bool& Bool::operator=(std::shared_ptr<void*> data) {
-  data_.store(GetBoolFbs(*data)->data());
+Bool& Bool::operator=(std::shared_ptr<void*> rhs) {
+  data_.store(GetBoolFbs(*rhs)->data());
   return *this;
 }
 
