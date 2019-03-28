@@ -31,10 +31,7 @@ jobs:
           # Install LCOV
           if [ "$(configuration)" = "Coverage" ] 
           then
-            mkdir -p $DEPS_DIR && cd $DEPS_DIR
-            wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.11.orig.tar.gz
-            tar xf lcov_1.11.orig.tar.gz
-            make -C lcov-1.11/ install
+            sudo apt-get install lcov
           fi
           # Install flatbuffers
           cd $DEPS_DIR
@@ -52,11 +49,11 @@ jobs:
           sudo apt-get install doxygen
         displayName: 'Install Dependencies'
       - script: |
+          mkdir -p $BUILD_DIR && cd $BUILD_DIR
           if [ "$(configuration)" = "Coverage" ] 
           then
             lcov --directory . --zerocounters
           fi
-          mkdir -p $BUILD_DIR && cd $BUILD_DIR
           export CXX='$(compiler)'
           cmake $(Build.SourcesDirectory) \
             -DCMAKE_BUILD_TYPE=$(configuration) \
@@ -82,8 +79,9 @@ jobs:
           if [ "$(configuration)" = "Coverage" ] 
           then
             # Generate code coverage information and send it to Coveralls
-            lcov --gcov-tool gcov-5 --directory $BUILD_DIR --capture --output-file coverage.info
-            lcov --remove coverage.info 'tests/*' 'msgs/include/simple_msgs/generated/*' '/usr/*' --output-file coverage.info
+            cd $BUILD_DIR
+            lcov --capture --directory . --output-file coverage.info
+            lcov --remove coverage.info 'tests/*' 'tests/include/*' 'msgs/include/simple_msgs/generated/*' '/usr/*' --output-file coverage.info
             lcov --list coverage.info
             bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
           fi
