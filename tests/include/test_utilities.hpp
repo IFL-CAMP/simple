@@ -14,7 +14,7 @@
 #include <thread>
 
 #include "random_generators.hpp"
-#include "simple_msgs/all_messages.h"
+#include "simple_msgs/all_messages.hpp"
 
 namespace simple_tests {
 
