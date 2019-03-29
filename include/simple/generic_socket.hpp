@@ -12,7 +12,6 @@
 #define SIMPLE_GENERIC_SOCKET_HPP
 
 #include <flatbuffers/flatbuffers.h>
-#include <zmq.h>
 #include <iostream>
 #include <memory>
 #include <mutex>
@@ -54,7 +53,7 @@ public:
     std::lock(mutex_, other.mutex_);
     std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
     std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
-    socket_ = other.socket_;
+    socket_ = std::move(other.socket_);
     other.socket_ = nullptr;
   }
 
@@ -66,7 +65,7 @@ public:
     std::lock_guard<std::mutex> lock{mutex_, std::adopt_lock};
     std::lock_guard<std::mutex> other_lock{other.mutex_, std::adopt_lock};
     if (other.isValid()) {
-      socket_ = other.socket_;
+      socket_ = std::move(other.socket_);
       other.socket_ = nullptr;
     }
     return *this;
@@ -101,15 +100,17 @@ protected:
    */
   void bind(const std::string& address) {
     std::lock_guard<std::mutex> lock{mutex_};
-    if (zmq_bind(socket_, address.c_str()) != 0) {
+    try {
+      socket_->bind(address);
+    } catch (const zmq::error_t& error) {
       throw std::runtime_error("[SIMPLE Error] - Cannot bind to the address/port: " + address +
-                               ". ZMQ Error: " + std::string(zmq_strerror(zmq_errno())));
+                               ". ZMQ Error: " + error.what());
     }
 
     // Query the bound endpoint from the ZMQ API.
     char last_endpoint[1024];
     size_t size = sizeof(last_endpoint);
-    zmq_getsockopt(socket_, ZMQ_LAST_ENDPOINT, &last_endpoint, &size);
+    socket_->getsockopt(ZMQ_LAST_ENDPOINT, &last_endpoint, &size);
     endpoint_ = last_endpoint;
   }
 
@@ -120,9 +121,11 @@ protected:
    */
   void connect(const std::string& address) {
     std::lock_guard<std::mutex> lock{mutex_};
-    if (zmq_connect(socket_, address.c_str()) != 0) {
+    try {
+      socket_->connect(address);
+    } catch (const zmq::error_t& error) {
       throw std::runtime_error("[SIMPLE Error] - Cannot connect to the address/port: " + address +
-                               ". ZMQ Error: " + std::string(zmq_strerror(zmq_errno())));
+                               ". ZMQ Error: " + error.what());
     }
   }
 
@@ -134,8 +137,9 @@ protected:
    */
   int sendMsg(std::shared_ptr<flatbuffers::DetachedBuffer> buffer,
               const std::string& custom_error = "[SIMPLE Error] - ") const {
-    std::lock_guard<std::mutex> lock{mutex_};
+    if (socket_ == nullptr) { return -1; }
 
+    std::lock_guard<std::mutex> lock{mutex_};
     zmq_msg_t topic_message{};
 
     // This is ugly, but we need a void* from the const char*.
@@ -164,8 +168,8 @@ protected:
     zmq_msg_init_data(&message, buffer->data(), buffer->size(), free_function, buffer_pointer);
 
     // Send the topic first and add the rest of the message after it.
-    auto topic_sent = zmq_msg_send(&topic_message, socket_, ZMQ_SNDMORE);
-    auto message_sent = zmq_msg_send(&message, socket_, ZMQ_DONTWAIT);
+    auto topic_sent = zmq_msg_send(&topic_message, socket_.get()->operator void*(), ZMQ_SNDMORE);
+    auto message_sent = zmq_msg_send(&message, socket_.get()->operator void*(), ZMQ_DONTWAIT);
 
     if (topic_sent == -1 || message_sent == -1) {
       // If send is not successful, we need to manually close the messages.
@@ -205,7 +209,7 @@ protected:
     // Receive the first bytes, this should match the topic message and can be used to check if the right topic (the
     // right message type) has been received. i.e. the received topic message should match the one of the template
     // argument of this socket (stored in the topic_ member variable).
-    int bytes_received = zmq_msg_recv(local_message.get(), socket_, 0);
+    int bytes_received = zmq_msg_recv(local_message.get(), socket_.get()->operator void*(), 0);
 
     // Check that some data has been received and that it matches the right message topic.
     if (bytes_received == -1) { return bytes_received; }
@@ -219,7 +223,7 @@ protected:
     }
 
     // If all is good, check that there is more data after the topic.
-    zmq_getsockopt(socket_, ZMQ_RCVMORE, &data_past_topic, &data_past_topic_size);
+    zmq_getsockopt(socket_.get()->operator void*(), ZMQ_RCVMORE, &data_past_topic, &data_past_topic_size);
 
     if (data_past_topic == 0 || data_past_topic_size == 0) {
       std::cerr << custom_error << "No data inside message." << std::endl;
@@ -227,7 +231,7 @@ protected:
     }
 
     // Receive the real message.
-    bytes_received = zmq_msg_recv(local_message.get(), socket_, 0);
+    bytes_received = zmq_msg_recv(local_message.get(), socket_.get()->operator void*(), 0);
 
     // Check if any data has been received.
     if (bytes_received == -1 || zmq_msg_size(local_message.get()) == 0) {
@@ -257,7 +261,7 @@ protected:
    */
   void filter() {
     std::lock_guard<std::mutex> lock{mutex_};
-    zmq_setsockopt(socket_, ZMQ_SUBSCRIBE, topic_.c_str(), topic_.size());
+    zmq_setsockopt(socket_.get()->operator void*(), ZMQ_SUBSCRIBE, topic_.c_str(), topic_.size());
   }
 
   /**
@@ -269,7 +273,7 @@ protected:
    */
   void setTimeout(int timeout) {
     std::lock_guard<std::mutex> lock{mutex_};
-    zmq_setsockopt(socket_, ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
+    zmq_setsockopt(socket_.get()->operator void*(), ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
   }
 
   /**
@@ -280,7 +284,7 @@ protected:
    */
   void setLinger(int linger) {
     std::lock_guard<std::mutex> lock{mutex_};
-    zmq_setsockopt(socket_, ZMQ_LINGER, &linger, sizeof(linger));
+    zmq_setsockopt(socket_.get()->operator void*(), ZMQ_LINGER, &linger, sizeof(linger));
   }
 
   /**
@@ -295,7 +299,10 @@ protected:
    */
   void initSocket(int type) {
     std::lock_guard<std::mutex> lock{mutex_};
-    if (socket_ == nullptr) { socket_ = zmq_socket(ContextManager::instance(), type); }
+    // if (socket_ == nullptr) { socket_ = zmq_socket(ContextManager::instance()->operator void*(), type); }
+    if (socket_ == nullptr) {
+      socket_ = std::unique_ptr<zmq::socket_t>(new zmq::socket_t(*ContextManager::instance(), type));
+    }
   }
 
   /**
@@ -304,7 +311,7 @@ protected:
   void closeSocket() {
     std::lock_guard<std::mutex> lock{mutex_};
     if (socket_ != nullptr) {
-      zmq_close(socket_);
+      socket_->close();
       socket_ = nullptr;
     }
   }
@@ -325,7 +332,8 @@ protected:
 private:
   mutable std::mutex mutex_{};              //! Mutex for thread-safety.
   const std::string topic_{T::getTopic()};  //! The message topic, internally defined for each SIMPLE message.
-  void* socket_{nullptr};                   //! The internal ZMQ socket.
+  // void* socket_{nullptr};                   //! The internal ZMQ socket.
+  std::unique_ptr<zmq::socket_t> socket_{nullptr};  //! The internal ZMQ socket.
   std::string endpoint_{};
 };
 }  // Namespace simple.

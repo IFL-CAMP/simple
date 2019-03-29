@@ -11,9 +11,9 @@
 #ifndef SIMPLE_CONTEXT_MANAGER_HPP
 #define SIMPLE_CONTEXT_MANAGER_HPP
 
-#include <zmq.h>
 #include <memory>
 #include <mutex>
+#include <zmq.hpp>
 
 #include "simple_export.h"
 
@@ -42,11 +42,11 @@ public:
    * During the first call, a new ZMQContext object is instantiated.
    * That instantiation performs thread-safe operations to create/dispose the underlying ZMQ context object.
    */
-  static void* instance() {
+  static zmq::context_t* instance() {
     std::lock_guard<std::mutex> lock{context_mutex_};
     // Create a new ZMQ context or return the existing one.
-    if (context_ == nullptr) { context_ = std::make_shared<ZMQContext>(); }
-    return context_->getContext();
+    if (context_ == nullptr) { context_ = std::make_shared<zmq::context_t>(); }
+    return context_.get();
   }
 
   /**
@@ -65,35 +65,8 @@ public:
   }
 
 private:
-  /**
-   * @brief The ZMQContext class handles the lifetime of a ZMQ context instance.
-   *
-   * The ZMQ context is instatiated only on construction and automatically terminated when the objects lifetime is over.
-   */
-  class ZMQContext {
-  public:
-    // Instantiate a new ZMQ context.
-    ZMQContext() { internal_context_ = zmq_ctx_new(); }
-
-    ZMQContext(const ZMQContext&) = delete;
-    ZMQContext& operator=(const ZMQContext&) = delete;
-    ZMQContext(ZMQContext&&) = delete;
-    ZMQContext& operator=(ZMQContext&&) = delete;
-
-    // Terminate the ZMQ context instance.
-    ~ZMQContext() {
-      if (internal_context_ != nullptr) { zmq_ctx_term(internal_context_); }
-    }
-
-    // Returns the ZMQ context instance.
-    void* getContext() { return internal_context_; }
-
-  private:
-    void* internal_context_{nullptr};  //! The actual ZMQ Context.
-  };
-
   static SIMPLE_EXPORT std::mutex context_mutex_;
-  static SIMPLE_EXPORT std::shared_ptr<ZMQContext>
+  static SIMPLE_EXPORT std::shared_ptr<zmq::context_t>
       context_;  //! This allows to automatically dispose (and therefore, terminate) the
                  // ZMQ context handled by the ZMQContext class.
 };
