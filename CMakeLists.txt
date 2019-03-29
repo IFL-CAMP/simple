@@ -93,7 +93,7 @@ add_subdirectory(msgs)
 ###### FIND LIBRARIES
 
 find_package(Threads REQUIRED)
-find_package(ZeroMQ REQUIRED)
+find_package(cppzmq REQUIRED)
 
 ###### TARGETS
 
@@ -118,7 +118,7 @@ target_include_directories(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
     simple_msgs
-    libzmq-static
+    cppzmq-static
   PRIVATE
     ${CMAKE_THREAD_LIBS_INIT}
     ${coverage_lib}
@@ -149,7 +149,7 @@ target_include_directories(${PROJECT_NAME}-static PUBLIC
 target_link_libraries(${PROJECT_NAME}-static
   PUBLIC
     simple_msgs
-    libzmq-static
+    cppzmq-static
   PRIVATE
     ${CMAKE_THREAD_LIBS_INIT}
     ${coverage_lib}

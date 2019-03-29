@@ -1,5 +1,6 @@
 language: cpp
 sudo: true
+dist: xenial
 
 matrix:
   include:
@@ -78,23 +79,26 @@ install:
     fi
   - |
     if [[ "${BUILD_TYPE}" == "Coverage" ]]; then
-      # Install LCOV 1.11
-      cd ${DEPS_DIR}
-      wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.11.orig.tar.gz
-      tar xf lcov_1.11.orig.tar.gz
-      sudo make -C lcov-1.11/ install
+      # Install LCOV
+      sudo apt install lcov
     fi
   # Install Flatbuffers
   - cd ${DEPS_DIR}
-  - git clone --branch v1.8.0 https://github.com/google/flatbuffers.git # Checkout the latest release
+  - git clone https://github.com/google/flatbuffers.git # Checkout master
   - cd flatbuffers && mkdir -p flatbuffer_build && cd flatbuffer_build
   - cmake -DCMAKE_BUILD_TYPE=Release ..
   - sudo make -j8 install
   # Install Zeromq
   - cd ${DEPS_DIR}
-  - git clone https://github.com/zeromq/libzmq.git # Pull libzmq (currently from master) and build it
+  - git clone https://github.com/zeromq/libzmq.git # Checkout master
   - cd libzmq && mkdir -p libzmq_build && cd libzmq_build
   - cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_CURVE=OFF -DZMQ_BUILD_TESTS=OFF ..
+  - sudo make -j8 install
+  # Install cppzmq
+  - cd ${DEPS_DIR}
+  - git clone https://github.com/zeromq/cppzmq.git # Checkout master
+  - cd cppzmq && mkdir -p cppzmq_build && cd cppzmq_build
+  - cmake -DCMAKE_BUILD_TYPE=Release -DCPPZMQ_BUILD_TESTS=OFF ..
   - sudo make -j8 install
 
 before_script:
@@ -114,8 +118,8 @@ after_success:
   - |
       if [ "${BUILD_TYPE}" == "Coverage" ]; then
         # Generate code coverage information & send to Coveralls
-        lcov --gcov-tool gcov-5 --directory ${TRAVIS_BUILD_DIR}/build --capture --output-file coverage.info
-        lcov --remove coverage.info 'tests/*' 'msgs/include/simple_msgs/generated/*' '/usr/*' --output-file coverage.info
+        lcov --capture --directory ${TRAVIS_BUILD_DIR}/build --output-file coverage.info
+        lcov --remove coverage.info 'tests/*' 'tests/include/*' 'msgs/include/simple_msgs/generated/*' '/usr/*' --output-file coverage.info
         lcov --list coverage.info
         bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
         fi
