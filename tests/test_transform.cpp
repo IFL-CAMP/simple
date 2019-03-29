@@ -14,7 +14,7 @@
 #include <iostream>
 
 #include "random_generators.hpp"
-#include "simple_msgs/transform.h"
+#include "simple_msgs/transform.hpp"
 
 using namespace simple_tests;
 

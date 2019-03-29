@@ -12,7 +12,7 @@
 #include "catch.hpp"
 
 #include <iostream>
-#include "simple_msgs/bool.h"
+#include "simple_msgs/bool.hpp"
 
 // TEST FOR USING THE BOOL MESSAGE WRAPPER
 

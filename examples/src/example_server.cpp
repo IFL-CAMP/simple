@@ -11,7 +11,7 @@
 #include <iostream>
 
 #include "simple/server.hpp"
-#include "simple_msgs/pose.h"
+#include "simple_msgs/pose.hpp"
 
 // Callback function for a Server object.
 // Whenever the Server receives a request (a Pose message), it is elaborated by this function.

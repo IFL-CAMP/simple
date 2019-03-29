@@ -11,7 +11,7 @@
 #include <iostream>
 
 #include "simple/subscriber.hpp"
-#include "simple_msgs/pose_stamped.h"
+#include "simple_msgs/pose_stamped.hpp"
 
 // Callback function for a Subscriber object.
 // Whenever the Subscriber receives a message (a PoseStamped in this example), it is elaborated by this function.

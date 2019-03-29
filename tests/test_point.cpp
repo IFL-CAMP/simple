@@ -14,7 +14,7 @@
 #include <iostream>
 
 #include "random_generators.hpp"
-#include "simple_msgs/point.h"
+#include "simple_msgs/point.hpp"
 
 using namespace simple_tests;
 

@@ -12,7 +12,7 @@
 #include <thread>
 
 #include "simple/client.hpp"
-#include "simple_msgs/pose.h"
+#include "simple_msgs/pose.hpp"
 
 int main() {
   const int N_RUN{25};

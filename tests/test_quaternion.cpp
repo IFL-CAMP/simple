@@ -14,7 +14,7 @@
 #include <iostream>
 
 #include "random_generators.hpp"
-#include "simple_msgs/quaternion.h"
+#include "simple_msgs/quaternion.hpp"
 
 using namespace simple_tests;
 

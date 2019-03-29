@@ -14,7 +14,7 @@
 #include <iostream>
 
 #include "random_generators.hpp"
-#include "simple_msgs/rotation_matrix.h"
+#include "simple_msgs/rotation_matrix.hpp"
 
 using namespace simple_tests;
 

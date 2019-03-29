@@ -14,7 +14,7 @@
 #include <iostream>
 
 #include "random_generators.hpp"
-#include "simple_msgs/pose.h"
+#include "simple_msgs/pose.hpp"
 
 using namespace simple_tests;
 

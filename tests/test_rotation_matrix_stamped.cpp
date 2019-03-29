@@ -14,7 +14,7 @@
 #include <iostream>
 
 #include "random_generators.hpp"
-#include "simple_msgs/rotation_matrix_stamped.h"
+#include "simple_msgs/rotation_matrix_stamped.hpp"
 
 using namespace simple_tests;
 

@@ -13,7 +13,7 @@
 
 #include <iostream>
 
-#include "simple_msgs/string.h"
+#include "simple_msgs/string.hpp"
 
 // TEST FOR USING THE STRING MESSAGE WRAPPER
 
