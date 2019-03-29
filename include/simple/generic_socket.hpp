@@ -141,12 +141,8 @@ protected:
 
     std::lock_guard<std::mutex> lock{mutex_};
 
-    // zmq_msg_t topic_message{};
-
     // This is ugly, but we need a void* from the const char*.
     auto topic_ptr = const_cast<void*>(static_cast<const void*>(topic_.c_str()));
-    // zmq_msg_init_data(&topic_message, topic_ptr, topic_.size(), nullptr, nullptr);
-
     zmq::message_t topic_message{topic_ptr, topic_.size()};
 
     // Create a shared_ptr to the given buffer data, this allows to avoid disposing the data to be sent before the
@@ -167,32 +163,23 @@ protected:
     // The functor free_function is passed as the function to call when this zmq_msg_t object has to be disposed.
     // This is automatically called when the data transmission is over.
     // buffer_pointer is passed as the pointer to use for the "hint" parameter in the free_function method.
-
-    // zmq_msg_t message{};
-    // zmq_msg_init_data(&message, buffer->data(), buffer->size(), free_function, buffer_pointer);
-
     zmq::message_t message{buffer->data(), buffer->size(), free_function, buffer_pointer};
 
     // Send the topic first and add the rest of the message after it.
-
-    auto topic_success = socket_->send(topic_message, ZMQ_SNDMORE);
-    auto message_success = socket_->send(message, ZMQ_DONTWAIT);
-
-    //    auto topic_sent = zmq_msg_send(topic_message.data(), socket_.get()->operator void*(), ZMQ_SNDMORE);
-    //    auto message_sent = zmq_msg_send(message.data(), socket_.get()->operator void*(), ZMQ_DONTWAIT);
+    bool topic_success{false}, message_success{false};
+    try {
+      topic_success = socket_->send(topic_message, ZMQ_SNDMORE);
+      message_success = socket_->send(message, ZMQ_DONTWAIT);
+    } catch (const zmq::error_t& error) {
+      std::cerr << custom_error << "Failed to send the message. ZMQ Error: " << error.what() << std::endl;
+    }
 
     if (topic_success == false || message_success == false) {
-      // If send is not successful, we need to manually close the messages.
-      std::cerr << custom_error << "Failed to send the message. ZMQ Error: " << zmq_strerror(zmq_errno()) << std::endl;
-    }
-    // Else, the message was successfully send, we don't need to call zmq_msg_close manually.
-    // We return the number of bytes sent.
-    if (message_success) {
-      return 1;
-    } else {
+      std::cerr << custom_error << "Failed to send the message." << std::endl;
       return -1;
+    } else {
+      return 1;
     }
-    //    return message_sent;
   }
 
   /**
