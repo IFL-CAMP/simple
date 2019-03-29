@@ -88,6 +88,6 @@ jobs:
         displayName: 'Code Coverage'
       - task: PublishCodeCoverageResults@1
         inputs:
-        codeCoverageTool: Cobertura
-        summaryFileLocation: '$(Agent.WorkFolder)/build/coverage.info'
-        reportDirectory: '$(Agent.WorkFolder)/build/htmlcov'
+          codeCoverageTool: Cobertura
+          summaryFileLocation: '$(Agent.WorkFolder)/build/coverage.info'
+          reportDirectory: '$(Agent.WorkFolder)/build/htmlcov'
