@@ -83,11 +83,6 @@ jobs:
             lcov --capture --directory . --output-file coverage.info
             lcov --remove coverage.info 'tests/*' 'tests/include/*' 'msgs/include/simple_msgs/generated/*' '/usr/*' --output-file coverage.info
             lcov --list coverage.info
-            bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
+            bash <(curl -s https://codecov.io/bash) -token $(CODECOV_TOKEN) -f coverage.info || echo "Codecov did not collect coverage reports"
           fi
         displayName: 'Code Coverage'
-      - task: PublishCodeCoverageResults@1
-        inputs:
-          codeCoverageTool: Cobertura
-          summaryFileLocation: '$(Agent.WorkFolder)/build/coverage.info'
-          reportDirectory: '$(Agent.WorkFolder)/build/htmlcov'
