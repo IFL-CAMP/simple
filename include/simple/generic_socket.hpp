@@ -140,11 +140,14 @@ protected:
     if (socket_ == nullptr) { return -1; }
 
     std::lock_guard<std::mutex> lock{mutex_};
-    zmq_msg_t topic_message{};
+
+    // zmq_msg_t topic_message{};
 
     // This is ugly, but we need a void* from the const char*.
     auto topic_ptr = const_cast<void*>(static_cast<const void*>(topic_.c_str()));
-    zmq_msg_init_data(&topic_message, topic_ptr, topic_.size(), nullptr, nullptr);
+    // zmq_msg_init_data(&topic_message, topic_ptr, topic_.size(), nullptr, nullptr);
+
+    zmq::message_t topic_message{topic_ptr, topic_.size()};
 
     // Create a shared_ptr to the given buffer data, this allows to avoid disposing the data to be sent before the
     // actual transmission is termianted. The zmq_msg_send() method will return as soon as the message has been queued
@@ -164,22 +167,32 @@ protected:
     // The functor free_function is passed as the function to call when this zmq_msg_t object has to be disposed.
     // This is automatically called when the data transmission is over.
     // buffer_pointer is passed as the pointer to use for the "hint" parameter in the free_function method.
-    zmq_msg_t message{};
-    zmq_msg_init_data(&message, buffer->data(), buffer->size(), free_function, buffer_pointer);
+
+    // zmq_msg_t message{};
+    // zmq_msg_init_data(&message, buffer->data(), buffer->size(), free_function, buffer_pointer);
+
+    zmq::message_t message{buffer->data(), buffer->size(), free_function, buffer_pointer};
 
     // Send the topic first and add the rest of the message after it.
-    auto topic_sent = zmq_msg_send(&topic_message, socket_.get()->operator void*(), ZMQ_SNDMORE);
-    auto message_sent = zmq_msg_send(&message, socket_.get()->operator void*(), ZMQ_DONTWAIT);
 
-    if (topic_sent == -1 || message_sent == -1) {
+    auto topic_success = socket_->send(topic_message, ZMQ_SNDMORE);
+    auto message_success = socket_->send(message, ZMQ_DONTWAIT);
+
+    //    auto topic_sent = zmq_msg_send(topic_message.data(), socket_.get()->operator void*(), ZMQ_SNDMORE);
+    //    auto message_sent = zmq_msg_send(message.data(), socket_.get()->operator void*(), ZMQ_DONTWAIT);
+
+    if (topic_success == false || message_success == false) {
       // If send is not successful, we need to manually close the messages.
-      zmq_msg_close(&message);
-      zmq_msg_close(&topic_message);
       std::cerr << custom_error << "Failed to send the message. ZMQ Error: " << zmq_strerror(zmq_errno()) << std::endl;
     }
     // Else, the message was successfully send, we don't need to call zmq_msg_close manually.
     // We return the number of bytes sent.
-    return message_sent;
+    if (message_success) {
+      return 1;
+    } else {
+      return -1;
+    }
+    //    return message_sent;
   }
 
   /**
@@ -261,7 +274,7 @@ protected:
    */
   void filter() {
     std::lock_guard<std::mutex> lock{mutex_};
-    zmq_setsockopt(socket_.get()->operator void*(), ZMQ_SUBSCRIBE, topic_.c_str(), topic_.size());
+    socket_->setsockopt(ZMQ_SUBSCRIBE, topic_.c_str(), topic_.size());
   }
 
   /**
@@ -273,7 +286,7 @@ protected:
    */
   void setTimeout(int timeout) {
     std::lock_guard<std::mutex> lock{mutex_};
-    zmq_setsockopt(socket_.get()->operator void*(), ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
+    socket_->setsockopt(ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
   }
 
   /**
@@ -284,7 +297,7 @@ protected:
    */
   void setLinger(int linger) {
     std::lock_guard<std::mutex> lock{mutex_};
-    zmq_setsockopt(socket_.get()->operator void*(), ZMQ_LINGER, &linger, sizeof(linger));
+    socket_->setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
   }
 
   /**
@@ -299,7 +312,6 @@ protected:
    */
   void initSocket(int type) {
     std::lock_guard<std::mutex> lock{mutex_};
-    // if (socket_ == nullptr) { socket_ = zmq_socket(ContextManager::instance()->operator void*(), type); }
     if (socket_ == nullptr) {
       socket_ = std::unique_ptr<zmq::socket_t>(new zmq::socket_t(*ContextManager::instance(), type));
     }
@@ -330,9 +342,8 @@ protected:
   inline const std::string& endpoint() { return endpoint_; }
 
 private:
-  mutable std::mutex mutex_{};              //! Mutex for thread-safety.
-  const std::string topic_{T::getTopic()};  //! The message topic, internally defined for each SIMPLE message.
-  // void* socket_{nullptr};                   //! The internal ZMQ socket.
+  mutable std::mutex mutex_{};                      //! Mutex for thread-safety.
+  const std::string topic_{T::getTopic()};          //! The message topic, internally defined for each SIMPLE message.
   std::unique_ptr<zmq::socket_t> socket_{nullptr};  //! The internal ZMQ socket.
   std::string endpoint_{};
 };

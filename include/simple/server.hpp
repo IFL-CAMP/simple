@@ -49,7 +49,6 @@ public:
   explicit Server(const std::string& address, const std::function<void(T&)>& callback, int timeout = 1000,
                   int linger = -1)
     : socket_{new GenericSocket<T>(ZMQ_REP)}, callback_{callback} {
-    socket_->filter();  //! Filter the type of message that can be received, only the type T is accepted.
     socket_->setTimeout(timeout);
     socket_->setLinger(linger);
     socket_->bind(address);
