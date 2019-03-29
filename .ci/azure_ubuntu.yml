@@ -78,13 +78,11 @@ jobs:
       - script: |
           if [ "$(configuration)" = "Coverage" ] 
           then
-            # Generate code coverage information and send it to Coveralls
+            # Generate code coverage information
             cd $BUILD_DIR
-            lcov --capture --directory . --output-file coverage.info
-            lcov --remove coverage.info 'tests/*' 'tests/include/*' 'msgs/include/simple_msgs/generated/*' '/usr/*' --output-file coverage.info
-            lcov --list coverage.info
-            echo $CODECOV_TOKEN
-            echo $BUILD_DIR/coverage.info
-            bash <(curl -s https://codecov.io/bash) -token $CODECOV_TOKEN -f $BUILD_DIR/coverage.info || echo "Codecov did not collect coverage reports"
+            lcov --capture --directory . --output-file coverage.xml
+            lcov --remove coverage.xml 'tests/*' 'tests/include/*' 'msgs/include/simple_msgs/generated/*' '/usr/*' --output-file coverage.xml
+            lcov --list coverage.xml
+            bash <(curl https://codecov.io/bash) -t a013a685-a504-45a3-a38d-d35124257827 || echo "Codecov did not collect coverage reports"
           fi
         displayName: 'Code Coverage'
