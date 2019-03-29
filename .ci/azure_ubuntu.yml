@@ -83,6 +83,11 @@ jobs:
             lcov --capture --directory . --output-file coverage.xml
             lcov --remove coverage.xml 'tests/*' 'tests/include/*' 'msgs/include/simple_msgs/generated/*' '/usr/*' --output-file coverage.xml
             lcov --list coverage.xml
-            bash <(curl https://codecov.io/bash) -t a013a685-a504-45a3-a38d-d35124257827 || echo "Codecov did not collect coverage reports"
+            bash <(curl https://codecov.io/bash) -t a013a685-a504-45a3-a38d-d35124257827 -f "coverage.xml" -R .. -s . -X gcov || echo "Codecov did not collect coverage reports"
           fi
         displayName: 'Code Coverage'
+      - task: PublishCodeCoverageResults@1
+      inputs:
+        codeCoverageTool: Cobertura
+        summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
+        reportDirectory: '$(System.DefaultWorkingDirectory)/**/htmlcov'
