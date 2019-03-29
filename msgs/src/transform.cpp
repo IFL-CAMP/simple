@@ -8,7 +8,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "simple_msgs/transform.h"
+#include "simple_msgs/transform.hpp"
 
 namespace simple_msgs {
 Transform::Transform(const Point& point, const RotationMatrix& rotation_matrix)

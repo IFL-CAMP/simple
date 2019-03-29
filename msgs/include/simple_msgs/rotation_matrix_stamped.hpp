@@ -15,13 +15,13 @@
 #include <ostream>
 
 #include "generated/rotation_matrix_stamped_generated.h"
-#include "generic_message.h"
-#include "header.h"
-#include "rotation_matrix.h"
+#include "generic_message.hpp"
+#include "header.hpp"
+#include "rotation_matrix.hpp"
 
 namespace simple_msgs {
 /**
- * @class RotationMatrixStamped rotation_matrix_stamped.h.
+ * @class RotationMatrixStamped rotation_matrix_stamped.hpp.
  * @brief Thread-safe wrapper for a Flatbuffers RotationMatrixStamped message.
  * It contains a RotationMatrix and a Header message.
  */

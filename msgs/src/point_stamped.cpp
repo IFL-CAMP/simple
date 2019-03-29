@@ -8,7 +8,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "simple_msgs/point_stamped.h"
+#include "simple_msgs/point_stamped.hpp"
 
 namespace simple_msgs {
 PointStamped::PointStamped(const Header& header, const Point& point) : header_{header}, point_{point} {}

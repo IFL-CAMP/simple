@@ -15,13 +15,13 @@
 #include <ostream>
 
 #include "generated/quaternion_stamped_generated.h"
-#include "generic_message.h"
-#include "header.h"
-#include "quaternion.h"
+#include "generic_message.hpp"
+#include "header.hpp"
+#include "quaternion.hpp"
 
 namespace simple_msgs {
 /**
- * @class QuaternionStamped quaternion_stamped.h.
+ * @class QuaternionStamped quaternion_stamped.hpp.
  * @brief Thread-safe wrapper for a Flatbuffers QuaternionStamped message.
  * It contains a Quaternion and a Header message.
  */

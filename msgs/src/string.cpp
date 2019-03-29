@@ -8,7 +8,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "simple_msgs/string.h"
+#include "simple_msgs/string.hpp"
 
 namespace simple_msgs {
 String::String(const std::string& data) : data_{data} {}

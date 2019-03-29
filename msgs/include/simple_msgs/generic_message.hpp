@@ -15,7 +15,7 @@
 
 namespace simple_msgs {
 /**
- * @class GenericMessage generic_message.h.
+ * @class GenericMessage generic_message.hpp.
  * @brief Base class for simple_msgs wrappers around Flatbuffers messages.
  */
 class GenericMessage {

@@ -8,7 +8,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "simple_msgs/bool.h"
+#include "simple_msgs/bool.hpp"
 
 namespace simple_msgs {
 Bool::Bool(bool data) : data_{data} {}

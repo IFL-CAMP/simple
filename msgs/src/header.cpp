@@ -8,7 +8,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "simple_msgs/header.h"
+#include "simple_msgs/header.hpp"
 
 namespace simple_msgs {
 Header::Header(int sequence_number, const std::string& frame_id, long long timestamp)

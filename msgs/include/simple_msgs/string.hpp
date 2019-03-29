@@ -15,11 +15,11 @@
 #include <ostream>
 
 #include "generated/string_generated.h"
-#include "generic_message.h"
+#include "generic_message.hpp"
 
 namespace simple_msgs {
 /**
- * @class String string.h
+ * @class String string.hpp.
  * @brief Thread-safe wrapper for a Flatbuffers String message, as defined in string.fbs.
  */
 class String : public GenericMessage {

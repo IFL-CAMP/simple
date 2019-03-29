@@ -8,7 +8,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "simple_msgs/pose_stamped.h"
+#include "simple_msgs/pose_stamped.hpp"
 
 namespace simple_msgs {
 PoseStamped::PoseStamped(const Header& header, const Pose& pose) : header_{header}, pose_{pose} {}

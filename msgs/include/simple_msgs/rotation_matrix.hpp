@@ -16,11 +16,11 @@
 #include <ostream>
 
 #include "generated/rotation_matrix_generated.h"
-#include "generic_message.h"
+#include "generic_message.hpp"
 
 namespace simple_msgs {
 /**
- * @class RotationMatrix rotation_matrix.h.
+ * @class RotationMatrix rotation_matrix.hpp.
  * @brief A thread-safe wrapper for a Flatbuffers RotationMatrix message.
  * It represents a 3x3 rotation matrix stored in <b>row-major</b> order.
  */

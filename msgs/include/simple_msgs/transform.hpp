@@ -15,12 +15,12 @@
 #include <ostream>
 
 #include "generated/transform_generated.h"
-#include "point.h"
-#include "rotation_matrix.h"
+#include "point.hpp"
+#include "rotation_matrix.hpp"
 
 namespace simple_msgs {
 /**
- * @class Transform transform.h.
+ * @class Transform transform.hpp.
  * @brief Wrapper for a Flatbuffers Transform message.
  * It represents a 4x4 homogeneous transformation, stored in <b>row-major</b> order.
  */

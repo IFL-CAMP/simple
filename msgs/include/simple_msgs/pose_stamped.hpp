@@ -15,12 +15,12 @@
 #include <ostream>
 
 #include "generated/pose_stamped_generated.h"
-#include "header.h"
-#include "pose.h"
+#include "header.hpp"
+#include "pose.hpp"
 
 namespace simple_msgs {
 /**
- * @class PoseStamped pose_stamped.h.
+ * @class PoseStamped pose_stamped.hpp.
  * @brief Thread-safe wrapper for a Flatbuffers PoseStamped message.
  * It contains a Pose and a Header message.
  */

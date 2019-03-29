@@ -15,12 +15,12 @@
 #include <ostream>
 
 #include "generated/transform_stamped_generated.h"
-#include "header.h"
-#include "transform.h"
+#include "header.hpp"
+#include "transform.hpp"
 
 namespace simple_msgs {
 /**
- * @class TransformStamped transform_stamped.h.
+ * @class TransformStamped transform_stamped.hpp.
  * @brief Thread-safe wrapper for a Flatbuffers TransformStamped message.
  * It contains a Transform and a Header message.
  */

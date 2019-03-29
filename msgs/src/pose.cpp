@@ -8,7 +8,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "simple_msgs/pose.h"
+#include "simple_msgs/pose.hpp"
 
 namespace simple_msgs {
 Pose::Pose(const Point& position, const Quaternion& quaternion) : position_{position}, quaternion_{quaternion} {}

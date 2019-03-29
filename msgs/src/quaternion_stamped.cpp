@@ -8,7 +8,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "simple_msgs/quaternion_stamped.h"
+#include "simple_msgs/quaternion_stamped.hpp"
 
 namespace simple_msgs {
 QuaternionStamped::QuaternionStamped(const Header& header, const Quaternion& quaternion)

@@ -15,11 +15,11 @@
 #include <ostream>
 
 #include "generated/header_generated.h"
-#include "generic_message.h"
+#include "generic_message.hpp"
 
 namespace simple_msgs {
 /**
- * @class Header header.h
+ * @class Header header.hpp
  * @brief Thread-safe wrapper for a Flatbuffers Header message, as defined in header.fbs.
  *
  * A Header contains metadata information for other messages types.

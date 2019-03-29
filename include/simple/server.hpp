@@ -33,13 +33,6 @@ template <typename T>
 class Server {
 public:
   Server() = default;
-  /**
-   * @brief Creates a ZMQ_REQ socket and connects it to the given address.
-   * @param [in] address - address the client connects to, in the form: \<PROTOCOL\>://\<HOSTNAME\>:\<PORT\>. e.g
-   * tcp://localhost:5555.
-   * @param [in] timeout - Time, in msec, the client shall wait for a reply. Default 30 seconds.
-   * @param [in] linger - Time, in msec, unsent messages linger in memory after socket is closed. Default -1 (infinite).
-   */
 
   /**
    * @brief Creates a ZMQ_REP socket and connects it to the given address.

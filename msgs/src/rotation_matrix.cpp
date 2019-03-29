@@ -8,7 +8,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "simple_msgs/rotation_matrix.h"
+#include "simple_msgs/rotation_matrix.hpp"
 
 namespace simple_msgs {
 RotationMatrix::RotationMatrix(double value) : data_{{value, value, value, value, value, value, value, value, value}} {}

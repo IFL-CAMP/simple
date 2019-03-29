@@ -15,13 +15,13 @@
 #include <ostream>
 
 #include "generated/point_stamped_generated.h"
-#include "generic_message.h"
-#include "header.h"
-#include "point.h"
+#include "generic_message.hpp"
+#include "header.hpp"
+#include "point.hpp"
 
 namespace simple_msgs {
 /**
- * @class PointStamped point_stamped.h.
+ * @class PointStamped point_stamped.hpp.
  * @brief Thread-safe wrapper for a Flatbuffers PointStamped message.
  * It contains a Point and a Header message.
  */

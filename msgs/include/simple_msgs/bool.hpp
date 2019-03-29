@@ -15,11 +15,11 @@
 #include <ostream>
 
 #include "generated/bool_generated.h"
-#include "generic_message.h"
+#include "generic_message.hpp"
 
 namespace simple_msgs {
 /**
- * @class Bool bool.h.
+ * @class Bool bool.hpp.
  * @brief Thread-safe wrapper for a Flatbuffers Bool message. Contains a boolean value.
  */
 class Bool : public GenericMessage {

@@ -16,11 +16,11 @@
 #include <ostream>
 
 #include "generated/quaternion_generated.h"
-#include "generic_message.h"
+#include "generic_message.hpp"
 
 namespace simple_msgs {
 /**
- * @class Quaternion quaternion.h.
+ * @class Quaternion quaternion.hpp.
  * @brief Thread-safe wrapper for a Flatbuffers Quaternion message.
  */
 class Quaternion : public GenericMessage {

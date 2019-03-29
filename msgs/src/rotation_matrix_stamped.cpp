@@ -8,7 +8,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "simple_msgs/rotation_matrix_stamped.h"
+#include "simple_msgs/rotation_matrix_stamped.hpp"
 
 namespace simple_msgs {
 RotationMatrixStamped::RotationMatrixStamped(const Header& header, const RotationMatrix& rotation_matrix)

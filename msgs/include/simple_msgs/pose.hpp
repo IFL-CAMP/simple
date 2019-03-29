@@ -15,12 +15,12 @@
 #include <ostream>
 
 #include "generated/pose_generated.h"
-#include "point.h"
-#include "quaternion.h"
+#include "point.hpp"
+#include "quaternion.hpp"
 
 namespace simple_msgs {
 /**
- * @class Pose pose.h.
+ * @class Pose pose.hpp.
  * @brief Thread-safe wrapper for a Flatbuffers Pose message.
  * It represents a Pose in 3D space by its position and orientation.
  */

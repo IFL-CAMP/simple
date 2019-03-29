@@ -14,7 +14,7 @@
 #include <atomic>
 #include <ostream>
 
-#include "generic_message.h"
+#include "generic_message.hpp"
 
 namespace simple_msgs {
 

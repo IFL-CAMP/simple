@@ -8,7 +8,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "simple_msgs/transform_stamped.h"
+#include "simple_msgs/transform_stamped.hpp"
 
 namespace simple_msgs {
 TransformStamped::TransformStamped(const Header& header, const Transform& transform)

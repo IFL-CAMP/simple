@@ -14,9 +14,9 @@
 #include <mutex>
 
 #include "generated/image_generated.h"
-#include "generic_message.h"
-#include "header.h"
-#include "pose.h"
+#include "generic_message.hpp"
+#include "header.hpp"
+#include "pose.hpp"
 
 namespace simple_msgs {
 /**

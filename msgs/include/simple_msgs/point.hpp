@@ -16,11 +16,11 @@
 #include <ostream>
 
 #include "generated/point_generated.h"
-#include "generic_message.h"
+#include "generic_message.hpp"
 
 namespace simple_msgs {
 /**
- * @class Point point.h.
+ * @class Point point.hpp.
  * @brief Thread-safe wrapper for a Flatbuffers Point message.
  * It represents a 3D Point by its x, y and z coordinates.
  */

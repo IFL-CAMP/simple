@@ -37,12 +37,7 @@ template <typename T>
 class Subscriber {
 public:
   Subscriber() = default;
-  /**
-   * @brief Creates a ZMQ_PUB socket and binds it to the given address.
-   *
-   * Subscribers can subscribe to a Publisher connecting to its address.
-   * @param [in] address - in the form \<PROTOCOL\>://\<IP_ADDRESS\>:\<PORT\>, e.g. tcp://127.0.0.1:5555.
-   */
+
   /**
    * @brief Creates a ZMQ_SUB socket and connects it to the given address, a Publisher is expected to be workin on that
    * address. The given callback function  runs on a dedicated thread.

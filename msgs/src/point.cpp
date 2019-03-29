@@ -8,7 +8,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "simple_msgs/point.h"
+#include "simple_msgs/point.hpp"
 
 namespace simple_msgs {
 Point::Point(double value) : data_{{value, value, value}} {}
