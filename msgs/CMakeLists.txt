@@ -32,7 +32,7 @@ endfunction()
 
 ###### SOURCE FILES
 
-file(GLOB_RECURSE SIMPLE_MSGS_HEADERS "*.h" "*.hpp")
+file(GLOB_RECURSE SIMPLE_MSGS_HEADERS "*.hpp")
 
 set(SIMPLE_MSGS_SRCS
   ${SIMPLE_MSGS_HEADERS}
