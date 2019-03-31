@@ -25,8 +25,8 @@ std::vector<cv::Mat> readImages() {
   const std::string baboon_path = DATA_DIRECTORY + "baboon.ascii.pgm";
   const std::string lena_color_path = DATA_DIRECTORY + "lena512color.tiff";
 
-  return {cv::imread(lena_path, CV_LOAD_IMAGE_COLOR), cv::imread(barbara_path, CV_LOAD_IMAGE_COLOR),
-          cv::imread(baboon_path, CV_LOAD_IMAGE_COLOR), cv::imread(lena_color_path, CV_LOAD_IMAGE_COLOR)};
+  return {cv::imread(lena_path, cv::IMREAD_GRAYSCALE), cv::imread(barbara_path, cv::IMREAD_GRAYSCALE),
+          cv::imread(baboon_path, cv::IMREAD_GRAYSCALE), cv::imread(lena_color_path, cv::IMREAD_COLOR)};
 }
 
 int main() {

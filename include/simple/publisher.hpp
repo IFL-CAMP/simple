@@ -11,7 +11,6 @@
 #ifndef SIMPLE_PUBLISHER_HPP
 #define SIMPLE_PUBLISHER_HPP
 
-#include <zmq.h>
 #include <memory>
 #include <string>
 
@@ -61,7 +60,7 @@ public:
    * @param [in] msg - simple_msgs class wrapper for Flatbuffer messages.
    * @return size of the published message, in bytes. Returns -1 if send fails.
    */
-  int publish(const T& msg) { return publish(msg.getBufferData()); }
+  bool publish(const T& msg) { return publish(msg.getBufferData()); }
 
   /**
    * @brief Query the endpoint that this object is bound to.
@@ -77,7 +76,7 @@ private:
    * @param [in] buffer - Flatbuffers buffer containing the data to be published.
    * @return size of the published message, in bytes. Returns -1 if send fails.
    */
-  int publish(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer) const {
+  bool publish(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer) const {
     return socket_.sendMsg(buffer, "[Simple Publisher] - ");
   }
 

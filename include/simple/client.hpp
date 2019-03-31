@@ -11,7 +11,6 @@
 #ifndef SIMPLE_CLIENT_HPP
 #define SIMPLE_CLIENT_HPP
 
-#include <zmq.h>
 #include <memory>
 #include <string>
 
@@ -68,8 +67,8 @@ public:
   bool request(T& msg) { return request(msg.getBufferData(), msg); }
 
   /**
-   * @brief Query the endpoint that this object is bound to. 
-   * 
+   * @brief Query the endpoint that this object is bound to.
+   *
    * Can be used to find the bound port if binding to ephemeral ports.
    * @return the endpoint in form of a ZMQ DSN string, i.e. "tcp://0.0.0.0:8000"
    */
@@ -88,7 +87,7 @@ private:
     bool success{false};
 
     // Send the message to the Server and receive back the response.
-    if (socket_.sendMsg(buffer, "[SIMPLE Client] - ") != -1) {
+    if (socket_.sendMsg(buffer, "[SIMPLE Client] - ")) {
       if (socket_.receiveMsg(msg, "[SIMPLE Client] - ") != -1) {
         success = true;
       } else {

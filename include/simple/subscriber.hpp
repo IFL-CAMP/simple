@@ -11,7 +11,6 @@
 #ifndef SIMPLE_SUBSCRIBER_HPP
 #define SIMPLE_SUBSCRIBER_HPP
 
-#include <zmq.h>
 #include <atomic>
 #include <memory>
 #include <string>

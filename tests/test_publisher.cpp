@@ -28,7 +28,7 @@ SCENARIO("SIMPLE Publisher interface") {
       simple::Publisher<simple_msgs::Bool> publisher;
       THEN("It is not able to send messages.") {
         auto result = publisher.publish(dummy);
-        REQUIRE(result == -1);
+        REQUIRE(result == false);
       }
     }
 
@@ -37,7 +37,7 @@ SCENARIO("SIMPLE Publisher interface") {
       simple::Publisher<simple_msgs::Bool> publisher{"tcp://*:6666"};
       THEN("It correctly sends messages.") {
         auto result = publisher.publish(dummy);
-        REQUIRE(result != -1);
+        REQUIRE(result == true);
       }
     }
 
@@ -48,11 +48,11 @@ SCENARIO("SIMPLE Publisher interface") {
       simple::Publisher<simple_msgs::Bool> publisher{std::move(copy_publisher)};
       THEN("It correctly sends messages.") {
         auto result = publisher.publish(dummy);
-        REQUIRE(result != -1);
+        REQUIRE(result == true);
       }
       THEN("The moved one is not able to send messages") {
         auto result = copy_publisher.publish(dummy);
-        REQUIRE(result == -1);
+        REQUIRE(result == false);
       }
     }
 
@@ -69,11 +69,11 @@ SCENARIO("SIMPLE Publisher interface") {
       publisher = std::move(copy_publisher);
       THEN("It correctly sends messages.") {
         auto result = publisher.publish(dummy);
-        REQUIRE(result != -1);
+        REQUIRE(result == true);
       }
       THEN("The moved one is not able to send messages") {
         auto result = copy_publisher.publish(dummy);
-        REQUIRE(result == -1);
+        REQUIRE(result == false);
       }
     }
 

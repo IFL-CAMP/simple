@@ -11,7 +11,6 @@
 #ifndef SIMPLE_SERVER_HPP
 #define SIMPLE_SERVER_HPP
 
-#include <zmq.h>
 #include <atomic>
 #include <functional>
 #include <memory>

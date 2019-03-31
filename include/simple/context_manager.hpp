@@ -66,9 +66,7 @@ public:
 
 private:
   static SIMPLE_EXPORT std::mutex context_mutex_;
-  static SIMPLE_EXPORT std::shared_ptr<zmq::context_t>
-      context_;  //! This allows to automatically dispose (and therefore, terminate) the
-                 // ZMQ context handled by the ZMQContext class.
+  static SIMPLE_EXPORT std::shared_ptr<zmq::context_t> context_;  //! zmq::context_t is automatically disposed.
 };
 }  // Namespace simple.
 
