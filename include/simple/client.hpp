@@ -88,7 +88,7 @@ private:
 
     // Send the message to the Server and receive back the response.
     if (socket_.sendMsg(buffer, "[SIMPLE Client] - ")) {
-      if (socket_.receiveMsg(msg, "[SIMPLE Client] - ") != -1) {
+      if (socket_.receiveMsg(msg, "[SIMPLE Client] - ")) {
         success = true;
       } else {
         std::cerr << "[SIMPLE Client] - No reply received. Aborting this request." << std::endl;

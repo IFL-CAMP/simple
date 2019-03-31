@@ -192,7 +192,7 @@ protected:
    * @param [in] custom_error - a string to prefix to the error messages printed in failure cases.
    * @return the number of bytes received by the ZMQ Socket. -1 for failure.
    */
-  int receiveMsg(T& msg, const std::string& custom_error = "") {
+  bool receiveMsg(T& msg, const std::string& custom_error = "") {
     // Early return if socket_ has not been created yet.
     if (socket_ == nullptr) { return false; }
 
@@ -211,42 +211,33 @@ protected:
     // right message type) has been received. i.e. the received topic message should match the one of the template
     // argument of this socket (stored in the topic_ member variable).
     try {
+      if (!socket_->recv(local_message.get())) { throw zmq::error_t(); };
+
+      // Check if the received topic matches the right message topic.
+      std::string received_message_type = static_cast<char*>(local_message->data());
+      if (std::strncmp(received_message_type.c_str(), topic_.c_str(), std::strlen(topic_.c_str())) != 0) {
+        std::cerr << custom_error << "Received message type " << received_message_type << " while expecting " << topic_
+                  << "." << std::endl;
+        return false;
+      }
+
+      // If all is good, check that there is more data after the topic.
+      socket_->getsockopt(ZMQ_RCVMORE, &data_past_topic, &data_past_topic_size);
+
+      if (data_past_topic == 0 || data_past_topic_size == 0) {
+        std::cerr << custom_error << "No data inside message." << std::endl;
+        return false;
+      }
+
+      // Receive the real message.
       success = socket_->recv(local_message.get());
+
+      // Check if any data has been received.
+      if (success == false || local_message->size() == 0) { throw zmq::error_t(); }
+
     } catch (const zmq::error_t& error) {
       std::cerr << custom_error << "Failed to receive the message. ZMQ Error: " << error.what() << std::endl;
-      return -1;
-    }
-
-    // Check that some data has been received.
-    if (success == false) { return -1; }
-    // Check if the received topic matches the right message topic.
-    std::string received_message_type = static_cast<char*>(local_message->data());
-    if (strncmp(received_message_type.c_str(), topic_.c_str(), strlen(topic_.c_str())) != 0) {
-      std::cerr << custom_error << "Received message type " << received_message_type << " while expecting " << topic_
-                << "." << std::endl;
-      return -1;
-    }
-
-    // If all is good, check that there is more data after the topic.
-    socket_->getsockopt(ZMQ_RCVMORE, &data_past_topic, &data_past_topic_size);
-
-    if (data_past_topic == 0 || data_past_topic_size == 0) {
-      std::cerr << custom_error << "No data inside message." << std::endl;
-      return -1;
-    }
-
-    // Receive the real message.
-    try {
-      success = socket_->recv(local_message.get());
-    } catch (const zmq::error_t& error) {
-      std::cerr << custom_error << "Failed to receive the message. ZMQ Error: " << error.what() << std::endl;
-      return -1;
-    }
-
-    // Check if any data has been received.
-    if (success == false || local_message->size() == 0) {
-      std::cerr << custom_error << "Failed to receive the message." << std::endl;
-      return -1;
+      return false;
     }
 
     // At this point we are sure that the message habe been correctly received, it has the right topic type and it is
@@ -260,12 +251,7 @@ protected:
     // data.
     msg = std::shared_ptr<void*>{local_message, &data_ptr};
 
-    // Return the number of bytes received.
-    if (success == false) {
-      return -1;
-    } else {
-      return 1;
-    }
+    return success;
   }
 
   /**

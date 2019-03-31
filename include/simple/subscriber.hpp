@@ -126,7 +126,7 @@ private:
   void subscribe(std::shared_ptr<std::atomic<bool>> alive, std::shared_ptr<GenericSocket<T>> socket) {
     while (alive->load()) {  //! Run this in a loop until the Subscriber is stopped.
       T msg;
-      if (socket->receiveMsg(msg, "[SIMPLE Subscriber] - ") != -1) {
+      if (socket->receiveMsg(msg, "[SIMPLE Subscriber] - ")) {
         if (alive->load()) { callback_(msg); }
       }
     }
