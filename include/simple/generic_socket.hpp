@@ -190,32 +190,30 @@ protected:
    */
   int receiveMsg(T& msg, const std::string& custom_error = "") {
     std::lock_guard<std::mutex> lock{mutex_};
+    bool success{false};
 
     // Local variables to check if data after the topic message is available and its size.
     int data_past_topic{0};
     auto data_past_topic_size{sizeof(data_past_topic)};
 
     // Local ZMQ message, it is used to collect the data received from the ZMQ socket.
-    // A custom deleter is provided, such that when the message has to be disposed zmq_msg_close is called before
-    // deleting the pointer. This is the pointer handling the lifetime of the received data.
-    std::shared_ptr<zmq_msg_t> local_message(new zmq_msg_t{}, [](zmq_msg_t* disposable_msg) {
-      zmq_msg_close(disposable_msg);
-      delete disposable_msg;
-    });
-
-    // ZMQ Messages have to be initialized.
-    zmq_msg_init(local_message.get());
+    // This is the pointer handling the lifetime of the received data.
+    std::shared_ptr<zmq::message_t> local_message(std::make_shared<zmq::message_t>());
 
     // Receive the first bytes, this should match the topic message and can be used to check if the right topic (the
     // right message type) has been received. i.e. the received topic message should match the one of the template
     // argument of this socket (stored in the topic_ member variable).
-    int bytes_received = zmq_msg_recv(local_message.get(), socket_.get()->operator void*(), 0);
+    try {
+      success = socket_->recv(local_message.get());
+    } catch (const zmq::error_t& error) {
+      std::cerr << custom_error << "Failed to receive the message. ZMQ Error: " << error.what() << std::endl;
+      return -1;
+    }
 
-    // Check that some data has been received and that it matches the right message topic.
-    if (bytes_received == -1) { return bytes_received; }
-
+    // Check that some data has been received.
+    if (success == false) { return -1; }
     // Check if the received topic matches the right message topic.
-    std::string received_message_type = static_cast<char*>(zmq_msg_data(local_message.get()));
+    std::string received_message_type = static_cast<char*>(local_message->data());
     if (strncmp(received_message_type.c_str(), topic_.c_str(), strlen(topic_.c_str())) != 0) {
       std::cerr << custom_error << "Received message type " << received_message_type << " while expecting " << topic_
                 << "." << std::endl;
@@ -223,7 +221,7 @@ protected:
     }
 
     // If all is good, check that there is more data after the topic.
-    zmq_getsockopt(socket_.get()->operator void*(), ZMQ_RCVMORE, &data_past_topic, &data_past_topic_size);
+    socket_->getsockopt(ZMQ_RCVMORE, &data_past_topic, &data_past_topic_size);
 
     if (data_past_topic == 0 || data_past_topic_size == 0) {
       std::cerr << custom_error << "No data inside message." << std::endl;
@@ -231,12 +229,16 @@ protected:
     }
 
     // Receive the real message.
-    bytes_received = zmq_msg_recv(local_message.get(), socket_.get()->operator void*(), 0);
+    try {
+      success = socket_->recv(local_message.get());
+    } catch (const zmq::error_t& error) {
+      std::cerr << custom_error << "Failed to receive the message. ZMQ Error: " << error.what() << std::endl;
+      return -1;
+    }
 
     // Check if any data has been received.
-    if (bytes_received == -1 || zmq_msg_size(local_message.get()) == 0) {
-      std::cerr << custom_error << "Failed to receive the message. ZMQ Error: " << zmq_strerror(zmq_errno())
-                << std::endl;
+    if (success == false || local_message->size() == 0) {
+      std::cerr << custom_error << "Failed to receive the message." << std::endl;
       return -1;
     }
 
@@ -244,14 +246,19 @@ protected:
     // not empty.
 
     // Set the T msg to the data that has been just received.
-    void* data_ptr = zmq_msg_data(local_message.get());  //! Internal data of the ZMQ message.
+    void* data_ptr = local_message->data();
+
     // Shared pointer to the internal data that shares ref counter with local_message. Since it is passed by value to
     // the operator= of T, the ref counter is increased and local_message will stay alive until the object T needs the
     // data.
     msg = std::shared_ptr<void*>{local_message, &data_ptr};
 
     // Return the number of bytes received.
-    return bytes_received;
+    if (success == false) {
+      return -1;
+    } else {
+      return 1;
+    }
   }
 
   /**
