@@ -104,7 +104,10 @@ file(GLOB SIMPLE_HEADERS "include/simple/*.hpp")
 add_custom_target(${PROJECT_NAME}-ide SOURCES ${SIMPLE_HEADERS})
 
 # SHARED library.
-add_library(${PROJECT_NAME} SHARED src/context_manager.cpp)
+add_library(${PROJECT_NAME} SHARED
+  src/context_manager.cpp
+  src/generic_socket.cpp
+  )
 
 target_include_directories(${PROJECT_NAME}
   PUBLIC
@@ -118,8 +121,8 @@ target_include_directories(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
     simple_msgs
-    cppzmq-static
   PRIVATE
+    cppzmq-static
     ${CMAKE_THREAD_LIBS_INIT}
     ${coverage_lib}
 )
@@ -132,7 +135,10 @@ include(GenerateExportHeader)
 generate_export_header(${PROJECT_NAME})
 
 # STATIC library.
-add_library(${PROJECT_NAME}-static src/context_manager.cpp)
+add_library(${PROJECT_NAME}-static
+  src/context_manager.cpp
+  src/generic_socket.cpp
+  )
 
 # Required for the generated export header.
 target_compile_definitions(${PROJECT_NAME}-static PUBLIC SIMPLE_STATIC_DEFINE)
@@ -149,8 +155,8 @@ target_include_directories(${PROJECT_NAME}-static PUBLIC
 target_link_libraries(${PROJECT_NAME}-static
   PUBLIC
     simple_msgs
-    cppzmq-static
   PRIVATE
+    cppzmq-static
     ${CMAKE_THREAD_LIBS_INIT}
     ${coverage_lib}
 )

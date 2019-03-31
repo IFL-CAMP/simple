@@ -76,7 +76,7 @@ public:
   /**
    * @brief Copy assignment operator that uses raw memory coming from the network.
    */
-  Point& operator=(std::shared_ptr<void*> rhs);
+  Point& operator=(std::shared_ptr<void*> rhs) override;
 
   /**
    * @brief Copy assignment from a 3D array.

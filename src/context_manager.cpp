@@ -8,7 +8,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <simple/context_manager.hpp>
+#include "simple/context_manager.hpp"
 
 //! Static member are here initialized.
 std::mutex simple::ContextManager::context_mutex_{};

@@ -24,6 +24,16 @@ public:
   virtual ~GenericMessage() = default;
 
   /**
+   * @brief Assignment operator from a shared void*
+   *
+   * Every message has to be constructable from a void*, since that is what we get from ZMQ.
+   *
+   * @param [in] rhs - the pointer from which construct the message
+   * @return
+   */
+  virtual GenericMessage& operator=(std::shared_ptr<void*> rhs) = 0;
+
+  /**
    * @brief Returns the built buffer. Each simple_msgs type implements its version of it.
    */
   virtual std::shared_ptr<flatbuffers::DetachedBuffer> getBufferData() const = 0;

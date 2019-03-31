@@ -47,7 +47,7 @@ public:
    */
   explicit Server(const std::string& address, const std::function<void(T&)>& callback, int timeout = 1000,
                   int linger = -1)
-    : socket_{new GenericSocket<T>(ZMQ_REP)}, callback_{callback} {
+    : socket_{new GenericSocket(zmq::socket_type::rep, T::getTopic())}, callback_{callback} {
     socket_->setTimeout(timeout);
     socket_->setLinger(linger);
     socket_->bind(address);
@@ -123,7 +123,7 @@ private:
    * @brief Keep waiting for a request to arrive. Process the request using the
    * callback function and reply.
    */
-  void awaitRequest(std::shared_ptr<std::atomic<bool>> alive, std::shared_ptr<GenericSocket<T>> socket) {
+  void awaitRequest(std::shared_ptr<std::atomic<bool>> alive, std::shared_ptr<GenericSocket> socket) {
     while (alive->load()) {
       T msg;
       if (socket->receiveMsg(msg, "[SIMPLE Server] - ")) {
@@ -137,10 +137,10 @@ private:
    * @brief Sends the message back to the client who requested it.
    * @param [in] msg - The message to be sent.
    */
-  void reply(GenericSocket<T>* socket, const T& msg) { socket->sendMsg(msg.getBufferData(), "[SIMPLE Server] - "); }
+  void reply(GenericSocket* socket, const T& msg) { socket->sendMsg(msg.getBufferData(), "[SIMPLE Server] - "); }
 
   std::shared_ptr<std::atomic<bool>> alive_{nullptr};  //! Flag keeping track of the internal thread's state.
-  std::shared_ptr<GenericSocket<T>> socket_{nullptr};  //! The internal socket.
+  std::shared_ptr<GenericSocket> socket_{nullptr};     //! The internal socket.
   std::function<void(T&)> callback_;                   //! The callback function called at each message arrival.
   std::thread server_thread_{};                        //! The internal Server thread on which the given callback runs.
 };

@@ -73,7 +73,7 @@ public:
   /**
    * @brief Copy assignment operator that uses raw memory coming from the network.
    */
-  Quaternion& operator=(std::shared_ptr<void*> rhs);
+  Quaternion& operator=(std::shared_ptr<void*> rhs) override;
 
   /**
    * @brief Copy assignment from a 4D array.

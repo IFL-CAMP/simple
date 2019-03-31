@@ -77,7 +77,7 @@ public:
   /**
    * @brief Copy assignment operator that uses raw memory coming from the network.
    */
-  RotationMatrix& operator=(std::shared_ptr<void*> rhs);
+  RotationMatrix& operator=(std::shared_ptr<void*> rhs) override;
 
   /**
    * @brief Copy assignment from a 9D array.

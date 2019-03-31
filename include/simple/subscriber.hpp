@@ -46,7 +46,7 @@ public:
    * milliseconds.
    */
   explicit Subscriber<T>(const std::string& address, const std::function<void(const T&)>& callback, int timeout = 1000)
-    : socket_{new GenericSocket<T>(ZMQ_SUB)}, callback_{callback} {
+    : socket_{new GenericSocket(zmq::socket_type::sub, T::getTopic())}, callback_{callback} {
     socket_->filter();  //! Filter the type of message that can be received, only the type T is accepted.
     socket_->setTimeout(timeout);
     socket_->connect(address);
@@ -123,7 +123,7 @@ private:
    * @brief Waits for a message to be published to the connected port.
    * Calls the user callback with an instance of T obtained by a simple Publisher.
    */
-  void subscribe(std::shared_ptr<std::atomic<bool>> alive, std::shared_ptr<GenericSocket<T>> socket) {
+  void subscribe(std::shared_ptr<std::atomic<bool>> alive, std::shared_ptr<GenericSocket> socket) {
     while (alive->load()) {  //! Run this in a loop until the Subscriber is stopped.
       T msg;
       if (socket->receiveMsg(msg, "[SIMPLE Subscriber] - ")) {
@@ -133,7 +133,7 @@ private:
   }
 
   std::shared_ptr<std::atomic<bool>> alive_{nullptr};  //! Flag keeping track of the internal thread's state.
-  std::shared_ptr<GenericSocket<T>> socket_{nullptr};  //! The internal socket.
+  std::shared_ptr<GenericSocket> socket_{nullptr};     //! The internal socket.
   std::function<void(const T&)> callback_{};           //! The callback function called at each message arrival.
   std::thread subscriber_thread_{};  //! The internal Subscriber thread on which the given callback runs.
 };

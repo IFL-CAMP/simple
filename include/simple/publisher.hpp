@@ -37,7 +37,9 @@ public:
    * Subscribers can subscribe to a Publisher connecting to its address.
    * @param [in] address - in the form \<PROTOCOL\>://\<IP_ADDRESS\>:\<PORT\>, e.g. tcp://127.0.0.1:5555.
    */
-  explicit Publisher<T>(const std::string& address) : socket_{ZMQ_PUB} { socket_.bind(address); }
+  explicit Publisher<T>(const std::string& address) : socket_{zmq::socket_type::pub, T::getTopic()} {
+    socket_.bind(address);
+  }
 
   // A Publisher cannot be copied, only moved.
   Publisher(const Publisher& other) = delete;
@@ -81,7 +83,7 @@ private:
   }
 
 private:
-  GenericSocket<T> socket_{};  //! The internal socket.
+  GenericSocket socket_{};  //! The internal socket.
 };
 }  // Namespace simple.
 
