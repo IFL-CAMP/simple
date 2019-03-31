@@ -12,6 +12,7 @@
 #define SIMPLE_GENERIC_SOCKET_HPP
 
 #include <flatbuffers/flatbuffers.h>
+#include <cstring>
 #include <iostream>
 #include <memory>
 #include <mutex>
@@ -135,64 +136,54 @@ protected:
    * @param [in] custom_error - a string to prefix to the error messages printed in failure cases.
    * @return the number of bytes sent over the ZMQ Socket. -1 for failure.
    */
-  int sendMsg(std::shared_ptr<flatbuffers::DetachedBuffer> buffer,
-              const std::string& custom_error = "[SIMPLE Error] - ") const {
-    if (socket_ == nullptr) { return -1; }
+  bool sendMsg(std::shared_ptr<flatbuffers::DetachedBuffer> buffer,
+               const std::string& custom_error = "[SIMPLE Error] - ") const {
+    // Early return if socket_ has not been created yet.
+    if (socket_ == nullptr) { return false; }
 
     std::lock_guard<std::mutex> lock{mutex_};
 
-    // zmq_msg_t topic_message{};
+    try {
+      // This is ugly, but we need a void* from the const char*.
+      auto topic_ptr = const_cast<void*>(static_cast<const void*>(topic_.c_str()));
 
-    // This is ugly, but we need a void* from the const char*.
-    auto topic_ptr = const_cast<void*>(static_cast<const void*>(topic_.c_str()));
-    // zmq_msg_init_data(&topic_message, topic_ptr, topic_.size(), nullptr, nullptr);
+      // Initialize the topic message to be sent.
+      zmq::message_t topic_message{topic_ptr, topic_.size()};
 
-    zmq::message_t topic_message{topic_ptr, topic_.size()};
+      // Create a shared_ptr to the given buffer data, this allows to avoid disposing the data to be sent before the
+      // actual transmission is terminated. The zmq::socket_t::send() method will return as soon as the message has been
+      // queued but there are no guaranteed that the data is yet transmitted. This pointer will keep the data alive and
+      // dispose it when not necessary anymore.
+      auto buffer_pointer = new std::shared_ptr<flatbuffers::DetachedBuffer>{buffer};
 
-    // Create a shared_ptr to the given buffer data, this allows to avoid disposing the data to be sent before the
-    // actual transmission is termianted. The zmq_msg_send() method will return as soon as the message has been queued
-    // but there are no guaranteed that the data is yet transmitted. This pointer will keep the data alive and it will
-    // be disposed when not necessary anymore.
-    auto buffer_pointer = new std::shared_ptr<flatbuffers::DetachedBuffer>{buffer};
+      // Functor to call when the data transmission is over. This deletes the buffer_pointer object.
+      auto free_function = [](void* /*unused*/, void* hint) {
+        if (hint != nullptr) {
+          auto b = static_cast<std::shared_ptr<flatbuffers::DetachedBuffer>*>(hint);
+          delete b;
+        }
+      };
 
-    // Functor to call when the data transmission is over. This deletes the buffer_pointer object.
-    auto free_function = [](void* /*unused*/, void* hint) {
-      if (hint != nullptr) {
-        auto b = static_cast<std::shared_ptr<flatbuffers::DetachedBuffer>*>(hint);
-        delete b;
-      }
-    };
+      // Initialize the message itself using the buffer data.
+      // The functor free_function is passed as the function to call when this zmq::message_t object has to be disposed.
+      // This is automatically called when the data transmission is over.
+      // buffer_pointer is passed as the pointer to use for the "hint" parameter in the free_function method.
+      zmq::message_t message{buffer->data(), buffer->size(), free_function, buffer_pointer};
 
-    // Initialize the message itself using the buffer data.
-    // The functor free_function is passed as the function to call when this zmq_msg_t object has to be disposed.
-    // This is automatically called when the data transmission is over.
-    // buffer_pointer is passed as the pointer to use for the "hint" parameter in the free_function method.
+      // Send the topic first and add the rest of the message after it.
+      auto topic_success = socket_->send(topic_message, ZMQ_SNDMORE);
+      auto message_success = socket_->send(message, ZMQ_DONTWAIT);
 
-    // zmq_msg_t message{};
-    // zmq_msg_init_data(&message, buffer->data(), buffer->size(), free_function, buffer_pointer);
+      // If something wrong happened, throw zmq::error_t().
+      if (topic_success == false || message_success == false) { throw zmq::error_t(); }
 
-    zmq::message_t message{buffer->data(), buffer->size(), free_function, buffer_pointer};
-
-    // Send the topic first and add the rest of the message after it.
-
-    auto topic_success = socket_->send(topic_message, ZMQ_SNDMORE);
-    auto message_success = socket_->send(message, ZMQ_DONTWAIT);
-
-    //    auto topic_sent = zmq_msg_send(topic_message.data(), socket_.get()->operator void*(), ZMQ_SNDMORE);
-    //    auto message_sent = zmq_msg_send(message.data(), socket_.get()->operator void*(), ZMQ_DONTWAIT);
-
-    if (topic_success == false || message_success == false) {
-      // If send is not successful, we need to manually close the messages.
-      std::cerr << custom_error << "Failed to send the message. ZMQ Error: " << zmq_strerror(zmq_errno()) << std::endl;
+    } catch (const zmq::error_t& error) {
+      std::cerr << custom_error << "Failed to send the message. ZMQ Error: " << error.what() << std::endl;
+      return false;
     }
-    // Else, the message was successfully send, we don't need to call zmq_msg_close manually.
-    // We return the number of bytes sent.
-    if (message_success) {
-      return 1;
-    } else {
-      return -1;
-    }
-    //    return message_sent;
+
+    // Return the number of bytes sent.
+    return true;
   }
 
   /**
@@ -202,6 +193,9 @@ protected:
    * @return the number of bytes received by the ZMQ Socket. -1 for failure.
    */
   int receiveMsg(T& msg, const std::string& custom_error = "") {
+    // Early return if socket_ has not been created yet.
+    if (socket_ == nullptr) { return false; }
+
     std::lock_guard<std::mutex> lock{mutex_};
 
     // Local variables to check if data after the topic message is available and its size.
