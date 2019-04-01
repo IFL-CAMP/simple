@@ -40,7 +40,7 @@ public:
    * @param [in] linger - Time, in msec, unsent messages linger in memory after socket is closed. Default -1 (infinite).
    */
   explicit Client(const std::string& address, int timeout = 2000, int linger = -1)
-    : socket_{zmq::socket_type::req, T::getTopic()}, address_{address}, timeout_{timeout}, linger_{linger} {
+    : socket_{zmq_socket_type::req, T::getTopic()}, address_{address}, timeout_{timeout}, linger_{linger} {
     initClient();
   }
 
@@ -77,7 +77,7 @@ public:
 private:
   // Initialize the client, setting up the socket and its configuration.
   void initClient() {
-    if (!socket_.isSocketValid()) { socket_.initSocket(zmq::socket_type::req); }
+    if (!socket_.isSocketValid()) { socket_.initSocket(zmq_socket_type::req); }
     socket_.setTimeout(timeout_);
     socket_.setLinger(linger_);
     socket_.connect(address_);

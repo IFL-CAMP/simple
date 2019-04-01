@@ -24,7 +24,13 @@ namespace flatbuffers {
 class DetachedBuffer;
 }
 
+namespace zmq {
+class socket_t;
+}  // namespace zmq
+
 namespace simple {
+
+enum class zmq_socket_type : int { pub = 1, sub = 2, req = 3, rep = 4 };
 
 /**
  * @class GenericSocket generic_socket.hpp.
@@ -62,7 +68,7 @@ public:
 
 protected:
   // Class ctors are protected. A user cannot instantiate a GenericSocket.
-  GenericSocket() = default;
+  GenericSocket();
 
   /**
    * @brief Constructs a socket with the given ZMQ socket type.
@@ -75,7 +81,7 @@ protected:
    * ZMQ_REQ - for a Client.
    * ZMQ_REP - for a Server.
    */
-  explicit GenericSocket(const zmq::socket_type& type, const std::string& topic);
+  explicit GenericSocket(const zmq_socket_type& type, const std::string& topic);
 
   /**
    * @brief Binds the ZMQ Socket to the given address.
@@ -137,12 +143,12 @@ protected:
    * @param [in] type - the ZMQ Socket Type.
    *
    * Accepted types are:
-   * zmq::socket_type::pub - for a Publisher.
-   * zmq::socket_type::sub - for a Subscriber.
-   * zmq::socket_type::req - for a Client.
-   * zmq::socket_type::rep - for a Server.
+   * zmq_socket_type::pub - for a Publisher.
+   * zmq_socket_type::sub - for a Subscriber.
+   * zmq_socket_type::req - for a Client.
+   * zmq_socket_type::rep - for a Server.
    */
-  void initSocket(const zmq::socket_type& type);
+  void initSocket(const zmq_socket_type& type);
 
   /**
    * @brief Closes the ZMQ socket.
@@ -163,10 +169,10 @@ protected:
   inline const std::string& endpoint() { return endpoint_; }
 
 private:
-  mutable std::mutex mutex_{};                      //! Mutex for thread-safety.
-  std::string topic_{""};                           //! The message topic, internally defined for each SIMPLE message.
-  std::unique_ptr<zmq::socket_t> socket_{nullptr};  //! The internal ZMQ socket.
-  std::string endpoint_{""};                        //! Stores the used endpoint for connection.
+  mutable std::mutex mutex_{};             //! Mutex for thread-safety.
+  std::string topic_{""};                  //! The message topic, internally defined for each SIMPLE message.
+  std::unique_ptr<zmq::socket_t> socket_;  //! The internal ZMQ socket.
+  std::string endpoint_{""};               //! Stores the used endpoint for connection.
 };
 }  // Namespace simple.
 

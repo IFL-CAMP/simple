@@ -37,7 +37,7 @@ public:
    * Subscribers can subscribe to a Publisher connecting to its address.
    * @param [in] address - in the form \<PROTOCOL\>://\<IP_ADDRESS\>:\<PORT\>, e.g. tcp://127.0.0.1:5555.
    */
-  explicit Publisher<T>(const std::string& address) : socket_{zmq::socket_type::pub, T::getTopic()} {
+  explicit Publisher<T>(const std::string& address) : socket_{zmq_socket_type::pub, T::getTopic()} {
     socket_.bind(address);
   }
 

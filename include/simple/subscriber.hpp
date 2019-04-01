@@ -46,7 +46,7 @@ public:
    * milliseconds.
    */
   explicit Subscriber<T>(const std::string& address, const std::function<void(const T&)>& callback, int timeout = 1000)
-    : socket_{new GenericSocket(zmq::socket_type::sub, T::getTopic())}, callback_{callback} {
+    : socket_{new GenericSocket(zmq_socket_type::sub, T::getTopic())}, callback_{callback} {
     socket_->filter();  //! Filter the type of message that can be received, only the type T is accepted.
     socket_->setTimeout(timeout);
     socket_->connect(address);

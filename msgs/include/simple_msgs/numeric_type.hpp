@@ -69,7 +69,7 @@ public:
   /**
    * @brief Copy assignment operator that uses raw memory coming from the network.
    */
-  NumericType& operator=(std::shared_ptr<void*> rhs);
+  NumericType& operator=(std::shared_ptr<void*> rhs) override;
 
   /**
    * @brief Returns true if lhs is equal to rhs, false otherwise.

@@ -9,12 +9,15 @@
  */
 
 #include <flatbuffers/flatbuffers.h>
+#include <zmq.hpp>
 
 #include "simple/generic_socket.hpp"
 
 namespace simple {
 
-GenericSocket::GenericSocket(const zmq::socket_type& type, const std::string& topic) : topic_{topic} {
+GenericSocket::GenericSocket() : socket_{nullptr} {}
+
+GenericSocket::GenericSocket(const zmq_socket_type& type, const std::string& topic) : topic_{topic} {
   initSocket(type);
 }
 
@@ -198,10 +201,10 @@ void GenericSocket::setLinger(int linger) {
   socket_->setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
 }
 
-void GenericSocket::initSocket(const zmq::socket_type& type) {
+void GenericSocket::initSocket(const zmq_socket_type& type) {
   std::lock_guard<std::mutex> lock{mutex_};
   if (socket_ == nullptr) {
-    socket_ = std::unique_ptr<zmq::socket_t>(new zmq::socket_t(*ContextManager::instance(), type));
+    socket_ = std::unique_ptr<zmq::socket_t>(new zmq::socket_t(*ContextManager::instance(), static_cast<int>(type)));
   }
 }
 

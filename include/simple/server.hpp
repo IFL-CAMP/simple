@@ -47,7 +47,7 @@ public:
    */
   explicit Server(const std::string& address, const std::function<void(T&)>& callback, int timeout = 1000,
                   int linger = -1)
-    : socket_{new GenericSocket(zmq::socket_type::rep, T::getTopic())}, callback_{callback} {
+    : socket_{new GenericSocket(zmq_socket_type::rep, T::getTopic())}, callback_{callback} {
     socket_->setTimeout(timeout);
     socket_->setLinger(linger);
     socket_->bind(address);

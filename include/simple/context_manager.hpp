@@ -13,9 +13,12 @@
 
 #include <memory>
 #include <mutex>
-#include <zmq.hpp>
 
 #include "simple_export.h"
+
+namespace zmq {
+class context_t;
+}
 
 namespace simple {
 /**
@@ -42,13 +45,7 @@ public:
    * During the first call, a new ZMQContext object is instantiated.
    * That instantiation performs thread-safe operations to create/dispose the underlying ZMQ context object.
    */
-  static zmq::context_t* instance() {
-    std::lock_guard<std::mutex> lock{context_mutex_};
-    // Create a new ZMQ context or return the existing one.
-    if (context_ == nullptr) { context_ = std::make_shared<zmq::context_t>(); }
-    return context_.get();
-  }
-
+  static zmq::context_t* instance();
   /**
    * @brief Destroys the current instance of the ZMQ context.
    *
@@ -59,10 +56,7 @@ public:
    *       be destroyed at static object destruction. Use this only when necessary and be aware that
    *       early destruction can result in application crashes or hangs.}
    */
-  static void destroy() {
-    std::lock_guard<std::mutex> lock{context_mutex_};
-    context_ = nullptr;
-  }
+  static void destroy();
 
 private:
   static SIMPLE_EXPORT std::mutex context_mutex_;
