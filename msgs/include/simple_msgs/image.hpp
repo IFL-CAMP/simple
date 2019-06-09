@@ -26,7 +26,7 @@ class Offset;
 
 namespace simple_msgs {
 
-class ImageFbs;
+struct ImageFbs;
 
 template <typename T>
 struct dataTraits;
