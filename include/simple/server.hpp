@@ -137,7 +137,7 @@ private:
    * @brief Sends the message back to the client who requested it.
    * @param [in] msg - The message to be sent.
    */
-  void reply(GenericSocket* socket, const T& msg) { socket->sendMsg(msg.getBufferData(), "[SIMPLE Server] - "); }
+  void reply(GenericSocket* socket, const T& msg) { socket->sendMsg(msg, "[SIMPLE Server] - "); }
 
   std::shared_ptr<std::atomic<bool>> alive_{nullptr};  //! Flag keeping track of the internal thread's state.
   std::shared_ptr<GenericSocket> socket_{nullptr};     //! The internal socket.

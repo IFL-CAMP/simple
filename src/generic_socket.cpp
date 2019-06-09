@@ -74,8 +74,7 @@ void GenericSocket::connect(const std::string& address) {
   }
 }
 
-bool GenericSocket::sendMsg(std::shared_ptr<flatbuffers::DetachedBuffer> buffer,
-                            const std::string& custom_error) const {
+bool GenericSocket::sendMsg(const simple_msgs::GenericMessage& msg, const std::string& custom_error) const {
   // Early return if socket_ has not been created yet.
   if (socket_ == nullptr) { return false; }
 
@@ -87,6 +86,8 @@ bool GenericSocket::sendMsg(std::shared_ptr<flatbuffers::DetachedBuffer> buffer,
 
     // Initialize the topic message to be sent.
     zmq::message_t topic_message{topic_ptr, topic_.size()};
+
+    auto buffer = msg.getBufferData();
 
     // Create a shared_ptr to the given buffer data, this allows to avoid disposing the data to be sent before the
     // actual transmission is terminated. The zmq::socket_t::send() method will return as soon as the message has been

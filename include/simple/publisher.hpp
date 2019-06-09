@@ -60,9 +60,9 @@ public:
   /**
    * @brief Publishes the given message of type T through the open socket.
    * @param [in] msg - simple_msgs class wrapper for Flatbuffer messages.
-   * @return size of the published message, in bytes. Returns -1 if send fails.
+   * @return success or failure of the publishing.
    */
-  bool publish(const T& msg) { return publish(msg.getBufferData()); }
+  bool publish(const T& msg) { return socket_.sendMsg(msg, "[Simple Publisher] - "); }
 
   /**
    * @brief Query the endpoint that this object is bound to.
@@ -71,16 +71,6 @@ public:
    * @return the endpoint in form of a ZMQ DSN string, i.e. "tcp://0.0.0.0:8000"
    */
   const std::string& endpoint() { return socket_.endpoint(); }
-
-private:
-  /**
-   * @brief Publishes the given message through the open socket.
-   * @param [in] buffer - Flatbuffers buffer containing the data to be published.
-   * @return size of the published message, in bytes. Returns -1 if send fails.
-   */
-  bool publish(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer) const {
-    return socket_.sendMsg(buffer, "[Simple Publisher] - ");
-  }
 
 private:
   GenericSocket socket_{};  //! The internal socket.

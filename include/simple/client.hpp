@@ -64,7 +64,22 @@ public:
    * @brief Sends the request to a server and waits for an answer.
    * @param [in,out] msg - simple_msgs class wrapper for Flatbuffer messages..
    */
-  bool request(T& msg) { return request(msg.getBufferData(), msg); }
+  bool request(T& msg) {
+    bool success{false};
+
+    // Send the message to the Server and receive back the response.
+    if (socket_.sendMsg(msg, "[SIMPLE Client] - ")) {
+      if (socket_.receiveMsg(msg, "[SIMPLE Client] - ")) {
+        success = true;
+      } else {
+        std::cerr << "[SIMPLE Client] - No reply received. Aborting this request." << std::endl;
+        // If no message was received back we need to delete the existing socket and create a new one.
+        socket_.closeSocket();
+        initClient();
+      }
+    }
+    return success;
+  }
 
   /**
    * @brief Query the endpoint that this object is bound to.
@@ -81,23 +96,6 @@ private:
     socket_.setTimeout(timeout_);
     socket_.setLinger(linger_);
     socket_.connect(address_);
-  }
-
-  bool request(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer, T& msg) {
-    bool success{false};
-
-    // Send the message to the Server and receive back the response.
-    if (socket_.sendMsg(buffer, "[SIMPLE Client] - ")) {
-      if (socket_.receiveMsg(msg, "[SIMPLE Client] - ")) {
-        success = true;
-      } else {
-        std::cerr << "[SIMPLE Client] - No reply received. Aborting this request." << std::endl;
-        // If no message was received back we need to delete the existing socket and create a new one.
-        socket_.closeSocket();
-        initClient();
-      }
-    }
-    return success;
   }
 
   GenericSocket socket_{};   //! The internal socket.

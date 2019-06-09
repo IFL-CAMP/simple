@@ -30,6 +30,9 @@ class socket_t;
 
 namespace simple {
 
+/**
+ * @brief The zmq::socket_type are redefined locally to avoid including the zmq.hpp header in simple headers.
+ */
 enum class zmq_socket_type : int { pub = 1, sub = 2, req = 3, rep = 4 };
 
 /**
@@ -99,12 +102,11 @@ protected:
 
   /**
    * @brief Sends buffer data over the ZMQ Socket.
-   * @param [in] buffer - a pointer to the buffer data constructed using Flatbuffers.
+   * @param [in] message - simple_msgs class wrapper for Flatbuffer messages.
    * @param [in] custom_error - a string to prefix to the error messages printed in failure cases.
-   * @return the number of bytes sent over the ZMQ Socket. -1 for failure.
+   * @return success or failure in sending the message over ZMQ.
    */
-  bool sendMsg(std::shared_ptr<flatbuffers::DetachedBuffer> buffer,
-               const std::string& custom_error = "[SIMPLE Error] - ") const;
+  bool sendMsg(const simple_msgs::GenericMessage& message, const std::string& custom_error = "[SIMPLE Error] - ") const;
 
   /**
    * @brief Receive a message of type T from the ZMQ Socket.

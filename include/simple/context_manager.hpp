@@ -16,6 +16,7 @@
 
 #include "simple_export.h"
 
+// Forward declaration.
 namespace zmq {
 class context_t;
 }
