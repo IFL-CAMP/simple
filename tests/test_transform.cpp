@@ -85,10 +85,6 @@ SCENARIO("Using a Transform Message") {
   // Testing copy/move constructors.
   GIVEN("A Transform message") {
     simple_msgs::Transform transform{point, matrix};
-    WHEN("I construct a new Transform from the serialized data of the existing Transform") {
-      simple_msgs::Transform copy_transform{transform.getBufferData()->data()};
-      THEN("The new Transform has to be equal to the other") { REQUIRE(copy_transform == transform); }
-    }
     WHEN("I copy-construct a new Transform") {
       simple_msgs::Transform copy_transform{transform};
       THEN("The new Transform is equal to the other") { REQUIRE(copy_transform == transform); }
@@ -105,12 +101,6 @@ SCENARIO("Using a Transform Message") {
   // Testing copy/move assignments.
   GIVEN("A Transform") {
     simple_msgs::Transform transform{point, matrix};
-    WHEN("I copy-assign from that Transform's buffer") {
-      simple_msgs::Transform copy_assigned_buffer_transform{};
-      auto data_ptr = std::make_shared<void*>(transform.getBufferData()->data());
-      copy_assigned_buffer_transform = data_ptr;
-      THEN("The new Transform has to be same as the original") { REQUIRE(copy_assigned_buffer_transform == transform); }
-    }
     WHEN("I copy-assign from that Transform") {
       simple_msgs::Transform copy_assigned_transform{};
       copy_assigned_transform = transform;
@@ -166,7 +156,7 @@ SCENARIO("Using a Transform Message") {
   GIVEN("A Transform") {
     simple_msgs::Transform transform{point, matrix};
     WHEN("I get the message topic") {
-      std::string topic_name = transform.getTopic();
+      std::string topic_name = simple_msgs::Transform::getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "TRAN"); }
     }
     WHEN("I print the Transform") {

@@ -54,16 +54,6 @@ SCENARIO("Using a QuaternionStamped Message") {
     }
   }
 
-  GIVEN("A QuaternionStamped created from the serialized data of an existing QuaternionStamped") {
-    simple_msgs::QuaternionStamped quaternion_stamped{random_header, random_quaternion};
-    simple_msgs::QuaternionStamped buffer_quaternion_stamped{quaternion_stamped.getBufferData()->data()};
-    WHEN("I check the QuaternionStamped's elements") {
-      THEN("The new QuaternionStamped has to be equal to the other") {
-        REQUIRE(buffer_quaternion_stamped == quaternion_stamped);
-      }
-    }
-  }
-
   // Testing copy constructors.
   GIVEN("A QuaternionStamped") {
     simple_msgs::QuaternionStamped quaternion_stamped{random_header, random_quaternion};
@@ -85,14 +75,6 @@ SCENARIO("Using a QuaternionStamped Message") {
   // Testing Copy-assignments.
   GIVEN("A QuaternionStamped") {
     simple_msgs::QuaternionStamped quaternion_stamped{random_header, random_quaternion};
-    WHEN("I copy-assign from that QuaternionStamped's buffer") {
-      simple_msgs::QuaternionStamped copy_assigned_buffer_quaternion_stamped{};
-      auto data_ptr = std::make_shared<void*>(quaternion_stamped.getBufferData()->data());
-      copy_assigned_buffer_quaternion_stamped = data_ptr;
-      THEN("The new QuaternionStamped has to be same as the original") {
-        REQUIRE(copy_assigned_buffer_quaternion_stamped == quaternion_stamped);
-      }
-    }
     WHEN("I copy-assign from that QuaternionStamped") {
       simple_msgs::QuaternionStamped copy_assigned_quaternion_stamped{};
       copy_assigned_quaternion_stamped = quaternion_stamped;
@@ -140,7 +122,7 @@ SCENARIO("Using a QuaternionStamped Message") {
   GIVEN("A point") {
     simple_msgs::QuaternionStamped quaternion_stamped{};
     WHEN("I get the message topic") {
-      std::string topic_name = quaternion_stamped.getTopic();
+      std::string topic_name = simple_msgs::QuaternionStamped::getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "QTST"); }
     }
     WHEN("I print the QuaternionStamped") {

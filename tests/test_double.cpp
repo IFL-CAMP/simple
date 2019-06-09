@@ -42,10 +42,6 @@ SCENARIO("Using a Double Message") {
   // Testing copy/move constructors.
   GIVEN("A Double") {
     simple_msgs::Double single_double{double_1};
-    WHEN("I construct a new Double from the serialized data of the existing Double") {
-      simple_msgs::Double copy_buffer_double(single_double.getBufferData()->data());
-      THEN("The new Double is equal to the original") { REQUIRE(copy_buffer_double == single_double); }
-    }
     WHEN("I copy-construct a new Double") {
       const simple_msgs::Double& copy_double{single_double};
       THEN("The new Double is equal to the original") { REQUIRE(copy_double == single_double); }
@@ -61,12 +57,6 @@ SCENARIO("Using a Double Message") {
   // Testing copy/move assignments.
   GIVEN("A Double") {
     simple_msgs::Double single_double{double_1};
-    WHEN("I copy-assign from that Double's buffer") {
-      simple_msgs::Double copy_assigned_buffer_double{};
-      auto data_ptr = std::make_shared<void*>(single_double.getBufferData()->data());
-      copy_assigned_buffer_double = data_ptr;
-      THEN("The new Double is equal to the original") { REQUIRE(copy_assigned_buffer_double == single_double); }
-    }
     WHEN("I copy-assign from that Double") {
       simple_msgs::Double copy_assigned_double{};
       copy_assigned_double = single_double;
@@ -107,7 +97,7 @@ SCENARIO("Using a Double Message") {
   GIVEN("A Double") {
     simple_msgs::Double single_double(double_1);
     WHEN("I get the message topic") {
-      std::string topic_name = single_double.getTopic();
+      std::string topic_name = simple_msgs::Double::getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "DOBL"); }
     }
     WHEN("I print the double") {

@@ -56,10 +56,6 @@ SCENARIO("Using a PointStamped Message") {
   // Testing copy/move constructors.
   GIVEN("A PointStamped") {
     simple_msgs::PointStamped point_stamped{random_header, random_point};
-    WHEN("I copy-construct a PointStamped from its serialized data") {
-      simple_msgs::PointStamped buffer_point_stamped{point_stamped.getBufferData()->data()};
-      THEN("The new PointStamped has to be equal to the other") { REQUIRE(buffer_point_stamped == point_stamped); }
-    }
     WHEN("I copy-construct a new PointStamped") {
       const simple_msgs::PointStamped copy_point_stamped{point_stamped};
       THEN("The new PointStamped is equal to the other") { REQUIRE(copy_point_stamped == point_stamped); }
@@ -76,14 +72,6 @@ SCENARIO("Using a PointStamped Message") {
   // Testing copy/move assignments.
   GIVEN("A PointStamped") {
     simple_msgs::PointStamped point_stamped{random_header, random_point};
-    WHEN("I copy-assign from that PointStamped's buffer") {
-      simple_msgs::PointStamped copy_assigned_buffer_point_stamped{};
-      auto data_ptr = std::make_shared<void*>(point_stamped.getBufferData()->data());
-      copy_assigned_buffer_point_stamped = data_ptr;
-      THEN("The new PointStamped has to be same as the original") {
-        REQUIRE(copy_assigned_buffer_point_stamped == point_stamped);
-      }
-    }
     WHEN("I copy-assign from that PointStamped") {
       simple_msgs::PointStamped copy_assigned_point_stamped{};
       copy_assigned_point_stamped = point_stamped;
@@ -131,7 +119,7 @@ SCENARIO("Using a PointStamped Message") {
   GIVEN("A point") {
     simple_msgs::PointStamped point_stamped{};
     WHEN("I get the message topic") {
-      std::string topic_name = point_stamped.getTopic();
+      std::string topic_name = simple_msgs::PointStamped::getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "PTST"); }
     }
     WHEN("I print the PointStamped") {

@@ -60,16 +60,6 @@ SCENARIO("Using a RotationMatrixStamped Message") {
     }
   }
 
-  GIVEN("A RotationMatrixStamped created from the serialized data of an existing RotationMatrixStamped") {
-    simple_msgs::RotationMatrixStamped rotation_matrix_stamped{random_header, random_rotation_matrix};
-    simple_msgs::RotationMatrixStamped buffer_rotation_matrix_stamped{rotation_matrix_stamped.getBufferData()->data()};
-    WHEN("I check the RotationMatrixStamped's elements") {
-      THEN("The new RotationMatrixStamped has to be equal to the other") {
-        REQUIRE(buffer_rotation_matrix_stamped == rotation_matrix_stamped);
-      }
-    }
-  }
-
   // Testing copy constructors.
   GIVEN("A RotationMatrixStamped") {
     simple_msgs::RotationMatrixStamped rotation_matrix_stamped{random_header, random_rotation_matrix};
@@ -91,14 +81,6 @@ SCENARIO("Using a RotationMatrixStamped Message") {
   // Testing Copy-assignments.
   GIVEN("A RotationMatrixStamped") {
     simple_msgs::RotationMatrixStamped rotation_matrix_stamped{random_header, random_rotation_matrix};
-    WHEN("I copy-assign from that RotationMatrixStamped's buffer") {
-      simple_msgs::RotationMatrixStamped copy_assigned_buffer_rotation_matrix_stamped{};
-      auto data_ptr = std::make_shared<void*>(rotation_matrix_stamped.getBufferData()->data());
-      copy_assigned_buffer_rotation_matrix_stamped = data_ptr;
-      THEN("The new RotationMatrixStamped has to be same as the original") {
-        REQUIRE(copy_assigned_buffer_rotation_matrix_stamped == rotation_matrix_stamped);
-      }
-    }
     WHEN("I copy-assign from that RotationMatrixStamped") {
       simple_msgs::RotationMatrixStamped copy_assigned_rotation_matrix_stamped{};
       copy_assigned_rotation_matrix_stamped = rotation_matrix_stamped;
@@ -148,7 +130,7 @@ SCENARIO("Using a RotationMatrixStamped Message") {
   GIVEN("A Rotation Matrix Stamped") {
     simple_msgs::RotationMatrixStamped rotation_matrix_stamped{random_header, random_rotation_matrix};
     WHEN("I get the message topic") {
-      std::string topic_name = rotation_matrix_stamped.getTopic();
+      std::string topic_name = simple_msgs::RotationMatrixStamped::getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "RMST"); }
     }
     WHEN("I print the RotatioMatrixStamped") {

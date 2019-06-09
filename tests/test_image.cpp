@@ -99,12 +99,6 @@ SCENARIO("Using an uint8 Image Message") {
     random_image.setHeader(random_header);
     random_image.setOrigin(random_pose);
     random_image.setImageData(image_data.get(), image_size);
-    WHEN("I copy-assign an Image from the original buffer") {
-      simple_msgs::Image<uint8_t> copy_buffer_image{};
-      auto data_ptr = std::make_shared<void*>(random_image.getBufferData()->data());
-      copy_buffer_image = data_ptr;
-      THEN("The new Image has to be same as the original") { REQUIRE(copy_buffer_image == random_image); }
-    }
     WHEN("I copy-assign a new Image") {
       simple_msgs::Image<uint8_t> copy_assigned_image{};
       copy_assigned_image = random_image;
@@ -185,7 +179,7 @@ SCENARIO("Using an uint8 Image Message") {
       THEN("The origin is correct") { REQUIRE(empty_image.getImageOrigin() == random_pose); }
     }
     WHEN("I get the message topic") {
-      std::string topic_name = empty_image.getTopic();
+      std::string topic_name = simple_msgs::Image<uint8_t>::getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "IMAG"); }
     }
   }
@@ -206,7 +200,7 @@ SCENARIO("Using an int16_t Image Message") {
 
   // Int16_t data.
   uint64_t image_size{1};
-  auto image_data = std::make_shared<int16_t>(static_cast<int16_t>(rand() % 256));  // TODO
+  auto image_data = std::make_shared<int16_t>(static_cast<int16_t>(rand() % 256));
 
   // Testing constructor.
   GIVEN("A int16_t Image created from an empty constructor") {
@@ -270,12 +264,6 @@ SCENARIO("Using an int16_t Image Message") {
     random_image.setHeader(random_header);
     random_image.setOrigin(random_pose);
     random_image.setImageData(image_data.get(), image_size);
-    WHEN("I copy-assign an Image from the original buffer") {
-      simple_msgs::Image<int16_t> copy_buffer_image{};
-      auto data_ptr = std::make_shared<void*>(random_image.getBufferData()->data());
-      copy_buffer_image = data_ptr;
-      THEN("The new Image has to be same as the original") { REQUIRE(copy_buffer_image == random_image); }
-    }
     WHEN("I copy-assign a new Image") {
       simple_msgs::Image<int16_t> copy_assigned_image{};
       copy_assigned_image = random_image;
@@ -356,7 +344,7 @@ SCENARIO("Using an int16_t Image Message") {
       THEN("The origin is correct") { REQUIRE(empty_image.getImageOrigin() == random_pose); }
     }
     WHEN("I get the message topic") {
-      std::string topic_name = empty_image.getTopic();
+      std::string topic_name = simple_msgs::Image<int16_t>::getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "IMAG"); }
     }
   }
@@ -441,12 +429,6 @@ SCENARIO("Using a float Image Message") {
     random_image.setHeader(random_header);
     random_image.setOrigin(random_pose);
     random_image.setImageData(image_data.get(), image_size);
-    WHEN("I copy-assign an Image from the original buffer") {
-      simple_msgs::Image<float> copy_buffer_image{};
-      auto data_ptr = std::make_shared<void*>(random_image.getBufferData()->data());
-      copy_buffer_image = data_ptr;
-      THEN("The new Image has to be same as the original") { REQUIRE(copy_buffer_image == random_image); }
-    }
     WHEN("I copy-assign a new Image") {
       simple_msgs::Image<float> copy_assigned_image{};
       copy_assigned_image = random_image;
@@ -527,7 +509,7 @@ SCENARIO("Using a float Image Message") {
       THEN("The origin is correct") { REQUIRE(empty_image.getImageOrigin() == random_pose); }
     }
     WHEN("I get the message topic") {
-      std::string topic_name = empty_image.getTopic();
+      std::string topic_name = simple_msgs::Image<float>::getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "IMAG"); }
     }
   }
@@ -612,12 +594,6 @@ SCENARIO("Using an double Image Message") {
     random_image.setHeader(random_header);
     random_image.setOrigin(random_pose);
     random_image.setImageData(image_data.get(), image_size);
-    WHEN("I copy-assign an Image from the original buffer") {
-      simple_msgs::Image<double> copy_buffer_image{};
-      auto data_ptr = std::make_shared<void*>(random_image.getBufferData()->data());
-      copy_buffer_image = data_ptr;
-      THEN("The new Image has to be same as the original") { REQUIRE(copy_buffer_image == random_image); }
-    }
     WHEN("I copy-assign a new Image") {
       simple_msgs::Image<double> copy_assigned_image{};
       copy_assigned_image = random_image;
@@ -698,7 +674,7 @@ SCENARIO("Using an double Image Message") {
       THEN("The origin is correct") { REQUIRE(empty_image.getImageOrigin() == random_pose); }
     }
     WHEN("I get the message topic") {
-      std::string topic_name = empty_image.getTopic();
+      std::string topic_name = simple_msgs::Image<double>::getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "IMAG"); }
     }
   }

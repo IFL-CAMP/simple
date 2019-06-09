@@ -42,10 +42,6 @@ SCENARIO("Using a Int Message") {
   // Testing copy/move constructors.
   GIVEN("A Int") {
     simple_msgs::Int single_Int{int_1};
-    WHEN("I construct a new Int from the serialized data of the existing Int") {
-      simple_msgs::Int copy_buffer_Int(single_Int.getBufferData()->data());
-      THEN("The new Int is equal to the original") { REQUIRE(copy_buffer_Int == single_Int); }
-    }
     WHEN("I copy-construct a new Int") {
       const simple_msgs::Int& copy_Int{single_Int};
       THEN("The new Int is equal to the original") { REQUIRE(copy_Int == single_Int); }
@@ -61,12 +57,6 @@ SCENARIO("Using a Int Message") {
   // Testing copy/move assignments.
   GIVEN("A Int") {
     simple_msgs::Int single_Int{int_1};
-    WHEN("I copy-assign from that Int's buffer") {
-      simple_msgs::Int copy_assigned_buffer_Int{};
-      auto data_ptr = std::make_shared<void*>(single_Int.getBufferData()->data());
-      copy_assigned_buffer_Int = data_ptr;
-      THEN("The new Int is equal to the original") { REQUIRE(copy_assigned_buffer_Int == single_Int); }
-    }
     WHEN("I copy-assign from that Int") {
       simple_msgs::Int copy_assigned_Int{};
       copy_assigned_Int = single_Int;
@@ -107,7 +97,7 @@ SCENARIO("Using a Int Message") {
   GIVEN("A Int") {
     simple_msgs::Int single_Int(int_1);
     WHEN("I get the message topic") {
-      std::string topic_name = single_Int.getTopic();
+      std::string topic_name = simple_msgs::Int::getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "INTF"); }
     }
     WHEN("I print the Int") {

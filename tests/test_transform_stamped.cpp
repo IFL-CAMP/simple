@@ -68,16 +68,6 @@ SCENARIO("Using a TransformStamped Message") {
     }
   }
 
-  GIVEN("A TransformStamped created from the serialized data of an existing TransformStamped") {
-    simple_msgs::TransformStamped transform_stamped{random_header, random_transform};
-    simple_msgs::TransformStamped buffer_transform_stamped{transform_stamped.getBufferData()->data()};
-    WHEN("I check the TransformStamped's elements") {
-      THEN("The new TransformStamped has to be equal to the other") {
-        REQUIRE(buffer_transform_stamped == transform_stamped);
-      }
-    }
-  }
-
   // Testing copy/move constructors.
   GIVEN("A TransformStamped") {
     simple_msgs::TransformStamped transform_stamped{random_header, random_transform};
@@ -97,14 +87,6 @@ SCENARIO("Using a TransformStamped Message") {
   // Testing copy/move assignments.
   GIVEN("A TransformStamped") {
     simple_msgs::TransformStamped transform_stamped{random_header, random_transform};
-    WHEN("I copy-assign from that TransformStamped's buffer") {
-      simple_msgs::TransformStamped copy_assigned_buffer_transform_stamped{};
-      auto data_ptr = std::make_shared<void*>(transform_stamped.getBufferData()->data());
-      copy_assigned_buffer_transform_stamped = data_ptr;
-      THEN("The new TransformStamped has to be same as the original") {
-        REQUIRE(copy_assigned_buffer_transform_stamped == transform_stamped);
-      }
-    }
     WHEN("I copy-assign from that TransformStamped") {
       simple_msgs::TransformStamped copy_assigned_transform_stamped{};
       copy_assigned_transform_stamped = transform_stamped;
@@ -152,7 +134,7 @@ SCENARIO("Using a TransformStamped Message") {
   GIVEN("A Rotation Matrix Stamped") {
     simple_msgs::TransformStamped transform_stamped{random_header, random_transform};
     WHEN("I get the message topic") {
-      std::string topic_name = transform_stamped.getTopic();
+      std::string topic_name = simple_msgs::TransformStamped::getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "TRST"); }
     }
     WHEN("I print the RotatioMatrixStamped") {
