@@ -9,6 +9,7 @@
  */
 
 #include "simple_msgs/rotation_matrix.hpp"
+#include "simple_msgs/generated/rotation_matrix_generated.h"
 
 namespace simple_msgs {
 RotationMatrix::RotationMatrix(double value) : data_{{value, value, value, value, value, value, value, value, value}} {}
@@ -104,6 +105,8 @@ std::shared_ptr<flatbuffers::DetachedBuffer> RotationMatrix::getBufferData() con
 
   return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
+
+std::string RotationMatrix::getTopic() { return RotationMatrixFbsIdentifier(); }
 
 RotationMatrix RotationMatrix::getTranspose() const {
   std::lock_guard<std::mutex> lock{mutex_};
