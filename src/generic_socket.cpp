@@ -110,11 +110,13 @@ bool GenericSocket::sendMsg(const simple_msgs::GenericMessage& msg, const std::s
     zmq::message_t message{buffer->data(), buffer->size(), free_function, buffer_pointer};
 
     // Send the topic first and add the rest of the message after it.
-    auto topic_success = socket_->send(topic_message, ZMQ_SNDMORE);
-    auto message_success = socket_->send(message, ZMQ_DONTWAIT);
+    // auto topic_success = socket_->send(topic_message, send_flags);
+
+    auto topic_success = socket_->send(topic_message, zmq::send_flags::sndmore);
+    auto message_success = socket_->send(message, zmq::send_flags::dontwait);
 
     // If something wrong happened, throw zmq::error_t().
-    if (topic_success == false || message_success == false) { throw zmq::error_t(); }
+    if (topic_success.value() == false || message_success.value() == false) { throw zmq::error_t(); }
 
   } catch (const zmq::error_t& error) {
     std::cerr << custom_error << "Failed to send the message. ZMQ Error: " << error.what() << std::endl;
@@ -130,7 +132,7 @@ bool GenericSocket::receiveMsg(simple_msgs::GenericMessage& msg, const std::stri
   if (socket_ == nullptr) { return false; }
 
   std::lock_guard<std::mutex> lock{mutex_};
-  bool success{false};
+  zmq::detail::recv_result_t success;
 
   // Local variables to check if data after the topic message is available and its size.
   int data_past_topic{0};
@@ -144,7 +146,7 @@ bool GenericSocket::receiveMsg(simple_msgs::GenericMessage& msg, const std::stri
   // right message type) has been received. i.e. the received topic message should match the one of the template
   // argument of this socket (stored in the topic_ member variable).
   try {
-    if (!socket_->recv(local_message.get())) { throw zmq::error_t(); };
+    if (!socket_->recv(*local_message.get())) { throw zmq::error_t(); };
 
     // Check if the received topic matches the right message topic.
     std::string received_message_type = static_cast<char*>(local_message->data());
@@ -163,10 +165,10 @@ bool GenericSocket::receiveMsg(simple_msgs::GenericMessage& msg, const std::stri
     }
 
     // Receive the real message.
-    success = socket_->recv(local_message.get());
+    success = socket_->recv(*local_message.get());
 
     // Check if any data has been received.
-    if (success == false || local_message->size() == 0) { throw zmq::error_t(); }
+    if (success.value() == false || local_message->size() == 0) { throw zmq::error_t(); }
 
   } catch (const zmq::error_t& error) {
     std::cerr << custom_error << "Failed to receive the message. ZMQ Error: " << error.what() << std::endl;
@@ -184,7 +186,7 @@ bool GenericSocket::receiveMsg(simple_msgs::GenericMessage& msg, const std::stri
   // data.
   msg = std::shared_ptr<void*>{local_message, &data_ptr};
 
-  return success;
+  return success.value();
 }
 
 void GenericSocket::filter() {
