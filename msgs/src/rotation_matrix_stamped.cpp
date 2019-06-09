@@ -9,6 +9,7 @@
  */
 
 #include "simple_msgs/rotation_matrix_stamped.hpp"
+#include "simple_msgs/generated/rotation_matrix_stamped_generated.h"
 
 namespace simple_msgs {
 RotationMatrixStamped::RotationMatrixStamped(const Header& header, const RotationMatrix& rotation_matrix)
@@ -80,6 +81,8 @@ std::shared_ptr<flatbuffers::DetachedBuffer> RotationMatrixStamped::getBufferDat
 
   return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
+
+std::string RotationMatrixStamped::getTopic() { return RotationMatrixStampedFbsIdentifier(); }
 
 void RotationMatrixStamped::setHeader(const Header& header) {
   std::lock_guard<std::mutex> lock{mutex_};
