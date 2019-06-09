@@ -36,10 +36,14 @@ file(GLOB_RECURSE SIMPLE_MSGS_HEADERS "*.hpp")
 
 set(SIMPLE_MSGS_SRCS
   ${SIMPLE_MSGS_HEADERS}
+  src/generic_message.cpp
   src/bool.cpp
+  src/double.cpp
+  src/float.cpp
   src/string.cpp
   src/header.cpp
   src/image.cpp
+  src/int.cpp
   src/point.cpp
   src/point_stamped.cpp
   src/quaternion.cpp
