@@ -186,7 +186,7 @@ bool GenericSocket::receiveMsg(simple_msgs::GenericMessage& msg, const std::stri
   // data.
   msg = std::shared_ptr<void*>{local_message, &data_ptr};
 
-  return success.value();
+  return success.has_value();
 }
 
 void GenericSocket::filter() {
