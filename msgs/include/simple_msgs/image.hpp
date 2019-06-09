@@ -17,6 +17,7 @@
 #include "header.hpp"
 #include "pose.hpp"
 
+// Forward declarations.
 namespace flatbuffers {
 class FlatBufferBuilder;
 
@@ -26,6 +27,7 @@ class Offset;
 
 namespace simple_msgs {
 
+// Forward declarations.
 struct ImageFbs;
 
 template <typename T>
