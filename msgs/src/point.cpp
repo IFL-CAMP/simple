@@ -9,6 +9,7 @@
  */
 
 #include "simple_msgs/point.hpp"
+#include "simple_msgs/generated/point_generated.h"
 
 namespace simple_msgs {
 Point::Point(double value) : data_{{value, value, value}} {}
@@ -164,6 +165,8 @@ std::shared_ptr<flatbuffers::DetachedBuffer> Point::getBufferData() const {
   FinishPointFbsBuffer(builder, tmp_builder.Finish());
   return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
+
+std::string Point::getTopic() { return PointFbsIdentifier(); }
 
 void Point::setX(double x) {
   std::lock_guard<std::mutex> lock{mutex_};
