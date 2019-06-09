@@ -9,6 +9,7 @@
  */
 
 #include "simple_msgs/string.hpp"
+#include "simple_msgs/generated/string_generated.h"
 
 namespace simple_msgs {
 String::String(const std::string& data) : data_{data} {}
@@ -80,6 +81,8 @@ std::shared_ptr<flatbuffers::DetachedBuffer> String::getBufferData() const {
 
   return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
+
+std::string String::getTopic() { return StringFbsIdentifier(); }
 
 /**
  * @brief Stream extraction operator.
