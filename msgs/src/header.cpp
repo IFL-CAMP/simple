@@ -9,6 +9,7 @@
  */
 
 #include "simple_msgs/header.hpp"
+#include "simple_msgs/generated/header_generated.h"
 
 namespace simple_msgs {
 Header::Header(int sequence_number, const std::string& frame_id, long long timestamp)
@@ -73,6 +74,8 @@ std::shared_ptr<flatbuffers::DetachedBuffer> Header::getBufferData() const {
   FinishHeaderFbsBuffer(builder, tmp_builder.Finish());
   return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
+
+std::string Header::getTopic() { return HeaderFbsIdentifier(); }
 
 void Header::setSequenceNumber(int sequence_number) {
   std::lock_guard<std::mutex> lock{mutex_};
