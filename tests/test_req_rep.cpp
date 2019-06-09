@@ -143,7 +143,7 @@ SCENARIO("Client-Server to a String message.") {
     WHEN("The client sends a request") {
       auto p = createRandomString();
       client.request(p);
-      THEN("The string received back is the default answer") { REQUIRE(p == "REPLY"); }
+      THEN("The string received back is the default answer") { REQUIRE(p == std::string("REPLY")); }
     }
   }
 }
