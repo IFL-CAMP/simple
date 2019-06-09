@@ -9,6 +9,7 @@
  */
 
 #include "simple_msgs/transform_stamped.hpp"
+#include "simple_msgs/generated/transform_stamped_generated.h"
 
 namespace simple_msgs {
 TransformStamped::TransformStamped(const Header& header, const Transform& transform)
@@ -79,6 +80,8 @@ std::shared_ptr<flatbuffers::DetachedBuffer> TransformStamped::getBufferData() c
   FinishTransformStampedFbsBuffer(builder, tmp_builder.Finish());
   return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
+
+std::string TransformStamped::getTopic() { return TransformStampedFbsIdentifier(); }
 
 void TransformStamped::setHeader(const Header& header) {
   std::lock_guard<std::mutex> lock{mutex_};
