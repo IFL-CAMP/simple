@@ -4,7 +4,7 @@ project(simple_examples)
 option(SIMPLE_BUILD_OPENCV_EXAMPLES "Build SIMPLE Examples that use OpenCV" FALSE)
 
 if (${SIMPLE_BUILD_OPENCV_EXAMPLES})
-  find_package(OpenCV REQUIRED COMPONENTS opencv_core opencv_videoio opencv_highgui)
+  find_package(OpenCV 4 REQUIRED COMPONENTS opencv_core opencv_videoio opencv_highgui)
   add_definitions(-DDATA_DIR="${PROJECT_SOURCE_DIR}/data/")
 
   add_executable(example_image_publisher src/example_image_publisher.cpp)
