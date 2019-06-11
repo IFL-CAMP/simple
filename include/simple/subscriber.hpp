@@ -12,6 +12,7 @@
 #define SIMPLE_SUBSCRIBER_HPP
 
 #include <atomic>
+#include <functional>
 #include <memory>
 #include <string>
 #include <thread>
