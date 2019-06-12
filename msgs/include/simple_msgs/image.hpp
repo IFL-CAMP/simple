@@ -22,7 +22,7 @@ namespace flatbuffers {
 class FlatBufferBuilder;
 
 template <typename T>
-class Offset;
+struct Offset;
 }  // namespace flatbuffers
 
 namespace simple_msgs {
