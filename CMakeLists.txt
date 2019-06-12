@@ -121,9 +121,9 @@ target_include_directories(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
     simple_msgs
+    ${CMAKE_THREAD_LIBS_INIT}
   PRIVATE
     cppzmq-static
-    ${CMAKE_THREAD_LIBS_INIT}
     ${coverage_lib}
 )
 
@@ -155,10 +155,9 @@ target_include_directories(${PROJECT_NAME}-static
 target_link_libraries(${PROJECT_NAME}-static
   PUBLIC
     simple_msgs
-  PRIVATE
     ${CMAKE_THREAD_LIBS_INIT}
+  PRIVATE
     ${coverage_lib}
-  INTERFACE
     $<BUILD_INTERFACE:cppzmq-static>
 )
 
