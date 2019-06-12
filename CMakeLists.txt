@@ -127,7 +127,7 @@ target_link_libraries(${PROJECT_NAME}
     ${coverage_lib}
 )
 
-# Set the compiler options for the shared lib, all warning are activated and treaded as errors.
+# Set the compiler options for the shared lib, all warning are activated and treated as errors.
 simple_compile_options(${PROJECT_NAME})
 
 # Generate the export header for the shared library.
