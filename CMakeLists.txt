@@ -135,7 +135,7 @@ include(GenerateExportHeader)
 generate_export_header(${PROJECT_NAME})
 
 # STATIC library.
-add_library(${PROJECT_NAME}-static
+add_library(${PROJECT_NAME}-static STATIC
   src/context_manager.cpp
   src/generic_socket.cpp
   )
@@ -143,7 +143,7 @@ add_library(${PROJECT_NAME}-static
 # Required for the generated export header.
 target_compile_definitions(${PROJECT_NAME}-static PUBLIC SIMPLE_STATIC_DEFINE)
 
-target_include_directories(${PROJECT_NAME}-static PUBLIC
+target_include_directories(${PROJECT_NAME}-static
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -156,9 +156,10 @@ target_link_libraries(${PROJECT_NAME}-static
   PUBLIC
     simple_msgs
   PRIVATE
-    cppzmq-static
     ${CMAKE_THREAD_LIBS_INIT}
     ${coverage_lib}
+  INTERFACE
+    $<BUILD_INTERFACE:cppzmq-static>
 )
 
 # Set the compiler options for the static lib, all warning are activated and treaded as errors.
@@ -196,7 +197,7 @@ install(EXPORT simpleTargets
 IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
 
   SET(CPACK_PACKAGING_INSTALL_PREFIX "/usr/local")
-  #SET(CPACK_TOPLEVEL_TAG "/tmp")
+
   SET(CPACK_GENERATOR "DEB")
   SET(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
   SET(CPACK_DEBIAN_PACKAGE_SECTION "science")
