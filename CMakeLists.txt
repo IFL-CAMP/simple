@@ -115,6 +115,7 @@ target_include_directories(${PROJECT_NAME}
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/msgs/include>
   PRIVATE
+    $<BUILD_INTERFACE:${ZeroMQ_INCLUDE_DIR}>
     $<BUILD_INTERFACE:${cppzmq_INCLUDE_DIR}>
 )
 
@@ -149,6 +150,7 @@ target_include_directories(${PROJECT_NAME}-static
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/msgs/include>
   PRIVATE
+    $<BUILD_INTERFACE:${ZeroMQ_INCLUDE_DIR}>
     $<BUILD_INTERFACE:${cppzmq_INCLUDE_DIR}>
 )
 
@@ -156,10 +158,10 @@ target_link_libraries(${PROJECT_NAME}-static
   PUBLIC
     simple_msgs
   PRIVATE
+    $<BUILD_INTERFACE:cppzmq-static>
     ${CMAKE_THREAD_LIBS_INIT}
     ${coverage_lib}
-  INTERFACE
-    $<BUILD_INTERFACE:cppzmq-static>
+
 )
 
 # Set the compiler options for the static lib, all warning are activated and treaded as errors.

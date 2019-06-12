@@ -71,7 +71,7 @@ target_include_directories(${PROJECT_NAME}
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC SIMPLE_STATIC_DEFINE)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:flatbuffers::flatbuffers>)
+target_link_libraries(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:flatbuffers::flatbuffers>)
 
 ###### INSTALLATION
 
