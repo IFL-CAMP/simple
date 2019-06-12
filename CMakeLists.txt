@@ -115,7 +115,7 @@ target_include_directories(${PROJECT_NAME}
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/msgs/include>
   PRIVATE
-    $<BUILD_INTERFACE:${ZeroMQ_INCLUDE_DIR}>
+    $<BUILD_INTERFACE:${cppzmq_INCLUDE_DIR}>
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -149,7 +149,7 @@ target_include_directories(${PROJECT_NAME}-static
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/msgs/include>
   PRIVATE
-    $<BUILD_INTERFACE:${ZeroMQ_INCLUDE_DIR}>
+    $<BUILD_INTERFACE:${cppzmq_INCLUDE_DIR}>
 )
 
 target_link_libraries(${PROJECT_NAME}-static
