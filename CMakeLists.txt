@@ -158,9 +158,10 @@ target_link_libraries(${PROJECT_NAME}-static
   PUBLIC
     simple_msgs
     ${CMAKE_THREAD_LIBS_INIT}
+    $<BUILD_INTERFACE:cppzmq-static>
+    $<BUILD_INTERFACE:libzmq-static>
   PRIVATE
     ${coverage_lib}
-    $<BUILD_INTERFACE:cppzmq-static>
 )
 
 # Set the compiler options for the static lib, all warning are activated and treaded as errors.
