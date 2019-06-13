@@ -15,8 +15,7 @@ matrix:
         - gcc-5
         - g++-5
     env: MATRIX_EVAL="CC='gcc-5' && CXX='g++-5'" BUILD_TYPE='Debug'
-    tags:
-      enabled: false
+    if: tag IS blank
 
   - os: linux
     compiler: gcc
@@ -28,8 +27,7 @@ matrix:
         - gcc-5
         - g++-5
     env: MATRIX_EVAL="CC='gcc-5' && CXX='g++-5'" BUILD_TYPE='Release'
-    tags:
-      enabled: false
+    if: tag IS blank
 
   - os: linux
     compiler: gcc
@@ -41,8 +39,7 @@ matrix:
         - gcc-5
         - g++-5
     env: MATRIX_EVAL="CC='gcc-5' && CXX='g++-5'" BUILD_TYPE='Coverage'
-    tags:
-      enabled: false
+    if: tag IS blank
 
   - os: linux
     compiler: gcc
@@ -54,8 +51,7 @@ matrix:
         - gcc-5
         - g++-5
     env: MATRIX_EVAL="CC='gcc-5' && CXX='g++-5'" BUILD_TYPE='Release' SIMPLE_PACKAGE='True'
-    tags:
-      enabled: true
+    if: tag IS present
 
   - os: linux
     compiler: clang
@@ -67,8 +63,7 @@ matrix:
         packages:
         - clang-3.8
     env: MATRIX_EVAL="CXX='clang++-3.8'" BUILD_TYPE='Debug'
-    tags:
-      enabled: false
+    if: tag IS blank
 
   - os: linux
     compiler: clang
@@ -80,29 +75,25 @@ matrix:
         packages:
         - clang-3.8
     env: MATRIX_EVAL="CXX='clang++-3.8'" BUILD_TYPE='Release'
-    tags:
-      enabled: false
+    if: tag IS blank
 
   - os: osx
     osx_image: xcode8.3
     compiler: clang
     env: MATRIX_EVAL="CXX='clang++'" BUILD_TYPE='Debug'
-    tags:
-      enabled: false
+    if: tag IS blank
 
   - os: osx
     osx_image: xcode8.3
     compiler: clang
     env: MATRIX_EVAL="CXX='clang++'" BUILD_TYPE='Release'
-    tags:
-      enabled: false
+    if: tag IS blank
 
   - os: osx
     osx_image: xcode8.3
     compiler: clang
     env: MATRIX_EVAL="CXX='clang++'" BUILD_TYPE='Release' SIMPLE_PACKAGE='True'
-    tags:
-      enabled: true
+    if: tag IS present
 
 before_install:
 - |
