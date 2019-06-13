@@ -132,5 +132,4 @@ TARGETS
   test_req_rep
   test_context_manager
 DESTINATION 
-  bin
-)
+  bin)
