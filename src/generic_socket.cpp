@@ -110,8 +110,6 @@ bool GenericSocket::sendMsg(const simple_msgs::GenericMessage& msg, const std::s
     zmq::message_t message{buffer->data(), buffer->size(), free_function, buffer_pointer};
 
     // Send the topic first and add the rest of the message after it.
-    // auto topic_success = socket_->send(topic_message, send_flags);
-
     auto topic_success = socket_->send(topic_message, zmq::send_flags::sndmore);
     auto message_success = socket_->send(message, zmq::send_flags::dontwait);
 
@@ -150,7 +148,8 @@ bool GenericSocket::receiveMsg(simple_msgs::GenericMessage& msg, const std::stri
 
     // Check if the received topic matches the right message topic.
     std::string received_message_type = static_cast<char*>(local_message->data());
-    if (std::strncmp(received_message_type.c_str(), topic_.c_str(), std::strlen(topic_.c_str())) != 0) {
+    // if (std::strncmp(received_message_type.c_str(), topic_.c_str(), std::strlen(topic_.c_str())) != 0) {
+    if (received_message_type.compare(0, topic_.size(), topic_, 0, topic_.size()) != 0) {
       std::cerr << custom_error << "Received message type " << received_message_type << " while expecting " << topic_
                 << "." << std::endl;
       return false;
