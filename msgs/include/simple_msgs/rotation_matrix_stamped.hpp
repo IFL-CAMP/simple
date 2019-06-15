@@ -129,7 +129,7 @@ protected:
   /**
    * @brief Construct a RotationMatrixStamped message using a raw memory coming from network.
    */
-  explicit RotationMatrixStamped(const void* data);
+  RotationMatrixStamped(const void* data);
 
   /**
    * @brief Copy assignment operator that uses raw memory coming from the network.

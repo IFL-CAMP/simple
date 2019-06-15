@@ -130,7 +130,7 @@ protected:
   /**
    * @brief Construct a QuaternionStamped message using a raw memory coming from network.
    */
-  explicit QuaternionStamped(const void* data);
+  QuaternionStamped(const void* data);
 
   /**
    * @brief Copy assignment operator that uses raw memory coming from the network.

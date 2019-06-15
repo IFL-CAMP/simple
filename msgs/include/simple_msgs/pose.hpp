@@ -126,7 +126,7 @@ protected:
   /**
    * @brief Construct a Pose message using a raw memory coming from network.
    */
-  explicit Pose(const void* data);
+  Pose(const void* data);
 
   /**
    * @brief Copy assignment operator that uses raw memory coming from the network.

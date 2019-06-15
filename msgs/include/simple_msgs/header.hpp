@@ -130,7 +130,7 @@ protected:
   /**
    * @brief Construct a Header message using a raw memory coming from network.
    */
-  explicit Header(const void* data);
+  Header(const void* data);
 
   /**
    * @brief Copy assignment operator that uses raw memory coming from the network.

@@ -129,7 +129,7 @@ protected:
   /**
    * @brief Construct a PointStamped message using a raw memory coming from network.
    */
-  explicit PointStamped(const void* data);
+  PointStamped(const void* data);
 
   /**
    * @brief Copy assignment operator that uses raw memory coming from the network.
