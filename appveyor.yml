@@ -51,3 +51,15 @@ build_script:
 
 test_script:
   - ctest -R simple_tests -C %CONFIGURATION% --output-on-failure
+
+deploy:
+  description: 'S.I.M.P.L.E. Release'
+  provider: GitHub
+  auth_token:
+    secure: cUPtOPIdMqFQI0T2jkc4PZVdafqiSRTHYxG0b0ajBQZ2ySvhjeq1r4SQu1BR/p7y
+  artifact: /.*\.exe/
+  draft: false
+  prerelease: false
+  on:
+    branch: master
+    APPVEYOR_REPO_TAG: true
