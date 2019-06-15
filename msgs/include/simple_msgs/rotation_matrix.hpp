@@ -154,7 +154,7 @@ protected:
   /**
    * @brief Construct a RotationMatrix message using a raw memory coming from network.
    */
-  RotationMatrix(const void* data);
+  explicit RotationMatrix(const void* data);
 
   /**
    * @brief Copy assignment operator that uses raw memory coming from the network.

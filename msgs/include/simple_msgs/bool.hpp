@@ -92,7 +92,7 @@ protected:
   /**
    * @brief Construct a Bool message using a raw memory coming from network.
    */
-  Bool(const void* data);
+  explicit Bool(const void* data);
 
   /**
    * @brief Copy assignment operator that uses raw memory coming from the network.

@@ -161,7 +161,7 @@ protected:
   /**
    * @brief Construct a Quaternion message using a raw memory coming from network.
    */
-  Quaternion(const void* data);
+  explicit Quaternion(const void* data);
 
   /**
    * @brief Copy assignment operator that uses raw memory coming from the network.

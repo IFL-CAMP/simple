@@ -126,7 +126,7 @@ protected:
   /**
    * @brief Construct a PoseStamped message using a raw memory coming from network.
    */
-  PoseStamped(const void* data);
+  explicit PoseStamped(const void* data);
 
   /**
    * @brief Copy assignment operator that uses raw memory coming from the network.

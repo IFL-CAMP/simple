@@ -129,7 +129,7 @@ protected:
   /**
    * @brief Construct a String message using the given text.
    */
-  String(const char* data);
+  explicit String(const char* data);
 
   /**
    * @brief Copy assignment operator that uses raw memory coming from the network.

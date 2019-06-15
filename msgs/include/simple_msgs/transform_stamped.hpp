@@ -126,7 +126,7 @@ protected:
   /**
    * @brief Construct a TransformStamped message using a raw memory coming from network.
    */
-  TransformStamped(const void* data);
+  explicit TransformStamped(const void* data);
 
   /**
    * @brief Copy assignment operator that uses raw memory coming from the network.
