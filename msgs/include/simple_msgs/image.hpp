@@ -349,6 +349,8 @@ private:
    */
   class InternalData {
   public:
+    InternalData() = default;
+
     const T* getData() const {
       if (owning_data_) { return owning_data_.get(); }
       return not_owning_data_;
