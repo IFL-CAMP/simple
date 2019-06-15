@@ -33,12 +33,12 @@ public:
   /**
    * @brief Construct a String message using the given text.
    */
-  String(std::string&& data);
+  String(const char* data);
 
   /**
-   * @brief Construct a String message using a raw memory coming from network.
+   * @brief Construct a String message using the given text.
    */
-  String(const void* data);
+  String(std::string&& data);
 
   /**
    * @brief Copy constructor.
@@ -127,9 +127,9 @@ public:
 
 protected:
   /**
-   * @brief Construct a String message using the given text.
+   * @brief Construct a String message using a raw memory coming from network.
    */
-  String(const char* data);
+  String(const void* data);
 
   /**
    * @brief Copy assignment operator that uses raw memory coming from the network.
