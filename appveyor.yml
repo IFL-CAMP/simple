@@ -53,16 +53,16 @@ build_script:
   - cmake --build . --config %CONFIGURATION% -- /verbosity:minimal
 
 test_script:
-  - sh: >-
-    If ($env:APPVEYOR_REPO_TAG -eq "false") { 
-      ctest -R simple_tests -C %CONFIGURATION% --output-on-failure
-    }
+  - ps: >-
+      If ($env:APPVEYOR_REPO_TAG -eq "false") { 
+        ctest -R simple_tests -C %CONFIGURATION% --output-on-failure
+      }
 
 after_build:
-  - sh: >-
-    If ($env:APPVEYOR_REPO_TAG -eq "true") { 
-      cpack
-    }
+  - ps: >-
+      If ($env:APPVEYOR_REPO_TAG -eq "true") { 
+        cpack
+      }
 
 deploy:
   description: 'S.I.M.P.L.E. Release'
