@@ -14,10 +14,11 @@ It provides a clean interface to the classic **Publisher-Subscriber** and **Requ
 ___
 ### Dependencies
 
-- A C++11 compiler (tested on **gcc-5**, **clang-3.8**, **msvc14** and **msvc15**.)
-- CMake 3.3+
-- [ZeroMQ](https://github.com/zeromq/libzmq) 4.2.4+
-- [FlatBuffers](https://github.com/google/flatbuffers) 1.9.0+
+-	A C++11 compiler (tested on **gcc-5**, **clang-3.8**, **msvc14** and **msvc15**.)
+-	CMake 3.3+
+-	[ZeroMQ](https://github.com/zeromq/libzmq) 4.2.4+
+-	[cppzmq](https://github.com/zeromq/cppzmq) 4.3.1+
+-	[FlatBuffers](https://github.com/google/flatbuffers) 1.9.0+
 
 ___
 

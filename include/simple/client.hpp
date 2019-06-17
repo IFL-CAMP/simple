@@ -11,7 +11,6 @@
 #ifndef SIMPLE_CLIENT_HPP
 #define SIMPLE_CLIENT_HPP
 
-#include <zmq.h>
 #include <memory>
 #include <string>
 
@@ -41,7 +40,7 @@ public:
    * @param [in] linger - Time, in msec, unsent messages linger in memory after socket is closed. Default -1 (infinite).
    */
   explicit Client(const std::string& address, int timeout = 2000, int linger = -1)
-    : socket_{ZMQ_REQ}, address_{address}, timeout_{timeout}, linger_{linger} {
+    : socket_{zmq_socket_type::req, T::getTopic()}, address_{address}, timeout_{timeout}, linger_{linger} {
     initClient();
   }
 
@@ -65,31 +64,12 @@ public:
    * @brief Sends the request to a server and waits for an answer.
    * @param [in,out] msg - simple_msgs class wrapper for Flatbuffer messages..
    */
-  bool request(T& msg) { return request(msg.getBufferData(), msg); }
-
-  /**
-   * @brief Query the endpoint that this object is bound to. 
-   * 
-   * Can be used to find the bound port if binding to ephemeral ports.
-   * @return the endpoint in form of a ZMQ DSN string, i.e. "tcp://0.0.0.0:8000"
-   */
-  const std::string& endpoint() { return socket_.endpoint(); }
-
-private:
-  // Initialize the client, setting up the socket and its configuration.
-  void initClient() {
-    if (!socket_.isValid()) { socket_.initSocket(ZMQ_REQ); }
-    socket_.setTimeout(timeout_);
-    socket_.setLinger(linger_);
-    socket_.connect(address_);
-  }
-
-  bool request(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer, T& msg) {
+  bool request(T& msg) {
     bool success{false};
 
     // Send the message to the Server and receive back the response.
-    if (socket_.sendMsg(buffer, "[SIMPLE Client] - ") != -1) {
-      if (socket_.receiveMsg(msg, "[SIMPLE Client] - ") != -1) {
+    if (socket_.sendMsg(msg, "[SIMPLE Client] - ")) {
+      if (socket_.receiveMsg(msg, "[SIMPLE Client] - ")) {
         success = true;
       } else {
         std::cerr << "[SIMPLE Client] - No reply received. Aborting this request." << std::endl;
@@ -101,10 +81,27 @@ private:
     return success;
   }
 
-  GenericSocket<T> socket_{};  //! The internal socket.
-  std::string address_{""};    //! The address the Client is connected to.
-  int timeout_{30000};         //! Milliseconds the Client should wait for a reply from a Server.
-  int linger_{-1};             //! Milliseconds the messages linger in memory after the socket is closed.
+  /**
+   * @brief Query the endpoint that this object is bound to.
+   *
+   * Can be used to find the bound port if binding to ephemeral ports.
+   * @return the endpoint in form of a ZMQ DSN string, i.e. "tcp://0.0.0.0:8000"
+   */
+  const std::string& endpoint() { return socket_.endpoint(); }
+
+private:
+  // Initialize the client, setting up the socket and its configuration.
+  void initClient() {
+    if (!socket_.isSocketValid()) { socket_.initSocket(zmq_socket_type::req); }
+    socket_.setTimeout(timeout_);
+    socket_.setLinger(linger_);
+    socket_.connect(address_);
+  }
+
+  GenericSocket socket_{};   //! The internal socket.
+  std::string address_{""};  //! The address the Client is connected to.
+  int timeout_{30000};       //! Milliseconds the Client should wait for a reply from a Server.
+  int linger_{-1};           //! Milliseconds the messages linger in memory after the socket is closed.
 };
 }  // Namespace simple.
 

@@ -14,7 +14,7 @@
 #include <iostream>
 
 #include "random_generators.hpp"
-#include "simple_msgs/pose_stamped.h"
+#include "simple_msgs/pose_stamped.hpp"
 
 using namespace simple_tests;
 
@@ -62,10 +62,6 @@ SCENARIO("Using a PoseStamped Message") {
   // Testing copy constructors.
   GIVEN("A PoseStamped") {
     simple_msgs::PoseStamped pose_stamped{random_header, random_pose};
-    WHEN("Another PoseStamped is created from the serialized data of the original one") {
-      simple_msgs::PoseStamped buffer_pose_stamped{pose_stamped.getBufferData()->data()};
-      THEN("The new PoseStamped has to be equal to the other") { REQUIRE(buffer_pose_stamped == pose_stamped); }
-    }
     WHEN("I copy-construct a new PoseStamped") {
       simple_msgs::PoseStamped copy_pose_stamped{pose_stamped};
       THEN("The new PoseStamped is equal to the other") { REQUIRE(copy_pose_stamped == pose_stamped); }
@@ -82,14 +78,6 @@ SCENARIO("Using a PoseStamped Message") {
   // Testing Copy-assignments.
   GIVEN("A PoseStamped") {
     simple_msgs::PoseStamped pose_stamped{random_header, random_pose};
-    WHEN("I copy-assign from that PoseStamped's buffer") {
-      simple_msgs::PoseStamped copy_assigned_buffer_pose_stamped{};
-      auto data_ptr = std::make_shared<void*>(pose_stamped.getBufferData()->data());
-      copy_assigned_buffer_pose_stamped = data_ptr;
-      THEN("The new PoseStamped has to be same as the original") {
-        REQUIRE(copy_assigned_buffer_pose_stamped == pose_stamped);
-      }
-    }
     WHEN("I copy-assign from that PoseStamped") {
       simple_msgs::PoseStamped copy_assigned_pose_stamped{};
       copy_assigned_pose_stamped = pose_stamped;
@@ -137,7 +125,7 @@ SCENARIO("Using a PoseStamped Message") {
   GIVEN("A point") {
     simple_msgs::PoseStamped pose_stamped{};
     WHEN("I get the message topic") {
-      std::string topic_name = pose_stamped.getTopic();
+      std::string topic_name = simple_msgs::PoseStamped::getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "POST"); }
     }
     WHEN("I print the PoseStamped") {

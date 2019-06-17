@@ -8,7 +8,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "simple_msgs/pose_stamped.h"
+#include "simple_msgs/pose_stamped.hpp"
+#include "simple_msgs/generated/pose_stamped_generated.h"
 
 namespace simple_msgs {
 PoseStamped::PoseStamped(const Header& header, const Pose& pose) : header_{header}, pose_{pose} {}
@@ -75,6 +76,8 @@ std::shared_ptr<flatbuffers::DetachedBuffer> PoseStamped::getBufferData() const 
   FinishPoseStampedFbsBuffer(builder, tmp_builder.Finish());
   return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
+
+std::string PoseStamped::getTopic() { return PoseStampedFbsIdentifier(); }
 
 void PoseStamped::setHeader(const Header& header) {
   std::lock_guard<std::mutex> lock{mutex_};

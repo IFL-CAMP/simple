@@ -8,7 +8,25 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <simple/context_manager.hpp>
+#include "simple/context_manager.hpp"
+#include <zmq.hpp>
+
 //! Static member are here initialized.
 std::mutex simple::ContextManager::context_mutex_{};
-std::shared_ptr<simple::ContextManager::ZMQContext> simple::ContextManager::context_{nullptr};
+std::shared_ptr<zmq::context_t> simple::ContextManager::context_{nullptr};
+
+namespace simple {
+
+zmq::context_t* ContextManager::instance() {
+  std::lock_guard<std::mutex> lock{context_mutex_};
+  // Create a new ZMQ context or return the existing one.
+  if (context_ == nullptr) { context_ = std::make_shared<zmq::context_t>(); }
+  return context_.get();
+}
+
+void ContextManager::destroy() {
+  std::lock_guard<std::mutex> lock{context_mutex_};
+  context_ = nullptr;
+}
+
+}  // namespace simple

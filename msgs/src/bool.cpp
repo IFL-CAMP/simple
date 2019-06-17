@@ -8,7 +8,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "simple_msgs/bool.h"
+#include "simple_msgs/generated/bool_generated.h"
+
+#include "simple_msgs/bool.hpp"
 
 namespace simple_msgs {
 Bool::Bool(bool data) : data_{data} {}
@@ -41,6 +43,8 @@ std::shared_ptr<flatbuffers::DetachedBuffer> Bool::getBufferData() const {
   FinishBoolFbsBuffer(builder, tmp_builder.Finish());
   return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
+
+std::string Bool::getTopic() { return BoolFbsIdentifier(); }
 
 /**
  * @brief Stream extraction operator.

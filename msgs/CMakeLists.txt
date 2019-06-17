@@ -32,14 +32,18 @@ endfunction()
 
 ###### SOURCE FILES
 
-file(GLOB_RECURSE SIMPLE_MSGS_HEADERS "*.h" "*.hpp")
+file(GLOB_RECURSE SIMPLE_MSGS_HEADERS "*.hpp")
 
 set(SIMPLE_MSGS_SRCS
   ${SIMPLE_MSGS_HEADERS}
+  src/generic_message.cpp
   src/bool.cpp
+  src/double.cpp
+  src/float.cpp
   src/string.cpp
   src/header.cpp
   src/image.cpp
+  src/int.cpp
   src/point.cpp
   src/point_stamped.cpp
   src/quaternion.cpp
@@ -65,14 +69,14 @@ target_include_directories(${PROJECT_NAME}
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/generated>
 )
 
-target_link_libraries(${PROJECT_NAME} PUBLIC flatbuffers::flatbuffers)
+target_compile_definitions(${PROJECT_NAME} PUBLIC SIMPLE_STATIC_DEFINE)
+
+target_link_libraries(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:flatbuffers::flatbuffers>)
 
 ###### INSTALLATION
 
 # Install the simple_msgs library in the desired folder.
 install(TARGETS ${PROJECT_NAME} EXPORT "simpleTargets"
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})

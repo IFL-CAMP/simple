@@ -11,7 +11,6 @@
 #ifndef SIMPLE_PUBLISHER_HPP
 #define SIMPLE_PUBLISHER_HPP
 
-#include <zmq.h>
 #include <memory>
 #include <string>
 
@@ -38,7 +37,9 @@ public:
    * Subscribers can subscribe to a Publisher connecting to its address.
    * @param [in] address - in the form \<PROTOCOL\>://\<IP_ADDRESS\>:\<PORT\>, e.g. tcp://127.0.0.1:5555.
    */
-  explicit Publisher<T>(const std::string& address) : socket_{ZMQ_PUB} { socket_.bind(address); }
+  explicit Publisher<T>(const std::string& address) : socket_{zmq_socket_type::pub, T::getTopic()} {
+    socket_.bind(address);
+  }
 
   // A Publisher cannot be copied, only moved.
   Publisher(const Publisher& other) = delete;
@@ -59,9 +60,9 @@ public:
   /**
    * @brief Publishes the given message of type T through the open socket.
    * @param [in] msg - simple_msgs class wrapper for Flatbuffer messages.
-   * @return size of the published message, in bytes. Returns -1 if send fails.
+   * @return success or failure of the publishing.
    */
-  int publish(const T& msg) { return publish(msg.getBufferData()); }
+  bool publish(const T& msg) { return socket_.sendMsg(msg, "[Simple Publisher] - "); }
 
   /**
    * @brief Query the endpoint that this object is bound to.
@@ -72,17 +73,7 @@ public:
   const std::string& endpoint() { return socket_.endpoint(); }
 
 private:
-  /**
-   * @brief Publishes the given message through the open socket.
-   * @param [in] buffer - Flatbuffers buffer containing the data to be published.
-   * @return size of the published message, in bytes. Returns -1 if send fails.
-   */
-  int publish(const std::shared_ptr<flatbuffers::DetachedBuffer>& buffer) const {
-    return socket_.sendMsg(buffer, "[Simple Publisher] - ");
-  }
-
-private:
-  GenericSocket<T> socket_{};  //! The internal socket.
+  GenericSocket socket_{};  //! The internal socket.
 };
 }  // Namespace simple.
 

@@ -14,7 +14,7 @@
 #include <iostream>
 
 #include "random_generators.hpp"
-#include "simple_msgs/header.h"
+#include "simple_msgs/header.hpp"
 
 using namespace simple_tests;
 
@@ -52,10 +52,6 @@ SCENARIO("Using a Header Message") {
   // Testing copy/move constructors.
   GIVEN("A header") {
     simple_msgs::Header original_header{int_1, string_1, long_1};
-    WHEN("I construct a new Header from the serialized data of the existing Header") {
-      simple_msgs::Header buffer_copy_header{original_header.getBufferData()->data()};
-      THEN("The new Header is equal to the other") { REQUIRE(buffer_copy_header == original_header); }
-    }
     WHEN("I copy-construct a new Header") {
       simple_msgs::Header copy_header{original_header};
       THEN("The new Header is equal to the other") { REQUIRE(copy_header == original_header); }
@@ -73,12 +69,6 @@ SCENARIO("Using a Header Message") {
   // Testing copy/move assignments.
   GIVEN("A Header") {
     simple_msgs::Header original_header(int_1, string_1, long_1);
-    WHEN("I copy-assign from that Header's buffer") {
-      simple_msgs::Header copy_assigned_buffer_header{};
-      auto data_ptr = std::make_shared<void*>(original_header.getBufferData()->data());
-      copy_assigned_buffer_header = data_ptr;
-      THEN("The new Header is equal to the other") { REQUIRE(copy_assigned_buffer_header == original_header); }
-    }
     WHEN("I copy-assign from that Header") {
       simple_msgs::Header copy_assigned_header{};
       copy_assigned_header = original_header;
@@ -129,7 +119,7 @@ SCENARIO("Using a Header Message") {
   GIVEN("A Header") {
     simple_msgs::Header header{int_1, string_1, long_1};
     WHEN("I get the message topic") {
-      std::string topic_name = header.getTopic();
+      std::string topic_name = simple_msgs::Header::getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "HEAD"); }
     }
     WHEN("I print the Float") {

@@ -1,121 +1,184 @@
 language: cpp
 sudo: true
+dist: xenial
 
 matrix:
   include:
 
-    # Linux C++11 GCC build
-    - os: linux
-      compiler: gcc
-      addons: &gcc5
-        apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['gcc-5', 'g++-5']
-      env: MATRIX_EVAL="CC='gcc-5' && CXX='g++-5'" BUILD_TYPE='Debug'
-      
-    - os: linux
-      compiler: gcc
-      addons: &gcc5
-        apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['gcc-5', 'g++-5']
-      env: MATRIX_EVAL="CC='gcc-5' && CXX='g++-5'" BUILD_TYPE='Release'
-      
-    - os: linux
-      compiler: gcc
-      addons: &gcc5
-        apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['gcc-5', 'g++-5']
-      env: MATRIX_EVAL="CC='gcc-5' && CXX='g++-5'" BUILD_TYPE='Coverage'
+  - os: linux
+    compiler: gcc
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - gcc-5
+        - g++-5
+    env: MATRIX_EVAL="CC='gcc-5' && CXX='g++-5'" BUILD_TYPE='Debug'
+    if: tag IS blank
 
-    # Linux C++11 Clang build
-    - os: linux
-      compiler: clang
-      addons: &clang38
-        apt:
-          sources: ['llvm-toolchain-precise-3.8', 'ubuntu-toolchain-r-test']
-          packages: ['clang-3.8']
-      env: MATRIX_EVAL="CXX='clang++-3.8'" BUILD_TYPE='Debug'
-      
-    - os: linux
-      compiler: clang
-      addons: &clang38
-        apt:
-          sources: ['llvm-toolchain-precise-3.8', 'ubuntu-toolchain-r-test']
-          packages: ['clang-3.8']
-      env: MATRIX_EVAL="CXX='clang++-3.8'" BUILD_TYPE='Release'
+  - os: linux
+    compiler: gcc
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - gcc-5
+        - g++-5
+    env: MATRIX_EVAL="CC='gcc-5' && CXX='g++-5'" BUILD_TYPE='Release'
+    if: tag IS blank
 
-    # OSX C++11 Clang Builds
-    - os: osx
-      osx_image: xcode8.3
-      compiler: clang
-      env: MATRIX_EVAL="CXX='clang++'" BUILD_TYPE='Debug'
-      
-    - os: osx
-      osx_image: xcode8.3
-      compiler: clang
-      env: MATRIX_EVAL="CXX='clang++'" BUILD_TYPE='Release'
-      
+  - os: linux
+    compiler: gcc
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - gcc-5
+        - g++-5
+    env: MATRIX_EVAL="CC='gcc-5' && CXX='g++-5'" BUILD_TYPE='Coverage'
+    if: tag IS blank
+
+  - os: linux
+    compiler: gcc
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - gcc-5
+        - g++-5
+    env: MATRIX_EVAL="CC='gcc-5' && CXX='g++-5'" BUILD_TYPE='Release' SIMPLE_PACKAGE='True'
+    if: tag IS present
+
+  - os: linux
+    compiler: clang
+    addons:
+      apt:
+        sources:
+        - llvm-toolchain-precise-3.8
+        - ubuntu-toolchain-r-test
+        packages:
+        - clang-3.8
+    env: MATRIX_EVAL="CXX='clang++-3.8'" BUILD_TYPE='Debug'
+    if: tag IS blank
+
+  - os: linux
+    compiler: clang
+    addons:
+      apt:
+        sources:
+        - llvm-toolchain-precise-3.8
+        - ubuntu-toolchain-r-test
+        packages:
+        - clang-3.8
+    env: MATRIX_EVAL="CXX='clang++-3.8'" BUILD_TYPE='Release'
+    if: tag IS blank
+
+  - os: osx
+    osx_image: xcode8.3
+    compiler: clang
+    env: MATRIX_EVAL="CXX='clang++'" BUILD_TYPE='Debug'
+    if: tag IS blank
+
+  - os: osx
+    osx_image: xcode8.3
+    compiler: clang
+    env: MATRIX_EVAL="CXX='clang++'" BUILD_TYPE='Release'
+    if: tag IS blank
+
+  - os: osx
+    osx_image: xcode8.3
+    compiler: clang
+    env: MATRIX_EVAL="CXX='clang++'" BUILD_TYPE='Release' SIMPLE_PACKAGE='True'
+    if: tag IS present
+
 before_install:
-  - | 
-    if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-      sudo apt-get update --option Acquire::Retries=100 --option Acquire::http::Timeout="60" # Hopefully preventing Travis to fail when installing from apt
-    fi
-  - eval "${MATRIX_EVAL}"
-  
+- |
+  if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+    sudo apt-get update --option Acquire::Retries=100 --option Acquire::http::Timeout="60" # Hopefully preventing Travis to fail when installing from apt
+  fi
+- eval "${MATRIX_EVAL}"
+
 install:
-  - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
-  - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
-  - |
-    if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-      # Install CMake 3.3
-      CMAKE_URL="http://www.cmake.org/files/v3.3/cmake-3.3.2-Linux-x86_64.tar.gz"
-      mkdir -p cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
-      export PATH=${DEPS_DIR}/cmake/bin:${PATH}
-    elif [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
-      which cmake || brew install cmake
-    fi
-  - |
-    if [[ "${BUILD_TYPE}" == "Coverage" ]]; then
-      # Install LCOV 1.11
-      cd ${DEPS_DIR}
-      wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.11.orig.tar.gz
-      tar xf lcov_1.11.orig.tar.gz
-      sudo make -C lcov-1.11/ install
-    fi
-  # Install Flatbuffers
-  - cd ${DEPS_DIR}
-  - git clone --branch v1.8.0 https://github.com/google/flatbuffers.git # Checkout the latest release
-  - cd flatbuffers && mkdir -p flatbuffer_build && cd flatbuffer_build
-  - cmake -DCMAKE_BUILD_TYPE=Release ..
-  - sudo make -j8 install
-  # Install Zeromq
-  - cd ${DEPS_DIR}
-  - git clone https://github.com/zeromq/libzmq.git # Pull libzmq (currently from master) and build it
-  - cd libzmq && mkdir -p libzmq_build && cd libzmq_build
-  - cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_CURVE=OFF -DZMQ_BUILD_TESTS=OFF ..
-  - sudo make -j8 install
+- DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
+- mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
+- |
+  if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+    # Install CMake 3.3
+    CMAKE_URL="http://www.cmake.org/files/v3.3/cmake-3.3.2-Linux-x86_64.tar.gz"
+    mkdir -p cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
+    export PATH=${DEPS_DIR}/cmake/bin:${PATH}
+  elif [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+    which cmake || brew install cmake
+  fi
+- |
+  if [[ "${BUILD_TYPE}" == "Coverage" ]]; then
+    # Install LCOV
+    sudo apt install lcov
+  fi
+- cd ${DEPS_DIR}
+- git clone https://github.com/google/flatbuffers.git
+- cd flatbuffers && mkdir -p flatbuffer_build && cd flatbuffer_build
+- cmake -DCMAKE_BUILD_TYPE=Release ..
+- sudo make -j8 install
+- cd ${DEPS_DIR}
+- git clone https://github.com/zeromq/libzmq.git
+- cd libzmq && mkdir -p libzmq_build && cd libzmq_build
+- cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_CURVE=OFF -DZMQ_BUILD_TESTS=OFF ..
+- sudo make -j8 install
+- cd ${DEPS_DIR}
+- git clone https://github.com/zeromq/cppzmq.git
+- cd cppzmq && mkdir -p cppzmq_build && cd cppzmq_build
+- cmake -DCMAKE_BUILD_TYPE=Release -DCPPZMQ_BUILD_TESTS=OFF ..
+- sudo make -j8 install
 
 before_script:
-  - cd ${TRAVIS_BUILD_DIR}
-  - |
-    if [[ "${BUILD_TYPE}" == "Coverage" ]]; then
-      lcov --directory . --zerocounters
-    fi
-  - mkdir -p build && cd build
-  - cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DSIMPLE_BUILD_TESTS=ON -DSIMPLE_BUILD_EXAMPLES=ON
+- cd ${TRAVIS_BUILD_DIR}
+- |
+  if [[ "${BUILD_TYPE}" == "Coverage" ]]; then
+    lcov --directory . --zerocounters
+  fi
+- mkdir -p build && cd build
+- |
+  if [[ "${SIMPLE_PACKAGE}" == "True" ]]; then
+    cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DSIMPLE_BUILD_STATIC=OFF -DSIMPLE_ENABLE_CPACK=ON
+  else
+    cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DSIMPLE_BUILD_TESTS=ON -DSIMPLE_BUILD_EXAMPLES=ON
+  fi
 
 script:
-  - make -j8
-  - ctest -R simple_tests -C Release --output-on-failure
-  
+- make -j8
+- |
+  if [[ "${SIMPLE_PACKAGE}" != "True" ]]; then  
+    ctest -R simple_tests -C Release --output-on-failure   
+  fi
+
 after_success:
-  - |
-      if [ "${BUILD_TYPE}" == "Coverage" ]; then
-        # Generate code coverage information & send to Coveralls
-        lcov --gcov-tool gcov-5 --directory ${TRAVIS_BUILD_DIR}/build --capture --output-file coverage.info
-        lcov --remove coverage.info 'tests/*' 'msgs/include/simple_msgs/generated/*' '/usr/*' --output-file coverage.info
-        lcov --list coverage.info
-        bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
-        fi
+- |
+  if [[ "${SIMPLE_PACKAGE}" == "True" ]]; then
+    cpack
+  fi
+
+deploy:
+  provider: releases
+  api_key:
+    secure: FLrIYC+3igsKRGMouvhY57l+iTavMUdYDCgWhEYG2Lld50I4Mouuel4dEXJwRSFPkcaSSJx19YGxx/0s59vRdqril/q+bPYTRYfDXVcDTDdSVolOV0iSAEImsQ+QAxRSm1/+Ubxb/jG3LvFOBQ7cByTmmfyT4U3RjRO8LNKzkmPRUZJFE491RzoB/MMIZGHUZ6nl3O1teoVVkvVPxgPsws1jtHkZUWPAJmAk3Nwg+OvWoC9Vop8zSonzaBriXw38kjw1qV/vAic7PvY6UOAuEzs7hLCdBPCBMxzu0ImLrP4v2ZVSMhHrqdeII40fHo6KDDEDX1Isy5oFX+cGRNE878zy9qbfyIMDwTHdp0YBOazg/pPkCxJh34nPji3JgpJZFsJ8tM7weiNdfN2HpXVaDXrmhNndov/dmRAGNG85xXchJr5G6Pth/EZVaN9DO3SbtOuafATwqkWLK4qeWhp0Gm/Kji05/R7tngp25lsdTq7+Oic1U+Ohn0kFv2SPyEh/nv9Ju54a4BvjJx9P3ORqzPnEwWNpuE22y26F5dWQmVLThDa2oML3MzfoSFGp8GxfSFmyiuVCqDWm3P+QI3ClpeX2UvBwl1Xv22fO97raZyT/aGW3M3wFCANmENobhPv/ZvQLDcg0w2bEZEkkZiRuZ4XQKIV3C6jEhyV50ZPa258=
+  file: "*.deb"
+  on:
+    repo: IFL-CAMP/simple
+    tags: true
+    os: linux
+
+deploy:
+  provider: releases
+  api_key:
+    secure: FLrIYC+3igsKRGMouvhY57l+iTavMUdYDCgWhEYG2Lld50I4Mouuel4dEXJwRSFPkcaSSJx19YGxx/0s59vRdqril/q+bPYTRYfDXVcDTDdSVolOV0iSAEImsQ+QAxRSm1/+Ubxb/jG3LvFOBQ7cByTmmfyT4U3RjRO8LNKzkmPRUZJFE491RzoB/MMIZGHUZ6nl3O1teoVVkvVPxgPsws1jtHkZUWPAJmAk3Nwg+OvWoC9Vop8zSonzaBriXw38kjw1qV/vAic7PvY6UOAuEzs7hLCdBPCBMxzu0ImLrP4v2ZVSMhHrqdeII40fHo6KDDEDX1Isy5oFX+cGRNE878zy9qbfyIMDwTHdp0YBOazg/pPkCxJh34nPji3JgpJZFsJ8tM7weiNdfN2HpXVaDXrmhNndov/dmRAGNG85xXchJr5G6Pth/EZVaN9DO3SbtOuafATwqkWLK4qeWhp0Gm/Kji05/R7tngp25lsdTq7+Oic1U+Ohn0kFv2SPyEh/nv9Ju54a4BvjJx9P3ORqzPnEwWNpuE22y26F5dWQmVLThDa2oML3MzfoSFGp8GxfSFmyiuVCqDWm3P+QI3ClpeX2UvBwl1Xv22fO97raZyT/aGW3M3wFCANmENobhPv/ZvQLDcg0w2bEZEkkZiRuZ4XQKIV3C6jEhyV50ZPa258=
+  file: "*.tar.gz"
+  on:
+    repo: IFL-CAMP/simple
+    tags: true
+    os: osx
+

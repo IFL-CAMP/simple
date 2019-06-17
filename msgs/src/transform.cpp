@@ -8,7 +8,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "simple_msgs/transform.h"
+#include "simple_msgs/transform.hpp"
+#include "simple_msgs/generated/transform_generated.h"
 
 namespace simple_msgs {
 Transform::Transform(const Point& point, const RotationMatrix& rotation_matrix)
@@ -85,6 +86,8 @@ std::shared_ptr<flatbuffers::DetachedBuffer> Transform::getBufferData() const {
   FinishTransformFbsBuffer(builder, tmp_builder.Finish());
   return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
+
+std::string Transform::getTopic() { return TransformFbsIdentifier(); }
 
 void Transform::setTranslation(const Point& point) {
   std::lock_guard<std::mutex> lock{mutex_};

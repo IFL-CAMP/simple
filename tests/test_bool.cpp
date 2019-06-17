@@ -12,7 +12,7 @@
 #include "catch.hpp"
 
 #include <iostream>
-#include "simple_msgs/bool.h"
+#include "simple_msgs/bool.hpp"
 
 // TEST FOR USING THE BOOL MESSAGE WRAPPER
 
@@ -35,11 +35,6 @@ SCENARIO("Using a Bool Message") {
   // Testing copy/move constructors.
   GIVEN("A Bool") {
     simple_msgs::Bool single_bool(true);
-    WHEN("I construct a new Bool from the serialized data of the existing "
-         "Bool") {
-      simple_msgs::Bool copy_buffer_bool(single_bool.getBufferData()->data());
-      THEN("The new Bool has to be equal to the other") { REQUIRE(copy_buffer_bool == single_bool); }
-    }
     WHEN("I copy-construct a new Bool") {
       const simple_msgs::Bool copy_bool(single_bool);
       THEN("The new Bool is equal to the other one") { REQUIRE(copy_bool == single_bool); }
@@ -55,12 +50,6 @@ SCENARIO("Using a Bool Message") {
   // Testing copy/move assignments.
   GIVEN("A Bool") {
     simple_msgs::Bool single_bool(false);
-    WHEN("I copy-assign using the Bool's buffer data") {
-      simple_msgs::Bool copy_assigned_buffer_bool{};
-      auto data_ptr = std::make_shared<void*>(single_bool.getBufferData()->data());
-      copy_assigned_buffer_bool = data_ptr;
-      THEN("The new Bool is equal to the other one") { REQUIRE(copy_assigned_buffer_bool == single_bool); }
-    }
     WHEN("I copy-assign from that Bool") {
       simple_msgs::Bool copy_assigned_bool{};
       copy_assigned_bool = single_bool;
@@ -104,7 +93,7 @@ SCENARIO("Using a Bool Message") {
   GIVEN("A Bool") {
     simple_msgs::Bool boolean{true};
     WHEN("I get the message topic") {
-      std::string topic_name = boolean.getTopic();
+      std::string topic_name = simple_msgs::Bool::getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "BOOL"); }
     }
     WHEN("I print the Bool") {

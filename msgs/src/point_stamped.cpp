@@ -8,7 +8,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "simple_msgs/point_stamped.h"
+#include "simple_msgs/point_stamped.hpp"
+#include "simple_msgs/generated/point_stamped_generated.h"
 
 namespace simple_msgs {
 PointStamped::PointStamped(const Header& header, const Point& point) : header_{header}, point_{point} {}
@@ -76,6 +77,8 @@ std::shared_ptr<flatbuffers::DetachedBuffer> PointStamped::getBufferData() const
   FinishPointStampedFbsBuffer(builder, tmp_builder.Finish());
   return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
+
+std::string PointStamped::getTopic() { return PointStampedFbsIdentifier(); }
 
 void PointStamped::setHeader(const Header& header) {
   std::lock_guard<std::mutex> lock{mutex_};

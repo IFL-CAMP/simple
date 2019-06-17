@@ -11,8 +11,8 @@
 #ifndef SIMPLE_SUBSCRIBER_HPP
 #define SIMPLE_SUBSCRIBER_HPP
 
-#include <zmq.h>
 #include <atomic>
+#include <functional>
 #include <memory>
 #include <string>
 #include <thread>
@@ -37,12 +37,7 @@ template <typename T>
 class Subscriber {
 public:
   Subscriber() = default;
-  /**
-   * @brief Creates a ZMQ_PUB socket and binds it to the given address.
-   *
-   * Subscribers can subscribe to a Publisher connecting to its address.
-   * @param [in] address - in the form \<PROTOCOL\>://\<IP_ADDRESS\>:\<PORT\>, e.g. tcp://127.0.0.1:5555.
-   */
+
   /**
    * @brief Creates a ZMQ_SUB socket and connects it to the given address, a Publisher is expected to be workin on that
    * address. The given callback function  runs on a dedicated thread.
@@ -52,7 +47,7 @@ public:
    * milliseconds.
    */
   explicit Subscriber<T>(const std::string& address, const std::function<void(const T&)>& callback, int timeout = 1000)
-    : socket_{new GenericSocket<T>(ZMQ_SUB)}, callback_{callback} {
+    : socket_{new GenericSocket(zmq_socket_type::sub, T::getTopic())}, callback_{callback} {
     socket_->filter();  //! Filter the type of message that can be received, only the type T is accepted.
     socket_->setTimeout(timeout);
     socket_->connect(address);
@@ -129,17 +124,17 @@ private:
    * @brief Waits for a message to be published to the connected port.
    * Calls the user callback with an instance of T obtained by a simple Publisher.
    */
-  void subscribe(std::shared_ptr<std::atomic<bool>> alive, std::shared_ptr<GenericSocket<T>> socket) {
+  void subscribe(std::shared_ptr<std::atomic<bool>> alive, std::shared_ptr<GenericSocket> socket) {
     while (alive->load()) {  //! Run this in a loop until the Subscriber is stopped.
       T msg;
-      if (socket->receiveMsg(msg, "[SIMPLE Subscriber] - ") != -1) {
+      if (socket->receiveMsg(msg, "[SIMPLE Subscriber] - ")) {
         if (alive->load()) { callback_(msg); }
       }
     }
   }
 
   std::shared_ptr<std::atomic<bool>> alive_{nullptr};  //! Flag keeping track of the internal thread's state.
-  std::shared_ptr<GenericSocket<T>> socket_{nullptr};  //! The internal socket.
+  std::shared_ptr<GenericSocket> socket_{nullptr};     //! The internal socket.
   std::function<void(const T&)> callback_{};           //! The callback function called at each message arrival.
   std::thread subscriber_thread_{};  //! The internal Subscriber thread on which the given callback runs.
 };

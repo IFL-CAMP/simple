@@ -42,10 +42,6 @@ SCENARIO("Using a Float Message") {
   // Testing copy/move constructors.
   GIVEN("A Float") {
     simple_msgs::Float single_Float{float_1};
-    WHEN("I construct a new Float from the serialized data of the existing Float") {
-      simple_msgs::Float copy_buffer_Float(single_Float.getBufferData()->data());
-      THEN("The new Float is equal to the original") { REQUIRE(copy_buffer_Float == single_Float); }
-    }
     WHEN("I copy-construct a new Float") {
       const simple_msgs::Float& copy_Float{single_Float};
       THEN("The new Float is equal to the original") { REQUIRE(copy_Float == single_Float); }
@@ -61,12 +57,6 @@ SCENARIO("Using a Float Message") {
   // Testing copy/move assignments.
   GIVEN("A Float") {
     simple_msgs::Float single_float{float_1};
-    WHEN("I copy-assign from that Float's buffer") {
-      simple_msgs::Float copy_assigned_buffer_float{};
-      auto data_ptr = std::make_shared<void*>(single_float.getBufferData()->data());
-      copy_assigned_buffer_float = data_ptr;
-      THEN("The new Float is equal to the original") { REQUIRE(copy_assigned_buffer_float == single_float); }
-    }
     WHEN("I copy-assign from that Float") {
       simple_msgs::Float copy_assigned_float{};
       copy_assigned_float = single_float;
@@ -107,7 +97,7 @@ SCENARIO("Using a Float Message") {
   GIVEN("A Float") {
     simple_msgs::Float single_Float(float_1);
     WHEN("I get the message topic") {
-      std::string topic_name = single_Float.getTopic();
+      std::string topic_name = simple_msgs::Float::getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "FLOT"); }
     }
     WHEN("I print the Float") {

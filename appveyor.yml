@@ -25,14 +25,19 @@ matrix:
 
 install:
   - mkdir deps && cd deps
-  - git clone https://github.com/google/flatbuffers.git # Checkout master
+  - git clone https://github.com/google/flatbuffers.git # Checkout master Flatbuffers
   - cd flatbuffers && mkdir flatbuffer_build && cd flatbuffer_build
   - cmake -G "%CMAKE_GENERATOR% Win64" -DCMAKE_BUILD_TYPE=%CONFIGURATION% .. # Flatbuffers doesn't install flatc other than in Release.
   - cmake --build . --target install --config %CONFIGURATION%
   - cd %APPVEYOR_BUILD_FOLDER%/deps
-  - git clone https://github.com/zeromq/libzmq.git # Checkout master
+  - git clone https://github.com/zeromq/libzmq.git # Checkout master libzmq
   - cd libzmq && mkdir libzmq_build && cd libzmq_build
   - cmake -G "%CMAKE_GENERATOR% Win64" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DENABLE_CURVE=OFF -DZMQ_BUILD_TESTS=OFF ..
+  - cmake --build . --target install --config %CONFIGURATION%
+  - cd %APPVEYOR_BUILD_FOLDER%/deps
+  - git clone https://github.com/zeromq/cppzmq.git # Checkout master cppzmq
+  - cd cppzmq && mkdir cppzmq_build && cd cppzmq_build
+  - cmake -G "%CMAKE_GENERATOR% Win64" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DCPPZMQ_BUILD_TESTS=OFF ..
   - cmake --build . --target install --config %CONFIGURATION%
 
 before_build:
@@ -46,3 +51,15 @@ build_script:
 
 test_script:
   - ctest -R simple_tests -C %CONFIGURATION% --output-on-failure
+
+deploy:
+  description: 'S.I.M.P.L.E. Release'
+  provider: GitHub
+  auth_token:
+    secure: cUPtOPIdMqFQI0T2jkc4PZVdafqiSRTHYxG0b0ajBQZ2ySvhjeq1r4SQu1BR/p7y
+  artifact: /.*\.exe/
+  draft: false
+  prerelease: false
+  on:
+    branch: master
+    APPVEYOR_REPO_TAG: true

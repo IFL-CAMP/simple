@@ -13,7 +13,7 @@
 #include "catch.hpp"
 
 #include "simple/publisher.hpp"
-#include "simple_msgs/bool.h"
+#include "simple_msgs/bool.hpp"
 
 // Test: Context Manager lifetime using dynamic Linkage.
 

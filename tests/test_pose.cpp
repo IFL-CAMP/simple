@@ -14,7 +14,7 @@
 #include <iostream>
 
 #include "random_generators.hpp"
-#include "simple_msgs/pose.h"
+#include "simple_msgs/pose.hpp"
 
 using namespace simple_tests;
 
@@ -60,10 +60,6 @@ SCENARIO("Using a Pose Message") {
   // Testing copy constructors.
   GIVEN("A Pose") {
     simple_msgs::Pose pose{point, quaternion};
-    WHEN("Another Pose is created from the its serialized data") {
-      simple_msgs::Pose buffer_pose{pose.getBufferData()->data()};
-      THEN("The new Pose has to be equal to the other") { REQUIRE(buffer_pose == pose); }
-    }
     WHEN("I copy-construct a new Pose") {
       const simple_msgs::Pose copy_pose{pose};
       THEN("The new Pose is equal to the other") { REQUIRE(copy_pose == pose); }
@@ -80,12 +76,6 @@ SCENARIO("Using a Pose Message") {
   // Testing Copy-assignments.
   GIVEN("A Pose") {
     simple_msgs::Pose pose{point, quaternion};
-    WHEN("I copy-assign from that Pose's buffer") {
-      simple_msgs::Pose copy_assigned_buffer_pose{};
-      auto data_ptr = std::make_shared<void*>(pose.getBufferData()->data());
-      copy_assigned_buffer_pose = data_ptr;
-      THEN("The new Pose has to be same as the original") { REQUIRE(copy_assigned_buffer_pose == pose); }
-    }
     WHEN("I copy-assign from that Pose") {
       simple_msgs::Pose copy_assigned_pose{};
       copy_assigned_pose = pose;
@@ -177,7 +167,7 @@ SCENARIO("Using a Pose Message") {
   GIVEN("A point") {
     simple_msgs::Pose pose{};
     WHEN("I get the message topic") {
-      std::string topic_name = pose.getTopic();
+      std::string topic_name = simple_msgs::Pose::getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "POSE"); }
     }
     WHEN("I print the Pose") {

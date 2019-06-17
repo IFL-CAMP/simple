@@ -13,7 +13,7 @@
 
 #include <iostream>
 
-#include "simple_msgs/string.h"
+#include "simple_msgs/string.hpp"
 
 // TEST FOR USING THE STRING MESSAGE WRAPPER
 
@@ -37,20 +37,9 @@ SCENARIO("Using a String Message") {
     }
   }
 
-  GIVEN("A String created from a const char*") {
-    simple_msgs::String single_string{char_1};
-    WHEN("We check the String's value") {
-      THEN("It has to be equal to the params from the constructor") { REQUIRE(single_string.get() == char_1); }
-    }
-  }
-
   // Testing copy/move constructors.
   GIVEN("A String") {
     simple_msgs::String single_string{string_1};
-    WHEN("I construct a new String from the serialized data of the existing String") {
-      simple_msgs::String copy_buffer_string(single_string.getBufferData()->data());
-      THEN("The new String has to be equal to the other") { REQUIRE(copy_buffer_string == single_string); }
-    }
     WHEN("I copy-construct a new String") {
       simple_msgs::String copy_string{single_string};
       THEN("The new String is equal to the other") { REQUIRE(copy_string == single_string); }
@@ -64,12 +53,6 @@ SCENARIO("Using a String Message") {
   // Testing copy/move assignments.
   GIVEN("A String") {
     simple_msgs::String single_string{string_1};
-    WHEN("I copy-assign from that String's buffer") {
-      simple_msgs::String copy_assigned_buffer_string{};
-      auto data_ptr = std::make_shared<void*>(single_string.getBufferData()->data());
-      copy_assigned_buffer_string = data_ptr;
-      THEN("The new String has to be same as the original") { REQUIRE(copy_assigned_buffer_string == single_string); }
-    }
     WHEN("I copy-assign from that String") {
       simple_msgs::String copy_assigned_string{};
       copy_assigned_string = single_string;
@@ -122,7 +105,7 @@ SCENARIO("Using a String Message") {
     simple_msgs::String string{string_1};
 
     WHEN("I get the message topic") {
-      std::string topic_name = string.getTopic();
+      std::string topic_name = simple_msgs::String::getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "STRG"); }
     }
     WHEN("I print the String") {

@@ -11,7 +11,6 @@
 #ifndef SIMPLE_SERVER_HPP
 #define SIMPLE_SERVER_HPP
 
-#include <zmq.h>
 #include <atomic>
 #include <functional>
 #include <memory>
@@ -33,13 +32,6 @@ template <typename T>
 class Server {
 public:
   Server() = default;
-  /**
-   * @brief Creates a ZMQ_REQ socket and connects it to the given address.
-   * @param [in] address - address the client connects to, in the form: \<PROTOCOL\>://\<HOSTNAME\>:\<PORT\>. e.g
-   * tcp://localhost:5555.
-   * @param [in] timeout - Time, in msec, the client shall wait for a reply. Default 30 seconds.
-   * @param [in] linger - Time, in msec, unsent messages linger in memory after socket is closed. Default -1 (infinite).
-   */
 
   /**
    * @brief Creates a ZMQ_REP socket and connects it to the given address.
@@ -55,8 +47,7 @@ public:
    */
   explicit Server(const std::string& address, const std::function<void(T&)>& callback, int timeout = 1000,
                   int linger = -1)
-    : socket_{new GenericSocket<T>(ZMQ_REP)}, callback_{callback} {
-    socket_->filter();  //! Filter the type of message that can be received, only the type T is accepted.
+    : socket_{new GenericSocket(zmq_socket_type::rep, T::getTopic())}, callback_{callback} {
     socket_->setTimeout(timeout);
     socket_->setLinger(linger);
     socket_->bind(address);
@@ -132,10 +123,10 @@ private:
    * @brief Keep waiting for a request to arrive. Process the request using the
    * callback function and reply.
    */
-  void awaitRequest(std::shared_ptr<std::atomic<bool>> alive, std::shared_ptr<GenericSocket<T>> socket) {
+  void awaitRequest(std::shared_ptr<std::atomic<bool>> alive, std::shared_ptr<GenericSocket> socket) {
     while (alive->load()) {
       T msg;
-      if (socket->receiveMsg(msg, "[SIMPLE Server] - ") != -1) {
+      if (socket->receiveMsg(msg, "[SIMPLE Server] - ")) {
         if (alive->load()) { callback_(msg); }
         if (alive->load()) { reply(socket.get(), msg); }
       }
@@ -146,10 +137,10 @@ private:
    * @brief Sends the message back to the client who requested it.
    * @param [in] msg - The message to be sent.
    */
-  void reply(GenericSocket<T>* socket, const T& msg) { socket->sendMsg(msg.getBufferData(), "[SIMPLE Server] - "); }
+  void reply(GenericSocket* socket, const T& msg) { socket->sendMsg(msg, "[SIMPLE Server] - "); }
 
   std::shared_ptr<std::atomic<bool>> alive_{nullptr};  //! Flag keeping track of the internal thread's state.
-  std::shared_ptr<GenericSocket<T>> socket_{nullptr};  //! The internal socket.
+  std::shared_ptr<GenericSocket> socket_{nullptr};     //! The internal socket.
   std::function<void(T&)> callback_;                   //! The callback function called at each message arrival.
   std::thread server_thread_{};                        //! The internal Server thread on which the given callback runs.
 };

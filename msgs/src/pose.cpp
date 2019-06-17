@@ -8,7 +8,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "simple_msgs/pose.h"
+#include "simple_msgs/pose.hpp"
+#include "simple_msgs/generated/pose_generated.h"
 
 namespace simple_msgs {
 Pose::Pose(const Point& position, const Quaternion& quaternion) : position_{position}, quaternion_{quaternion} {}
@@ -73,6 +74,8 @@ std::shared_ptr<flatbuffers::DetachedBuffer> Pose::getBufferData() const {
   FinishPoseFbsBuffer(builder, tmp_builder.Finish());
   return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
+
+std::string Pose::getTopic() { return PoseFbsIdentifier(); }
 
 void Pose::setPosition(const Point& position) {
   std::lock_guard<std::mutex> lock{mutex_};

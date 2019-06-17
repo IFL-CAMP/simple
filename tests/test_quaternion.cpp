@@ -14,7 +14,7 @@
 #include <iostream>
 
 #include "random_generators.hpp"
-#include "simple_msgs/quaternion.h"
+#include "simple_msgs/quaternion.hpp"
 
 using namespace simple_tests;
 
@@ -79,10 +79,6 @@ SCENARIO("Using a Quaternion Message") {
   // Testing Copy-constructors.
   GIVEN("A Quaternion") {
     simple_msgs::Quaternion quaternion{double_array};
-    WHEN("I construct a new Quaternion from the serialized data of the existing Quaternion") {
-      simple_msgs::Quaternion buffer_quaternion(quaternion.getBufferData()->data());
-      THEN("The new Quaternion has to be equal to the other") { REQUIRE(buffer_quaternion == quaternion); }
-    }
     WHEN("I copy-construct a new Quaternion") {
       const simple_msgs::Quaternion copy_quaternion{quaternion};
       THEN("The new Quaternion is equal to the other") { REQUIRE(copy_quaternion == quaternion); }
@@ -101,14 +97,6 @@ SCENARIO("Using a Quaternion Message") {
   // Testing Copy-assignments.
   GIVEN("A Quaternion") {
     simple_msgs::Quaternion quaternion{double_array};
-    WHEN("I copy-assign from that Quaternion's buffer") {
-      simple_msgs::Quaternion copy_assigned_buffer_quaternion{};
-      auto data_ptr = std::make_shared<void*>(quaternion.getBufferData()->data());
-      copy_assigned_buffer_quaternion = data_ptr;
-      THEN("The new Quaternion has to be same as the original") {
-        REQUIRE(copy_assigned_buffer_quaternion == quaternion);
-      }
-    }
     WHEN("I copy-assign from that Quaternion") {
       simple_msgs::Quaternion copy_assigned_quaternion{};
       copy_assigned_quaternion = quaternion;
@@ -195,7 +183,7 @@ SCENARIO("Using a Quaternion Message") {
   GIVEN("A Quaternion message") {
     simple_msgs::Quaternion quaternion{double_array};
     WHEN("I get the message topic") {
-      std::string topic_name = quaternion.getTopic();
+      std::string topic_name = simple_msgs::Quaternion::getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "QUAT"); }
     }
     WHEN("I print the Quaternion") {

@@ -8,7 +8,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "simple_msgs/quaternion.h"
+#include "simple_msgs/quaternion.hpp"
+#include "simple_msgs/generated/quaternion_generated.h"
 
 namespace simple_msgs {
 Quaternion::Quaternion(double x, double y, double z, double w) : data_{{x, y, z, w}} {}
@@ -88,6 +89,8 @@ std::shared_ptr<flatbuffers::DetachedBuffer> Quaternion::getBufferData() const {
   FinishQuaternionFbsBuffer(builder, tmp_builder.Finish());
   return std::make_shared<flatbuffers::DetachedBuffer>(builder.Release());
 }
+
+std::string Quaternion::getTopic() { return QuaternionFbsIdentifier(); }
 
 void Quaternion::setX(double x) {
   std::lock_guard<std::mutex> lock{mutex_};

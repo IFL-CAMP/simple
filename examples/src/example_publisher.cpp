@@ -12,7 +12,7 @@
 #include <thread>
 
 #include "simple/publisher.hpp"
-#include "simple_msgs/pose_stamped.h"
+#include "simple_msgs/pose_stamped.hpp"
 
 // Helper function to get the current time as a double.
 long long getTimeNow() {

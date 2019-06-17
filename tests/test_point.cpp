@@ -14,7 +14,7 @@
 #include <iostream>
 
 #include "random_generators.hpp"
-#include "simple_msgs/point.h"
+#include "simple_msgs/point.hpp"
 
 using namespace simple_tests;
 
@@ -86,10 +86,6 @@ SCENARIO("Using a Point Message") {
   GIVEN("A Point") {
     simple_msgs::Point single_point{double_array};
     simple_msgs::Point reference_point{single_point};
-    WHEN("I construct a new Point from the serialized data of the existing Point") {
-      simple_msgs::Point buffer_point{single_point.getBufferData()->data()};
-      THEN("The new Point has to be equal to the other") { REQUIRE(buffer_point == single_point); }
-    }
     WHEN("I copy-construct a new Point") {
       simple_msgs::Point copied_point{single_point};
       THEN("The new Point is equal to the other") { REQUIRE(copied_point == single_point); }
@@ -117,12 +113,6 @@ SCENARIO("Using a Point Message") {
       simple_msgs::Point move_assign_point{};
       move_assign_point = std::move(single_point);
       THEN("The new Point has to be same as the original") { REQUIRE(move_assign_point == reference_point); }
-    }
-    WHEN("I copy-assign from that Point's buffer") {
-      simple_msgs::Point copy_buffer_point{};
-      auto data_ptr = std::make_shared<void*>(reference_point.getBufferData()->data());
-      copy_buffer_point = data_ptr;
-      THEN("The new Point has to be same as the original") { REQUIRE(copy_buffer_point == reference_point); }
     }
     WHEN("I copy-assign a double array to that point") {
       single_point = flipped_double_array;
@@ -270,7 +260,7 @@ SCENARIO("Using a Point Message") {
       }
     }
     WHEN("I get the message topic") {
-      std::string topic_name = single_point.getTopic();
+      std::string topic_name = simple_msgs::Point::getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "POIT"); }
     }
     WHEN("I print the Point") {

@@ -14,7 +14,7 @@
 #include <iostream>
 
 #include "random_generators.hpp"
-#include "simple_msgs/rotation_matrix.h"
+#include "simple_msgs/rotation_matrix.hpp"
 
 using namespace simple_tests;
 
@@ -129,12 +129,6 @@ SCENARIO("Using a Rotation Matrix Message") {
   // Testing copy/move constructors.
   GIVEN("A rotation Matrix") {
     simple_msgs::RotationMatrix array_rotation_matrix{doubles_array};
-    WHEN("I construct a new Rotation Matrix from the serialized data of the existing Rotation Matrix") {
-      simple_msgs::RotationMatrix copy_buffer_rotation_matrix{array_rotation_matrix.getBufferData()->data()};
-      THEN("The new Rotation Matrix has to be equal to the other") {
-        REQUIRE(copy_buffer_rotation_matrix == array_rotation_matrix);
-      }
-    }
     WHEN("I copy-construct a new Rotation Matrix") {
       simple_msgs::RotationMatrix copy_rotation_matrix{array_rotation_matrix};
       THEN("The new Rotation Matrix is equal to the other") { REQUIRE(copy_rotation_matrix == array_rotation_matrix); }
@@ -158,14 +152,6 @@ SCENARIO("Using a Rotation Matrix Message") {
   // Testing copy/move assignments.
   GIVEN("A Rotation Matrix") {
     simple_msgs::RotationMatrix array_rotation_matrix{doubles_array};
-    WHEN("I copy-assign from that Rotation Matrix's buffer") {
-      simple_msgs::RotationMatrix copy_assigned_buffer_rotation_matrix{};
-      auto data_ptr = std::make_shared<void*>(array_rotation_matrix.getBufferData()->data());
-      copy_assigned_buffer_rotation_matrix = data_ptr;
-      THEN("The new Rotation Matrix has to be same as the original") {
-        REQUIRE(copy_assigned_buffer_rotation_matrix == array_rotation_matrix);
-      }
-    }
     WHEN("I copy-assign from that Rotation Matrix") {
       simple_msgs::RotationMatrix copy_assigned_rotation_matrix{};
       copy_assigned_rotation_matrix = array_rotation_matrix;
@@ -357,7 +343,7 @@ SCENARIO("Using a Rotation Matrix Message") {
   GIVEN("A RotationMatrix") {
     simple_msgs::RotationMatrix rotation_matrix{doubles_array};
     WHEN("I get the message topic") {
-      std::string topic_name = rotation_matrix.getTopic();
+      std::string topic_name = simple_msgs::RotationMatrix::getTopic();
       THEN("I get the correct one") { REQUIRE(topic_name == "RMAT"); }
     }
     WHEN("I print the RotatioMatrix") {
