@@ -64,12 +64,16 @@ after_build:
         cpack
       }
 
+artifacts:
+- path: /.*\.exe/
+  name: simple_artifact
+
 deploy:
   description: 'S.I.M.P.L.E. Release'
   provider: GitHub
   auth_token:
     secure: /Zfum05XMUCPaLKLsrsOTr/t4A8Kvz3lDN4ajPt6SZRlU+AX1/ee0CqpgR5AKCGg
-  artifact: /.*\.exe/
+  artifact: simple_artifact
   draft: false
   prerelease: false
   on:
