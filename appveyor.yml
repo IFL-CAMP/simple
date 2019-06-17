@@ -42,11 +42,11 @@ before_build:
   - cd %APPVEYOR_BUILD_FOLDER%
   - rmdir deps /s /q
   - mkdir build && cd build
-  - sh: >-
-    If ($env:APPVEYOR_REPO_TAG -Match "false") {
-      cmake -G "%CMAKE_GENERATOR% Win64" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DSIMPLE_BUILD_TESTS=ON -DSIMPLE_BUILD_EXAMPLES=ON ..
+  - ps: >-
+    If ($env:APPVEYOR_REPO_TAG -eq "false") {
+      cmake -G "%CMAKE_GENERATOR% Win64" .. -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DSIMPLE_BUILD_TESTS=ON -DSIMPLE_BUILD_EXAMPLES=ON
     } Else {
-      cmake -G "%CMAKE_GENERATOR% Win64" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DSIMPLE_BUILD_STATIC=OFF -DSIMPLE_ENABLE_CPACK=ON ..
+      cmake -G "%CMAKE_GENERATOR% Win64" .. -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DSIMPLE_BUILD_STATIC=OFF -DSIMPLE_ENABLE_CPACK=ON
     }
 
 build_script:
@@ -54,13 +54,13 @@ build_script:
 
 test_script:
   - sh: >-
-    If ($env:APPVEYOR_REPO_TAG -Match "false") { 
+    If ($env:APPVEYOR_REPO_TAG -eq "false") { 
       ctest -R simple_tests -C %CONFIGURATION% --output-on-failure
     }
 
 after_build:
   - sh: >-
-    If ($env:APPVEYOR_REPO_TAG -Match "true") { 
+    If ($env:APPVEYOR_REPO_TAG -eq "true") { 
       cpack
     }
 
