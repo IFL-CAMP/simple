@@ -44,9 +44,9 @@ before_build:
   - mkdir build && cd build
   - ps: >-
       If ($env:APPVEYOR_REPO_TAG -eq "false") {
-        cmake -G "%CMAKE_GENERATOR% Win64" .. -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DSIMPLE_BUILD_TESTS=ON -DSIMPLE_BUILD_EXAMPLES=ON
+        cmake -G "$env:CMAKE_GENERATOR Win64" .. -DCMAKE_BUILD_TYPE=$env:CONFIGURATION -DSIMPLE_BUILD_TESTS=ON -DSIMPLE_BUILD_EXAMPLES=ON
       } Else {
-        cmake -G "%CMAKE_GENERATOR% Win64" .. -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DSIMPLE_BUILD_STATIC=OFF -DSIMPLE_ENABLE_CPACK=ON
+        cmake -G "$env:CMAKE_GENERATOR Win64" .. -DCMAKE_BUILD_TYPE=$env:CONFIGURATION -DSIMPLE_BUILD_STATIC=OFF -DSIMPLE_ENABLE_CPACK=ON
       }
 
 build_script:
@@ -55,7 +55,7 @@ build_script:
 test_script:
   - ps: >-
       If ($env:APPVEYOR_REPO_TAG -eq "false") { 
-        ctest -R simple_tests -C %CONFIGURATION% --output-on-failure
+        ctest -R simple_tests -C $env:CONFIGURATION --output-on-failure
       }
 
 after_build:
