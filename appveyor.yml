@@ -65,7 +65,7 @@ after_build:
       }
 
 artifacts:
-- path: '%APPVEYOR_BUILD_FOLDER%/build/*.exe'
+- path: 'build/*.exe'
   name: simple_artifact
 
 deploy:
