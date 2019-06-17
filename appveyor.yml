@@ -4,8 +4,6 @@ version: "{build}"
 os:
   - Visual Studio 2017
 
-skip_tags: true
-
 configuration:
   - Release
 
@@ -44,30 +42,27 @@ before_build:
   - cd %APPVEYOR_BUILD_FOLDER%
   - rmdir deps /s /q
   - mkdir build && cd build
-  - cmake -G "%CMAKE_GENERATOR% Win64" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DSIMPLE_BUILD_TESTS=ON -DSIMPLE_BUILD_EXAMPLES=ON ..
-  on : 
-    APPVEYOR_REPO_TAG: false
-
-before_build:
-  - cd %APPVEYOR_BUILD_FOLDER%
-  - rmdir deps /s /q
-  - mkdir build && cd build
-  - cmake -G "%CMAKE_GENERATOR% Win64" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DSIMPLE_BUILD_STATIC=OFF -DSIMPLE_ENABLE_CPACK=ON ..
-  on : 
-    APPVEYOR_REPO_TAG: true
+  - ps: >-
+      If ($env:APPVEYOR_REPO_TAG -eq "false") {
+        cmake -G "$env:CMAKE_GENERATOR Win64" .. -DCMAKE_BUILD_TYPE=$env:CONFIGURATION -DSIMPLE_BUILD_TESTS=ON -DSIMPLE_BUILD_EXAMPLES=ON
+      } Else {
+        cmake -G "$env:CMAKE_GENERATOR Win64" .. -DCMAKE_BUILD_TYPE=$env:CONFIGURATION -DSIMPLE_BUILD_STATIC=OFF -DSIMPLE_ENABLE_CPACK=ON
+      }
 
 build_script:
   - cmake --build . --config %CONFIGURATION% -- /verbosity:minimal
 
 test_script:
-  - ctest -R simple_tests -C %CONFIGURATION% --output-on-failure
-  on : 
-    APPVEYOR_REPO_TAG: false
+  - ps: >-
+      If ($env:APPVEYOR_REPO_TAG -eq "false") { 
+        ctest -R simple_tests -C $env:CONFIGURATION --output-on-failure
+      }
 
 after_build:
-  - cpack
-  on : 
-    APPVEYOR_REPO_TAG: true
+  - ps: >-
+      If ($env:APPVEYOR_REPO_TAG -eq "true") { 
+        cpack
+      }
 
 deploy:
   description: 'S.I.M.P.L.E. Release'
