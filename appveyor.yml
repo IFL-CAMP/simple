@@ -45,21 +45,37 @@ before_build:
   - rmdir deps /s /q
   - mkdir build && cd build
   - cmake -G "%CMAKE_GENERATOR% Win64" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DSIMPLE_BUILD_TESTS=ON -DSIMPLE_BUILD_EXAMPLES=ON ..
+  on : 
+    APPVEYOR_REPO_TAG: false
+
+before_build:
+  - cd %APPVEYOR_BUILD_FOLDER%
+  - rmdir deps /s /q
+  - mkdir build && cd build
+  - cmake -G "%CMAKE_GENERATOR% Win64" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DSIMPLE_BUILD_STATIC=OFF -DSIMPLE_ENABLE_CPACK=ON ..
+  on : 
+    APPVEYOR_REPO_TAG: true
 
 build_script:
   - cmake --build . --config %CONFIGURATION% -- /verbosity:minimal
 
 test_script:
   - ctest -R simple_tests -C %CONFIGURATION% --output-on-failure
+  on : 
+    APPVEYOR_REPO_TAG: false
+
+after_build:
+  - cpack
+  on : 
+    APPVEYOR_REPO_TAG: true
 
 deploy:
   description: 'S.I.M.P.L.E. Release'
   provider: GitHub
   auth_token:
-    secure: cUPtOPIdMqFQI0T2jkc4PZVdafqiSRTHYxG0b0ajBQZ2ySvhjeq1r4SQu1BR/p7y
+    secure: /Zfum05XMUCPaLKLsrsOTr/t4A8Kvz3lDN4ajPt6SZRlU+AX1/ee0CqpgR5AKCGg
   artifact: /.*\.exe/
   draft: false
   prerelease: false
   on:
-    branch: master
     APPVEYOR_REPO_TAG: true
