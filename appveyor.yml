@@ -42,7 +42,7 @@ before_build:
   - cd %APPVEYOR_BUILD_FOLDER%
   - rmdir deps /s /q
   - mkdir build && cd build
-  - ps: >-
+  - sh: >-
     If ($env:APPVEYOR_REPO_TAG -Match "false") {
       cmake -G "%CMAKE_GENERATOR% Win64" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DSIMPLE_BUILD_TESTS=ON -DSIMPLE_BUILD_EXAMPLES=ON ..
     } Else {
@@ -53,13 +53,13 @@ build_script:
   - cmake --build . --config %CONFIGURATION% -- /verbosity:minimal
 
 test_script:
-  - ps: >-
+  - sh: >-
     If ($env:APPVEYOR_REPO_TAG -Match "false") { 
       ctest -R simple_tests -C %CONFIGURATION% --output-on-failure
     }
 
 after_build:
-  - ps: >-
+  - sh: >-
     If ($env:APPVEYOR_REPO_TAG -Match "true") { 
       cpack
     }
