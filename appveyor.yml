@@ -4,8 +4,6 @@ version: "{build}"
 os:
   - Visual Studio 2017
 
-skip_tags: true
-
 configuration:
   - Release
 
@@ -44,22 +42,39 @@ before_build:
   - cd %APPVEYOR_BUILD_FOLDER%
   - rmdir deps /s /q
   - mkdir build && cd build
-  - cmake -G "%CMAKE_GENERATOR% Win64" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DSIMPLE_BUILD_TESTS=ON -DSIMPLE_BUILD_EXAMPLES=ON ..
+  - ps: >-
+      If ($env:APPVEYOR_REPO_TAG -eq "false") {
+        cmake -G "$env:CMAKE_GENERATOR Win64" -DSIMPLE_BUILD_TESTS=ON -DSIMPLE_BUILD_EXAMPLES=ON ..
+      } Else {
+        cmake -G "$env:CMAKE_GENERATOR Win64" -DSIMPLE_BUILD_STATIC=OFF -DSIMPLE_ENABLE_CPACK=ON ..
+      }
 
 build_script:
   - cmake --build . --config %CONFIGURATION% -- /verbosity:minimal
 
 test_script:
-  - ctest -R simple_tests -C %CONFIGURATION% --output-on-failure
+  - ps: >-
+      If ($env:APPVEYOR_REPO_TAG -eq "false") { 
+        ctest -R simple_tests -C $env:CONFIGURATION --output-on-failure
+      }
+
+after_build:
+  - ps: >-
+      If ($env:APPVEYOR_REPO_TAG -eq "true") { 
+        cpack
+      }
+
+artifacts:
+- path: 'build/*.exe'
+  name: simple_artifact
 
 deploy:
   description: 'S.I.M.P.L.E. Release'
   provider: GitHub
   auth_token:
-    secure: cUPtOPIdMqFQI0T2jkc4PZVdafqiSRTHYxG0b0ajBQZ2ySvhjeq1r4SQu1BR/p7y
-  artifact: /.*\.exe/
+    secure: /Zfum05XMUCPaLKLsrsOTr/t4A8Kvz3lDN4ajPt6SZRlU+AX1/ee0CqpgR5AKCGg
+  artifact: simple_artifact
   draft: false
   prerelease: false
   on:
-    branch: master
     APPVEYOR_REPO_TAG: true
