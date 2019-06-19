@@ -29,7 +29,7 @@ ___
 New messages can be defined - in the *simple_msgs* format - and sent/received using the same interface.
 
 ### Usage
-<b>[Install S.I.M.P.L.E.]</b>(https://github.com/IFL-CAMP/simple/wiki#install-the-binaries)     
+<b>[Install the binaries](https://github.com/IFL-CAMP/simple/wiki#install-the-binaries)</b>   
 <b>Build from source:</b> on [Windows](https://github.com/IFL-CAMP/simple/wiki/install:-windows) or [Linux/Mac OSX](https://github.com/IFL-CAMP/simple/wiki/install:-linux).      
 <b>Use in your C++ project:</b> [via CMake](https://github.com/IFL-CAMP/simple/wiki#cmake). We suggest Windows users to link to the static version of *simple*.     
 
