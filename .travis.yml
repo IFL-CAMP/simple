@@ -120,17 +120,17 @@ install:
     sudo apt install lcov
   fi
 - cd ${DEPS_DIR}
-- git clone https://github.com/google/flatbuffers.git
+- git clone -b v1.11.0 --single-branch https://github.com/google/flatbuffers.git
 - cd flatbuffers && mkdir -p flatbuffer_build && cd flatbuffer_build
 - cmake -DCMAKE_BUILD_TYPE=Release ..
 - sudo make -j8 install
 - cd ${DEPS_DIR}
-- git clone https://github.com/zeromq/libzmq.git
+- git clone -b v4.3.2 --single-branch https://github.com/zeromq/libzmq.git # Fixed to release 4.3.2
 - cd libzmq && mkdir -p libzmq_build && cd libzmq_build
 - cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_CURVE=OFF -DZMQ_BUILD_TESTS=OFF ..
 - sudo make -j8 install
 - cd ${DEPS_DIR}
-- git clone https://github.com/zeromq/cppzmq.git
+- git clone -b v4.6.0 --single-branch https://github.com/zeromq/cppzmq.git # Fixed to release 4.6.0
 - cd cppzmq && mkdir -p cppzmq_build && cd cppzmq_build
 - cmake -DCMAKE_BUILD_TYPE=Release -DCPPZMQ_BUILD_TESTS=OFF ..
 - sudo make -j8 install
