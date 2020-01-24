@@ -120,7 +120,7 @@ install:
     sudo apt install lcov
   fi
 - cd ${DEPS_DIR}
-- git clone -b v1.11.0 --single-branch https://github.com/google/flatbuffers.git
+- git clone -b v1.11.0 --single-branch https://github.com/google/flatbuffers.git # Fixed to release 1.11.0
 - cd flatbuffers && mkdir -p flatbuffer_build && cd flatbuffer_build
 - cmake -DCMAKE_BUILD_TYPE=Release ..
 - sudo make -j8 install
