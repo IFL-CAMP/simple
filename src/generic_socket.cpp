@@ -130,7 +130,7 @@ bool GenericSocket::receiveMsg(simple_msgs::GenericMessage& msg, const std::stri
   if (socket_ == nullptr) { return false; }
 
   std::lock_guard<std::mutex> lock{mutex_};
-  zmq::detail::recv_result_t success;
+  zmq::recv_result_t success;
 
   // Local variables to check if data after the topic message is available and its size.
   int data_past_topic{0};
