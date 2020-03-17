@@ -43,7 +43,7 @@ public:
   /**
    * @brief Returns the static instance of the ZMQ context.
    *
-   * During the first call, a new ZMQContext object is instantiated.
+   * During the first call, a new ZMQ context object is instantiated.
    * That instantiation performs thread-safe operations to create/dispose the underlying ZMQ context object.
    */
   static zmq::context_t* instance();

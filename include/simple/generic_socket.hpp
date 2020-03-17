@@ -11,18 +11,17 @@
 #ifndef SIMPLE_GENERIC_SOCKET_HPP
 #define SIMPLE_GENERIC_SOCKET_HPP
 
-#include <cstring>
-#include <iostream>
 #include <memory>
 #include <mutex>
-#include <simple_msgs/generic_message.hpp>
 #include <string>
 
 #include "context_manager.hpp"
 
-namespace flatbuffers {
-class DetachedBuffer;
-}
+namespace google {
+namespace protobuf {
+class Message;
+}  // namespace protobuf
+}  // namespace google
 
 namespace zmq {
 class socket_t;
@@ -33,13 +32,12 @@ namespace simple {
 /**
  * @brief The zmq::socket_type are redefined locally to avoid including the zmq.hpp header in simple headers.
  */
-enum class zmq_socket_type : int { pub = 1, sub = 2, req = 3, rep = 4 };
+enum class zmq_socket_type : int { Pub = 1, Sub = 2, Req = 3, Rep = 4 };
 
 /**
  * @class GenericSocket generic_socket.hpp.
- * @brief The GenericSocket class implements the logic to transmit Flatbuffers data over ZMQ sockets. It is a
- * thread-safe class.
- * @tparam T The simple_msgs type to handle.
+ * @brief The GenericSocket class implements the logic to transmit Protobuf data over ZMQ sockets.
+ * It is a thread-safe class.
  */
 class GenericSocket {
 public:
@@ -76,13 +74,13 @@ protected:
   /**
    * @brief Constructs a socket with the given ZMQ socket type.
    * @param [in] type - the ZMQ type.
-   * @param [in] topic - the message topic, it is internally defined for every simple_msgs.
+   * @param [in] topic - the message topic, received messages can be filtered using this value.
    *
    * Accepted types are:
-   * ZMQ_PUB - for a Publisher.
-   * ZMQ_SUB - for a Subscriber.
-   * ZMQ_REQ - for a Client.
-   * ZMQ_REP - for a Server.
+   * zmq_socket_type::Pub - for a Publisher.
+   * zmq_socket_type::Sub - for a Subscriber.
+   * zmq_socket_type::Req - for a Client.
+   * zmq_socket_type::Sub - for a Server.
    */
   explicit GenericSocket(const zmq_socket_type& type, const std::string& topic);
 
@@ -102,24 +100,25 @@ protected:
 
   /**
    * @brief Sends buffer data over the ZMQ Socket.
-   * @param [in] message - simple_msgs class wrapper for Flatbuffer messages.
+   * @param [in] message - a Protobuf messages.
+   * @param [in] message_size - size of the message to send.
    * @param [in] custom_error - a string to prefix to the error messages printed in failure cases.
    * @return success or failure in sending the message over ZMQ.
    */
-  bool sendMsg(const simple_msgs::GenericMessage& message, const std::string& custom_error = "[SIMPLE Error] - ") const;
+  bool sendMessage(const ::google::protobuf::Message& message, const size_t message_size,
+                   const std::string& custom_error = "[SIMPLE Error] - ") const;
 
   /**
-   * @brief Receive a message of type T from the ZMQ Socket.
-   * @param [in,out] msg - The message of type T to populate with the data incoming from the ZMQ Socket.
+   * @brief Receives a Protobuf message from the ZMQ Socket.
+   * @param [in,out] msg - Protobuf message to populate with the data incoming from the ZMQ Socket.
    * @param [in] custom_error - a string to prefix to the error messages printed in failure cases.
-   * @return the number of bytes received by the ZMQ Socket. -1 for failure.
+   * @return success or failure in receiving the message over ZMQ.
    */
-  bool receiveMsg(simple_msgs::GenericMessage& msg, const std::string& custom_error = "");
+  bool receiveMessage(google::protobuf::Message& msg, const std::string& custom_error = "");
 
   /**
    * @brief Set the ZMQ socket to accept only messages with the correct topic name.
-   *
-   * The topic name is set to the one privded by the template argument of this socket.
+   * The topic name is set to the one provided during construction.
    */
   void filter();
 
@@ -127,7 +126,7 @@ protected:
    * @brief Set the timeout of the ZMQ socket.
    * @param [in] timeout - in milliseconds.
    *
-   * The timeout is used by Subscriber, Server and Client  sockets as the maximum allowed time to wait for an incoming
+   * The timeout is used by Subscriber, Server and Client sockets as the maximum allowed time to wait for an incoming
    * message, request or reply (respectively).
    */
   void setTimeout(int timeout);
@@ -145,10 +144,10 @@ protected:
    * @param [in] type - the ZMQ Socket Type.
    *
    * Accepted types are:
-   * zmq_socket_type::pub - for a Publisher.
-   * zmq_socket_type::sub - for a Subscriber.
-   * zmq_socket_type::req - for a Client.
-   * zmq_socket_type::rep - for a Server.
+   * zmq_socket_type::Pub - for a Publisher.
+   * zmq_socket_type::Sub - for a Subscriber.
+   * zmq_socket_type::Req - for a Client.
+   * zmq_socket_type::Rep - for a Server.
    */
   void initSocket(const zmq_socket_type& type);
 
@@ -166,15 +165,17 @@ protected:
    * @brief Query the endpoint that this object is bound to.
    *
    * Can be used to find the bound port if binding to ephemeral ports.
-   * @return The endpoint in form of a ZMQ DSN string, i.e. "tcp://0.0.0.0:8000".
+   * @return The endpoint in form of a ZMQ DSN string, i.e., "tcp://0.0.0.0:8000".
    */
   inline const std::string& endpoint() { return endpoint_; }
 
 private:
-  mutable std::mutex mutex_{};             //! Mutex for thread-safety.
-  std::string topic_{""};                  //! The message topic, internally defined for each SIMPLE message.
-  std::unique_ptr<zmq::socket_t> socket_;  //! The internal ZMQ socket.
-  std::string endpoint_{""};               //! Stores the used endpoint for connection.
+  void setEndpoint();
+
+  mutable std::mutex mutex_{};                      //! Mutex for thread-safety.
+  std::string topic_{""};                           //! The message topic, internally defined for each SIMPLE message.
+  std::unique_ptr<zmq::socket_t> socket_{nullptr};  //! The internal ZMQ socket.
+  std::string endpoint_{""};                        //! Stores the used endpoint for connection.
 };
 }  // Namespace simple.
 

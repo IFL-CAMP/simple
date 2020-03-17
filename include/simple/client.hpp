@@ -20,56 +20,65 @@ namespace simple {
 
 /**
  * @class Client client.hpp.
- * @brief The Client class creates a ZMQ socket of type ZMQ_REQ that can send requests to a Server object using the
- * message of type T passed to its request() method.
- * @tparam T The simple_msgs type to use.
+ * @brief The Client class creates a ZMQ socket of type zmq_socket_type::Req that can send requests to a Server object
+ * using the Protobuf message of type T passed to its request() method.
+ * @tparam T The Protobuf message type to use.
  *
  * Implements the logic for a Client in the Client / Server paradigm.
- * A Client can send requests to a Server using messages of types T and receive back an answer.
+ * A Client can send requests to a Server using messages of type T and receive back an answer.
  */
 template <typename T>
 class Client {
+  static_assert(std::is_base_of<google::protobuf::Message, T>::value,
+                "The message type must inherit from google::protobuf::Message");
+
 public:
   Client() = default;
 
   /**
-   * @brief Creates a ZMQ_REQ socket and connects it to the given address.
-   * @param [in] address - address the client connects to, in the form: \<PROTOCOL\>://\<HOSTNAME\>:\<PORT\>. e.g
+   * @brief Creates a zmq_socket_type::Req socket and connects it to the given address.
+   * @param [in] address - address the client connects to, in the form: \<PROTOCOL\>://\<HOSTNAME\>:\<PORT\>. e.g,
    * tcp://localhost:5555.
-   * @param [in] timeout - Time, in msec, the client shall wait for a reply. Default 30 seconds.
-   * @param [in] linger - Time, in msec, unsent messages linger in memory after socket is closed. Default -1 (infinite).
+   * @param [in] timeout - time, in milliseconds, the client shall wait for a reply. Default 2 seconds.
+   * @param [in] linger - time, in milliseconds, unsent messages linger in memory after socket is closed.
+   * Default -1 (infinite).
    */
   explicit Client(const std::string& address, int timeout = 2000, int linger = -1)
-    : socket_{zmq_socket_type::req, T::getTopic()}, address_{address}, timeout_{timeout}, linger_{linger} {
+    : socket_{zmq_socket_type::Req, T::descriptor()->full_name()}
+    , address_{address}
+    , timeout_{timeout}
+    , linger_{linger} {
     initClient();
   }
 
-  // Copy operations are not available.
+  // A Client cannot be copied, only moved.
   Client(const Client& other) = delete;
   Client& operator=(const Client& other) = delete;
 
   /**
    * @brief Move constructor.
    */
-  Client(Client&& other) = default;
+  Client(Client&& other) noexcept = default;
 
   /**
    * @brief Move assignment operator.
    */
-  Client& operator=(Client&& other) = default;
+  Client& operator=(Client&& other) noexcept = default;
 
+  /**
+   * @brief Class destructor.
+   */
   ~Client() = default;
 
   /**
    * @brief Sends the request to a server and waits for an answer.
-   * @param [in,out] msg - simple_msgs class wrapper for Flatbuffer messages..
+   * @param [in,out] message - Protobuf message to send as request and receive as response.
    */
-  bool request(T& msg) {
+  bool request(T& message) {
     bool success{false};
-
     // Send the message to the Server and receive back the response.
-    if (socket_.sendMsg(msg, "[SIMPLE Client] - ")) {
-      if (socket_.receiveMsg(msg, "[SIMPLE Client] - ")) {
+    if (socket_.sendMessage(message, message.ByteSizeLong(), "[SIMPLE Client] - ")) {
+      if (socket_.receiveMessage(message, "[SIMPLE Client] - ")) {
         success = true;
       } else {
         std::cerr << "[SIMPLE Client] - No reply received. Aborting this request." << std::endl;
@@ -85,14 +94,14 @@ public:
    * @brief Query the endpoint that this object is bound to.
    *
    * Can be used to find the bound port if binding to ephemeral ports.
-   * @return the endpoint in form of a ZMQ DSN string, i.e. "tcp://0.0.0.0:8000"
+   * @return the endpoint in form of a ZMQ DSN string, i.e., "tcp://0.0.0.0:8000"
    */
-  const std::string& endpoint() { return socket_.endpoint(); }
+  const std::string endpoint() { return socket_.endpoint(); }
 
 private:
   // Initialize the client, setting up the socket and its configuration.
   void initClient() {
-    if (!socket_.isSocketValid()) { socket_.initSocket(zmq_socket_type::req); }
+    if (!socket_.isSocketValid()) { socket_.initSocket(zmq_socket_type::Req); }
     socket_.setTimeout(timeout_);
     socket_.setLinger(linger_);
     socket_.connect(address_);

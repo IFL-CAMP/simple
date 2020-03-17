@@ -25,29 +25,32 @@ namespace simple {
  */
 /**
  * @class Subscriber subscriber.hpp.
- * @brief The Subscriber class creates a ZMQ Socket of type ZMQ_SUB that receives messages of type T from a simple
- * Publisher.
- * @tparam T The simple_msgs type to be received.
+ * @brief The Subscriber class creates a ZMQ Socket of type zmq_socket_type::Sub that receives Protobuf messages of
+ * type T from a simple Publisher.
+ * @tparam T The Protobuf message type to be received.
  *
  * Implements the logic for a Subscriber in the Publisher / Subscriber paradigm. A Subscriber receives messages of type
- * T from a simple Publisher. The received messages will be passed to the callback function which is providede to the
+ * T from a simple Publisher. The received messages will be passed to the callback function which is provided to the
  * Subscriber upon construction.
  */
 template <typename T>
 class Subscriber {
+  static_assert(std::is_base_of<google::protobuf::Message, T>::value,
+                "The message type must inherit from google::protobuf::Message");
+
 public:
   Subscriber() = default;
 
   /**
-   * @brief Creates a ZMQ_SUB socket and connects it to the given address, a Publisher is expected to be workin on that
-   * address. The given callback function  runs on a dedicated thread.
+   * @brief Creates a ZMQ_SUB socket and connects it to the given address, a Publisher is expected to be working on that
+   * address. The given callback function runs on a dedicated thread.
    * @param [in] address - in the form \<PROTOCOL\>://\<IP_ADDRESS\>:\<PORT\>, e.g. tcp://127.0.0.1:5555.
    * @param [in] callback - user defined callback function for incoming messages.
-   * @param [in] timeout - Time the subscriber will block the thread waiting for a message. In
-   * milliseconds.
+   * @param [in] timeout - time, in milliseconds, the subscriber will block the thread waiting for a message.
+   * Default 1 second.
    */
   explicit Subscriber<T>(const std::string& address, const std::function<void(const T&)>& callback, int timeout = 1000)
-    : socket_{new GenericSocket(zmq_socket_type::sub, T::getTopic())}, callback_{callback} {
+    : socket_{new GenericSocket{zmq_socket_type::Sub, T::descriptor()->full_name()}}, callback_{callback} {
     socket_->filter();  //! Filter the type of message that can be received, only the type T is accepted.
     socket_->setTimeout(timeout);
     socket_->connect(address);
@@ -61,7 +64,7 @@ public:
   /**
    * @brief Move constructor.
    */
-  Subscriber(Subscriber&& other) : socket_{std::move(other.socket_)}, callback_{std::move(other.callback_)} {
+  Subscriber(Subscriber&& other) noexcept : socket_{std::move(other.socket_)}, callback_{std::move(other.callback_)} {
     other.stop();  //! The moved Subscriber has to be stopped.
     initSubscriber();
   }
@@ -69,9 +72,9 @@ public:
   /**
    * @brief Move assignment operator.
    */
-  Subscriber& operator=(Subscriber&& other) {
+  Subscriber& operator=(Subscriber&& other) noexcept {
     stop();                 //! Stop the current Subscriber object.
-    if (other.isValid()) {  //! Move the Subscriber only if it's a valid one, e.g. if it was not default constructed.
+    if (other.isValid()) {  //! Move the Subscriber only if it's a valid one, e.g., if it was not default constructed.
       other.stop();         //! The moved Subscriber has to be stopped.
       socket_ = std::move(other.socket_);
       callback_ = std::move(other.callback_);
@@ -80,6 +83,9 @@ public:
     return *this;
   }
 
+  /**
+   * @brief Class destructor.
+   */
   ~Subscriber<T>() { stop(); }
 
   /**
@@ -98,13 +104,13 @@ public:
    * @brief Query the endpoint that this object is bound to.
    *
    * Can be used to find the bound port if binding to ephemeral ports.
-   * @return the endpoint in form of a ZMQ DSN string, i.e. "tcp://0.0.0.0:8000"
+   * @return the endpoint in form of a ZMQ DSN string, i.e., "tcp://0.0.0.0:8000"
    */
-  const std::string& endpoint() { return socket_->endpoint(); }
+  const std::string endpoint() { return socket_ == nullptr ? "" : socket_->endpoint(); }
 
 private:
   /**
-   * @brief Checks if the Subscriber is properly initialied and its internal thread is running.
+   * @brief Checks if the Subscriber is properly initialized and its internal thread is running.
    */
   inline bool isValid() const { return alive_ == nullptr ? false : alive_->load(); }
 
@@ -116,7 +122,7 @@ private:
 
     // Start the callback thread if not yet done.
     if (!subscriber_thread_.joinable() && socket_ != nullptr) {
-      subscriber_thread_ = std::thread(&Subscriber::subscribe, this, alive_, socket_);
+      subscriber_thread_ = std::thread{&Subscriber::subscribe, this, alive_, socket_};
     }
   }
 
@@ -126,9 +132,9 @@ private:
    */
   void subscribe(std::shared_ptr<std::atomic<bool>> alive, std::shared_ptr<GenericSocket> socket) {
     while (alive->load()) {  //! Run this in a loop until the Subscriber is stopped.
-      T msg;
-      if (socket->receiveMsg(msg, "[SIMPLE Subscriber] - ")) {
-        if (alive->load()) { callback_(msg); }
+      T message;
+      if (socket->receiveMessage(message, "[SIMPLE Subscriber] - ")) {
+        if (alive->load()) { callback_(message); }
       }
     }
   }

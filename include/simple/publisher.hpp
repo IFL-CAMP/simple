@@ -16,28 +16,37 @@
 
 #include "simple/generic_socket.hpp"
 
+namespace google {
+namespace protobuf {
+class Message;
+}  // namespace protobuf
+}  // namespace google
+
 namespace simple {
 /**
  * @class Publisher publisher.hpp.
- * @brief The Publisher class creates a ZMQ Socket of type ZMQ_PUB that can publish messages of type T passed to its
- * publish() method.
- * @tparam T The simple_msgs type to publish.
+ * @brief The Publisher class creates a ZMQ Socket of type zmq_socket_type::Pub that can publish Protobuf messages of
+ * type T passed to its publish() method.
+ * @tparam T The Protobuf message type to publish.
  *
  * Implements the logic for a Publisher in the Publisher / Subscriber paradigm. A Publisher can publish messages of
  * types T that can be received by any number of Subscribers.
  */
 template <typename T>
 class Publisher {
+  static_assert(std::is_base_of<google::protobuf::Message, T>::value,
+                "The message type must inherit from google::protobuf::Message");
+
 public:
   Publisher() = default;
 
   /**
-   * @brief Creates a ZMQ_PUB socket and binds it to the given address.
+   * @brief Creates a zmq_socket_type::Pub socket and binds it to the given address.
    *
    * Subscribers can subscribe to a Publisher connecting to its address.
    * @param [in] address - in the form \<PROTOCOL\>://\<IP_ADDRESS\>:\<PORT\>, e.g. tcp://127.0.0.1:5555.
    */
-  explicit Publisher<T>(const std::string& address) : socket_{zmq_socket_type::pub, T::getTopic()} {
+  explicit Publisher<T>(const std::string& address) : socket_{zmq_socket_type::Pub, T::descriptor()->full_name()} {
     socket_.bind(address);
   }
 
@@ -55,22 +64,34 @@ public:
    */
   Publisher& operator=(Publisher&& other) = default;
 
+  /**
+   * @brief Class destructor.
+   */
   ~Publisher() = default;
 
   /**
    * @brief Publishes the given message of type T through the open socket.
-   * @param [in] msg - simple_msgs class wrapper for Flatbuffer messages.
-   * @return success or failure of the publishing.
+   * @param [in] msg - Protobuf message to publish.
+   * @return success or failure.
    */
-  bool publish(const T& msg) { return socket_.sendMsg(msg, "[Simple Publisher] - "); }
+  bool publish(const T& message) {
+    if (!message.IsInitialized()) {
+      std::cerr << "[Simple Publisher] - Attempting to publish an uninitialized " << socket_.topic_
+                << " message. All required fields "
+                   "have to be set."
+                << std::endl;
+      return false;
+    }
+    return socket_.sendMessage(message, message.ByteSizeLong(), "[Simple Publisher] - ");
+  }
 
   /**
    * @brief Query the endpoint that this object is bound to.
    *
    * Can be used to find the bound port if binding to ephemeral ports.
-   * @return the endpoint in form of a ZMQ DSN string, i.e. "tcp://0.0.0.0:8000"
+   * @return the endpoint in form of a ZMQ DSN string, i.e., "tcp://0.0.0.0:8000"
    */
-  const std::string& endpoint() { return socket_.endpoint(); }
+  const std::string endpoint() { return socket_.endpoint(); }
 
 private:
   GenericSocket socket_{};  //! The internal socket.
