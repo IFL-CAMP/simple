@@ -17,7 +17,7 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Allows all symbols generated from the dynamic library to be exported.
-if (WIN32)
+if(WIN32)
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 endif(WIN32)
 
@@ -32,7 +32,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 function(simple_compile_options target_name)
   if(MSVC)
     target_compile_options(${target_name} PRIVATE /W4 /w44640 /WX)
-    if (MSVC_VERSION GREATER 1900)
+    if(MSVC_VERSION GREATER 1900)
       target_compile_options(${target_name} PRIVATE /permissive-)
     endif()
   else()
@@ -46,7 +46,7 @@ option(SIMPLE_USE_IWYU "FALSE")
 option(SIMPLE_USE_LWYU "FALSE")
 mark_as_advanced(SIMPLE_USE_IWYU SIMPLE_USE_LWYU)
 
-if (${SIMPLE_USE_IWYU})
+if(${SIMPLE_USE_IWYU})
   find_program(iwyu_path NAMES include-what-you-use iwyu)
   if(NOT iwyu_path)
     message(FATAL_ERROR "Could not find include-what-you-use")
@@ -55,7 +55,7 @@ if (${SIMPLE_USE_IWYU})
   endif()
 endif()
 
-if (${SIMPLE_USE_LWYU})
+if(${SIMPLE_USE_LWYU})
   set(CMAKE_LINK_WHAT_YOU_USE ON)
 endif()
 
@@ -68,8 +68,8 @@ option(SIMPLE_BUILD_DOC "Build SIMPLE Documentation" FALSE)
 option(SIMPLE_ENABLE_CPACK "Enable packaging via CPack" FALSE)
 
 # Examples.
-if (${SIMPLE_BUILD_EXAMPLES})
-  if (${SIMPLE_BUILD_STATIC})
+if(${SIMPLE_BUILD_EXAMPLES})
+  if(${SIMPLE_BUILD_STATIC})
     add_subdirectory(examples)
   else()
     message(WARNING "Not building the examples, since SIMPLE_BUILD_STATIC is not enabled.")
@@ -77,10 +77,10 @@ if (${SIMPLE_BUILD_EXAMPLES})
 endif()
 
 # Tests.
-if (${SIMPLE_BUILD_TESTS})
-  if (${SIMPLE_BUILD_STATIC})
+if(${SIMPLE_BUILD_TESTS})
+  if(${SIMPLE_BUILD_STATIC})
     include(CTest)
-    if (CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND CMAKE_BUILD_TYPE MATCHES "Coverage") # Coverage flags for GCC
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND CMAKE_BUILD_TYPE MATCHES "Coverage") # Coverage flags for GCC
       add_compile_options(-g -O0 -fprofile-arcs -ftest-coverage)
       set(coverage_lib gcov)
     endif()
@@ -92,7 +92,7 @@ if (${SIMPLE_BUILD_TESTS})
 endif()
 
 # Documentation.
-if (${SIMPLE_BUILD_DOC})
+if(${SIMPLE_BUILD_DOC})
   add_subdirectory(doc)
 endif()
 
@@ -105,7 +105,7 @@ add_subdirectory(msgs)
 find_package(Threads REQUIRED)
 find_package(cppzmq REQUIRED)
 
-###### TARGETS
+###### INSTALLATION
 
 # Collect all the headers.
 file(GLOB SIMPLE_HEADERS "include/simple/*.hpp")
@@ -121,22 +121,22 @@ add_library(${PROJECT_NAME} SHARED
 
 target_include_directories(${PROJECT_NAME}
   PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/msgs/include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>          # For simple_export.h
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>  # For simple headers
+  $<INSTALL_INTERFACE:include>
   PRIVATE
-    $<BUILD_INTERFACE:${ZeroMQ_INCLUDE_DIR}>
-    $<BUILD_INTERFACE:${cppzmq_INCLUDE_DIR}>
-    )
+  $<BUILD_INTERFACE:${ZeroMQ_INCLUDE_DIR}>
+  $<BUILD_INTERFACE:${cppzmq_INCLUDE_DIR}>
+  )
 
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
-    simple_msgs
-    ${CMAKE_THREAD_LIBS_INIT}
+  simple_msgs
+  ${CMAKE_THREAD_LIBS_INIT}
   PRIVATE
-    cppzmq-static
-    ${coverage_lib}
-    )
+  cppzmq-static
+  ${coverage_lib}
+  )
 
 # Set the compiler options for the shared lib, all warning are activated and treated as errors.
 simple_compile_options(${PROJECT_NAME})
@@ -147,7 +147,7 @@ generate_export_header(${PROJECT_NAME})
 
 # STATIC library.
 
-if (${SIMPLE_BUILD_STATIC})
+if(${SIMPLE_BUILD_STATIC})
   add_library(${PROJECT_NAME}-static STATIC
     src/context_manager.cpp
     src/generic_socket.cpp
@@ -158,22 +158,22 @@ if (${SIMPLE_BUILD_STATIC})
 
   target_include_directories(${PROJECT_NAME}-static
     PUBLIC
-      $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/msgs/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>          # For simple_export.h
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>  # For simple headers
+    $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
     PRIVATE
-      $<BUILD_INTERFACE:${ZeroMQ_INCLUDE_DIR}>
-      $<BUILD_INTERFACE:${cppzmq_INCLUDE_DIR}>
-      )
+    $<BUILD_INTERFACE:${ZeroMQ_INCLUDE_DIR}>
+    $<BUILD_INTERFACE:${cppzmq_INCLUDE_DIR}>
+    )
 
   target_link_libraries(${PROJECT_NAME}-static
     PUBLIC
-      simple_msgs
-      ${CMAKE_THREAD_LIBS_INIT}
+    simple_msgs
+    ${CMAKE_THREAD_LIBS_INIT}
     PRIVATE
-      ${coverage_lib}
-      $<BUILD_INTERFACE:cppzmq-static>
-      )
+    ${coverage_lib}
+    $<BUILD_INTERFACE:cppzmq-static>
+    )
 
   # Set the compiler options for the static lib, all warning are activated and treaded as errors.
   simple_compile_options(${PROJECT_NAME}-static)
@@ -203,13 +203,13 @@ write_basic_package_version_file("${CMAKE_CURRENT_SOURCE_DIR}/simpleConfigVersio
   VERSION ${simple_VERSION}
   COMPATIBILITY SameMajorVersion)
 
-install (FILES "simpleConfig.cmake" "simpleConfigVersion.cmake"
-  DESTINATION lib/cmake/simple)
+install(FILES "simpleConfig.cmake" "simpleConfigVersion.cmake"
+  DESTINATION lib/cmake/${PROJECT_NAME})
 
 install(EXPORT simpleTargets
   FILE simpleTargets.cmake
   NAMESPACE simple::
-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/simple)
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 
 ###### CPACK
 if(${SIMPLE_ENABLE_CPACK})
@@ -236,7 +236,7 @@ if(${SIMPLE_ENABLE_CPACK})
       set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CMAKE_SYSTEM_NAME}-${CMAKE_CXX_COMPILER_ID}")
 
       if(UNIX)
-	    set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}${MAJOR_COMPILER_VERSION}")
+        set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}${MAJOR_COMPILER_VERSION}")
         if(APPLE)
           # MacOS
           set(CPACK_GENERATOR "TGZ")
@@ -247,17 +247,17 @@ if(${SIMPLE_ENABLE_CPACK})
           set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
           set(CPACK_DEBIAN_PACKAGE_SECTION "science")
           if(NOT CPACK_DEBIAN_PACKAGE_ARCHITECTURE)
-              execute_process(COMMAND dpkg --print-architecture
-                  OUTPUT_VARIABLE arch OUTPUT_STRIP_TRAILING_WHITESPACE)
-              set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "${arch}")
+            execute_process(COMMAND dpkg --print-architecture
+              OUTPUT_VARIABLE arch OUTPUT_STRIP_TRAILING_WHITESPACE)
+            set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "${arch}")
           endif()
         endif()
       elseif(WIN32)
-	  	if(MSVC)
-		  set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}${MSVC_VERSION}")
-	    endif()
+        if(MSVC)
+          set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}${MSVC_VERSION}")
+        endif()
         set(CPACK_GENERATOR "NSIS")
-		set(CPACK_PACKAGE_INSTALL_DIRECTORY "simple")
+        set(CPACK_PACKAGE_INSTALL_DIRECTORY "simple")
       endif()
 
       # Do this at last
