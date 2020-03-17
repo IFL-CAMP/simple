@@ -14,56 +14,74 @@
 #include <thread>
 
 #include "simple/publisher.hpp"
-#include "simple_msgs/image.hpp"
+#include "simple_msgs/image.pb.h"
 
-const std::string DATA_DIRECTORY{DATA_DIR};
+const std::string kDataDirectory{DATA_DIR};
+const std::string kLenaPath = kDataDirectory + "lena.ascii.pgm";
+const std::string kBarbaraPath = kDataDirectory + "barbara.ascii.pgm";
+const std::string kBaboonPath = kDataDirectory + "baboon.ascii.pgm";
+const std::string kLenaColorPath = kDataDirectory + "lena512color.tiff";
 
 // Create a vector containing OpenCV images.
 std::vector<cv::Mat> readImages() {
-  const std::string lena_path = DATA_DIRECTORY + "lena.ascii.pgm";
-  const std::string barbara_path = DATA_DIRECTORY + "barbara.ascii.pgm";
-  const std::string baboon_path = DATA_DIRECTORY + "baboon.ascii.pgm";
-  const std::string lena_color_path = DATA_DIRECTORY + "lena512color.tiff";
-
-  return {cv::imread(lena_path, cv::IMREAD_GRAYSCALE), cv::imread(barbara_path, cv::IMREAD_GRAYSCALE),
-          cv::imread(baboon_path, cv::IMREAD_GRAYSCALE), cv::imread(lena_color_path, cv::IMREAD_COLOR)};
+  return {cv::imread(kLenaPath, cv::IMREAD_GRAYSCALE), cv::imread(kBarbaraPath, cv::IMREAD_GRAYSCALE),
+          cv::imread(kBaboonPath, cv::IMREAD_GRAYSCALE), cv::imread(kLenaColorPath, cv::IMREAD_COLOR)};
 }
 
 int main() {
-  const int N_RUN{30000};
-  const int SLEEP_TIME{200};  //!  Milliseconds.
+  constexpr int kNumberRuns{30000};
+  constexpr int kSleepTimeMilliseconds{200};  //!  Milliseconds.
+  const std::string kAddress{"tcp://*:5555"};
 
   // Obtain the images.
   auto images = readImages();
 
   // Add dummy Header and Origin to the image message.
-  simple_msgs::Header h{1, "Image", 0};
-  simple_msgs::Pose p{};
-  simple_msgs::Image<uint8_t> img{};
-  img.setHeader(h);
-  img.setOrigin(p);
+  simple_msgs::Header header;
+  header.set_id(1);
+  header.set_frame("Image");
+  header.set_timestamp(0);
+
+  simple_msgs::Pose pose;
+  pose.mutable_point()->set_x(0);
+  pose.mutable_point()->set_y(0);
+  pose.mutable_point()->set_z(0);
+
+  pose.mutable_quaternion()->set_x(0);
+  pose.mutable_quaternion()->set_y(0);
+  pose.mutable_quaternion()->set_z(0);
+  pose.mutable_quaternion()->set_w(1);
+
+  simple_msgs::Image image_message;
+  image_message.set_allocated_header(&header);
+  image_message.set_allocated_origin(&pose);
 
   // Create a Publisher that will send Image messages to any Subscriber listening on port 5555.
-  // In this example images are treated as uint8.
-  simple::Publisher<simple_msgs::Image<uint8_t>> pub{"tcp://*:5555"};
+  simple::Publisher<simple_msgs::Image> publisher{kAddress};
 
   // Publish an image from the pool of images we read from files, for a total of N_RUN times.
-  for (int i = 0; i < N_RUN; i++) {
+  for (size_t i = 0; i < kNumberRuns; i++) {
     // At each iteration pick one of the images in rotation.
-    auto image = images[i % 4];
-    // Set the image dimensions (e.g. 512x512x1).
-    img.setImageDimensions(static_cast<uint32_t>(image.cols), static_cast<uint32_t>(image.rows), 1);
-    // Set the image data, giving also the total size in bytes and the number of channels
-    img.setImageData(image.data, static_cast<uint64_t>(image.total() * image.elemSize()),
-                     static_cast<uint16_t>(image.channels()));
+    auto image = images[i % images.size()];
+
+    // Set the image dimensions.
+    image_message.set_height(image.rows);
+    image_message.set_width(image.cols);
+    image_message.set_depth(1);
+
+    // Set the image data. In this example images are treated as uint8.
+    image_message.set_uint8_data(image.data, image.total() * image.elemSize());
+    image_message.set_data_size(image.total() * image.elemSize());
+    image_message.set_channels(image.channels());
+
     // Publish the image.
-    pub.publish(img);
+    publisher.publish(image_message);
 
     std::cout << "Message #" << i + 1 << " has been published. " << std::endl;
-    std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_TIME));
-    img.getHeader().setSequenceNumber(i + 1);
+    std::this_thread::sleep_for(std::chrono::milliseconds(kSleepTimeMilliseconds));
+    image_message.mutable_header()->set_id(i + 1);
   }
 
-  std::cout << "Publishing ended." << std::endl;
+  std::cout << "Quitting..." << std::endl;
   return 0;
 }

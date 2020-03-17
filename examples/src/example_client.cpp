@@ -12,30 +12,48 @@
 #include <thread>
 
 #include "simple/client.hpp"
-#include "simple_msgs/pose.hpp"
+#include "simple_msgs/pose.pb.h"
+
+void printPose(const simple_msgs::Pose& pose) {
+  std::cout << "(" << pose.point().x() << ", " << pose.point().y() << ", " << pose.point().z() << ") "
+            << "(" << pose.quaternion().x() << ", " << pose.quaternion().y() << ", " << pose.quaternion().z() << ", "
+            << pose.quaternion().w() << ")" << std::endl;
+}
 
 int main() {
-  const int N_RUN{25};
-  const int SLEEP_TIME{1000};  //!  Milliseconds.
+  constexpr int kNumberRuns{25};
+  constexpr int kSleepTimeMilliseconds{1000};  //!  Milliseconds.
+  const std::string kAddress{"tcp://localhost:5555"};
 
   // Create a pose message
-  simple_msgs::Pose pose({5.0, 6.0, 7.0}, {1.0, 2.0, 3.0, 4.0});
-  // Create a Client that will send request to a Server on "localhost" and on port "5555".
-  simple::Client<simple_msgs::Pose> client{"tcp://localhost:5555"};
+  simple_msgs::Pose pose;
+  pose.mutable_point()->set_x(5.0);
+  pose.mutable_point()->set_y(6.0);
+  pose.mutable_point()->set_z(7.0);
+  pose.mutable_quaternion()->set_x(1.0);
+  pose.mutable_quaternion()->set_y(2.0);
+  pose.mutable_quaternion()->set_z(3.0);
+  pose.mutable_quaternion()->set_w(4.0);
 
-  // Send a request every SLEEP_TIME milliseconds for N_RUN times.
+  // Create a Client that will send request to a Server on "localhost" and on port "5555".
+  simple::Client<simple_msgs::Pose> client{kAddress};
+
+  // Send a request every kSleepTime milliseconds for kNumberRuns times.
   // The request is a Pose message, the reply is the modified Pose message.
   // The message is modified by the Server that listens on localhost:5555 accordingly to its callback function.
-  for (auto i = 0; i < N_RUN; ++i) {
-    std::cout << "Sending: \n" << pose << std::endl;
+  for (auto i = 0; i < kNumberRuns; ++i) {
+    std::cout << "Sending Pose: \n";
+    printPose(pose);
     if (client.request(pose)) {
-      std::cout << "Receiving: \n" << pose << std::endl;
+      std::cout << "Receiving Pose: \n";
+      printPose(pose);
     } else {
       std::cerr << "Request to the server failed." << std::endl;
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_TIME));
+    std::cout << "##########################################" << std::endl;
+    std::this_thread::sleep_for(std::chrono::milliseconds(kSleepTimeMilliseconds));
   }
 
-  std::cout << "Requesting ended." << std::endl;
+  std::cout << "Quitting..." << std::endl;
   return 0;
 }

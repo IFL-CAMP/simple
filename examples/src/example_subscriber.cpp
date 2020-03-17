@@ -11,24 +11,24 @@
 #include <iostream>
 
 #include "simple/subscriber.hpp"
-#include "simple_msgs/pose_stamped.hpp"
-
-// Callback function for a Subscriber object.
-// Whenever the Subscriber receives a message (a PoseStamped in this example), it is elaborated by this function.
-// In this trivial case, the PoseStamped message is just printed to screen.
-void example_callback(const simple_msgs::PoseStamped& p) {
-  std::cout << p << std::endl;  //! Just print the content of the message.
-}
+#include "simple_msgs/point_stamped.pb.h"
 
 int main() {
-  const int SLEEP_TIME{60000};  //! Milliseconds.
+  constexpr int kSleepTime{60};  //! Seconds.
+  const std::string kAddress{"tcp://localhost:5555"};
 
   // A Subscriber listening on port 5555 to messages coming from the IP address "localhost"
   std::cout << "Creating a subscriber." << std::endl;
-  simple::Subscriber<simple_msgs::PoseStamped> subscriber{"tcp://localhost:5555", example_callback};
+
+  // clang-format off
+  simple::Subscriber<simple_msgs::PointStamped> subscriber{kAddress,[](const simple_msgs::PointStamped& p) {
+    std::cout << "[" << p.header().timestamp() << "] " << "Received point"
+    " (" << p.point().x() << ", " << p.point().y() << ", " << p.point().z() << ")" << std::endl;
+  }};
+  // clang-format on
 
   // Run this thread for 60 seconds. The subscriber callback is called asynchronously.
-  std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_TIME));
+  std::this_thread::sleep_for(std::chrono::seconds(kSleepTime));
 
   std::cout << "Subscribing ended." << std::endl;
   return 0;

@@ -9,44 +9,68 @@
  */
 
 #include <iostream>
+#include <csignal>
+#include <condition_variable>
+
 #include <opencv2/opencv.hpp>
 
 #include "simple/subscriber.hpp"
-#include "simple_msgs/image.hpp"
+#include "simple_msgs/image.pb.h"
 
-const std::string window_name{"Received image"};
-cv::Mat buffer{};
+class ImageReceiver {
+public:
+  ImageReceiver(const std::string& address) :
+  subscriber_{address, std::bind(&ImageReceiver::imageCallback, this, std::placeholders::_1)} {}
 
-// Callback function for the Image Subscriber.
-// Every image that is received by the Subscriber is shown in a OpenCV window.
-void example_callback(const simple_msgs::Image<uint8_t>& i) {
-  // Get the image raw data.
-  auto img = const_cast<uint8_t*>(i.getImageData());
+  inline cv::Mat getImage() const
+  {
+    std::unique_lock<std::mutex> lock(mutex_);
+    condition_variable_.wait(lock);
+    return image_;
+  }
 
-  // Get the image dimensions, e.g. 512x512x1.
-  const auto dimensions = i.getImageDimensions();
+private:
+  void imageCallback(const simple_msgs::Image& i) {
+    std::unique_lock<std::mutex> lock(mutex_);
+    auto image = const_cast<char*>(i.uint8_data().data());
+    const cv::Mat received_image{static_cast<int>(i.width()), static_cast<int>(i.height()),
+                         CV_8UC(static_cast<int>(i.channels())), image};
+    received_image.copyTo(image_);
+    condition_variable_.notify_all();
+  }
 
-  // Build an OpenCV Mat from those.
-  // We need to cast the image dimensions, since OpenCV takes signed ints :(
-  cv::Mat received_img{static_cast<int>(dimensions[1]), static_cast<int>(dimensions[0]), CV_8UC(i.getNumChannels()),
-                       img};
+  const simple::Subscriber<simple_msgs::Image> subscriber_{};
+  cv::Mat image_{};
+  mutable std::mutex mutex_{};          //< Used to avoid race-condition between method accessing the stored data.
+  mutable std::condition_variable condition_variable_{};
+};
 
-  received_img.copyTo(buffer);
-  cv::imshow(window_name, buffer);
-  std::cout << "Message # " << i.getHeader().getSequenceNumber() << " received !" << std::endl;
-}
+static bool run = true;
+void quit (int /*unused*/) { run = false; }
 
 int main() {
-  cv::namedWindow(window_name);
+  const std::string kWindowName{"Received image"};
+  const std::string kAddress{"tcp://localhost:5555"};
 
-  // Created a Subscriber that listens to Images sent by a Publisher on the IP address "localhost" on port 5555.
-  std::cout << "Creating a subscriber for Image messages." << std::endl;
+  // OpenCV window.
+  cv::namedWindow(kWindowName, cv::WINDOW_AUTOSIZE);
 
-  simple::Subscriber<simple_msgs::Image<uint8_t>> sub{"tcp://localhost:5555", example_callback};
+  std::cout << "Creating a Subscriber for Image messages." << std::endl;
+  std::cout << "Images will be displayed as soon as they are received from a Publisher." << std::endl;
 
-  cv::waitKey(0);
-  std::cout << "Subscribing ended." << std::endl;
+  ImageReceiver receiver{kAddress};
 
+  // Signal handlers.
+  std::signal(SIGTERM, quit);
+  std::signal(SIGINT, quit);
+  std::signal(SIGHUP, quit);
+
+  while(run) {
+    cv::imshow(kWindowName, receiver.getImage());
+    cv::waitKey(1);
+  }
+
+  std::cout << "Quitting..." << std::endl;
   cv::destroyAllWindows();
   return 0;
 }
