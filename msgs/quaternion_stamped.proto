@@ -1,0 +1,11 @@
+syntax = "proto2";
+
+import "header.proto";
+import "quaternion.proto";
+
+package simple_msgs;
+
+message QuaternionStamped {
+  required simple_msgs.Header header = 1;
+  required simple_msgs.Quaternion quaternion = 2;
+}

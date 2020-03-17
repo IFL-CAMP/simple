@@ -1,0 +1,9 @@
+syntax = "proto2";
+
+package simple_msgs;
+
+message Header {
+  required uint32 id = 1;
+  required string frame = 2;
+  required uint64 timestamp = 3;
+}

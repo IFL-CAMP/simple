@@ -1,0 +1,11 @@
+syntax = "proto2";
+
+import "header.proto";
+import "transform.proto";
+
+package simple_msgs;
+
+message TransformStamped {
+  required simple_msgs.Header header = 1;
+  required simple_msgs.Transform transform = 2;
+}

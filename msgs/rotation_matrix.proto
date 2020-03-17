@@ -1,0 +1,15 @@
+syntax = "proto2";
+
+package simple_msgs;
+
+message RotationMatrix {
+  required double r00 = 1;
+  required double r01 = 2;
+  required double r02 = 3;
+  required double r10 = 4;
+  required double r11 = 5;
+  required double r12 = 6;
+  required double r20 = 7;
+  required double r21 = 8;
+  required double r22 = 9;
+}

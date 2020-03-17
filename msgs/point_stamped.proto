@@ -1,0 +1,11 @@
+syntax = "proto2";
+
+import "header.proto";
+import "point.proto";
+
+package simple_msgs;
+
+message PointStamped {
+  required simple_msgs.Header header = 1;
+  required simple_msgs.Point point = 2;
+}

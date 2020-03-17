@@ -1,0 +1,11 @@
+syntax = "proto2";
+
+import "header.proto";
+import "rotation_matrix.proto";
+
+package simple_msgs;
+
+message RotationMatrixStamped {
+  required simple_msgs.Header header = 1;
+  required simple_msgs.RotationMatrix matrix = 2;
+}

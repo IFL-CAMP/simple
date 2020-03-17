@@ -1,0 +1,11 @@
+syntax = "proto2";
+
+import "point.proto";
+import "rotation_matrix.proto";
+
+package simple_msgs;
+
+message Transform {
+  required simple_msgs.Point point = 1;
+  required simple_msgs.RotationMatrix matrix = 2;
+}

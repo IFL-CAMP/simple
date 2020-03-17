@@ -1,0 +1,11 @@
+syntax = "proto2";
+
+import "point.proto";
+import "quaternion.proto";
+
+package simple_msgs;
+
+message Pose {
+  required simple_msgs.Point point = 1;
+  required simple_msgs.Quaternion quaternion = 2;
+}

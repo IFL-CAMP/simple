@@ -1,82 +1,59 @@
 cmake_minimum_required(VERSION 3.3)
 project(simple_msgs)
 
-# Find FlatBuffers and Flatc.
-find_package(Flatbuffers REQUIRED)
+# Force the use of the static version of protobuf.
+set(Protobuf_USE_STATIC_LIBS ON)
 
-find_program(FLATBUFFERS_FLATC_EXECUTABLE flatc
-  /usr/local/bin
-  /usr/bin
-  "$ENV{PROGRAMFILES}/FlatBuffers/bin"
-  "${Flatbuffers_DIR}/../../../bin"
-  "${Flatbuffers_DIR}/../../tools/flatbuffers"
-  NO_DEFAULT_PATH)
+# Find protobuf and protoc,
+find_package(Protobuf REQUIRED)
 
-if(NOT FLATBUFFERS_FLATC_EXECUTABLE)
-	message(FATAL_ERROR "Flatbuffers' flatc could not be found. Please set FLATBUFFERS_FLATC_EXECUTABLE manually!")
-endif()
+###### PROTOBUF ######
 
-# CMake function that generates Flatbuffers headers from fbs files in the given directory.
-function(flatbuffers_generate_c_headers NAME FBS_DIR OUTPUT_DIR)
-  set(FLATC_OUTPUTS)
-  file(GLOB FBS_FILES ${FBS_DIR}/*.fbs)
-  foreach(FILE ${FBS_FILES})
-    get_filename_component(FLATC_OUTPUT ${FILE} NAME_WE)
-    set(FLATC_OUTPUT "${OUTPUT_DIR}/${FLATC_OUTPUT}_generated.h")
-    list(APPEND FLATC_OUTPUTS ${FLATC_OUTPUT})
-    set(EXECUTE_COMMAND ${FLATBUFFERS_FLATC_EXECUTABLE} -c -o ${OUTPUT_DIR} ${FILE})
-    execute_process(COMMAND ${EXECUTE_COMMAND})
-  endforeach()
-  set(${NAME}_OUTPUTS ${FLATC_OUTPUTS} PARENT_SCOPE)
+# Output directory for the generated proto messages.
+set(PROTO_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}")
+# Create the output directory.
+file(MAKE_DIRECTORY ${PROTO_OUTPUT_PATH})
+
+# Languages for which proto messages are generated.
+# By default cpp messages are always generated.
+list(APPEND PROTO_LANGUAGE_GENERATION "cpp")
+
+# CMake function that generates Protobuf messages from proto files in the given directory.
+function(generate_protobuf_messages PROTO_DIR OUTPUT_DIR LANGUAGE_GENERATOR)
+  # Gather all proto files.
+  file(GLOB PROTO_FILES ${PROTO_DIR}/*.proto)
+  # Creates the flags for the protoc command.
+  list(APPEND PROTOC_FLAGS "--proto_path=${PROTO_DIR}")
+  list(APPEND PROTOC_FLAGS "--${LANGUAGE_GENERATOR}_out=${OUTPUT_DIR}")
+  # Execute the protobuf compiler and generates the appropriate messages.
+  set(EXECUTE_COMMAND ${Protobuf_PROTOC_EXECUTABLE} ${PROTOC_FLAGS} ${PROTO_FILES})
+  execute_process(COMMAND ${EXECUTE_COMMAND})
 endfunction()
 
-###### SOURCE FILES
+# Generate the proto messages for each selected language.
+foreach(LANGUAGE ${PROTO_LANGUAGE_GENERATION})
+  generate_protobuf_messages(${CMAKE_CURRENT_SOURCE_DIR} ${PROTO_OUTPUT_PATH} ${LANGUAGE})
+endforeach()
 
-file(GLOB_RECURSE SIMPLE_MSGS_HEADERS "*.hpp")
+# CPP - Collect all generated heades and source files.
+file(GLOB PROTO_CPP_HEADERS ${PROTO_OUTPUT_PATH}/*.pb.h)
+file(GLOB PROTO_CPP_SOURCES ${PROTO_OUTPUT_PATH}/*.pb.cc)
 
-set(SIMPLE_MSGS_SRCS
-  ${SIMPLE_MSGS_HEADERS}
-  src/generic_message.cpp
-  src/bool.cpp
-  src/double.cpp
-  src/float.cpp
-  src/string.cpp
-  src/header.cpp
-  src/image.cpp
-  src/int.cpp
-  src/point.cpp
-  src/point_stamped.cpp
-  src/quaternion.cpp
-  src/quaternion_stamped.cpp
-  src/pose.cpp
-  src/pose_stamped.cpp
-  src/rotation_matrix.cpp
-  src/rotation_matrix_stamped.cpp
-  src/transform.cpp
-  src/transform_stamped.cpp
+###### TARGETS ######
+add_library(${PROJECT_NAME} STATIC ${PROTO_CPP_SOURCES} ${PROTO_CPP_HEADERS})
+
+target_include_directories(${PROJECT_NAME} PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+  $<BUILD_INTERFACE:${Protobuf_INCLUDE_DIRS}>
+  $<INSTALL_INTERFACE:include>
   )
 
-# Generate the Flatbuffers headers.
-flatbuffers_generate_c_headers(simple_msgs ${PROJECT_SOURCE_DIR}/fbs ${PROJECT_SOURCE_DIR}/include/simple_msgs/generated)
-
-###### TARGETS
-
-add_library(${PROJECT_NAME} STATIC ${SIMPLE_MSGS_SRCS})
-target_include_directories(${PROJECT_NAME}
-  PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  PRIVATE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/generated>
-)
-
 target_compile_definitions(${PROJECT_NAME} PUBLIC SIMPLE_STATIC_DEFINE)
+target_link_libraries(${PROJECT_NAME} PUBLIC ${Protobuf_LIBRARIES})
 
-target_link_libraries(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:flatbuffers::flatbuffers>)
-
-###### INSTALLATION
-
-# Install the simple_msgs library in the desired folder.
+###### INSTALLATION ######
 install(TARGETS ${PROJECT_NAME} EXPORT "simpleTargets"
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
-install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  )
+install(DIRECTORY ${PROTO_OUTPUT_PATH} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})

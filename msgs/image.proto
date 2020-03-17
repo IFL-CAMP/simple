@@ -1,0 +1,25 @@
+syntax = "proto2";
+
+package simple_msgs;
+
+import "header.proto";
+import "pose.proto";
+import "point.proto";
+
+message Image {
+  optional simple_msgs.Header header = 1;
+  optional simple_msgs.Pose origin = 2;
+  optional string encoding = 3;
+  optional simple_msgs.Point spacing = 4;
+  required uint32 width = 5;
+  required uint32 height = 6;
+  optional uint32 depth = 7;
+  optional uint32 channels = 8;
+  optional uint32 data_size = 9;
+  oneof data {
+    bytes uint8_data = 10;
+    uint32 uint32_data = 11;
+    float float_data = 12;
+    double double_data = 13;
+  }
+}

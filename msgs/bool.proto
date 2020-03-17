@@ -1,0 +1,7 @@
+syntax = "proto2";
+
+package simple_msgs;
+
+message Bool {
+  required bool value = 1;
+}

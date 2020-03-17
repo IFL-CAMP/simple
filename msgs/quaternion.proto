@@ -1,0 +1,10 @@
+syntax = "proto2";
+
+package simple_msgs;
+
+message Quaternion {
+  required double x = 1;
+  required double y = 2;
+  required double z = 3;
+  required double w = 4;
+}
