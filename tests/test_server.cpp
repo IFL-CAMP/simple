@@ -22,45 +22,52 @@
 
 #include "simple/client.hpp"
 #include "simple/server.hpp"
-#include "simple_msgs/point.h"
+#include "simple_msgs/point.pb.h"
+#include "test_utilities.hpp"
 
 // Test: Subscriber interface.
 
-//< A dummy callback used to build the subscribers in this test.
-int n_received_requests{0};
-auto dummy_callback = [](simple_msgs::Point& /*unused*/) { ++n_received_requests; };
-simple_msgs::Point dummy{0, 0, 0};
+using namespace simple_tests;
+
+//! A dummy callback used to build the subscribers in this test.
+int number_received_messages{0};
+auto dummyCallback = [](simple_msgs::Point& /*unused*/) { ++number_received_messages; };
 
 SCENARIO("SIMPLE Server interface") {
+  simple_msgs::Point dummy;
+  dummy.set_x(1);
+  dummy.set_y(1);
+  dummy.set_z(1);
+
   GIVEN("A SIMPLE Server object") {
     // Default ctor.
     WHEN("It is default constructed.") {
-      THEN("It constructed correctly.") { REQUIRE_NOTHROW(simple::Server<simple_msgs::Point>{}); }
+      simple::Server<simple_msgs::Point> server;
+      THEN("Its endpoint string is empty") { REQUIRE(server.endpoint() == ""); }
     }
 
     // Parameter ctor.
     WHEN("It is constructed passing valid parameters.") {
-      THEN("It constructed correctly.") {
-        REQUIRE_NOTHROW(simple::Server<simple_msgs::Point>{"tcp://*:6666", dummy_callback});
-      }
+      const auto address = kAddressPrefix + std::to_string(generatePort());
+      simple::Server<simple_msgs::Point> server{address, dummyCallback};
+      THEN("Its endpoint string is correct") { REQUIRE(server.endpoint() == address); }
     }
 
     // Move ctor.
     WHEN("It is move-constructed") {
-      std::this_thread::sleep_for(std::chrono::seconds(2));
-      simple::Server<simple_msgs::Point> copy_server{"tcp://*:6667", dummy_callback};
-      simple::Server<simple_msgs::Point> another_server{"tcp://*:6671", dummy_callback};
+      const auto address = kAddressPrefix + std::to_string(generatePort());
+      simple::Server<simple_msgs::Point> copy_server{address, dummyCallback};
       THEN("It is moved correctly.") { REQUIRE_NOTHROW(simple::Server<simple_msgs::Point>{std::move(copy_server)}); }
       THEN("It works properly.") {
-        simple::Client<simple_msgs::Point> client{"tcp://localhost:6671"};
-        simple::Server<simple_msgs::Point> server{std::move(another_server)};
-        std::this_thread::sleep_for(std::chrono::seconds(2));
-        n_received_requests = 0;  //< Reset the global variable.
-        for (int i = 0; i < 10; ++i) {
+        simple::Client<simple_msgs::Point> client{address};
+        simple::Server<simple_msgs::Point> server{std::move(copy_server)};
+        std::this_thread::sleep_for(std::chrono::seconds(kWaitTimeForServers));
+        number_received_messages = 0;  //< Reset the global variable.
+        for (int i = 0; i < kTestMessagesToSend; ++i) {
           client.request(dummy);
-          std::this_thread::sleep_for(std::chrono::milliseconds(10));
+          std::this_thread::sleep_for(std::chrono::milliseconds(kWaitTimeBetweenMessagesMilliseconds));
         }
-        REQUIRE(n_received_requests == 10);
+        REQUIRE(number_received_messages == kTestMessagesToSend);
       }
     }
 
@@ -71,23 +78,22 @@ SCENARIO("SIMPLE Server interface") {
 
     // Move assignment.
     WHEN("It is move-assigned") {
-      std::this_thread::sleep_for(std::chrono::seconds(2));
-      simple::Server<simple_msgs::Point> copy_server{"tcp://*:6668", dummy_callback};
-      simple::Server<simple_msgs::Point> another_server{"tcp://*:6670", dummy_callback};
+      const auto address = kAddressPrefix + std::to_string(generatePort());
+      simple::Server<simple_msgs::Point> copy_server{address, dummyCallback};
       THEN("It is moved correctly.") {
         simple::Server<simple_msgs::Point> server;
         REQUIRE_NOTHROW(server = std::move(copy_server));
       }
       THEN("It works properly.") {
-        simple::Client<simple_msgs::Point> client{"tcp://localhost:6670"};
-        simple::Server<simple_msgs::Point> server = std::move(another_server);
-        std::this_thread::sleep_for(std::chrono::seconds(2));
-        n_received_requests = 0;  //< Reset the global variable.
-        for (int i = 0; i < 10; ++i) {
+        simple::Client<simple_msgs::Point> client{address};
+        simple::Server<simple_msgs::Point> server = std::move(copy_server);
+        std::this_thread::sleep_for(std::chrono::seconds(kWaitTimeForServers));
+        number_received_messages = 0;  //< Reset the global variable.
+        for (int i = 0; i < kTestMessagesToSend; ++i) {
           client.request(dummy);
-          std::this_thread::sleep_for(std::chrono::milliseconds(10));
+          std::this_thread::sleep_for(std::chrono::milliseconds(kWaitTimeBetweenMessagesMilliseconds));
         }
-        REQUIRE(n_received_requests == 10);
+        REQUIRE(number_received_messages == kTestMessagesToSend);
       }
     }
 
@@ -100,38 +106,41 @@ SCENARIO("SIMPLE Server interface") {
     }
 
     // Stop.
-    //    WHEN("A server is stopped") {
-    //      std::this_thread::sleep_for(std::chrono::seconds(2));
-    //      simple::Client<simple_msgs::Point> client{"tcp://localhost:6669", 10};
-    //      simple::Server<simple_msgs::Point> server{"tcp://*:6669", dummy_callback, 100};
-    //      n_received_requests = 0;  //< Reset the global variable.
-    //      std::this_thread::sleep_for(std::chrono::seconds(2));
+    WHEN("A server is stopped") {
+      const auto address = kAddressPrefix + std::to_string(generatePort());
+      simple::Client<simple_msgs::Point> client{address, kDefaultTimeoutMilliseconds, kDefaultLingerMilliseconds};
+      simple::Server<simple_msgs::Point> server{address, dummyCallback};
+      number_received_messages = 0;  //< Reset the global variable.
+      std::this_thread::sleep_for(std::chrono::seconds(kWaitTimeForServers));
 
-    //      for (int i = 0; i < 5; ++i) {
-    //        client.request(dummy);
-    //        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-    //      }
-    //      REQUIRE(n_received_requests == 5);
+      for (int i = 0; i < kTestMessagesToSend; ++i) {
+        client.request(dummy);
+        std::this_thread::sleep_for(std::chrono::milliseconds(kWaitTimeBetweenMessagesMilliseconds));
+      }
+      REQUIRE(number_received_messages == kTestMessagesToSend);
 
-    //      server.stop();  //< The subscriber is stopped, no messages should be received now.
-    //      for (int i = 0; i < 5; ++i) {
-    //        client.request(dummy);
-    //        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-    //      }
-    //      REQUIRE(n_received_requests == 5);
-    //      server = simple::Server<simple_msgs::Point>{"tcp://*:6669", dummy_callback, 10};
+      server.stop();  //< The subscriber is stopped, no messages should be received now.
+      const auto messages_so_far = number_received_messages;
+      for (int i = 0; i < kTestMessagesToSend; ++i) {
+        client.request(dummy);
+        std::this_thread::sleep_for(std::chrono::milliseconds(kWaitTimeBetweenMessagesMilliseconds));
+      }
+      REQUIRE(number_received_messages == messages_so_far);
+      server = simple::Server<simple_msgs::Point>{address, dummyCallback};
+      std::this_thread::sleep_for(
+          std::chrono::seconds(kWaitTimeForServers));  //! Wait a bit so that the subcriber is connected.
 
-    //      for (int i = 0; i < 10; ++i) {
-    //        client.request(dummy);
-    //        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-    //      }
-    //      REQUIRE(n_received_requests == 15);
-    //    }
+      for (int i = 0; i < kTestMessagesToSend; ++i) {
+        client.request(dummy);
+        std::this_thread::sleep_for(std::chrono::milliseconds(kWaitTimeBetweenMessagesMilliseconds));
+      }
+      REQUIRE(number_received_messages == messages_so_far + kTestMessagesToSend);
+    }
 
     // Failure case.
     WHEN("It is constructed passing an invalid address.") {
       THEN("An exception is thrown") {
-        REQUIRE_THROWS_AS(simple::Server<simple_msgs::Point>("invalid_address", dummy_callback), std::runtime_error);
+        REQUIRE_THROWS_AS(simple::Server<simple_msgs::Point>(kInvalidAddress, dummyCallback), std::runtime_error);
       }
     }
   }

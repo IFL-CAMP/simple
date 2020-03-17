@@ -24,53 +24,67 @@
 
 #include "simple/client.hpp"
 #include "simple/server.hpp"
-#include "simple_msgs/point.h"
+#include "simple_msgs/point.pb.h"
+#include "test_utilities.hpp"
 
 // Test: Client interface
 
-auto dummy_callback = [](simple_msgs::Point& msg) { ++msg; };
-simple_msgs::Point dummy{0, 0, 0};
+static double random_value{0};
+auto dummyCallback = [](simple_msgs::Point& msg) {
+  msg.set_x(msg.x() + random_value);
+  msg.set_y(msg.y() + random_value);
+  msg.set_z(msg.z() + random_value);
+};
+
+using namespace simple_tests;
 
 SCENARIO("SIMPLE Client interface") {
+  simple_msgs::Point dummy;
+  dummy.set_x(1);
+  dummy.set_y(1);
+  dummy.set_z(1);
+
   GIVEN("A SIMPLE Client object") {
     // Default ctor.
     WHEN("It is default constructed.") {
       simple::Client<simple_msgs::Point> client;
-      THEN("It is not able to send requests.") {
-        auto result = client.request(dummy);
-        REQUIRE(result == false);
-      }
+      THEN("It is not able to send requests.") { REQUIRE(client.request(dummy) == false); }
+      THEN("Its endpoint string is empty") { REQUIRE(client.endpoint() == ""); }
     }
 
     // Parameter ctor.
     WHEN("It is constructed passing an valid address to bind to.") {
-      std::this_thread::sleep_for(std::chrono::seconds(2));
-      simple::Server<simple_msgs::Point> server{"tcp://*:5555", dummy_callback};
-      simple::Client<simple_msgs::Point> client{"tcp://localhost:5555"};
+      auto const address = kAddressPrefix + std::to_string(generatePort());
+      simple::Server<simple_msgs::Point> server{address, dummyCallback};
+      simple::Client<simple_msgs::Point> client{address};
 
       THEN("It correctly sends its request and receives a reply.") {
-        auto result = client.request(dummy);
-        REQUIRE(result == true);
-        REQUIRE(dummy == simple_msgs::Point{1, 1, 1});
+        const auto original_message = dummy;
+        random_value = double_dist(generator);
+        REQUIRE(client.request(dummy) == true);
+        REQUIRE(dummy.x() == original_message.x() + random_value);
+        REQUIRE(dummy.y() == original_message.y() + random_value);
+        REQUIRE(dummy.z() == original_message.z() + random_value);
       }
+      THEN("Its endpoint string is correct") { REQUIRE(client.endpoint() == address); }
     }
 
     // Move ctor.
     WHEN("It is move-constructed") {
-      std::this_thread::sleep_for(std::chrono::seconds(2));
-      simple::Server<simple_msgs::Point> server{"tcp://*:5556", dummy_callback};
-      simple::Client<simple_msgs::Point> copy_client{"tcp://localhost:5556"};
+      auto const address = kAddressPrefix + std::to_string(generatePort());
+      simple::Server<simple_msgs::Point> server{address, dummyCallback};
+      simple::Client<simple_msgs::Point> copy_client{address};
       simple::Client<simple_msgs::Point> client{std::move(copy_client)};
-      std::this_thread::sleep_for(std::chrono::seconds(2));
+      std::this_thread::sleep_for(std::chrono::seconds(kWaitTimeForServers));
       THEN("It can send a request") {
-        auto result = client.request(dummy);
-        REQUIRE(result == true);
-        REQUIRE(dummy == simple_msgs::Point{2, 2, 2});
+        const auto original_message = dummy;
+        random_value = double_dist(generator);
+        REQUIRE(client.request(dummy) == true);
+        REQUIRE(dummy.x() == original_message.x() + random_value);
+        REQUIRE(dummy.y() == original_message.y() + random_value);
+        REQUIRE(dummy.z() == original_message.z() + random_value);
       }
-      THEN("The moved one is not able to send requests.") {
-        auto result = copy_client.request(dummy);
-        REQUIRE(result == false);
-      }
+      THEN("The moved one is not able to send requests.") { REQUIRE(copy_client.request(dummy) == false); }
     }
 
     WHEN("Is is move-constructed from a default constructed Publisher") {
@@ -80,21 +94,21 @@ SCENARIO("SIMPLE Client interface") {
 
     // Copy assignment.
     WHEN("It is move-assigned") {
-      std::this_thread::sleep_for(std::chrono::seconds(2));
-      simple::Server<simple_msgs::Point> server{"tcp://*:5557", dummy_callback};
-      simple::Client<simple_msgs::Point> copy_client{"tcp://localhost:5557"};
+      auto const address = kAddressPrefix + std::to_string(generatePort());
+      simple::Server<simple_msgs::Point> server{address, dummyCallback};
+      simple::Client<simple_msgs::Point> copy_client{address};
       simple::Client<simple_msgs::Point> client;
-      std::this_thread::sleep_for(std::chrono::seconds(2));
+      std::this_thread::sleep_for(std::chrono::seconds(kWaitTimeForServers));
       client = std::move(copy_client);
       THEN("It correctly sends its request and receives a reply.") {
-        auto result = client.request(dummy);
-        REQUIRE(result == true);
-        REQUIRE(dummy == simple_msgs::Point{3, 3, 3});
+        const auto original_message = dummy;
+        random_value = double_dist(generator);
+        REQUIRE(client.request(dummy) == true);
+        REQUIRE(dummy.x() == original_message.x() + random_value);
+        REQUIRE(dummy.y() == original_message.y() + random_value);
+        REQUIRE(dummy.z() == original_message.z() + random_value);
       }
-      THEN("The moved one is not able to send requests.") {
-        auto result = copy_client.request(dummy);
-        REQUIRE(result == false);
-      }
+      THEN("The moved one is not able to send requests.") { REQUIRE(copy_client.request(dummy) == false); }
     }
 
     WHEN("Is is move-assigned from a default constructed Client") {
@@ -113,7 +127,7 @@ SCENARIO("SIMPLE Client interface") {
 
     WHEN("It is constructed passing an invalid address.") {
       THEN("An exception is thrown") {
-        REQUIRE_THROWS_AS(simple::Client<simple_msgs::Point>("invalid_address"), std::runtime_error);
+        REQUIRE_THROWS_AS(simple::Client<simple_msgs::Point>(kInvalidAddress), std::runtime_error);
       }
     }
   }

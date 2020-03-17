@@ -13,44 +13,53 @@
 
 #include "simple/publisher.hpp"
 #include "simple/subscriber.hpp"
-#include "simple_msgs/bool.hpp"
+#include "simple_msgs/bool.pb.h"
+#include "test_utilities.hpp"
 
 // Test: Subscriber interface.
 
+using namespace simple_tests;
+
 //! A dummy callback used to build the subscribers in this test.
-static int n_received_msg{0};
-auto dummy_callback = [](const simple_msgs::Bool& /*unused*/) { ++n_received_msg; };
+static int number_received_messages{0};
+auto dummyCallback = [](const simple_msgs::Bool& /*unused*/) { ++number_received_messages; };
 
 SCENARIO("SIMPLE Subscriber interface") {
+  simple_msgs::Bool false_boolean;
+  false_boolean.set_value(false);
+
   GIVEN("A SIMPLE Subscriber object") {
     // Default ctor.
     WHEN("It is default constructed.") {
-      THEN("It constructed correctly.") { REQUIRE_NOTHROW(simple::Subscriber<simple_msgs::Bool>{}); }
+      simple::Subscriber<simple_msgs::Bool> subscriber;
+      THEN("Its endpoint string is empty") { REQUIRE(subscriber.endpoint() == ""); }
     }
 
     // Parameter ctor.
     WHEN("It is constructed passing valid parameters.") {
-      THEN("It constructed correctly.") {
-        REQUIRE_NOTHROW(simple::Subscriber<simple_msgs::Bool>{"tcp://127.0.0.1:6666", dummy_callback});
-      }
+      const auto address = kAddressPrefix + std::to_string(generatePort());
+      simple::Subscriber<simple_msgs::Bool> subscriber{address, dummyCallback};
+      THEN("Its endpoint string is correct") { REQUIRE(subscriber.endpoint() == address); }
     }
 
     // Move ctor.
     WHEN("It is move-constructed") {
-      simple::Subscriber<simple_msgs::Bool> copy_subscriber{"tcp://127.0.0.1:6667", dummy_callback};
+      const auto address = kAddressPrefix + std::to_string(generatePort());
+      simple::Subscriber<simple_msgs::Bool> copy_subscriber{address, dummyCallback};
       THEN("It is moved correctly.") {
         REQUIRE_NOTHROW(simple::Subscriber<simple_msgs::Bool>{std::move(copy_subscriber)});
       }
       THEN("It works properly.") {
-        simple::Publisher<simple_msgs::Bool> publisher{"tcp://*:6667"};
+        simple::Publisher<simple_msgs::Bool> publisher{address};
         simple::Subscriber<simple_msgs::Bool> subscriber{std::move(copy_subscriber)};
-        std::this_thread::sleep_for(std::chrono::seconds(2));  //! Wait a bit so that the subcriber is connected.
-        n_received_msg = 0;                                    //! Reset the global variable.
-        for (int i = 0; i < 10; ++i) {
-          publisher.publish(simple_msgs::Bool{false});
-          std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        std::this_thread::sleep_for(
+            std::chrono::seconds(kWaitTimeForSubscribers));  //! Wait a bit so that the subcriber is connected.
+        number_received_messages = 0;                        //! Reset the global variable.
+        for (int i = 0; i < kTestMessagesToSend; ++i) {
+          publisher.publish(false_boolean);
+          std::this_thread::sleep_for(std::chrono::milliseconds(kWaitTimeBetweenMessagesMilliseconds));
         }
-        REQUIRE(n_received_msg == 10);
+        REQUIRE(number_received_messages == kTestMessagesToSend);
       }
     }
 
@@ -63,21 +72,23 @@ SCENARIO("SIMPLE Subscriber interface") {
 
     // Move assignment.
     WHEN("It is move-assigned") {
-      simple::Subscriber<simple_msgs::Bool> copy_subscriber{"tcp://127.0.0.1:6668", dummy_callback};
+      const auto address = kAddressPrefix + std::to_string(generatePort());
+      simple::Subscriber<simple_msgs::Bool> copy_subscriber{address, dummyCallback};
       THEN("It is moved correctly.") {
         simple::Subscriber<simple_msgs::Bool> subscriber;
         REQUIRE_NOTHROW(subscriber = std::move(copy_subscriber));
       }
       THEN("It works properly.") {
-        simple::Publisher<simple_msgs::Bool> publisher{"tcp://*:6668"};
+        simple::Publisher<simple_msgs::Bool> publisher{address};
         simple::Subscriber<simple_msgs::Bool> subscriber = std::move(copy_subscriber);
-        std::this_thread::sleep_for(std::chrono::seconds(2));  //! Wait a bit so that the subcriber is connected.
-        n_received_msg = 0;                                    //! Reset the global variable.
-        for (int i = 0; i < 10; ++i) {
-          publisher.publish(simple_msgs::Bool{true});
-          std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        std::this_thread::sleep_for(
+            std::chrono::seconds(kWaitTimeForSubscribers));  //! Wait a bit so that the subcriber is connected.
+        number_received_messages = 0;                        //! Reset the global variable.
+        for (int i = 0; i < kTestMessagesToSend; ++i) {
+          publisher.publish(false_boolean);
+          std::this_thread::sleep_for(std::chrono::milliseconds(kWaitTimeBetweenMessagesMilliseconds));
         }
-        REQUIRE(n_received_msg == 10);
+        REQUIRE(number_received_messages == kTestMessagesToSend);
       }
     }
 
@@ -91,38 +102,42 @@ SCENARIO("SIMPLE Subscriber interface") {
 
     // Stop.
     WHEN("A subscriber is stopped") {
-      simple::Publisher<simple_msgs::Bool> publisher{"tcp://*:6669"};
-      simple::Subscriber<simple_msgs::Bool> subscriber{"tcp://127.0.0.1:6669", dummy_callback};
-      n_received_msg = 0;                                    //! Reset the global variable.
-      std::this_thread::sleep_for(std::chrono::seconds(2));  //! Wait a bit so that the subcriber is connected.
+      const auto address = kAddressPrefix + std::to_string(generatePort());
+      simple::Publisher<simple_msgs::Bool> publisher{address};
+      simple::Subscriber<simple_msgs::Bool> subscriber{address, dummyCallback};
+      number_received_messages = 0;  //! Reset the global variable.
+      std::this_thread::sleep_for(
+          std::chrono::seconds(kWaitTimeForSubscribers));  //! Wait a bit so that the subcriber is connected.
 
-      for (int i = 0; i < 5; ++i) {
-        publisher.publish(simple_msgs::Bool{false});
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+      for (int i = 0; i < kTestMessagesToSend; ++i) {
+        publisher.publish(false_boolean);
+        std::this_thread::sleep_for(std::chrono::milliseconds(kWaitTimeBetweenMessagesMilliseconds));
       }
-      REQUIRE(n_received_msg == 5);
+      REQUIRE(number_received_messages == kTestMessagesToSend);
 
       subscriber.stop();  //! The subscriber is stopped, no messages should be received now.
-      for (int i = 0; i < 5; ++i) {
-        publisher.publish(simple_msgs::Bool{true});
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+      const auto messages_so_far = number_received_messages;
+      for (int i = 0; i < kTestMessagesToSend; ++i) {
+        publisher.publish(false_boolean);
+        std::this_thread::sleep_for(std::chrono::milliseconds(kWaitTimeBetweenMessagesMilliseconds));
       }
-      REQUIRE(n_received_msg == 5);
+      REQUIRE(number_received_messages == messages_so_far);
 
-      subscriber = simple::Subscriber<simple_msgs::Bool>{"tcp://127.0.0.1:6669", dummy_callback};
-      std::this_thread::sleep_for(std::chrono::seconds(2));  //! Wait a bit so that the subcriber is connected.
+      subscriber = simple::Subscriber<simple_msgs::Bool>{address, dummyCallback};
+      std::this_thread::sleep_for(
+          std::chrono::seconds(kWaitTimeForSubscribers));  //! Wait a bit so that the subcriber is connected.
 
-      for (int i = 0; i < 10; ++i) {
-        publisher.publish(simple_msgs::Bool{false});
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+      for (int i = 0; i < kTestMessagesToSend; ++i) {
+        publisher.publish(false_boolean);
+        std::this_thread::sleep_for(std::chrono::milliseconds(kWaitTimeBetweenMessagesMilliseconds));
       }
-      REQUIRE(n_received_msg == 15);
+      REQUIRE(number_received_messages == messages_so_far + kTestMessagesToSend);
     }
 
     // Failure case.
     WHEN("It is constructed passing an invalid address.") {
       THEN("An exception is thrown") {
-        REQUIRE_THROWS_AS(simple::Subscriber<simple_msgs::Bool>("invalid_address", dummy_callback), std::runtime_error);
+        REQUIRE_THROWS_AS(simple::Subscriber<simple_msgs::Bool>(kInvalidAddress, dummyCallback), std::runtime_error);
       }
     }
   }

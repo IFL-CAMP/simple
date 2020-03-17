@@ -14,86 +14,74 @@
 #include "catch.hpp"
 
 #include "simple/publisher.hpp"
-#include "simple_msgs/bool.hpp"
+#include "simple_msgs/bool.pb.h"
+#include "test_utilities.hpp"
 
 // Test: Publisher interface
+
+using namespace simple_tests;
 
 SCENARIO("SIMPLE Publisher interface") {
   GIVEN("A SIMPLE Publisher object") {
     // Dummy simple_msgs to test the publish() method.
     simple_msgs::Bool dummy;
+    dummy.set_value(true);
 
     // Default ctor.
     WHEN("It is default constructed.") {
       simple::Publisher<simple_msgs::Bool> publisher;
-      THEN("It is not able to send messages.") {
-        auto result = publisher.publish(dummy);
-        REQUIRE(result == false);
-      }
+      THEN("It is not able to send messages.") { REQUIRE(publisher.publish(dummy) == false); }
+      THEN("Its endpoint string is empty") { REQUIRE(publisher.endpoint() == ""); }
     }
 
     // Parameter ctor.
     WHEN("It is constructed passing an valid address to bind to.") {
-      simple::Publisher<simple_msgs::Bool> publisher{"tcp://*:6666"};
-      THEN("It correctly sends messages.") {
-        auto result = publisher.publish(dummy);
-        REQUIRE(result == true);
-      }
+      auto const address = kAddressPrefix + std::to_string(generatePort());
+      simple::Publisher<simple_msgs::Bool> publisher{address};
+      THEN("It correctly sends messages.") { REQUIRE(publisher.publish(dummy) == true); }
+      THEN("Its endpoint string is correct") { REQUIRE(publisher.endpoint() == address); }
     }
 
     // Move ctor.
     WHEN("It is move-constructed") {
-      std::this_thread::sleep_for(std::chrono::seconds(1));  //! Wait a bit so that the subcriber is connected.
-      simple::Publisher<simple_msgs::Bool> copy_publisher{"tcp://*:6667"};
+      simple::Publisher<simple_msgs::Bool> copy_publisher{kAddressPrefix + std::to_string(generatePort())};
       simple::Publisher<simple_msgs::Bool> publisher{std::move(copy_publisher)};
-      THEN("It correctly sends messages.") {
-        auto result = publisher.publish(dummy);
-        REQUIRE(result == true);
-      }
-      THEN("The moved one is not able to send messages") {
-        auto result = copy_publisher.publish(dummy);
-        REQUIRE(result == false);
-      }
+      THEN("It correctly sends messages.") { REQUIRE(publisher.publish(dummy) == true); }
+      THEN("The moved one is not able to send messages") { REQUIRE(copy_publisher.publish(dummy) == false); }
     }
 
     WHEN("Is is move-constructed from a default constructed Publisher") {
-      simple::Publisher<simple_msgs::Bool> publisher{};
+      simple::Publisher<simple_msgs::Bool> publisher;
       THEN("It constructed correctly.") { REQUIRE_NOTHROW(simple::Publisher<simple_msgs::Bool>{std::move(publisher)}); }
     }
 
-    // Copy assignment.
+    // Move assignment.
     WHEN("It is move-assigned") {
-      std::this_thread::sleep_for(std::chrono::seconds(1));  //! Wait a bit so that the subcriber is connected.
-      simple::Publisher<simple_msgs::Bool> copy_publisher{"tcp://*:6668"};
+      simple::Publisher<simple_msgs::Bool> copy_publisher{kAddressPrefix + std::to_string(generatePort())};
       simple::Publisher<simple_msgs::Bool> publisher;
       publisher = std::move(copy_publisher);
-      THEN("It correctly sends messages.") {
-        auto result = publisher.publish(dummy);
-        REQUIRE(result == true);
-      }
-      THEN("The moved one is not able to send messages") {
-        auto result = copy_publisher.publish(dummy);
-        REQUIRE(result == false);
-      }
+      THEN("It correctly sends messages.") { REQUIRE(publisher.publish(dummy) == true); }
+      THEN("The moved one is not able to send messages") { REQUIRE(copy_publisher.publish(dummy) == false); }
     }
 
     WHEN("Is is move-assigned from a default constructed Publisher") {
-      simple::Publisher<simple_msgs::Bool> copy_publisher{};
-      simple::Publisher<simple_msgs::Bool> publisher{};
+      simple::Publisher<simple_msgs::Bool> copy_publisher;
+      simple::Publisher<simple_msgs::Bool> publisher;
       THEN("It constructed correctly.") { REQUIRE_NOTHROW(publisher = std::move(copy_publisher)); }
     }
 
     // Failure case.
     WHEN("It is constructed passing an address which is already in use.") {
-      simple::Publisher<simple_msgs::Bool> copy_publisher{"tcp://*:6667"};
+      const auto port = std::to_string(generatePort());
+      simple::Publisher<simple_msgs::Bool> copy_publisher{kAddressPrefix + port};
       THEN("An exception is thrown") {
-        REQUIRE_THROWS_AS(simple::Publisher<simple_msgs::Bool>("tcp://*:6667"), std::runtime_error);
+        REQUIRE_THROWS_AS(simple::Publisher<simple_msgs::Bool>(kAddressPrefix + port), std::runtime_error);
       }
     }
 
     WHEN("It is constructed passing an invalid address.") {
       THEN("An exception is thrown") {
-        REQUIRE_THROWS_AS(simple::Publisher<simple_msgs::Bool>("invalid_address"), std::runtime_error);
+        REQUIRE_THROWS_AS(simple::Publisher<simple_msgs::Bool>(kInvalidAddress), std::runtime_error);
       }
     }
   }
