@@ -121,7 +121,7 @@ install:
   fi
 - cd ${DEPS_DIR}
 - git clone -b v3.11.4 --single-branch https://github.com/protocolbuffers/protobuf.git # Fixed to release 3.11.4
-- cd protobuf && mkdir -p protobuf_build && cd protobuf_build
+- cd protobuf
 - ./autogen.sh
 - ./configure CXXFLAGS="-fPIC" --prefix=/usr/local --disable-shared
 - sudo make -j8 install
