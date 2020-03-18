@@ -5,7 +5,7 @@ project(simple_msgs)
 set(Protobuf_USE_STATIC_LIBS ON)
 
 # Find protobuf and protoc,
-find_package(protobuf REQUIRED)
+find_package(Protobuf REQUIRED)
 
 ###### PROTOBUF ######
 
@@ -41,6 +41,7 @@ file(GLOB PROTO_CPP_SOURCES ${PROTO_OUTPUT_PATH}/*.pb.cc)
 
 ###### TARGETS ######
 add_library(${PROJECT_NAME} STATIC ${PROTO_CPP_SOURCES} ${PROTO_CPP_HEADERS})
+set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
