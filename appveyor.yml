@@ -25,7 +25,7 @@ install:
   - mkdir deps && cd deps
   - git clone -b v3.11.4 --single-branch https://github.com/protocolbuffers/protobuf.git # Fixed to release 3.11.4
   - cd protobuf && mkdir protobuf_build && cd protobuf_build
-  - cmake -G "%CMAKE_GENERATOR% Win64" -DCMAKE_BUILD_TYPE=%CONFIGURATION% ../cmake
+  - cmake -G "%CMAKE_GENERATOR% Win64" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_BUILD_SHARED_LIBS=OFF ../cmake
   - cmake --build . --target install --config %CONFIGURATION%
   - cd %APPVEYOR_BUILD_FOLDER%/deps
   - git clone -b v4.3.2 --single-branch https://github.com/zeromq/libzmq.git # Fixed to release 4.3.2
