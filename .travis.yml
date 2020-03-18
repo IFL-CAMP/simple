@@ -120,9 +120,10 @@ install:
     sudo apt install lcov
   fi
 - cd ${DEPS_DIR}
-- git clone -b v1.11.0 --single-branch https://github.com/google/flatbuffers.git # Fixed to release 1.11.0
-- cd flatbuffers && mkdir -p flatbuffer_build && cd flatbuffer_build
-- cmake -DCMAKE_BUILD_TYPE=Release ..
+- git clone -b v3.11.4 --single-branch https://github.com/protocolbuffers/protobuf.git # Fixed to release 3.11.4
+- cd protobuf && mkdir -p protobuf_build && cd protobuf_build
+- ./autogen.sh
+- ./configure CXXFLAGS="-fPIC" --prefix=/usr/local --disable-shared
 - sudo make -j8 install
 - cd ${DEPS_DIR}
 - git clone -b v4.3.2 --single-branch https://github.com/zeromq/libzmq.git # Fixed to release 4.3.2
