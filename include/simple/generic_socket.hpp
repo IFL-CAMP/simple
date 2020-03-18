@@ -172,10 +172,10 @@ protected:
 private:
   void setEndpoint();
 
-  mutable std::mutex mutex_{};                      //! Mutex for thread-safety.
-  std::string topic_{""};                           //! The message topic, internally defined for each SIMPLE message.
-  std::unique_ptr<zmq::socket_t> socket_{nullptr};  //! The internal ZMQ socket.
-  std::string endpoint_{""};                        //! Stores the used endpoint for connection.
+  mutable std::mutex mutex_{};             //! Mutex for thread-safety.
+  std::string topic_{""};                  //! The message topic, internally defined for each SIMPLE message.
+  std::unique_ptr<zmq::socket_t> socket_;  //! The internal ZMQ socket.
+  std::string endpoint_{""};               //! Stores the used endpoint for connection.
 };
 }  // Namespace simple.
 
