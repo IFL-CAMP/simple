@@ -5,7 +5,7 @@ project(simple_msgs)
 set(Protobuf_USE_STATIC_LIBS ON)
 
 # Find protobuf and protoc,
-find_package(Protobuf REQUIRED)
+find_package(protobuf REQUIRED)
 
 ###### PROTOBUF ######
 
