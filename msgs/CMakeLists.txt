@@ -4,8 +4,12 @@ project(simple_msgs)
 # Force the use of the static version of protobuf.
 set(Protobuf_USE_STATIC_LIBS ON)
 
+if(DEFINED Protobuf_DIR)
+  set(CMAKE_PREFIX_PATH "${Protobuf_DIR}" "${CMAKE_PREFIX_PATH}")
+endif()
+
 # Find protobuf and protoc,
-find_package(protobuf REQUIRED)
+find_package(Protobuf REQUIRED)
 
 ###### PROTOBUF ######
 

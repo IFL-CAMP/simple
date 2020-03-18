@@ -22,20 +22,20 @@ matrix:
   fast_finish: true
 
 install:
-  - mkdir install && mkdir deps && cd deps
+  - mkdir deps && cd deps
   - git clone -b v3.11.4 --single-branch https://github.com/protocolbuffers/protobuf.git # Fixed to release 3.11.4
-  - cd protobuf && mkdir protobuf_build && cd protobuf_build
-  - cmake -G "%CMAKE_GENERATOR% Win64" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/install -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_BUILD_SHARED_LIBS=OFF ../cmake
+  - cd protobuf && mkdir protobuf_install && mkdir protobuf_build && cd protobuf_build
+  - cmake -G "%CMAKE_GENERATOR% Win64" -DCMAKE_INSTALL_PREFIX=../protobuf_install -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_BUILD_SHARED_LIBS=OFF ../cmake
   - cmake --build . --target install --config %CONFIGURATION%
   - cd %APPVEYOR_BUILD_FOLDER%/deps
   - git clone -b v4.3.2 --single-branch https://github.com/zeromq/libzmq.git # Fixed to release 4.3.2
   - cd libzmq && mkdir libzmq_build && cd libzmq_build
-  - cmake -G "%CMAKE_GENERATOR% Win64" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/install -DENABLE_CURVE=OFF -DZMQ_BUILD_TESTS=OFF ..
+  - cmake -G "%CMAKE_GENERATOR% Win64" -DENABLE_CURVE=OFF -DZMQ_BUILD_TESTS=OFF ..
   - cmake --build . --target install --config %CONFIGURATION%
   - cd %APPVEYOR_BUILD_FOLDER%/deps
   - git clone -b v4.6.0 --single-branch https://github.com/zeromq/cppzmq.git # Fixed to release 4.6.0
   - cd cppzmq && mkdir cppzmq_build && cd cppzmq_build
-  - cmake -G "%CMAKE_GENERATOR% Win64" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/install -DCPPZMQ_BUILD_TESTS=OFF ..
+  - cmake -G "%CMAKE_GENERATOR% Win64" -DCPPZMQ_BUILD_TESTS=OFF ..
   - cmake --build . --target install --config %CONFIGURATION%
 
 before_build:
@@ -44,9 +44,9 @@ before_build:
   - mkdir build && cd build
   - ps: >-
       If ($env:APPVEYOR_REPO_TAG -eq "false") {
-        cmake -G "$env:CMAKE_GENERATOR Win64" -DCMAKE_PREFIX_PATH=%APPVEYOR_BUILD_FOLDER%/install -DSIMPLE_BUILD_TESTS=ON -DSIMPLE_BUILD_EXAMPLES=ON ..
+        cmake -G "$env:CMAKE_GENERATOR Win64" -DProtobuf_DIR=%APPVEYOR_BUILD_FOLDER%/deps/protobuf/protobuf_install -DSIMPLE_BUILD_TESTS=ON -DSIMPLE_BUILD_EXAMPLES=ON ..
       } Else {
-        cmake -G "$env:CMAKE_GENERATOR Win64" -DCMAKE_PREFIX_PATH=%APPVEYOR_BUILD_FOLDER%/install -DSIMPLE_BUILD_STATIC=OFF -DSIMPLE_ENABLE_CPACK=ON ..
+        cmake -G "$env:CMAKE_GENERATOR Win64" -DProtobuf_DIR=%APPVEYOR_BUILD_FOLDER%/deps/protobuf/protobuf_install -DSIMPLE_BUILD_STATIC=OFF -DSIMPLE_ENABLE_CPACK=ON ..
       }
 
 build_script:
