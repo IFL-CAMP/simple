@@ -23,7 +23,7 @@ constexpr uint16_t kMaxEndpointSize = 50;
 
 namespace simple {
 
-GenericSocket::GenericSocket() {}
+GenericSocket::GenericSocket() : socket_{nullptr} {}
 
 GenericSocket::GenericSocket(const zmq_socket_type& type, const std::string& topic) : topic_{topic} {
   initSocket(type);
