@@ -108,8 +108,8 @@ install:
 - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
 - |
   if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-    # Install CMake 3.3
-    CMAKE_URL="http://www.cmake.org/files/v3.3/cmake-3.3.2-Linux-x86_64.tar.gz"
+    # Install CMake 3.10.3
+    CMAKE_URL="https://cmake.org/files/v3.10/cmake-3.10.3-Linux-x86_64.tar.gz"
     mkdir -p cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
     export PATH=${DEPS_DIR}/cmake/bin:${PATH}
   elif [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
@@ -120,15 +120,16 @@ install:
     # Install LCOV
     sudo apt install lcov
   fi
+- cmake --version
 - cd ${DEPS_DIR}
 - git clone -b v3.11.4 --single-branch https://github.com/protocolbuffers/protobuf.git # Fixed to release 3.11.4
 - cd protobuf && mkdir -p protobuf_build && cd protobuf_build
-- cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_MSVC_STATIC_RUNTIME=OFF ../cmake
+- cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_BUILD_SHARED_LIBS=OFF cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ../cmake
 - sudo make -j8 install
 - cd ${DEPS_DIR}
 - git clone -b v4.3.2 --single-branch https://github.com/zeromq/libzmq.git # Fixed to release 4.3.2
 - cd libzmq && mkdir -p libzmq_build && cd libzmq_build
-- cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -DENABLE_CURVE=OFF -DZMQ_BUILD_TESTS=OFF ..
+- cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -DENABLE_CURVE=OFF -DZMQ_BUILD_TESTS=OFF -DCMAKE_POSITION_INDIPENDENT_CODE=ON ..
 - sudo make -j8 install
 - cd ${DEPS_DIR}
 - git clone -b v4.6.0 --single-branch https://github.com/zeromq/cppzmq.git # Fixed to release 4.6.0
@@ -145,9 +146,9 @@ before_script:
 - mkdir -p build && cd build
 - |
   if [[ "${SIMPLE_PACKAGE}" == "True" ]]; then
-    cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_PREFIX_PATH=${INSTALL_DIR} -DSIMPLE_BUILD_STATIC=OFF -DSIMPLE_ENABLE_CPACK=ON
+    cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_PREFIX_PATH=${INSTALL_DIR} -DSIMPLE_BUILD_STATIC=OFF -DSIMPLE_ENABLE_CPACK=ON -DProtobuf_DEBUG=ON -Dprotobuf_MODULE_COMPATIBLE=ON
   else
-    cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_PREFIX_PATH=${INSTALL_DIR} -DSIMPLE_BUILD_TESTS=ON -DSIMPLE_BUILD_EXAMPLES=ON
+    cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_PREFIX_PATH=${INSTALL_DIR} -DSIMPLE_BUILD_TESTS=ON -DSIMPLE_BUILD_EXAMPLES=ON -DProtobuf_DEBUG=ON -Dprotobuf_MODULE_COMPATIBLE=ON
   fi
 
 script:

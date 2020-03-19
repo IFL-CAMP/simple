@@ -30,4 +30,4 @@ target_link_libraries(example_client simple-static)
 add_executable(example_server src/example_server.cpp)
 target_link_libraries(example_server simple-static)
 
-install(TARGETS example_publisher example_subscriber example_client example_server DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS example_publisher example_subscriber example_client example_server RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

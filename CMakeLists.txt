@@ -22,6 +22,9 @@ endif(WIN32)
 # Add a suffix to the debug artifacts.
 set(CMAKE_DEBUG_POSTFIX "-d")
 
+# Provides generic install paths
+include(GNUInstallDirs)
+
 # Output all binaries and libs into a common folder across all libraries.
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -85,7 +88,7 @@ if(${SIMPLE_BUILD_DOC})
 endif()
 
 ###### BUILD SIMPLE MSGS
-
+message("CMAKE_PREFIX_PATH set to ${CMAKE_PREFIX_PATH}")
 add_subdirectory(msgs)
 
 ###### FIND LIBRARIES
@@ -180,7 +183,6 @@ if(${SIMPLE_BUILD_STATIC})
 endif()
 
 ###### INSTALLATION
-include(GNUInstallDirs)
 
 # Install SIMPLE in the desired folder.
 if(${SIMPLE_BUILD_SHARED})

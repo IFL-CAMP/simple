@@ -9,7 +9,47 @@ if(DEFINED Protobuf_DIR)
 endif()
 
 # Find protobuf and protoc.
-find_package(Protobuf REQUIRED)
+find_package(protobuf QUIET)
+
+if(NOT DEFINED Protobuf_FOUND)
+  find_path(Protobuf_INCLUDE_DIR
+  google/protobuf/service.h
+  PATHS ${Protobuf_DIR}/include
+  )
+  
+  if(CMAKE_BUILD_TYPE MATCHES RELEASE)
+    find_library(Protobuf_LIBRARIES
+    NAMES protobuf
+    PATHS ${Protobuf_DIR}/lib)
+  else()
+    find_library(Protobuf_LIBRARIES
+    NAMES protobufd protobuf
+    PATHS ${Protobuf_DIR}/lib)
+  endif()
+  
+  find_program(Protobuf_PROTOC_EXECUTABLE protoc
+  /usr/local/bin
+  /usr/bin
+  "$ENV{PROGRAMFILES}/protobuf/bin"
+  "${CMAKE_PREFIX_PATH}/bin"
+  "${Protobuf_DIR}/bin"
+  NO_DEFAULT_PATH)
+
+  if(NOT DEFINED Protobuf_INCLUDE_DIR OR Protobuf_LIBRARIES OR Protobuf_PROTOC_EXECUTABLE)
+    message(FATAL_ERROR "Cannot find Protobuf. Aborting...")
+  endif()
+  
+  if(UNIX AND Threads_FOUND)
+      list(APPEND Protobuf_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})
+  endif()
+  set(Protobuf_FOUND ON)
+endif()
+
+message("Protobuf_FOUND ${Protobuf_FOUND}")
+message("Protobuf_VERSION ${Protobuf_VERSION}")
+message("Protobuf_INCLUDE_DIRS ${Protobuf_INCLUDE_DIRS}")
+message("Protobuf_LIBRARIES ${Protobuf_LIBRARIES}")
+message("PROTOBUF_LIBRARY ${PROTOBUF_LIBRARY}")
 
 ###### PROTOBUF ######
 
@@ -66,10 +106,9 @@ target_compile_options(${PROJECT_NAME} PRIVATE
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC SIMPLE_STATIC_DEFINE)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:protobuf::libprotobuf>)
+target_link_libraries(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${Protobuf_LIBRARIES}>)
 
 ###### INSTALLATION ######
-include(GNUInstallDirs)
 install(TARGETS ${PROJECT_NAME} EXPORT "simpleTargets"
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

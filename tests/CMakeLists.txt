@@ -51,4 +51,4 @@ install(
   test_server
   test_req_rep
   test_context_manager
-  DESTINATION ${CMAKE_INSTALL_BINDIR})
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
