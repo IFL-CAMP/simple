@@ -39,8 +39,8 @@ static constexpr size_t kTestMessagesToSend = 5;
 static constexpr size_t kWaitTimeForServers = 2;                    //! Seconds.
 static constexpr size_t kWaitTimeForSubscribers = 1;                //! Seconds.
 static constexpr size_t kWaitTimeBetweenMessagesMilliseconds = 10;  //! Milliseconds.
-static constexpr size_t kDefaultTimeoutMilliseconds = 1;            //! Milliseconds.
-static constexpr size_t kDefaultLingerMilliseconds = 1;             //! Milliseconds.
+static constexpr int kDefaultTimeoutMilliseconds = 1;            //! Milliseconds.
+static constexpr int kDefaultLingerMilliseconds = 1;             //! Milliseconds.
 
 //! The total number of messages defined in the simple_msgs namespace.
 static constexpr size_t kTotalNumberMessages = 13;

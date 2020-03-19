@@ -51,7 +51,7 @@ int main() {
     my_point.mutable_point()->set_y(my_point.point().y() + 1);
     my_point.mutable_point()->set_z(my_point.point().z() + 1);
     my_point.mutable_header()->set_timestamp(getTimeNow());
-    my_point.mutable_header()->set_id(i);
+    my_point.mutable_header()->set_id(static_cast<int>(i));
 
     std::cout << "Message #" << i << " has been published." << std::endl;
     std::this_thread::sleep_for(std::chrono::milliseconds(kSleepTimeMilliseconds));

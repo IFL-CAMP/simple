@@ -47,12 +47,9 @@ SCENARIO("Two Servers binding to the same address") {
 }
 
 SCENARIO("A Client connecting to a false address") {
-  const auto port = generatePort();
-  const auto address = kAddressPrefix + std::to_string(port);
-
   GIVEN("A client") {
     WHEN("The address provided is wrong") {
-      THEN("An exception is thrown") { REQUIRE_THROWS(simple::Client<simple_msgs::Point>(address)); }
+      THEN("An exception is thrown") { REQUIRE_THROWS(simple::Client<simple_msgs::Point>(kInvalidAddress)); }
     }
   }
 }
