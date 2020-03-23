@@ -129,6 +129,9 @@ target_link_libraries(${LIB_TARGET_NAME}
   ${coverage_lib}
   )
 
+include(GenerateExportHeader)
+generate_export_header(${LIB_TARGET_NAME} BASE_NAME ${PROJECT_NAME})
+
 # Activate all warnings and treat them as errors.
 target_compile_options(${LIB_TARGET_NAME} PRIVATE
     $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
@@ -136,11 +139,8 @@ target_compile_options(${LIB_TARGET_NAME} PRIVATE
     $<$<CXX_COMPILER_ID:MSVC>:
         /W4 /w44640 /WX /permissive- /wd4127>)
 
-# Set target flags according to the build type.
-if (${SIMPLE_BUILD_SHARED})
-  include(GenerateExportHeader)
-  generate_export_header(${LIB_TARGET_NAME})
-else()
+# Specific settings for static builds.
+if (NOT ${SIMPLE_BUILD_SHARED})
   target_compile_definitions(${LIB_TARGET_NAME} PUBLIC SIMPLE_STATIC_DEFINE)
   # simple-static needs to link directly to ZeroMQ.
   target_link_libraries(${LIB_TARGET_NAME} PUBLIC ${ZeroMQ_STATIC_LIBRARY})
