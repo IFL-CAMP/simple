@@ -95,6 +95,7 @@ add_subdirectory(msgs)
 
 find_package(Threads REQUIRED)
 find_package(cppzmq REQUIRED)
+find_package(Protobuf REQUIRED)
 
 ###### TARGETS
 
@@ -107,28 +108,27 @@ add_library(${PROJECT_NAME} SHARED
   ${SIMPLE_HEADERS}
   src/context_manager.cpp
   src/generic_socket.cpp
-	)
+  ${MSGS_HEADERS} ${MSGS_SOURCES}
+  )
 
 target_include_directories(${PROJECT_NAME}
-	PUBLIC
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>          # For simple_export.h
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/msgs>     # For simple_msgs
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>  # For simple headers
-	$<INSTALL_INTERFACE:include/${PROJECT_NAME}>
-	$<INSTALL_INTERFACE:include>
-	PRIVATE
-	$<BUILD_INTERFACE:${ZeroMQ_INCLUDE_DIR}>
-	$<BUILD_INTERFACE:${cppzmq_INCLUDE_DIR}>
-	)
+  PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>          # For simple_export.h
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>  # For simple headers
+  $<INSTALL_INTERFACE:include>
+  PRIVATE
+  $<BUILD_INTERFACE:${ZeroMQ_INCLUDE_DIR}>
+  $<BUILD_INTERFACE:${cppzmq_INCLUDE_DIR}>
+  )
 
 target_link_libraries(${PROJECT_NAME}
-	PUBLIC
-	${CMAKE_THREAD_LIBS_INIT}
-	simple_msgs
-	PRIVATE
-	cppzmq-static
-	${coverage_lib}
-	)
+  PUBLIC
+  ${CMAKE_THREAD_LIBS_INIT}
+  simple_msgs
+  PRIVATE
+  cppzmq-static
+  ${coverage_lib}
+  )
 
 # Activate all warnings and treat them as errors.
 target_compile_options(${PROJECT_NAME} PRIVATE
@@ -156,10 +156,8 @@ if(${SIMPLE_BUILD_STATIC})
   target_include_directories(${PROJECT_NAME}-static
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>          # For simple_export.h
-	#$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/msgs>     # For simple_msgs
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>  # For simple headers
-    $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
-	$<INSTALL_INTERFACE:include>
+    $<INSTALL_INTERFACE:include>
     PRIVATE
     $<BUILD_INTERFACE:${ZeroMQ_INCLUDE_DIR}>
     $<BUILD_INTERFACE:${cppzmq_INCLUDE_DIR}>
@@ -168,10 +166,11 @@ if(${SIMPLE_BUILD_STATIC})
   target_link_libraries(${PROJECT_NAME}-static
     PUBLIC
     ${CMAKE_THREAD_LIBS_INIT}
-	simple_msgs
+    simple_msgs
+    ${ZeroMQ_LIBRARY}
     PRIVATE
-    ${coverage_lib}
     $<BUILD_INTERFACE:cppzmq-static>
+    ${coverage_lib}
     )
 
   # Activate all warnings and treat them as errors.
@@ -241,7 +240,7 @@ if(${SIMPLE_ENABLE_CPACK})
       set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CMAKE_SYSTEM_NAME}-${CMAKE_CXX_COMPILER_ID}")
 
       if(UNIX)
-	    set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}${MAJOR_COMPILER_VERSION}")
+      set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}${MAJOR_COMPILER_VERSION}")
         if(APPLE)
           # MacOS
           set(CPACK_GENERATOR "TGZ")
@@ -258,11 +257,11 @@ if(${SIMPLE_ENABLE_CPACK})
           endif()
         endif()
       elseif(WIN32)
-	  	if(MSVC)
-		  set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}${MSVC_VERSION}")
-	    endif()
+      if(MSVC)
+      set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}${MSVC_VERSION}")
+      endif()
         set(CPACK_GENERATOR "NSIS")
-		set(CPACK_PACKAGE_INSTALL_DIRECTORY "simple")
+    set(CPACK_PACKAGE_INSTALL_DIRECTORY "simple")
       endif()
 
       # Do this at last

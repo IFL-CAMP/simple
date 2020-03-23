@@ -4,52 +4,13 @@ project(simple_msgs)
 # Force the use of the static version of protobuf.
 set(Protobuf_USE_STATIC_LIBS ON)
 
-if(DEFINED Protobuf_DIR) 
-  set(CMAKE_PREFIX_PATH "${Protobuf_DIR}" "${CMAKE_PREFIX_PATH}")
-endif()
-
 # Find protobuf and protoc.
-find_package(protobuf QUIET)
-
-if(NOT DEFINED Protobuf_FOUND)
-  find_path(Protobuf_INCLUDE_DIR
-  google/protobuf/service.h
-  PATHS ${Protobuf_DIR}/include
-  )
-  
-  if(CMAKE_BUILD_TYPE MATCHES RELEASE)
-    find_library(Protobuf_LIBRARIES
-    NAMES protobuf
-    PATHS ${Protobuf_DIR}/lib)
-  else()
-    find_library(Protobuf_LIBRARIES
-    NAMES protobufd protobuf
-    PATHS ${Protobuf_DIR}/lib)
-  endif()
-  
-  find_program(Protobuf_PROTOC_EXECUTABLE protoc
-  /usr/local/bin
-  /usr/bin
-  "$ENV{PROGRAMFILES}/protobuf/bin"
-  "${CMAKE_PREFIX_PATH}/bin"
-  "${Protobuf_DIR}/bin"
-  NO_DEFAULT_PATH)
-
-  if(NOT DEFINED Protobuf_INCLUDE_DIR OR Protobuf_LIBRARIES OR Protobuf_PROTOC_EXECUTABLE)
-    message(FATAL_ERROR "Cannot find Protobuf. Aborting...")
-  endif()
-  
-  if(UNIX AND Threads_FOUND)
-      list(APPEND Protobuf_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})
-  endif()
-  set(Protobuf_FOUND ON)
-endif()
+find_package(Protobuf REQUIRED)
 
 message("Protobuf_FOUND ${Protobuf_FOUND}")
 message("Protobuf_VERSION ${Protobuf_VERSION}")
 message("Protobuf_INCLUDE_DIRS ${Protobuf_INCLUDE_DIRS}")
 message("Protobuf_LIBRARIES ${Protobuf_LIBRARIES}")
-message("PROTOBUF_LIBRARY ${PROTOBUF_LIBRARY}")
 
 ###### PROTOBUF ######
 
@@ -82,10 +43,12 @@ endforeach()
 # CPP - Collect all generated heades and source files.
 file(GLOB PROTO_CPP_HEADERS ${PROTO_OUTPUT_PATH}/*.pb.h )
 file(GLOB PROTO_CPP_SOURCES ${PROTO_OUTPUT_PATH}/*.pb.cc )
+set(MSGS_HEADERS ${PROTO_CPP_HEADERS} PARENT_SCOPE)
+set(MSGS_SOURCES ${PROTO_CPP_SOURCES} PARENT_SCOPE)
 
 ###### TARGETS ######
 
-add_library(${PROJECT_NAME} STATIC ${PROTO_CPP_SOURCES} ${PROTO_CPP_HEADERS})
+add_library(${PROJECT_NAME} SHARED ${PROTO_CPP_SOURCES} ${PROTO_CPP_HEADERS})
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
@@ -104,9 +67,9 @@ target_compile_options(${PROJECT_NAME} PRIVATE
      $<$<CXX_COMPILER_ID:MSVC>:
           /W0>)
 
-target_compile_definitions(${PROJECT_NAME} PUBLIC SIMPLE_STATIC_DEFINE)
+#target_compile_definitions(${PROJECT_NAME} PUBLIC SIMPLE_STATIC_DEFINE)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${Protobuf_LIBRARIES}>)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${Protobuf_LIBRARIES})
 
 ###### INSTALLATION ######
 install(TARGETS ${PROJECT_NAME} EXPORT "simpleTargets"
@@ -114,5 +77,6 @@ install(TARGETS ${PROJECT_NAME} EXPORT "simpleTargets"
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   )
 install(DIRECTORY ${PROTO_OUTPUT_PATH} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(DIRECTORY ${Protobuf_INCLUDE_DIRS}/google DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 
