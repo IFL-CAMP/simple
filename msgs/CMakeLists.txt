@@ -1,16 +1,8 @@
 cmake_minimum_required(VERSION 3.3)
 project(simple_msgs)
 
-# Force the use of the static version of protobuf.
-set(Protobuf_USE_STATIC_LIBS ON)
-
 # Find protobuf and protoc.
 find_package(Protobuf REQUIRED)
-
-message("Protobuf_FOUND ${Protobuf_FOUND}")
-message("Protobuf_VERSION ${Protobuf_VERSION}")
-message("Protobuf_INCLUDE_DIRS ${Protobuf_INCLUDE_DIRS}")
-message("Protobuf_LIBRARIES ${Protobuf_LIBRARIES}")
 
 ###### PROTOBUF ######
 
@@ -43,8 +35,6 @@ endforeach()
 # CPP - Collect all generated heades and source files.
 file(GLOB PROTO_CPP_HEADERS ${PROTO_OUTPUT_PATH}/*.pb.h )
 file(GLOB PROTO_CPP_SOURCES ${PROTO_OUTPUT_PATH}/*.pb.cc )
-set(MSGS_HEADERS ${PROTO_CPP_HEADERS} PARENT_SCOPE)
-set(MSGS_SOURCES ${PROTO_CPP_SOURCES} PARENT_SCOPE)
 
 ###### TARGETS ######
 
@@ -67,8 +57,6 @@ target_compile_options(${PROJECT_NAME} PRIVATE
      $<$<CXX_COMPILER_ID:MSVC>:
           /W0>)
 
-#target_compile_definitions(${PROJECT_NAME} PUBLIC SIMPLE_STATIC_DEFINE)
-
 target_link_libraries(${PROJECT_NAME} PRIVATE ${Protobuf_LIBRARIES})
 
 ###### INSTALLATION ######
@@ -76,6 +64,7 @@ install(TARGETS ${PROJECT_NAME} EXPORT "simpleTargets"
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   )
+# Install both the generated Protobuf messagesa and the Protobuf headers.
 install(DIRECTORY ${PROTO_OUTPUT_PATH} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 install(DIRECTORY ${Protobuf_INCLUDE_DIRS}/google DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
