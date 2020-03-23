@@ -11,6 +11,7 @@
 #ifndef SIMPLE_CLIENT_HPP
 #define SIMPLE_CLIENT_HPP
 
+#include <iostream>
 #include <memory>
 #include <string>
 
