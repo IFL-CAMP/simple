@@ -51,7 +51,13 @@ endif()
 
 ###### OPTIONAL BUILDS
 
-option(SIMPLE_BUILD_SHARED "Build the shared version of the libray" FALSE)
+# The shared build is not available on Windows, Protobuf and dynamic linking on Windows are not good friends. 
+if (NOT WIN32)
+  option(SIMPLE_BUILD_SHARED "Build the shared version of the libray" FALSE)
+else()
+  set(SIMPLE_BUILD_SHARED FALSE)
+endif()
+
 option(SIMPLE_BUILD_EXAMPLES "Build SIMPLE Examples" FALSE)
 option(SIMPLE_BUILD_TESTS "Build SIMPLE Tests" FALSE)
 option(SIMPLE_BUILD_DOC "Build SIMPLE Documentation" FALSE)
@@ -100,6 +106,11 @@ find_package(Protobuf REQUIRED)
 
 ###### TARGETS
 
+# Ignore warnings triggered by the proto messages.
+if(WIN32)
+  set_source_files_properties(${MSGS_HEADERS} ${MSGS_SOURCES} ${Protobuf_INCLUDE_DIRS}/* PROPERTIES COMPILE_FLAGS /W0)
+endif()
+
 add_library(${LIB_TARGET_NAME} ${LIB_TYPE}
   include/simple/client.hpp
   include/simple/context_manager.hpp
@@ -109,6 +120,7 @@ add_library(${LIB_TARGET_NAME} ${LIB_TYPE}
   include/simple/subscriber.hpp
   src/context_manager.cpp
   src/generic_socket.cpp
+  ${MSGS_HEADERS} ${MSGS_SOURCES}
   )
 
 target_include_directories(${LIB_TARGET_NAME}
@@ -121,11 +133,16 @@ target_include_directories(${LIB_TARGET_NAME}
   $<BUILD_INTERFACE:${cppzmq_INCLUDE_DIR}>
   )
 
+# Add the protobuf headers as system ones, so that compiler warnings are ignored for them.
+target_include_directories(${LIB_TARGET_NAME} SYSTEM PUBLIC
+  $<BUILD_INTERFACE:${Protobuf_INCLUDE_DIRS}>
+  )
+
 target_link_libraries(${LIB_TARGET_NAME}
   PUBLIC
   ${CMAKE_THREAD_LIBS_INIT}
-  simple_msgs
   PRIVATE
+  ${Protobuf_LIBRARIES}
   $<BUILD_INTERFACE:cppzmq-static>
   ${coverage_lib}
   )
@@ -145,6 +162,10 @@ if (NOT ${SIMPLE_BUILD_SHARED})
   target_compile_definitions(${LIB_TARGET_NAME} PUBLIC SIMPLE_STATIC_DEFINE)
   # simple-static needs to link directly to ZeroMQ.
   target_link_libraries(${LIB_TARGET_NAME} PUBLIC ${ZeroMQ_STATIC_LIBRARY})
+  if(WIN32)
+    # And on Windows this.
+    target_link_libraries(${LIB_TARGET_NAME} PRIVATE ws2_32 Iphlpapi)
+  endif()
 endif()
 
 ###### INSTALLATION
