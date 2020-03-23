@@ -1,5 +1,4 @@
 language: cpp
-sudo: true
 dist: xenial
 
 matrix:
