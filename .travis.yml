@@ -124,7 +124,7 @@ install:
 - cd ${DEPS_DIR}
 - git clone -b v3.11.4 --single-branch https://github.com/protocolbuffers/protobuf.git # Fixed to release 3.11.4
 - cd protobuf && mkdir -p protobuf_build && cd protobuf_build
-- cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_BUILD_SHARED_LIBS=OFF cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON ../cmake
+- cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_BUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON ../cmake
 - sudo make -j8 install
 - cd ${DEPS_DIR}
 - git clone -b v4.3.2 --single-branch https://github.com/zeromq/libzmq.git # Fixed to release 4.3.2
@@ -146,9 +146,9 @@ before_script:
 - mkdir -p build && cd build
 - |
   if [[ "${SIMPLE_PACKAGE}" == "True" ]]; then
-    cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_PREFIX_PATH=${INSTALL_DIR} -DSIMPLE_BUILD_STATIC=OFF -DSIMPLE_ENABLE_CPACK=ON -DProtobuf_DEBUG=ON -Dprotobuf_MODULE_COMPATIBLE=ON
+    cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_PREFIX_PATH=${INSTALL_DIR} -DSIMPLE_BUILD_SHARED=ON -DSIMPLE_ENABLE_CPACK=ON
   else
-    cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_PREFIX_PATH=${INSTALL_DIR} -DSIMPLE_BUILD_TESTS=ON -DSIMPLE_BUILD_EXAMPLES=ON -DProtobuf_DEBUG=ON -Dprotobuf_MODULE_COMPATIBLE=ON
+    cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_PREFIX_PATH=${INSTALL_DIR} -DSIMPLE_BUILD_TESTS=ON -DSIMPLE_BUILD_EXAMPLES=ON
   fi
 
 script:
