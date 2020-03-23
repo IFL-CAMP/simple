@@ -126,6 +126,7 @@ add_library(${LIB_TARGET_NAME} ${LIB_TYPE}
 target_include_directories(${LIB_TARGET_NAME}
   PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>          # For simple_export.h
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/msgs>          # For simple_export.h
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>  # For simple headers
   $<INSTALL_INTERFACE:include>
   PRIVATE
