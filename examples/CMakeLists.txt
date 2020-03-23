@@ -9,25 +9,25 @@ if(${SIMPLE_BUILD_OPENCV_EXAMPLES})
 
   add_executable(example_image_publisher src/example_image_publisher.cpp)
   target_include_directories(example_image_publisher PRIVATE ${OpenCV_INCLUDE_DIRS})
-  target_link_libraries(example_image_publisher simple-static opencv_core opencv_videoio)
+  target_link_libraries(example_image_publisher ${LIB_TARGET_NAME} opencv_core opencv_videoio)
 
   add_executable(example_image_subscriber src/example_image_subscriber.cpp)
   target_include_directories(example_image_subscriber PRIVATE ${OpenCV_INCLUDE_DIRS})
-  target_link_libraries(example_image_subscriber simple-static opencv_core opencv_highgui)
+  target_link_libraries(example_image_subscriber ${LIB_TARGET_NAME} opencv_core opencv_highgui)
 
   install(TARGETS example_image_publisher example_image_subscriber DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif()
 
 add_executable(example_publisher src/example_publisher.cpp)
-target_link_libraries(example_publisher simple-static)
+target_link_libraries(example_publisher ${LIB_TARGET_NAME})
 
 add_executable(example_subscriber src/example_subscriber.cpp)
-target_link_libraries(example_subscriber simple-static)
+target_link_libraries(example_subscriber ${LIB_TARGET_NAME})
 
 add_executable(example_client src/example_client.cpp)
-target_link_libraries(example_client simple-static)
+target_link_libraries(example_client ${LIB_TARGET_NAME})
 
 add_executable(example_server src/example_server.cpp)
-target_link_libraries(example_server simple-static)
+target_link_libraries(example_server ${LIB_TARGET_NAME})
 
 install(TARGETS example_publisher example_subscriber example_client example_server RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

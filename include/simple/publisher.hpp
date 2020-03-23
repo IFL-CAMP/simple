@@ -11,6 +11,7 @@
 #ifndef SIMPLE_PUBLISHER_HPP
 #define SIMPLE_PUBLISHER_HPP
 
+#include <iostream>
 #include <memory>
 #include <string>
 
@@ -71,7 +72,7 @@ public:
 
   /**
    * @brief Publishes the given message of type T through the open socket.
-   * @param [in] msg - Protobuf message to publish.
+   * @param [in] message - Protobuf message to publish.
    * @return success or failure.
    */
   bool publish(const T& message) {
