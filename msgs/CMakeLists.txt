@@ -3,6 +3,8 @@ project(simple_msgs)
 
 ###### PROTOBUF ######
 
+find_package(Protobuf REQUIRED)
+
 # Output directory for the generated proto messages.
 set(PROTO_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}")
 # Create the output directory.
@@ -39,6 +41,6 @@ set(MSGS_SOURCES ${PROTO_CPP_SOURCES} PARENT_SCOPE)
 
 # Install both the generated Protobuf messagesa and the Protobuf headers.
 install(DIRECTORY ${PROTO_OUTPUT_PATH} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-install(DIRECTORY ${Protobuf_INCLUDE_DIR}/google DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(DIRECTORY ${Protobuf_INCLUDE_DIRS}/google DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 
