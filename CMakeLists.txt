@@ -109,6 +109,8 @@ find_package(Protobuf REQUIRED)
 # Ignore warnings triggered by the proto messages.
 if(WIN32)
   set_source_files_properties(${MSGS_HEADERS} ${MSGS_SOURCES} ${Protobuf_INCLUDE_DIRS}/* PROPERTIES COMPILE_FLAGS /W0)
+else()
+  set_source_files_properties(${MSGS_HEADERS} ${MSGS_SOURCES} ${Protobuf_INCLUDE_DIRS}/* PROPERTIES COMPILE_FLAGS -w)
 endif()
 
 add_library(${LIB_TARGET_NAME} ${LIB_TYPE}
