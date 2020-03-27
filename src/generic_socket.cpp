@@ -21,6 +21,14 @@
 
 constexpr uint16_t kMaxEndpointSize = 50;
 
+// Functor that will be called when the data transmission is over. This deletes the buffer.
+const auto free_function = [](void* /*unused*/, void* hint) {
+  if (hint != nullptr) {
+    auto b = static_cast<char*>(hint);
+    delete b;
+  }
+};
+
 namespace simple {
 
 GenericSocket::GenericSocket() : socket_{nullptr} {}
@@ -99,14 +107,6 @@ bool GenericSocket::sendMessage(const google::protobuf::Message& message, const 
     auto buffer = new char[message_size];
     google::protobuf::io::ArrayOutputStream output_stream{buffer, static_cast<int>(message_size)};
     if (!message.SerializeToZeroCopyStream(&output_stream)) { return false; }
-
-    // Functor to call when the data transmission is over. This deletes the buffer object.
-    auto free_function = [](void* /*unused*/, void* hint) {
-      if (hint != nullptr) {
-        auto b = static_cast<char*>(hint);
-        delete b;
-      }
-    };
 
     // Initialize the message itself using the buffer data.
     zmq::message_t zmq_message{buffer, static_cast<size_t>(output_stream.ByteCount()), free_function, buffer};
